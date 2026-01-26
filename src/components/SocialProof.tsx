@@ -33,10 +33,11 @@ const SocialProof = () => {
                 <img
                   src={student.img}
                   alt="Student"
-                  className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover"
+                  className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover ring-1 ring-foreground/20"
                 />
-                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card text-xs px-2 py-1 rounded-full shadow-sm text-muted-foreground font-medium whitespace-nowrap">
-                  {student.badge}
+                {/* Company logo placeholder */}
+                <div className="absolute -bottom-1 -right-1 w-8 h-8 md:w-10 md:h-10 bg-card rounded-md shadow-md border border-border flex items-center justify-center">
+                  <span className="text-[8px] text-muted-foreground font-medium">{student.badge.substring(0, 2)}</span>
                 </div>
               </div>
             ))}
