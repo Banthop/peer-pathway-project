@@ -67,7 +67,7 @@ const FloatingLogo = ({
     className={`absolute ${className}`}
     style={{
       opacity: 0.7,
-      filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))',
+      filter: 'grayscale(100%) brightness(0.2) drop-shadow(0 1px 1px rgba(0,0,0,0.1))',
       ...style
     }}
   >
