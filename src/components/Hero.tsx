@@ -3,9 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import logoUcl from "@/assets/logo-ucl-new.png";
 import logoLse from "@/assets/logo-lse-new.png";
-import logoImperial from "@/assets/logo-imperial.png";
+import logoImperial from "@/assets/logo-imperial-new.png";
 import logoMckinsey from "@/assets/logo-mckinsey-new.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
+import logoOxford from "@/assets/logo-oxford.png";
+import logoJpmorgan from "@/assets/logo-jpmorgan.png";
+import logoMeta from "@/assets/logo-meta.png";
+import logoGoldmanSachs from "@/assets/logo-goldman-sachs.png";
 import coachSarahCard from "@/assets/coach-sarah-card.png";
 import coachDavidCard from "@/assets/coach-david-card.png";
 
@@ -16,28 +20,6 @@ const popularCategories = [
   "Oxbridge",
   "Law",
 ];
-
-// Oxford Logo SVG Component
-const OxfordLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 240 80" fill="currentColor">
-    <g>
-      <circle cx="30" cy="40" r="25" fill="none" stroke="currentColor" strokeWidth="2"/>
-      <text x="28" y="35" fontSize="8" textAnchor="middle" fontFamily="serif">⚜</text>
-      <text x="28" y="50" fontSize="6" textAnchor="middle" fontFamily="serif">OXON</text>
-      <text x="80" y="28" fontSize="10" fontFamily="sans-serif" letterSpacing="2">UNIVERSITY OF</text>
-      <text x="80" y="55" fontSize="24" fontFamily="serif" fontWeight="400" letterSpacing="1">OXFORD</text>
-    </g>
-  </svg>
-);
-
-// JP Morgan Logo SVG Component
-const JPMorganLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 200 50" fill="currentColor">
-    <text x="0" y="38" fontSize="36" fontFamily="Georgia, serif" fontWeight="400" letterSpacing="-1">
-      J.P.Morgan
-    </text>
-  </svg>
-);
 
 // Floating Coach Card Image Component
 const FloatingCoachCard = ({ 
@@ -62,15 +44,6 @@ const FloatingCoachCard = ({
       className="w-full h-auto"
     />
   </div>
-);
-
-// Meta Logo SVG Component
-const MetaLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 140 40" fill="currentColor">
-    <path d="M10 30C10 18 16 10 24 10C30 10 34 14 38 20L42 26C46 32 50 36 58 36C70 36 78 26 78 16C78 8 74 4 68 4" 
-          fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
-    <text x="85" y="30" fontSize="26" fontFamily="Arial, sans-serif" fontWeight="400">Meta</text>
-  </svg>
 );
 
 
@@ -112,7 +85,7 @@ const Hero = () => {
           className="hidden lg:block animate-float"
           style={{ top: '22%', left: '10%', width: '170px', animationDelay: '0s' }}
         >
-          <OxfordLogo className="w-full h-auto text-gray-700" />
+          <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* UCL Logo */}
@@ -158,7 +131,7 @@ const Hero = () => {
           className="hidden lg:block animate-float"
           style={{ top: '26%', right: '10%', width: '210px', animationDelay: '0.3s' }}
         >
-          <JPMorganLogo className="w-full h-auto text-gray-600" />
+          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* David Coach Card */}
@@ -194,7 +167,7 @@ const Hero = () => {
           className="hidden xl:block animate-float-reverse"
           style={{ top: '78%', right: '20%', width: '120px', animationDelay: '1.6s' }}
         >
-          <MetaLogo className="w-full h-auto text-gray-600" />
+          <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
 
       </div>
