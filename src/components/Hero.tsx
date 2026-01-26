@@ -228,20 +228,47 @@ const Hero = () => {
           />
         </div>
 
-        {/* Popular Categories */}
+        {/* Popular Categories - 3 rows: 5, 4, 1 */}
         <div 
-          className="flex flex-wrap justify-center gap-2 animate-fade-up"
+          className="flex flex-col items-center gap-2 animate-fade-up"
           style={{ animationDelay: "0.3s" }}
         >
-          {popularCategories.map((category) => (
-            <Badge
-              key={category}
-              variant="outline"
-              className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-            >
-              {category}
-            </Badge>
-          ))}
+          {/* Row 1: 5 pills */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {popularCategories.slice(0, 5).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+          {/* Row 2: 4 pills */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {popularCategories.slice(5, 9).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+          {/* Row 3: 1 pill */}
+          <div className="flex justify-center gap-2">
+            {popularCategories.slice(9).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
         </div>
       </div>
     </section>
