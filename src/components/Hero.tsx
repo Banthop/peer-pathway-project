@@ -126,16 +126,6 @@ const FloatingLogo = ({
     {children}
   </div>
 );
-    className={`absolute ${className}`}
-    style={{
-      opacity: 0.65,
-      filter: 'grayscale(100%) contrast(1.05) drop-shadow(0 1px 1px rgba(0,0,0,0.18)) drop-shadow(0 -1px 1px rgba(0,0,0,0.08))',
-      ...style
-    }}
-  >
-    {children}
-  </div>
-);
 
 const Hero = () => {
   return (
