@@ -23,7 +23,7 @@
     --popover-foreground: 0 0% 7%;
     
     /* Brand Teal */
-    --primary: 174 29% 43%;
+    --primary: 0 0% 7%;
     --primary-foreground: 0 0% 100%;
     
     /* Secondary - light gray surfaces */
@@ -35,7 +35,7 @@
     --muted-foreground: 220 9% 46%;
     
     /* Accent */
-    --accent: 174 29% 43%;
+    --accent: 0 0% 7%;
     --accent-foreground: 0 0% 100%;
     
     /* Destructive */
@@ -45,7 +45,7 @@
     /* Borders */
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 174 29% 43%;
+    --ring: 0 0% 7%;
     
     --radius: 0.75rem;
     
@@ -54,17 +54,17 @@
     --dark-foreground: 0 0% 100%;
     
     /* Category hover */
-    --category-hover: 174 29% 43%;
+    --category-hover: 0 0% 7%;
     
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 220 9% 26%;
-    --sidebar-primary: 174 29% 43%;
+    --sidebar-primary: 0 0% 7%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 14% 96%;
     --sidebar-accent-foreground: 0 0% 7%;
     --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 174 29% 43%;
+    --sidebar-ring: 0 0% 7%;
   }
 
   .dark {
