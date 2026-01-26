@@ -105,12 +105,12 @@ const Hero = () => {
 
         {/* Sarah Coach Card */}
         <FloatingCoachCard 
-          className="hidden lg:block animate-float-reverse"
+          className="hidden xl:block animate-float-reverse"
           imageSrc={coachSarahCard}
           style={{ 
             top: '42%', 
-            left: '16%', 
-            width: '220px',
+            left: '10%', 
+            width: '200px',
             transform: 'rotate(-12deg)',
           }}
         />
@@ -151,12 +151,12 @@ const Hero = () => {
 
         {/* David Coach Card */}
         <FloatingCoachCard 
-          className="hidden lg:block animate-float"
+          className="hidden xl:block animate-float"
           imageSrc={coachDavidCard}
           style={{ 
             top: '48%', 
-            right: '16%', 
-            width: '280px',
+            right: '8%', 
+            width: '240px',
             transform: 'rotate(12deg)',
           }}
         />
