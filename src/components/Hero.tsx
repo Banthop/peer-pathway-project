@@ -217,7 +217,7 @@ const Hero = () => {
 
         {/* Search Bar */}
         <div 
-          className="relative max-w-xl mx-auto mb-8 animate-fade-up"
+          className="relative max-w-2xl w-full mx-auto mb-8 animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
