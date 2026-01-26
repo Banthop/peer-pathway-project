@@ -215,11 +215,11 @@ const Hero = () => {
           className="relative max-w-xl mx-auto mb-8 animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
           <Input
             type="text"
             placeholder="Search for coaches..."
-            className="w-full pl-12 pr-4 py-6 text-base rounded-full border-border bg-card shadow-sm focus:ring-2 focus:ring-primary/20"
+            className="w-full pl-12 pr-4 py-6 text-base rounded-full border-2 border-primary bg-card shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary/70"
           />
         </div>
 
@@ -231,8 +231,7 @@ const Hero = () => {
           {popularCategories.map((category) => (
             <Badge
               key={category}
-              variant="secondary"
-              className="px-4 py-2 text-sm font-medium cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              className="px-4 py-2 text-sm font-medium cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               {category}
             </Badge>
