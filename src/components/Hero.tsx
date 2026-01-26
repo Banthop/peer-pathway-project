@@ -194,15 +194,15 @@ const Hero = () => {
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-4 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
         <h1 
-          className="text-foreground mb-6 animate-fade-up mx-auto"
+          className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
           style={{ 
             fontFamily: '"Source Serif 4", Georgia, serif',
             fontWeight: 600,
             fontSize: 'clamp(40px, 8vw, 84px)', 
             lineHeight: '0.98',
-            width: 'fit-content'
+            textAlign: 'center'
           }}
         >
           Your edge, unlocked.
