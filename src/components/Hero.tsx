@@ -158,7 +158,7 @@ const Hero = () => {
         {/* J.P. Morgan Logo - right of David */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '38%', right: '6%', width: '150px', transform: 'rotate(4deg)', animationDelay: '0.4s' }}
+          style={{ top: '50%', right: '5%', width: '150px', transform: 'rotate(4deg)', animationDelay: '0.4s' }}
         >
           <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" style={{ opacity: 0.7 }} />
         </FloatingLogo>
