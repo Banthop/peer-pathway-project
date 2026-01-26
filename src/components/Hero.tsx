@@ -20,6 +20,11 @@ const popularCategories = [
   "Spring Weeks",
   "Oxbridge",
   "Law",
+  "University Applications",
+  "Personal Statements",
+  "Software Engineering",
+  "UCAT",
+  "Quantitative Finance",
 ];
 
 // Floating Coach Card Image Component
@@ -204,8 +209,8 @@ const Hero = () => {
         </h1>
         
         <p 
-          className="text-muted-foreground mb-10 max-w-xl mx-auto animate-fade-up font-sans" 
-          style={{ animationDelay: "0.1s", fontSize: '19px' }}
+          className="text-foreground/80 mb-10 max-w-xl mx-auto animate-fade-up" 
+          style={{ animationDelay: "0.1s", fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
         >
           Learn from students who just landed the offers you want.
         </p>
