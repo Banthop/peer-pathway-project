@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-border/30">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-center h-16 md:h-18">
+        <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo and Navigation - left side */}
           <div className="flex items-center gap-8">
             <a href="/" className="flex items-center">
