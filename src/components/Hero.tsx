@@ -7,9 +7,10 @@ import logoImperial from "@/assets/logo-imperial-new.png";
 import logoMckinsey from "@/assets/logo-mckinsey-new.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
 import logoOxford from "@/assets/logo-oxford.png";
-import logoJpmorgan from "@/assets/logo-jpmorgan.png";
+import logoJpmorgan from "@/assets/logo-jpmorgan-new.png";
 import logoMeta from "@/assets/logo-meta.png";
 import logoGoldmanSachs from "@/assets/logo-goldman-sachs.png";
+import logoCambridge from "@/assets/logo-cambridge.png";
 import coachSarahCard from "@/assets/coach-sarah-card.png";
 import coachDavidCard from "@/assets/coach-david-card.png";
 
@@ -88,6 +89,14 @@ const Hero = () => {
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
 
+        {/* Cambridge Logo - left of Sarah */}
+        <FloatingLogo 
+          className="hidden lg:block animate-float"
+          style={{ top: '38%', left: '6%', width: '100px', transform: 'rotate(-4deg)', animationDelay: '0.2s' }}
+        >
+          <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
+        </FloatingLogo>
+
         {/* Sarah Coach Card */}
         <FloatingCoachCard 
           className="hidden lg:block animate-float-reverse"
@@ -129,7 +138,7 @@ const Hero = () => {
         {/* Goldman Sachs Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '18%', right: '14%', width: '160px', transform: 'rotate(5deg)', animationDelay: '0.3s' }}
+          style={{ top: '18%', right: '14%', width: '200px', transform: 'rotate(5deg)', animationDelay: '0.3s' }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
@@ -140,11 +149,19 @@ const Hero = () => {
           imageSrc={coachDavidCard}
           style={{ 
             top: '42%', 
-            right: '10%', 
+            right: '16%', 
             width: '280px',
             transform: 'rotate(8deg)',
           }}
         />
+
+        {/* J.P. Morgan Logo - right of David */}
+        <FloatingLogo 
+          className="hidden lg:block animate-float-reverse"
+          style={{ top: '38%', right: '6%', width: '120px', opacity: 0.7, transform: 'rotate(4deg)', animationDelay: '0.4s' }}
+        >
+          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" />
+        </FloatingLogo>
 
         {/* Clifford Chance Logo */}
         <FloatingLogo 
