@@ -83,7 +83,7 @@ const Hero = () => {
         {/* Oxford Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '18%', left: '14%', width: '170px', animationDelay: '0s' }}
+          style={{ top: '18%', left: '14%', width: '170px', transform: 'rotate(-5deg)', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
@@ -96,14 +96,14 @@ const Hero = () => {
             top: '42%', 
             left: '10%', 
             width: '220px',
-            transform: 'rotate(-6deg)',
+            transform: 'rotate(-8deg)',
           }}
         />
 
         {/* UCL Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', left: '16%', width: '150px', animationDelay: '0.5s' }}
+          style={{ top: '68%', left: '16%', width: '150px', transform: 'rotate(4deg)', animationDelay: '0.5s' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
@@ -111,7 +111,7 @@ const Hero = () => {
         {/* Imperial Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '82%', left: '10%', width: '160px', animationDelay: '1s' }}
+          style={{ top: '82%', left: '10%', width: '160px', transform: 'rotate(-3deg)', animationDelay: '1s' }}
         >
           <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
         </FloatingLogo>
@@ -119,7 +119,7 @@ const Hero = () => {
         {/* LSE Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', left: '24%', width: '70px', transform: 'rotate(-10deg)', animationDelay: '1.5s' }}
+          style={{ top: '88%', left: '24%', width: '70px', transform: 'rotate(-12deg)', animationDelay: '1.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
@@ -129,7 +129,7 @@ const Hero = () => {
         {/* Goldman Sachs Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '18%', right: '14%', width: '160px', animationDelay: '0.3s' }}
+          style={{ top: '18%', right: '14%', width: '160px', transform: 'rotate(5deg)', animationDelay: '0.3s' }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
@@ -142,14 +142,14 @@ const Hero = () => {
             top: '42%', 
             right: '10%', 
             width: '280px',
-            transform: 'rotate(6deg)',
+            transform: 'rotate(8deg)',
           }}
         />
 
         {/* Clifford Chance Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', right: '16%', width: '180px', animationDelay: '0.8s' }}
+          style={{ top: '68%', right: '16%', width: '180px', transform: 'rotate(-4deg)', animationDelay: '0.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
@@ -157,7 +157,7 @@ const Hero = () => {
         {/* McKinsey Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '82%', right: '10%', width: '160px', animationDelay: '1.2s' }}
+          style={{ top: '82%', right: '10%', width: '160px', transform: 'rotate(3deg)', animationDelay: '1.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
@@ -165,7 +165,7 @@ const Hero = () => {
         {/* Meta Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', right: '24%', width: '100px', animationDelay: '1.6s' }}
+          style={{ top: '88%', right: '24%', width: '100px', transform: 'rotate(10deg)', animationDelay: '1.6s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
