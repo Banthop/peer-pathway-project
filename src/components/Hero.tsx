@@ -84,7 +84,7 @@ const Hero = () => {
         {/* Oxford Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '28%', left: '14%', width: '170px', transform: 'rotate(-5deg)', animationDelay: '0s' }}
+          style={{ top: '22%', left: '14%', width: '170px', transform: 'rotate(-5deg)', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
@@ -92,7 +92,7 @@ const Hero = () => {
         {/* Cambridge Logo - left of Sarah */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '38%', left: '6%', width: '100px', transform: 'rotate(-4deg)', animationDelay: '0.2s' }}
+          style={{ top: '38%', left: '6%', width: '130px', transform: 'rotate(-4deg)', animationDelay: '0.2s' }}
         >
           <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
         </FloatingLogo>
@@ -148,7 +148,7 @@ const Hero = () => {
           className="hidden lg:block animate-float"
           imageSrc={coachDavidCard}
           style={{ 
-            top: '42%', 
+            top: '48%', 
             right: '16%', 
             width: '280px',
             transform: 'rotate(8deg)',
@@ -158,9 +158,9 @@ const Hero = () => {
         {/* J.P. Morgan Logo - right of David */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '38%', right: '6%', width: '120px', opacity: 0.7, transform: 'rotate(4deg)', animationDelay: '0.4s' }}
+          style={{ top: '38%', right: '6%', width: '150px', transform: 'rotate(4deg)', animationDelay: '0.4s' }}
         >
-          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" />
+          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" style={{ opacity: 0.7 }} />
         </FloatingLogo>
 
         {/* Clifford Chance Logo */}
