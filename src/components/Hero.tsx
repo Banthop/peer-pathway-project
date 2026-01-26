@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import RetroGrid from "@/components/RetroGrid";
 import logoUcl from "@/assets/logo-ucl-new.png";
 import logoLse from "@/assets/logo-lse-new.png";
 import logoImperial from "@/assets/logo-imperial-new.png";
@@ -80,8 +81,11 @@ const Hero = () => {
       className="relative flex items-center justify-center pt-20 pb-12 overflow-hidden"
       style={{ minHeight: '78vh', maxHeight: '820px' }}
     >
+      {/* RetroGrid Background */}
+      <RetroGrid className="z-0" />
+
       {/* Background Layer - Floating Elements */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+      <div className="absolute inset-0 pointer-events-none z-[1]">
         
         {/* LEFT CLUSTER - Universities */}
         
