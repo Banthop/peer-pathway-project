@@ -6,19 +6,19 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-      <div className="container mx-auto px-4">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-border/30">
+      <div className="w-full px-6 lg:px-10">
         <div className="flex items-center justify-between h-16 md:h-18">
-          {/* Logo */}
-          <a href="/" className="flex items-center -ml-2">
+          {/* Logo - pushed to left */}
+          <a href="/" className="flex items-center">
             <span className="text-xl md:text-2xl text-foreground">
               <span className="font-sans font-normal">Early</span>
               <span className="font-sans font-bold">Edge</span>
             </span>
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          {/* Desktop Navigation - centered */}
+          <nav className="hidden md:flex items-center gap-8 absolute left-1/2 transform -translate-x-1/2">
             <button className="flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors">
               Browse
               <ChevronDown className="w-4 h-4" />
@@ -31,7 +31,7 @@ const Header = () => {
             </a>
           </nav>
 
-          {/* Desktop CTA */}
+          {/* Desktop CTA - pushed to right */}
           <div className="hidden md:flex items-center gap-4">
             <Button variant="ghost" size="sm" className="text-foreground">
               Log In
