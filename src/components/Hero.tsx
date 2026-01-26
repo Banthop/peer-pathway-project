@@ -194,7 +194,7 @@ const Hero = () => {
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 container mx-auto px-4 max-w-3xl text-center">
+      <div className="relative z-10 w-full max-w-3xl mx-auto px-4 text-center">
         <h1 
           className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
           style={{ 
