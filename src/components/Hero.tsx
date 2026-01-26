@@ -1,7 +1,7 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import BackgroundRippleEffect from "@/components/BackgroundRippleEffect";
+import RippleEffect from "@/components/RippleEffect";
 import logoUcl from "@/assets/logo-ucl-new.png";
 import logoLse from "@/assets/logo-lse-new.png";
 import logoImperial from "@/assets/logo-imperial-new.png";
@@ -81,8 +81,8 @@ const Hero = () => {
       className="relative flex items-center justify-center pt-20 pb-12 overflow-hidden"
       style={{ minHeight: '78vh', maxHeight: '820px' }}
     >
-      {/* Background Ripple Effect */}
-      <BackgroundRippleEffect className="z-0" />
+      {/* Ripple Background Effect */}
+      <RippleEffect className="z-0" />
 
       {/* Background Layer - Floating Elements */}
       <div className="absolute inset-0 pointer-events-none z-[1]">
