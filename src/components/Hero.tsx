@@ -1,10 +1,13 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import logoUcl from "@/assets/logo-ucl.png";
-import logoLse from "@/assets/logo-lse.png";
+import logoUcl from "@/assets/logo-ucl-new.png";
+import logoLse from "@/assets/logo-lse-new.png";
 import logoImperial from "@/assets/logo-imperial.png";
-import logoMckinsey from "@/assets/logo-mckinsey.png";
+import logoMckinsey from "@/assets/logo-mckinsey-new.png";
+import logoCliffordChance from "@/assets/logo-clifford-chance.png";
+import coachSarahCard from "@/assets/coach-sarah-card.png";
+import coachDavidCard from "@/assets/coach-david-card.png";
 
 const popularCategories = [
   "Investment Banking",
