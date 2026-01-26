@@ -192,11 +192,11 @@ const Hero = () => {
       {/* Foreground Content */}
       <div className="relative z-10 container mx-auto px-4 max-w-3xl text-center">
         <h1 
-          className="text-foreground mb-6 animate-fade-up"
+          className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
           style={{ 
             fontFamily: '"Source Serif 4", Georgia, serif',
             fontWeight: 600,
-            fontSize: 'clamp(56px, 5.2vw, 84px)', 
+            fontSize: 'clamp(40px, 8vw, 84px)', 
             lineHeight: '0.98' 
           }}
         >
