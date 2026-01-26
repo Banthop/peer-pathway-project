@@ -39,13 +39,30 @@ const JPMorganLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Clifford Chance Logo SVG Component
-const CliffordChanceLogo = ({ className }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 220 50" fill="currentColor">
-    <text x="0" y="36" fontSize="28" fontFamily="Georgia, serif" fontStyle="italic" fontWeight="400">
-      Clifford Chance
-    </text>
-  </svg>
+// Floating Coach Card Image Component
+const FloatingCoachCard = ({ 
+  imageSrc,
+  className,
+  style
+}: { 
+  imageSrc: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) => (
+  <div 
+    className={`absolute ${className}`}
+    style={{
+      opacity: 0.6,
+      filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
+      ...style
+    }}
+  >
+    <img 
+      src={imageSrc} 
+      alt="Coach card"
+      className="w-full h-auto"
+    />
+  </div>
 );
 
 // Meta Logo SVG Component
@@ -99,6 +116,16 @@ const FloatingLogo = ({
   style?: React.CSSProperties;
 }) => (
   <div 
+    className={`absolute ${className}`}
+    style={{
+      opacity: 0.6,
+      filter: 'grayscale(100%) contrast(1.05) drop-shadow(0 1px 1px rgba(0,0,0,0.18)) drop-shadow(0 -1px 1px rgba(0,0,0,0.08))',
+      ...style
+    }}
+  >
+    {children}
+  </div>
+);
     className={`absolute ${className}`}
     style={{
       opacity: 0.65,
