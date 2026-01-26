@@ -212,7 +212,7 @@ const Hero = () => {
           className="text-foreground mb-10 max-w-xl mx-auto animate-fade-up" 
           style={{ animationDelay: "0.1s", fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
         >
-          Get prepped for uni applications, tests, and internships
+          Get prepped for uni applications, tests, and internships.
         </p>
 
         {/* Search Bar */}
