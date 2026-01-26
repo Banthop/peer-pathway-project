@@ -204,7 +204,7 @@ const Hero = () => {
         </h1>
         
         <p 
-          className="text-muted-foreground mb-10 max-w-xl mx-auto animate-fade-up" 
+          className="text-muted-foreground mb-10 max-w-xl mx-auto animate-fade-up font-sans" 
           style={{ animationDelay: "0.1s", fontSize: '19px' }}
         >
           Learn from students who just landed the offers you want.
