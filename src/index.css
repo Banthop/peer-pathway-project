@@ -12,7 +12,7 @@
 @layer base {
   :root {
     /* Core Colors */
-    --background: 0 0% 100%;
+    --background: 170 30% 97%;
     --foreground: 0 0% 7%;
     
     /* Card and surfaces */
