@@ -171,21 +171,16 @@ const Hero = () => {
         </FloatingLogo>
 
         {/* Sarah Coach Card */}
-        <div 
-          className="hidden lg:block absolute animate-float-reverse"
+        <FloatingCoachCard 
+          className="hidden lg:block animate-float-reverse"
+          imageSrc={coachSarahCard}
           style={{ 
             top: '50%', 
-            left: '18%', 
+            left: '14%', 
+            width: '220px',
             transform: 'rotate(-8deg)',
-            animationDelay: '0.7s'
           }}
-        >
-          <CoachCard 
-            name="Sarah K."
-            subtitle="Oxford PPE '24"
-            imageUrl="https://i.pravatar.cc/80?img=12"
-          />
-        </div>
+        />
 
         {/* RIGHT CLUSTER - Companies */}
         
@@ -198,28 +193,23 @@ const Hero = () => {
         </FloatingLogo>
 
         {/* David Coach Card */}
-        <div 
-          className="hidden lg:block absolute animate-float"
+        <FloatingCoachCard 
+          className="hidden lg:block animate-float"
+          imageSrc={coachDavidCard}
           style={{ 
             top: '46%', 
-            right: '15%', 
+            right: '10%', 
+            width: '280px',
             transform: 'rotate(6deg)',
-            animationDelay: '0.4s'
           }}
-        >
-          <CoachCard 
-            name="David W."
-            subtitle="Goldman Sachs Summer Analyst"
-            imageUrl="https://i.pravatar.cc/80?img=33"
-          />
-        </div>
+        />
 
         {/* Clifford Chance Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
           style={{ top: '64%', right: '13%', width: '200px', animationDelay: '0.8s' }}
         >
-          <CliffordChanceLogo className="w-full h-auto text-gray-600" />
+          <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* McKinsey Logo */}
