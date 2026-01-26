@@ -14,60 +14,45 @@ import logoCambridge from "@/assets/logo-cambridge.png";
 import coachSarahCard from "@/assets/coach-sarah-card.png";
 import coachDavidCard from "@/assets/coach-david-card.png";
 
-const popularCategories = [
-  "Investment Banking",
-  "Consulting",
-  "Spring Weeks",
-  "Oxbridge",
-  "Law",
-  "University Applications",
-  "Personal Statements",
-  "Software Engineering",
-  "UCAT",
-  "Quantitative Finance",
-];
+const popularCategories = ["Investment Banking", "Consulting", "Spring Weeks", "Oxbridge", "Law"];
 
 // Floating Coach Card Image Component
-const FloatingCoachCard = ({ 
+const FloatingCoachCard = ({
   imageSrc,
   className,
-  style
-}: { 
+  style,
+}: {
   imageSrc: string;
   className?: string;
   style?: React.CSSProperties;
 }) => (
-  <div 
+  <div
     className={`absolute ${className}`}
     style={{
-      filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
-      ...style
+      filter: "drop-shadow(0 10px 25px rgba(0,0,0,0.15))",
+      ...style,
     }}
   >
-    <img 
-      src={imageSrc} 
-      alt="Coach card"
-      className="w-full h-auto"
-    />
+    <img src={imageSrc} alt="Coach card" className="w-full h-auto" />
   </div>
 );
 
-
 // Floating Logo Component
-const FloatingLogo = ({ 
-  children, 
+const FloatingLogo = ({
+  children,
   className,
-  style
-}: { 
-  children: React.ReactNode; 
+  style,
+}: {
+  children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }) => (
-  <div 
+  <div
     className={`absolute ${className}`}
     style={{
-      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15)) drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
-      ...style
+      opacity: 0.7,
+      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.1))",
+      ...style,
     }}
   >
     {children}
@@ -76,150 +61,144 @@ const FloatingLogo = ({
 
 const Hero = () => {
   return (
-    <section 
+    <section
       className="relative flex items-center justify-center pt-20 pb-12 overflow-hidden"
-      style={{ minHeight: '78vh', maxHeight: '820px' }}
+      style={{ minHeight: "78vh", maxHeight: "820px" }}
     >
       {/* Background Layer - Floating Elements */}
       <div className="absolute inset-0 pointer-events-none z-0">
-        
         {/* LEFT CLUSTER - Universities */}
-        
+
         {/* Oxford Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float"
-          style={{ top: '22%', left: '14%', width: '170px', transform: 'rotate(-12deg)', animationDelay: '0s' }}
+          style={{ top: "22%", left: "14%", width: "170px", transform: "rotate(-12deg)", animationDelay: "0s" }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* Cambridge Logo - left of Sarah */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float"
-          style={{ top: '38%', left: '6%', width: '130px', transform: 'rotate(8deg)', animationDelay: '0.2s' }}
+          style={{ top: "38%", left: "6%", width: "130px", transform: "rotate(8deg)", animationDelay: "0.2s" }}
         >
           <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* Sarah Coach Card */}
-        <FloatingCoachCard 
+        <FloatingCoachCard
           className="hidden lg:block animate-float-reverse"
           imageSrc={coachSarahCard}
-          style={{ 
-            top: '42%', 
-            left: '16%', 
-            width: '220px',
-            transform: 'rotate(-12deg)',
+          style={{
+            top: "42%",
+            left: "16%",
+            width: "220px",
+            transform: "rotate(-12deg)",
           }}
         />
 
         {/* UCL Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', left: '16%', width: '150px', transform: 'rotate(10deg)', animationDelay: '0.5s' }}
+          style={{ top: "68%", left: "16%", width: "150px", transform: "rotate(10deg)", animationDelay: "0.5s" }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* Imperial Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden xl:block animate-float"
-          style={{ top: '82%', left: '10%', width: '160px', transform: 'rotate(-8deg)', animationDelay: '1s' }}
+          style={{ top: "82%", left: "10%", width: "160px", transform: "rotate(-8deg)", animationDelay: "1s" }}
         >
           <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* LSE Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '78%', left: '30%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
+          style={{ top: "88%", left: "24%", width: "70px", transform: "rotate(-18deg)", animationDelay: "1.5s" }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* RIGHT CLUSTER - Companies */}
-        
+
         {/* Goldman Sachs Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float"
-          style={{ top: '18%', right: '14%', width: '200px', transform: 'rotate(10deg)', animationDelay: '0.3s' }}
+          style={{ top: "18%", right: "14%", width: "200px", transform: "rotate(10deg)", animationDelay: "0.3s" }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* David Coach Card */}
-        <FloatingCoachCard 
+        <FloatingCoachCard
           className="hidden lg:block animate-float"
           imageSrc={coachDavidCard}
-          style={{ 
-            top: '48%', 
-            right: '16%', 
-            width: '280px',
-            transform: 'rotate(12deg)',
+          style={{
+            top: "48%",
+            right: "16%",
+            width: "280px",
+            transform: "rotate(12deg)",
           }}
         />
 
         {/* J.P. Morgan Logo - right of David */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '50%', right: '5%', width: '150px', transform: 'rotate(-8deg)', animationDelay: '0.4s' }}
+          style={{ top: "50%", right: "5%", width: "150px", transform: "rotate(-8deg)", animationDelay: "0.4s" }}
         >
           <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" style={{ opacity: 0.7 }} />
         </FloatingLogo>
 
         {/* Clifford Chance Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', right: '16%', width: '180px', transform: 'rotate(-10deg)', animationDelay: '0.8s' }}
+          style={{ top: "68%", right: "16%", width: "180px", transform: "rotate(-10deg)", animationDelay: "0.8s" }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* McKinsey Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden xl:block animate-float"
-          style={{ top: '82%', right: '10%', width: '190px', transform: 'rotate(8deg)', animationDelay: '1.2s' }}
+          style={{ top: "82%", right: "10%", width: "190px", transform: "rotate(8deg)", animationDelay: "1.2s" }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* Meta Logo */}
-        <FloatingLogo 
+        <FloatingLogo
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '78%', right: '30%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
+          style={{ top: "88%", right: "24%", width: "140px", transform: "rotate(15deg)", animationDelay: "1.6s" }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
-
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
-        <h1 
+      <div className="relative z-10 container mx-auto px-4 max-w-3xl text-center">
+        <h1
           className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
-          style={{ 
+          style={{
             fontFamily: '"Source Serif 4", Georgia, serif',
             fontWeight: 600,
-            fontSize: 'clamp(40px, 8vw, 84px)', 
-            lineHeight: '0.98',
-            textAlign: 'center'
+            fontSize: "clamp(40px, 8vw, 84px)",
+            lineHeight: "0.98",
           }}
         >
           Your edge, unlocked.
         </h1>
-        
-        <p 
-          className="text-foreground/80 mb-10 max-w-xl mx-auto animate-fade-up" 
-          style={{ animationDelay: "0.1s", fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+
+        <p
+          className="text-muted-foreground mb-10 max-w-xl mx-auto animate-fade-up font-sans"
+          style={{ animationDelay: "0.1s", fontSize: "19px" }}
         >
-          Learn from students who just landed the offers you want.
+          Get prepped for uni admissions, tests and internships.
         </p>
 
         {/* Search Bar */}
-        <div 
-          className="relative max-w-2xl w-full mx-auto mb-8 animate-fade-up"
-          style={{ animationDelay: "0.2s" }}
-        >
+        <div className="relative max-w-xl mx-auto mb-8 animate-fade-up" style={{ animationDelay: "0.2s" }}>
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
           <Input
             type="text"
@@ -228,47 +207,16 @@ const Hero = () => {
           />
         </div>
 
-        {/* Popular Categories - 3 rows: 5, 4, 1 */}
-        <div 
-          className="flex flex-col items-center gap-2 animate-fade-up"
-          style={{ animationDelay: "0.3s" }}
-        >
-          {/* Row 1: 5 pills */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {popularCategories.slice(0, 5).map((category) => (
-              <Badge
-                key={category}
-                variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
-          {/* Row 2: 4 pills */}
-          <div className="flex flex-wrap justify-center gap-2">
-            {popularCategories.slice(5, 9).map((category) => (
-              <Badge
-                key={category}
-                variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
-          {/* Row 3: 1 pill */}
-          <div className="flex justify-center gap-2">
-            {popularCategories.slice(9).map((category) => (
-              <Badge
-                key={category}
-                variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
+        {/* Popular Categories */}
+        <div className="flex flex-wrap justify-center gap-2 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+          {popularCategories.map((category) => (
+            <Badge
+              key={category}
+              className="px-4 py-2 text-sm font-medium cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              {category}
+            </Badge>
+          ))}
         </div>
       </div>
     </section>
