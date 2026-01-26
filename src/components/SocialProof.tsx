@@ -34,6 +34,7 @@ const SocialProof = () => {
                   src={student.img}
                   alt="Student"
                   className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover"
+                  style={{ filter: 'saturate(1.1)' }}
                 />
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card text-xs px-2 py-1 rounded-full shadow-sm text-muted-foreground font-medium whitespace-nowrap">
                   {student.badge}
