@@ -132,7 +132,7 @@ const Hero = () => {
         {/* LSE Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', left: '24%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
+          style={{ top: '78%', left: '30%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
@@ -186,7 +186,7 @@ const Hero = () => {
         {/* Meta Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', right: '24%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
+          style={{ top: '78%', right: '30%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
@@ -194,14 +194,15 @@ const Hero = () => {
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 container mx-auto px-4 max-w-3xl text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
         <h1 
           className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
           style={{ 
             fontFamily: '"Source Serif 4", Georgia, serif',
             fontWeight: 600,
             fontSize: 'clamp(40px, 8vw, 84px)', 
-            lineHeight: '0.98' 
+            lineHeight: '0.98',
+            textAlign: 'center'
           }}
         >
           Your edge, unlocked.
@@ -216,7 +217,7 @@ const Hero = () => {
 
         {/* Search Bar */}
         <div 
-          className="relative max-w-xl mx-auto mb-8 animate-fade-up"
+          className="relative max-w-2xl w-full mx-auto mb-8 animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
@@ -227,20 +228,47 @@ const Hero = () => {
           />
         </div>
 
-        {/* Popular Categories */}
+        {/* Popular Categories - 3 rows: 5, 4, 1 */}
         <div 
-          className="flex flex-wrap justify-center gap-2 animate-fade-up"
+          className="flex flex-col items-center gap-2 animate-fade-up"
           style={{ animationDelay: "0.3s" }}
         >
-          {popularCategories.map((category) => (
-            <Badge
-              key={category}
-              variant="outline"
-              className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-            >
-              {category}
-            </Badge>
-          ))}
+          {/* Row 1: 5 pills */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {popularCategories.slice(0, 5).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+          {/* Row 2: 4 pills */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {popularCategories.slice(5, 9).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+          {/* Row 3: 1 pill */}
+          <div className="flex justify-center gap-2">
+            {popularCategories.slice(9).map((category) => (
+              <Badge
+                key={category}
+                variant="outline"
+                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
         </div>
       </div>
     </section>
