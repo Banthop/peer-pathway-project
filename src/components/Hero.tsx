@@ -94,7 +94,7 @@ const Hero = () => {
           imageSrc={coachSarahCard}
           style={{ 
             top: '42%', 
-            left: '10%', 
+            left: '16%', 
             width: '220px',
             transform: 'rotate(-8deg)',
           }}
