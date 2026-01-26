@@ -16,26 +16,26 @@ const students = [
 
 const SocialProof = () => {
   return (
-    <section className="py-10 bg-secondary/50 border-y border-border/50">
-      <div className="container mx-auto px-4">
+    <section className="py-10 bg-secondary/50 border-y border-border/50 w-full">
+      <div className="w-full px-0">
         {/* Stats Line */}
-        <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8">
+        <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8 px-4">
           <span className="font-medium text-foreground">JOIN 1,000+ STUDENTS ACHIEVING THEIR GOALS</span>
           <span className="mx-3">·</span>
           <span>⭐ 500+ REVIEWS (AVG 4.98)</span>
         </p>
 
         {/* Student Photos Scroll */}
-        <div className="relative overflow-hidden">
-          <div className="flex gap-6 animate-slide-left hover:[animation-play-state:paused]">
+        <div className="relative overflow-hidden w-full">
+          <div className="flex gap-4 animate-slide-left hover:[animation-play-state:paused]">
             {[...students, ...students, ...students].map((student, index) => (
               <div key={index} className="relative flex-shrink-0">
                 <img
                   src={student.img}
                   alt="Student"
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover grayscale"
+                  className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover"
                 />
-                <div className="absolute -bottom-1 -right-1 bg-card text-[10px] px-1.5 py-0.5 rounded-full shadow-sm text-muted-foreground font-medium">
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card text-xs px-2 py-1 rounded-full shadow-sm text-muted-foreground font-medium whitespace-nowrap">
                   {student.badge}
                 </div>
               </div>
