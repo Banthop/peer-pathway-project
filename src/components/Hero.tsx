@@ -209,10 +209,10 @@ const Hero = () => {
         </h1>
         
         <p 
-          className="text-foreground/80 mb-10 max-w-xl mx-auto animate-fade-up" 
+          className="text-foreground mb-10 max-w-xl mx-auto animate-fade-up" 
           style={{ animationDelay: "0.1s", fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
         >
-          Learn from students who just landed the offers you want.
+          Get prepped for uni applications, tests, and internships
         </p>
 
         {/* Search Bar */}
