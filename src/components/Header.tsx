@@ -12,9 +12,9 @@ const Header = () => {
           {/* Logo and Navigation - left side */}
           <div className="flex items-center gap-8">
             <a href="/" className="flex items-center">
-              <span className="text-xl md:text-2xl text-foreground font-sans">
-                <span className="font-normal">Early</span>
-                <span className="font-bold">Edge</span>
+              <span className="text-xl md:text-2xl text-foreground" style={{ fontFamily: 'Inter, sans-serif' }}>
+                <span style={{ fontWeight: 400 }}>Early</span>
+                <span style={{ fontWeight: 700 }}>Edge</span>
               </span>
             </a>
 
