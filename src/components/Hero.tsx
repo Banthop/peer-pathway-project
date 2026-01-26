@@ -241,7 +241,8 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
               >
                 {category}
               </Badge>
@@ -253,7 +254,8 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
               >
                 {category}
               </Badge>
@@ -265,7 +267,8 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
+                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
               >
                 {category}
               </Badge>

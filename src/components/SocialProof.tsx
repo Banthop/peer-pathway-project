@@ -19,10 +19,11 @@ const SocialProof = () => {
     <section className="py-8 bg-background border-y border-border/50 w-full">
       <div className="w-full px-0">
         {/* Stats Line */}
-        <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8 px-4">
-          <span className="font-medium text-foreground">JOIN 1,000+ STUDENTS ACHIEVING THEIR GOALS</span>
-          <span className="mx-3">·</span>
-          <span>⭐ 500+ REVIEWS (AVG 4.98)</span>
+        <p 
+          className="text-center text-sm md:text-base tracking-wide text-foreground mb-8 px-4"
+          style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+        >
+          Coaches From 50+ Universities and Firms
         </p>
 
         {/* Student Photos Scroll */}
