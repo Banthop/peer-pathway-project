@@ -16,28 +16,27 @@ const students = [
 
 const SocialProof = () => {
   return (
-    <section className="py-4 bg-background border-y border-border/50 w-full -mt-8">
-      <div className="w-full px-0">
+    <section className="py-10 bg-secondary/50 border-y border-border/50">
+      <div className="container mx-auto px-4">
         {/* Stats Line */}
-        <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8 px-4">
+        <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8">
           <span className="font-medium text-foreground">JOIN 1,000+ STUDENTS ACHIEVING THEIR GOALS</span>
           <span className="mx-3">·</span>
           <span>⭐ 500+ REVIEWS (AVG 4.98)</span>
         </p>
 
         {/* Student Photos Scroll */}
-        <div className="relative overflow-hidden w-full">
-          <div className="flex gap-4 animate-slide-left hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
-            {[...students, ...students, ...students, ...students].map((student, index) => (
+        <div className="relative overflow-hidden">
+          <div className="flex gap-6 animate-slide-left hover:[animation-play-state:paused]">
+            {[...students, ...students, ...students].map((student, index) => (
               <div key={index} className="relative flex-shrink-0">
                 <img
                   src={student.img}
                   alt="Student"
-                  className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover ring-1 ring-foreground/20"
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover grayscale"
                 />
-                {/* Company logo placeholder */}
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 md:w-10 md:h-10 bg-card rounded-md shadow-md border border-border flex items-center justify-center">
-                  <span className="text-[8px] text-muted-foreground font-medium">{student.badge.substring(0, 2)}</span>
+                <div className="absolute -bottom-1 -right-1 bg-card text-[10px] px-1.5 py-0.5 rounded-full shadow-sm text-muted-foreground font-medium">
+                  {student.badge}
                 </div>
               </div>
             ))}
