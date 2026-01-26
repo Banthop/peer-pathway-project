@@ -16,7 +16,7 @@ const students = [
 
 const SocialProof = () => {
   return (
-    <section className="py-4 bg-background border-y border-border/50 w-full -mt-8">
+    <section className="py-8 bg-background border-y border-border/50 w-full">
       <div className="w-full px-0">
         {/* Stats Line */}
         <p className="text-center text-sm md:text-base tracking-wide text-muted-foreground mb-8 px-4">
