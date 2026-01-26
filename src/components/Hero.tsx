@@ -83,7 +83,7 @@ const Hero = () => {
         {/* Oxford Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '22%', left: '14%', width: '170px', transform: 'rotate(-5deg)', animationDelay: '0s' }}
+          style={{ top: '28%', left: '14%', width: '170px', transform: 'rotate(-5deg)', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
