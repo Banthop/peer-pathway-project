@@ -132,7 +132,7 @@ const Hero = () => {
         {/* LSE Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', left: '24%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
+          style={{ top: '78%', left: '30%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
@@ -186,7 +186,7 @@ const Hero = () => {
         {/* Meta Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', right: '24%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
+          style={{ top: '78%', right: '30%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
