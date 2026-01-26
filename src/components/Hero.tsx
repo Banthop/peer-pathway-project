@@ -74,36 +74,6 @@ const MetaLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Coach Card Component
-const CoachCard = ({ 
-  name, 
-  subtitle, 
-  imageUrl,
-  className 
-}: { 
-  name: string; 
-  subtitle: string; 
-  imageUrl: string;
-  className?: string;
-}) => (
-  <div 
-    className={`bg-white rounded-[14px] p-3 flex items-center gap-3 ${className}`}
-    style={{ 
-      boxShadow: '0 10px 25px rgba(0,0,0,0.10)',
-      minWidth: '220px'
-    }}
-  >
-    <img 
-      src={imageUrl} 
-      alt={name}
-      className="w-11 h-11 rounded-full object-cover flex-shrink-0"
-    />
-    <div className="min-w-0">
-      <p className="font-semibold text-sm text-[#111111] leading-tight">{name}</p>
-      <p className="text-xs text-[#111111] leading-tight mt-0.5">{subtitle}</p>
-    </div>
-  </div>
-);
 
 // Floating Logo Component
 const FloatingLogo = ({ 
