@@ -66,7 +66,7 @@ const FloatingLogo = ({
   <div 
     className={`absolute ${className}`}
     style={{
-      filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.1))',
+      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15)) drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
       ...style
     }}
   >
@@ -235,7 +235,8 @@ const Hero = () => {
           {popularCategories.map((category) => (
             <Badge
               key={category}
-              className="px-4 py-2 text-sm font-medium cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              variant="outline"
+              className="px-4 py-2 text-sm font-medium cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
             >
               {category}
             </Badge>
