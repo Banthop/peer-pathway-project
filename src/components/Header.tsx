@@ -7,12 +7,13 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <span className="text-xl md:text-2xl font-serif font-semibold text-foreground">
-              EarlyEdge
+          <a href="/" className="flex items-center -ml-2">
+            <span className="text-xl md:text-2xl text-foreground">
+              <span className="font-sans font-normal">Early</span>
+              <span className="font-sans font-bold">Edge</span>
             </span>
           </a>
 
