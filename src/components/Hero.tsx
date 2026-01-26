@@ -83,7 +83,7 @@ const Hero = () => {
         {/* Oxford Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '22%', left: '10%', width: '170px', animationDelay: '0s' }}
+          style={{ top: '26%', left: '10%', width: '170px', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
@@ -91,7 +91,7 @@ const Hero = () => {
         {/* UCL Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '44%', left: '6%', width: '150px', transform: 'rotate(-8deg)', animationDelay: '0.5s' }}
+          style={{ top: '64%', left: '13%', width: '150px', animationDelay: '0.5s' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
@@ -99,7 +99,7 @@ const Hero = () => {
         {/* Imperial Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '70%', left: '7%', width: '220px', animationDelay: '1s' }}
+          style={{ top: '69%', left: '6%', width: '180px', animationDelay: '1s' }}
         >
           <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
         </FloatingLogo>
@@ -107,7 +107,7 @@ const Hero = () => {
         {/* LSE Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '78%', left: '18%', width: '90px', transform: 'rotate(-10deg)', animationDelay: '1.5s' }}
+          style={{ top: '78%', left: '20%', width: '90px', transform: 'rotate(-10deg)', animationDelay: '1.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
@@ -117,10 +117,10 @@ const Hero = () => {
           className="hidden lg:block animate-float-reverse"
           imageSrc={coachSarahCard}
           style={{ 
-            top: '50%', 
-            left: '14%', 
+            top: '44%', 
+            left: '6%', 
             width: '220px',
-            transform: 'rotate(-8deg)',
+            transform: 'rotate(-6deg)',
           }}
         />
 
@@ -129,7 +129,7 @@ const Hero = () => {
         {/* Goldman Sachs Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '26%', right: '10%', width: '140px', animationDelay: '0.3s' }}
+          style={{ top: '26%', right: '13%', width: '120px', animationDelay: '0.3s' }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
@@ -139,8 +139,8 @@ const Hero = () => {
           className="hidden lg:block animate-float"
           imageSrc={coachDavidCard}
           style={{ 
-            top: '46%', 
-            right: '10%', 
+            top: '44%', 
+            right: '6%', 
             width: '280px',
             transform: 'rotate(6deg)',
           }}
