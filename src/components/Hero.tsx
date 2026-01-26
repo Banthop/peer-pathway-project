@@ -157,7 +157,7 @@ const Hero = () => {
         {/* McKinsey Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '82%', right: '10%', width: '160px', transform: 'rotate(3deg)', animationDelay: '1.2s' }}
+          style={{ top: '82%', right: '10%', width: '190px', transform: 'rotate(3deg)', animationDelay: '1.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
@@ -165,7 +165,7 @@ const Hero = () => {
         {/* Meta Logo */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '88%', right: '24%', width: '100px', transform: 'rotate(10deg)', animationDelay: '1.6s' }}
+          style={{ top: '88%', right: '24%', width: '140px', transform: 'rotate(10deg)', animationDelay: '1.6s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
@@ -175,8 +175,10 @@ const Hero = () => {
       {/* Foreground Content */}
       <div className="relative z-10 container mx-auto px-4 max-w-3xl text-center">
         <h1 
-          className="font-serif font-semibold text-foreground mb-6 animate-fade-up"
+          className="text-foreground mb-6 animate-fade-up"
           style={{ 
+            fontFamily: '"Source Serif 4", Georgia, serif',
+            fontWeight: 600,
             fontSize: 'clamp(56px, 5.2vw, 84px)', 
             lineHeight: '0.98' 
           }}
