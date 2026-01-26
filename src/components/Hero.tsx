@@ -126,12 +126,12 @@ const Hero = () => {
 
         {/* RIGHT CLUSTER - Companies */}
         
-        {/* J.P. Morgan Logo */}
+        {/* Goldman Sachs Logo */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '26%', right: '10%', width: '210px', animationDelay: '0.3s' }}
+          style={{ top: '26%', right: '10%', width: '140px', animationDelay: '0.3s' }}
         >
-          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" />
+          <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* David Coach Card */}
