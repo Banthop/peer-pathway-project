@@ -15,7 +15,7 @@ const PopularCategories = () => {
   return (
     <section className="py-20 md:py-28">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground mb-12">
+        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground mb-12" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
           Popular categories
         </h2>
 
@@ -31,7 +31,8 @@ const PopularCategories = () => {
                 {category.logos.map((logo, i) => (
                   <div
                     key={i}
-                    className="w-8 h-8 rounded-md bg-muted flex items-center justify-center text-[10px] font-medium text-muted-foreground"
+                    className="w-8 h-8 rounded-md bg-muted flex items-center justify-center text-[10px] text-muted-foreground"
+                    style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
                   >
                     {logo.substring(0, 2)}
                   </div>
@@ -39,7 +40,7 @@ const PopularCategories = () => {
               </div>
               
               {/* Category name */}
-              <p className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
+              <p className="text-sm text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
                 {category.name}
               </p>
             </a>
