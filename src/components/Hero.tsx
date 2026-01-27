@@ -164,7 +164,7 @@ const Hero = () => {
           style={{ 
             top: '42%', 
             right: '12%', 
-            width: '250px',
+            width: '280px',
             transform: 'rotate(12deg)',
           }}
         />
