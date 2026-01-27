@@ -87,10 +87,10 @@ const Hero = () => {
         
         {/* LEFT CLUSTER - Universities */}
         
-        {/* Oxford Logo - top left corner */}
+        {/* Oxford Logo - under Sarah, slightly right */}
         <FloatingLogo 
-          className="hidden lg:block animate-float"
-          style={{ top: '15%', left: '4%', width: '150px', transform: 'rotate(-12deg)', animationDelay: '0s' }}
+          className="hidden xl:block animate-float"
+          style={{ top: '62%', left: '18%', width: '140px', transform: 'rotate(-8deg)', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
@@ -141,10 +141,10 @@ const Hero = () => {
 
         {/* RIGHT CLUSTER - Companies */}
         
-        {/* Goldman Sachs Logo - top right corner */}
+        {/* Goldman Sachs Logo - under David, slightly left */}
         <FloatingLogo 
-          className="hidden lg:block animate-float"
-          style={{ top: '12%', right: '4%', width: '180px', transform: 'rotate(10deg)', animationDelay: '0.3s' }}
+          className="hidden xl:block animate-float"
+          style={{ top: '65%', right: '16%', width: '160px', transform: 'rotate(8deg)', animationDelay: '0.3s' }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
