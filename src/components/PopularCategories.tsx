@@ -1,25 +1,25 @@
-import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
-import categoryConsulting from "@/assets/category-consulting.png";
-import categoryLaw from "@/assets/category-law.png";
-import categoryUniApplications from "@/assets/category-uni-applications.png";
-import categoryOxbridge from "@/assets/category-oxbridge.png";
-import categoryUcat from "@/assets/category-ucat.png";
-import categorySoftwareEngineering from "@/assets/category-software-engineering.png";
-import categoryStep from "@/assets/category-step.png";
-import categoryQuantFinance from "@/assets/category-quant-finance.png";
-import categoryInternship from "@/assets/category-internship.png";
+import iconInvestmentBanking from "@/assets/icon-investment-banking.png";
+import iconConsulting from "@/assets/icon-consulting.png";
+import iconLaw from "@/assets/icon-law.png";
+import iconUniApplications from "@/assets/icon-uni-applications.png";
+import iconOxbridge from "@/assets/icon-oxbridge.png";
+import iconUcat from "@/assets/icon-ucat.png";
+import iconSoftwareEngineering from "@/assets/icon-software-engineering.png";
+import iconStep from "@/assets/icon-step.png";
+import iconQuantFinance from "@/assets/icon-quant-finance.png";
+import iconInternship from "@/assets/icon-internship.png";
 
 const categories = [
-  { name: "Investment Banking", image: categoryInvestmentBanking },
-  { name: "Consulting", image: categoryConsulting },
-  { name: "Law", image: categoryLaw },
-  { name: "Uni Applications", image: categoryUniApplications },
-  { name: "Oxbridge Applications", image: categoryOxbridge },
-  { name: "UCAT", image: categoryUcat },
-  { name: "Software Engineering", image: categorySoftwareEngineering },
-  { name: "STEP", image: categoryStep },
-  { name: "Quant Finance", image: categoryQuantFinance },
-  { name: "Internship Conversion", image: categoryInternship },
+  { name: "Investment Banking", image: iconInvestmentBanking },
+  { name: "Consulting", image: iconConsulting },
+  { name: "Law", image: iconLaw },
+  { name: "Uni Applications", image: iconUniApplications },
+  { name: "Oxbridge Applications", image: iconOxbridge },
+  { name: "UCAT", image: iconUcat },
+  { name: "Software Engineering", image: iconSoftwareEngineering },
+  { name: "STEP", image: iconStep },
+  { name: "Quant Finance", image: iconQuantFinance },
+  { name: "Internship Conversion", image: iconInternship },
 ];
 
 const PopularCategories = () => {
@@ -37,12 +37,12 @@ const PopularCategories = () => {
               href={`#${category.name.toLowerCase().replace(/\s+/g, "-")}`}
               className="group p-5 bg-card rounded-xl border border-border hover:border-primary hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Category image */}
-              <div className="mb-4">
+              {/* Category icon */}
+              <div className="mb-4 flex justify-center">
                 <img 
                   src={category.image} 
                   alt={category.name}
-                  className="w-full h-32 object-cover object-center rounded-md"
+                  className="w-16 h-16 object-contain"
                 />
               </div>
               
