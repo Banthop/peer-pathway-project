@@ -34,7 +34,7 @@ const PopularCategories = () => {
                   <img 
                     src={category.image} 
                     alt={category.name}
-                    className="w-full h-12 object-cover object-top rounded-md"
+                    className="w-full h-20 object-cover object-top rounded-md"
                   />
                 ) : (
                   <div className="flex gap-1">
