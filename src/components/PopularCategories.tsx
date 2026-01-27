@@ -1,5 +1,5 @@
 import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
-import categoryConsulting from "@/assets/category-consulting.jpg";
+import categoryConsulting from "@/assets/category-consulting.png";
 
 const categories = [
   { name: "Investment Banking", image: categoryInvestmentBanking },
