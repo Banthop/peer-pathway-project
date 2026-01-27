@@ -1,18 +1,25 @@
 import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
 import categoryConsulting from "@/assets/category-consulting.png";
 import categoryLaw from "@/assets/category-law.png";
+import categoryUniApplications from "@/assets/category-uni-applications.png";
+import categoryOxbridge from "@/assets/category-oxbridge.png";
+import categoryUcat from "@/assets/category-ucat.png";
+import categorySoftwareEngineering from "@/assets/category-software-engineering.png";
+import categoryStep from "@/assets/category-step.png";
+import categoryQuantFinance from "@/assets/category-quant-finance.png";
+import categoryInternship from "@/assets/category-internship.png";
 
 const categories = [
   { name: "Investment Banking", image: categoryInvestmentBanking },
   { name: "Consulting", image: categoryConsulting },
   { name: "Law", image: categoryLaw },
-  { name: "Uni Applications" },
-  { name: "Oxbridge Applications" },
-  { name: "UCAT" },
-  { name: "Software Engineering" },
-  { name: "STEP" },
-  { name: "Quant Finance" },
-  { name: "Internship Conversion" },
+  { name: "Uni Applications", image: categoryUniApplications },
+  { name: "Oxbridge Applications", image: categoryOxbridge },
+  { name: "UCAT", image: categoryUcat },
+  { name: "Software Engineering", image: categorySoftwareEngineering },
+  { name: "STEP", image: categoryStep },
+  { name: "Quant Finance", image: categoryQuantFinance },
+  { name: "Internship Conversion", image: categoryInternship },
 ];
 
 const PopularCategories = () => {
@@ -32,17 +39,11 @@ const PopularCategories = () => {
             >
               {/* Category image */}
               <div className="mb-4">
-                {category.image ? (
-                  <img 
-                    src={category.image} 
-                    alt={category.name}
-                    className="w-full h-32 object-cover object-center rounded-md"
-                  />
-                ) : (
-                  <div className="w-full h-32 rounded-md bg-muted flex items-center justify-center">
-                    <span className="text-muted-foreground text-xs">Coming soon</span>
-                  </div>
-                )}
+                <img 
+                  src={category.image} 
+                  alt={category.name}
+                  className="w-full h-32 object-cover object-center rounded-md"
+                />
               </div>
               
               {/* Category name */}
