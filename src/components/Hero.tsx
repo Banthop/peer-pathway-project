@@ -87,108 +87,108 @@ const Hero = () => {
         
         {/* LEFT CLUSTER - Universities */}
         
-        {/* Oxford Logo */}
+        {/* Oxford Logo - top left corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '22%', left: '14%', width: '170px', transform: 'rotate(-12deg)', animationDelay: '0s' }}
+          style={{ top: '15%', left: '4%', width: '150px', transform: 'rotate(-12deg)', animationDelay: '0s' }}
         >
           <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* Cambridge Logo - left of Sarah */}
+        {/* Cambridge Logo - upper left */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '38%', left: '6%', width: '130px', transform: 'rotate(8deg)', animationDelay: '0.2s' }}
+          style={{ top: '28%', left: '2%', width: '120px', transform: 'rotate(8deg)', animationDelay: '0.2s' }}
         >
           <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* Sarah Coach Card */}
+        {/* Sarah Coach Card - moved more left */}
         <FloatingCoachCard 
           className="hidden xl:block animate-float-reverse"
           imageSrc={coachSarahCard}
           style={{ 
-            top: '42%', 
-            left: '10%', 
-            width: '200px',
+            top: '38%', 
+            left: '14%', 
+            width: '190px',
             transform: 'rotate(-12deg)',
           }}
         />
 
-        {/* UCL Logo */}
+        {/* UCL Logo - bottom left corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', left: '16%', width: '150px', transform: 'rotate(10deg)', animationDelay: '0.5s' }}
+          style={{ top: '72%', left: '2%', width: '140px', transform: 'rotate(10deg)', animationDelay: '0.5s' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* Imperial Logo */}
+        {/* Imperial Logo - far bottom left */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '82%', left: '10%', width: '160px', transform: 'rotate(-8deg)', animationDelay: '1s' }}
+          style={{ top: '88%', left: '4%', width: '150px', transform: 'rotate(-8deg)', animationDelay: '1s' }}
         >
           <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* LSE Logo */}
+        {/* LSE Logo - moved more inward bottom */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '78%', left: '30%', width: '70px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
+          style={{ top: '85%', left: '22%', width: '65px', transform: 'rotate(-18deg)', animationDelay: '1.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* RIGHT CLUSTER - Companies */}
         
-        {/* Goldman Sachs Logo */}
+        {/* Goldman Sachs Logo - top right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float"
-          style={{ top: '18%', right: '14%', width: '200px', transform: 'rotate(10deg)', animationDelay: '0.3s' }}
+          style={{ top: '12%', right: '4%', width: '180px', transform: 'rotate(10deg)', animationDelay: '0.3s' }}
         >
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* David Coach Card */}
-        <FloatingCoachCard 
-          className="hidden xl:block animate-float"
-          imageSrc={coachDavidCard}
-          style={{ 
-            top: '48%', 
-            right: '8%', 
-            width: '240px',
-            transform: 'rotate(12deg)',
-          }}
-        />
-
-        {/* J.P. Morgan Logo - right of David */}
+        {/* J.P. Morgan Logo - upper right */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '50%', right: '5%', width: '150px', transform: 'rotate(-8deg)', animationDelay: '0.4s' }}
+          style={{ top: '28%', right: '2%', width: '130px', transform: 'rotate(-8deg)', animationDelay: '0.4s' }}
         >
           <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" style={{ opacity: 0.7 }} />
         </FloatingLogo>
 
-        {/* Clifford Chance Logo */}
+        {/* David Coach Card - moved more right */}
+        <FloatingCoachCard 
+          className="hidden xl:block animate-float"
+          imageSrc={coachDavidCard}
+          style={{ 
+            top: '42%', 
+            right: '12%', 
+            width: '220px',
+            transform: 'rotate(12deg)',
+          }}
+        />
+
+        {/* Clifford Chance Logo - bottom right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '68%', right: '16%', width: '180px', transform: 'rotate(-10deg)', animationDelay: '0.8s' }}
+          style={{ top: '72%', right: '2%', width: '160px', transform: 'rotate(-10deg)', animationDelay: '0.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* McKinsey Logo */}
+        {/* McKinsey Logo - far bottom right */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '82%', right: '10%', width: '190px', transform: 'rotate(8deg)', animationDelay: '1.2s' }}
+          style={{ top: '88%', right: '4%', width: '170px', transform: 'rotate(8deg)', animationDelay: '1.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* Meta Logo */}
+        {/* Meta Logo - moved more inward bottom */}
         <FloatingLogo 
           className="hidden xl:block animate-float-reverse"
-          style={{ top: '78%', right: '30%', width: '140px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
+          style={{ top: '85%', right: '22%', width: '120px', transform: 'rotate(15deg)', animationDelay: '1.6s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
