@@ -1,10 +1,11 @@
 import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
 import categoryConsulting from "@/assets/category-consulting.png";
+import categoryLaw from "@/assets/category-law.png";
 
 const categories = [
   { name: "Investment Banking", image: categoryInvestmentBanking },
   { name: "Consulting", image: categoryConsulting },
-  { name: "Law" },
+  { name: "Law", image: categoryLaw },
   { name: "Uni Applications" },
   { name: "Oxbridge Applications" },
   { name: "UCAT" },
