@@ -118,7 +118,7 @@ const Hero = () => {
         {/* UCL Logo - bottom left corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '72%', left: '2%', width: '140px', transform: 'rotate(10deg)', animationDelay: '0.5s' }}
+          style={{ top: '72%', left: '8%', width: '140px', transform: 'rotate(10deg)', animationDelay: '0.5s' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
@@ -172,7 +172,7 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-reverse"
-          style={{ top: '72%', right: '2%', width: '160px', transform: 'rotate(-10deg)', animationDelay: '0.8s' }}
+          style={{ top: '72%', right: '8%', width: '160px', transform: 'rotate(-10deg)', animationDelay: '0.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
