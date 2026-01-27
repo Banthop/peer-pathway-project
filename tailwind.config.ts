@@ -113,6 +113,23 @@ export default {
   			'30': '7.5rem'
   		},
 		keyframes: {
+			'float': {
+				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
+				'50%': { transform: 'translateY(-12px) rotate(var(--tw-rotate, 0deg))' }
+			},
+			'float-reverse': {
+				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
+				'50%': { transform: 'translateY(10px) rotate(var(--tw-rotate, 0deg))' }
+			},
+			'float-gentle': {
+				'0%, 100%': { transform: 'translateY(0) translateX(0) rotate(var(--tw-rotate, 0deg))' },
+				'33%': { transform: 'translateY(-8px) translateX(3px) rotate(var(--tw-rotate, 0deg))' },
+				'66%': { transform: 'translateY(-4px) translateX(-2px) rotate(var(--tw-rotate, 0deg))' }
+			},
+			'float-slow': {
+				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
+				'50%': { transform: 'translateY(-6px) rotate(var(--tw-rotate, 0deg))' }
+			},
 			'ripple': {
 				'0%, 100%': { transform: 'translate(-50%, -50%) scale(1)' },
 				'50%': { transform: 'translate(-50%, -50%) scale(0.9)' }
@@ -165,6 +182,10 @@ export default {
   			}
   		},
 		animation: {
+			'float': 'float 6s ease-in-out infinite',
+			'float-reverse': 'float-reverse 7s ease-in-out infinite',
+			'float-gentle': 'float-gentle 8s ease-in-out infinite',
+			'float-slow': 'float-slow 10s ease-in-out infinite',
 			'ripple': 'ripple 3s ease-in-out infinite',
 			'grid': 'grid 60s linear infinite',
 			'accordion-down': 'accordion-down 0.2s ease-out',
