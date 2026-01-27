@@ -28,7 +28,7 @@ const SocialProof = () => {
 
         {/* Student Photos Scroll */}
         <div className="relative overflow-hidden w-full">
-          <div className="flex gap-4 animate-slide-left hover:[animation-play-state:paused]" style={{ width: 'max-content' }}>
+          <div className="flex gap-4 animate-slide-left" style={{ width: 'max-content' }}>
             {[...students, ...students, ...students, ...students].map((student, index) => (
               <div key={index} className="relative flex-shrink-0">
                 <img
