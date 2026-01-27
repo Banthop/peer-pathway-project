@@ -5,7 +5,7 @@ import PopularCategories from "@/components/PopularCategories";
 import FeaturedCoaches from "@/components/FeaturedCoaches";
 import HowItWorks from "@/components/HowItWorks";
 import Reviews from "@/components/Reviews";
-import FloatingLogosSection from "@/components/FloatingLogosSection";
+import LogosBar from "@/components/LogosBar";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 
@@ -20,7 +20,7 @@ const Index = () => {
         <FeaturedCoaches />
         <HowItWorks />
         <Reviews />
-        <FloatingLogosSection />
+        <LogosBar />
         <FinalCTA />
       </main>
       <Footer />
