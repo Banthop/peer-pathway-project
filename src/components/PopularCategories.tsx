@@ -1,16 +1,17 @@
 import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
+import categoryConsulting from "@/assets/category-consulting.jpg";
 
 const categories = [
-  { name: "Investment Banking", logos: ["GS", "JPM", "MS"], image: categoryInvestmentBanking },
-  { name: "Consulting", logos: ["McK", "BCG", "Bain"] },
-  { name: "Law", logos: ["CC", "A&O", "Linklaters"] },
-  { name: "Uni Applications", logos: ["Ox", "Cam", "UCL"] },
-  { name: "Oxbridge Applications", logos: ["Oxford", "Cambridge"] },
-  { name: "UCAT", logos: ["Med", "Dent"] },
-  { name: "Software Engineering", logos: ["Meta", "Google", "AMZN"] },
-  { name: "STEP", logos: ["Math", "Cam"] },
-  { name: "Quant Finance", logos: ["Jane St", "Citadel"] },
-  { name: "Internship Conversion", logos: ["Convert", "Return"] },
+  { name: "Investment Banking", image: categoryInvestmentBanking },
+  { name: "Consulting", image: categoryConsulting },
+  { name: "Law" },
+  { name: "Uni Applications" },
+  { name: "Oxbridge Applications" },
+  { name: "UCAT" },
+  { name: "Software Engineering" },
+  { name: "STEP" },
+  { name: "Quant Finance" },
+  { name: "Internship Conversion" },
 ];
 
 const PopularCategories = () => {
@@ -28,7 +29,7 @@ const PopularCategories = () => {
               href={`#${category.name.toLowerCase().replace(/\s+/g, "-")}`}
               className="group p-5 bg-card rounded-xl border border-border hover:border-primary hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Mini logos or image */}
+              {/* Category image */}
               <div className="mb-4">
                 {category.image ? (
                   <img 
@@ -37,16 +38,8 @@ const PopularCategories = () => {
                     className="w-full h-32 object-cover object-center rounded-md"
                   />
                 ) : (
-                  <div className="flex gap-1">
-                    {category.logos.map((logo, i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-md bg-muted flex items-center justify-center text-[10px] text-muted-foreground"
-                        style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
-                      >
-                        {logo.substring(0, 2)}
-                      </div>
-                    ))}
+                  <div className="w-full h-32 rounded-md bg-muted flex items-center justify-center">
+                    <span className="text-muted-foreground text-xs">Coming soon</span>
                   </div>
                 )}
               </div>
