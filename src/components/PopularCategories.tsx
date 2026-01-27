@@ -18,7 +18,7 @@ const PopularCategories = () => {
   return (
     <section className="py-20 md:py-28">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground mb-12" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+        <h2 className="text-3xl md:text-4xl text-foreground mb-12" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 600 }}>
           Popular categories
         </h2>
 
@@ -45,7 +45,7 @@ const PopularCategories = () => {
               </div>
               
               {/* Category name */}
-              <p className="text-sm text-foreground group-hover:text-primary transition-colors text-center" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              <p className="text-sm text-foreground group-hover:text-primary transition-colors text-center" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500 }}>
                 {category.name}
               </p>
             </a>
