@@ -1,5 +1,7 @@
+import categoryInvestmentBanking from "@/assets/category-investment-banking.png";
+
 const categories = [
-  { name: "Investment Banking", logos: ["GS", "JPM", "MS"] },
+  { name: "Investment Banking", logos: ["GS", "JPM", "MS"], image: categoryInvestmentBanking },
   { name: "Consulting", logos: ["McK", "BCG", "Bain"] },
   { name: "Law", logos: ["CC", "A&O", "Linklaters"] },
   { name: "Uni Applications", logos: ["Ox", "Cam", "UCL"] },
@@ -26,17 +28,27 @@ const PopularCategories = () => {
               href={`#${category.name.toLowerCase().replace(/\s+/g, "-")}`}
               className="group p-5 bg-card rounded-xl border border-border hover:border-primary hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Mini logos */}
-              <div className="flex gap-1 mb-4">
-                {category.logos.map((logo, i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-md bg-muted flex items-center justify-center text-[10px] text-muted-foreground"
-                    style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
-                  >
-                    {logo.substring(0, 2)}
+              {/* Mini logos or image */}
+              <div className="mb-4">
+                {category.image ? (
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-12 object-cover object-top rounded-md"
+                  />
+                ) : (
+                  <div className="flex gap-1">
+                    {category.logos.map((logo, i) => (
+                      <div
+                        key={i}
+                        className="w-8 h-8 rounded-md bg-muted flex items-center justify-center text-[10px] text-muted-foreground"
+                        style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                      >
+                        {logo.substring(0, 2)}
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
               
               {/* Category name */}
