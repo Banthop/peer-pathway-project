@@ -143,35 +143,9 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer"
-              style={{ 
-                scrollSnapAlign: "start",
-                transformStyle: "preserve-3d",
-                perspective: "1000px",
-              }}
+              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer transition-shadow duration-300 hover:shadow-lg"
+              style={{ scrollSnapAlign: "start" }}
             >
-              {/* Card with tilt effect */}
-              <div 
-                className="transition-all duration-300 ease-out group-hover:shadow-lg"
-                style={{
-                  transform: "rotateX(0deg) rotateY(0deg)",
-                  transition: "transform 0.3s ease-out, box-shadow 0.3s ease-out",
-                }}
-                onMouseMove={(e) => {
-                  const card = e.currentTarget;
-                  const rect = card.getBoundingClientRect();
-                  const x = e.clientX - rect.left;
-                  const y = e.clientY - rect.top;
-                  const centerX = rect.width / 2;
-                  const centerY = rect.height / 2;
-                  const rotateX = (y - centerY) / 20;
-                  const rotateY = (centerX - x) / 20;
-                  card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
-                }}
-              >
                 {/* Photo with gradient overlay and glassmorphism badges */}
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
@@ -247,7 +221,6 @@ const FeaturedCoaches = () => {
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
                   </a>
                 </div>
-              </div>
             </div>
           ))}
         </div>
