@@ -288,7 +288,7 @@ const Hero = () => {
           className="text-muted-foreground mb-6 animate-fade-up"
           style={{ animationDelay: "0.25s", fontFamily: 'Inter, sans-serif', fontWeight: 300, fontSize: '14px' }}
         >
-          <span className="text-green-600 font-medium">Free intro call</span>
+          <span className="text-green-600 font-medium">Book a free intro call</span>
           <span className="mx-2">•</span>
           Sessions from £25
         </p>
