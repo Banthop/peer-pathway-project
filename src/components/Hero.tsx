@@ -135,7 +135,7 @@ const Hero = () => {
         {/* LSE Logo - moved more inward bottom */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '85%', left: '22%', width: '65px', transform: 'rotate(-18deg)', animationDelay: '2.5s' }}
+          style={{ top: '85%', left: '22%', width: '65px', animationDelay: '2.5s' }}
         >
           <img src={logoLse} alt="LSE" className="w-full h-auto" />
         </FloatingLogo>
@@ -174,14 +174,14 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-gentle"
-          style={{ top: '72%', right: '2%', width: '160px', transform: 'rotate(-10deg)', animationDelay: '1.8s' }}
+          style={{ top: '72%', right: '2%', width: '160px', animationDelay: '1.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* McKinsey Logo - moved more inward bottom */}
         <FloatingLogo 
-          className="hidden xl:block animate-float-slow rotate-[18deg]"
+          className="hidden xl:block animate-float-slow"
           style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
