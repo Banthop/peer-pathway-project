@@ -182,7 +182,7 @@ const FeaturedCoaches = () => {
               {/* Logo badges */}
               <div className="flex items-center gap-2 mb-3">
                 <div 
-                  className="h-10 rounded-xl flex items-center justify-center overflow-hidden"
+                  className="h-10 px-1.5 rounded-xl flex items-center justify-center overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
                     backdropFilter: 'blur(12px)',
@@ -193,11 +193,11 @@ const FeaturedCoaches = () => {
                   <img 
                     src={coach.universityLogo} 
                     alt="University" 
-                    className="h-full w-auto object-contain"
+                    className="h-3/4 w-auto object-contain"
                   />
                 </div>
                 <div 
-                  className="h-10 rounded-xl flex items-center justify-center overflow-hidden"
+                  className="h-10 px-1.5 rounded-xl flex items-center justify-center overflow-hidden"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
                     backdropFilter: 'blur(12px)',
@@ -208,7 +208,7 @@ const FeaturedCoaches = () => {
                   <img 
                     src={coach.companyLogo} 
                     alt="Company" 
-                    className="h-full w-auto object-contain"
+                    className="h-3/4 w-auto object-contain"
                   />
                 </div>
               </div>
