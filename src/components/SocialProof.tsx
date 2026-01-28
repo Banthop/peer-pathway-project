@@ -19,12 +19,12 @@ const SocialProof = () => {
     <section className="py-8 bg-background border-y border-border/50 w-full">
       <div className="w-full px-0">
         {/* Stats Line */}
-        <p 
-          className="text-center text-sm md:text-base tracking-wide text-foreground mb-8 px-4"
-          style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+        <h2 
+          className="text-center text-2xl md:text-3xl tracking-wide text-foreground mb-8 px-4"
+          style={{ fontFamily: 'Inter, sans-serif', fontWeight: 200 }}
         >
           Coaches From 50+ Universities and Firms
-        </p>
+        </h2>
 
         {/* Student Photos Scroll */}
         <div className="relative overflow-hidden w-full">
