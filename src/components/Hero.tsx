@@ -8,7 +8,7 @@ import logoImperial from "@/assets/logo-imperial-new.png";
 import logoMckinsey from "@/assets/logo-mckinsey-new.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
 import logoOxford from "@/assets/logo-oxford.png";
-import logoJpmorgan from "@/assets/logo-jpmorgan-new.png";
+import logoCitadel from "@/assets/logo-citadel.png";
 import logoMeta from "@/assets/logo-meta.png";
 import logoGoldmanSachs from "@/assets/logo-goldman-sachs.png";
 import logoCambridge from "@/assets/logo-cambridge.png";
@@ -175,12 +175,12 @@ const Hero = () => {
           <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* J.P. Morgan Logo - upper right */}
+        {/* Citadel Logo - upper right */}
         <FloatingLogo 
           className="hidden lg:block animate-float-slow"
-          style={{ top: '28%', right: '2%', width: '130px', transform: 'rotate(-8deg)', animationDelay: '1.2s' }}
+          style={{ top: '28%', right: '2%', width: '75px', animationDelay: '1.2s' }}
         >
-          <img src={logoJpmorgan} alt="J.P. Morgan" className="w-full h-auto" style={{ opacity: 0.7 }} />
+          <img src={logoCitadel} alt="Citadel Securities" className="w-full h-auto" />
         </FloatingLogo>
 
         {/* David Coach Card - moved more right */}
