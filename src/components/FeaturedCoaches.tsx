@@ -185,14 +185,14 @@ const FeaturedCoaches = () => {
                   <img 
                     src={coach.universityLogo} 
                     alt="University" 
-                    className="h-full w-auto object-contain"
+                    className="h-full w-auto object-contain rounded-lg"
                   />
                 </div>
                 <div className="h-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden">
                   <img 
                     src={coach.companyLogo} 
                     alt="Company" 
-                    className="h-full w-auto object-contain"
+                    className="h-full w-auto object-contain rounded-lg"
                   />
                 </div>
               </div>
