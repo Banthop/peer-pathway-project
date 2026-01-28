@@ -181,18 +181,34 @@ const FeaturedCoaches = () => {
 
               {/* Logo badges */}
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 rounded-lg bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm flex items-center justify-center overflow-hidden">
+                <div 
+                  className="h-10 rounded-xl flex items-center justify-center overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.8), inset 0 -1px 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08)',
+                    border: '1px solid rgba(255,255,255,0.6)'
+                  }}
+                >
                   <img 
                     src={coach.universityLogo} 
                     alt="University" 
-                    className="h-full w-auto object-contain rounded-lg"
+                    className="h-full w-auto object-contain"
                   />
                 </div>
-                <div className="h-10 rounded-lg bg-white/60 backdrop-blur-sm border border-white/40 shadow-sm flex items-center justify-center overflow-hidden">
+                <div 
+                  className="h-10 rounded-xl flex items-center justify-center overflow-hidden"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.8), inset 0 -1px 1px rgba(0,0,0,0.05), 0 4px 12px rgba(0,0,0,0.08)',
+                    border: '1px solid rgba(255,255,255,0.6)'
+                  }}
+                >
                   <img 
                     src={coach.companyLogo} 
                     alt="Company" 
-                    className="h-full w-auto object-contain rounded-lg"
+                    className="h-full w-auto object-contain"
                   />
                 </div>
               </div>
