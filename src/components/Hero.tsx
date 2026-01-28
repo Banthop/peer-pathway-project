@@ -179,18 +179,18 @@ const Hero = () => {
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* McKinsey Logo - far bottom right */}
+        {/* McKinsey Logo - moved more inward bottom */}
         <FloatingLogo 
           className="hidden xl:block animate-float-slow rotate-[18deg]"
-          style={{ top: '88%', right: '4%', width: '65px', animationDelay: '2.2s' }}
+          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
 
-        {/* Meta Logo - moved more inward bottom */}
+        {/* Meta Logo - far bottom right */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '85%', right: '22%', width: '120px', transform: 'rotate(15deg)', animationDelay: '3s' }}
+          style={{ top: '88%', right: '4%', width: '120px', transform: 'rotate(15deg)', animationDelay: '3s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
