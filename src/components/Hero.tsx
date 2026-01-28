@@ -88,12 +88,17 @@ const Hero = () => {
         {/* LEFT CLUSTER - Universities */}
         
         {/* Oxford Logo - under Sarah, slightly right */}
-        <FloatingLogo 
-          className="hidden xl:block animate-float-gentle"
-          style={{ top: '72%', left: '18%', width: '140px', transform: 'rotate(-8deg)', animationDelay: '0.5s' }}
+        <div 
+          className="absolute hidden xl:block animate-float-gentle"
+          style={{ top: '72%', left: '18%', width: '75px', animationDelay: '0.5s' }}
         >
-          <img src={logoOxford} alt="University of Oxford" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoOxford} 
+            alt="University of Oxford" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
 
         {/* Cambridge Logo - upper left */}
         <div 
