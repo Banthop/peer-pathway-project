@@ -96,7 +96,7 @@ const Hero = () => {
             src={logoOxford} 
             alt="University of Oxford" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -108,8 +108,8 @@ const Hero = () => {
           <img 
             src={logoCambridge} 
             alt="University of Cambridge" 
-            className="w-full h-auto rounded-lg"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+            className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -134,8 +134,8 @@ const Hero = () => {
           <img 
             src={logoUcl} 
             alt="UCL" 
-            className="w-full h-auto rounded-lg"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+            className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -148,7 +148,7 @@ const Hero = () => {
             src={logoImperial} 
             alt="Imperial College London" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -161,7 +161,7 @@ const Hero = () => {
             src={logoLse} 
             alt="LSE" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -170,12 +170,13 @@ const Hero = () => {
         {/* Goldman Sachs Logo - under David, slightly left */}
         <div 
           className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
+          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s' }}
         >
           <img 
             src={logoGoldmanSachs} 
             alt="Goldman Sachs" 
             className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -188,7 +189,7 @@ const Hero = () => {
             src={logoCitadel} 
             alt="Citadel Securities" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
@@ -208,36 +209,39 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <div 
           className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
+          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s' }}
         >
           <img 
             src={logoCliffordChance} 
             alt="Clifford Chance" 
             className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* McKinsey Logo - moved more inward bottom */}
         <div 
           className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
+          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
         >
           <img 
             src={logoMckinsey} 
             alt="McKinsey & Company" 
             className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Meta Logo - far bottom right */}
         <div 
           className="absolute hidden xl:block animate-float"
-          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
+          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s' }}
         >
           <img 
             src={logoMeta} 
             alt="Meta" 
             className="w-full h-auto"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
         
