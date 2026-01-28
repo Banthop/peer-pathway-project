@@ -143,7 +143,7 @@ const FeaturedCoaches = () => {
         <div
           ref={scrollRef}
           onScroll={checkScroll}
-          className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4"
+          className="flex gap-6 overflow-x-auto overflow-y-visible scrollbar-hide py-4 -mx-4 px-4"
           style={{ scrollSnapType: "x mandatory" }}
         >
           {coaches.map((coach, index) => (
