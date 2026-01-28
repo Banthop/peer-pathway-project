@@ -24,7 +24,7 @@ const categories = [
 
 const PopularCategories = () => {
   return (
-    <section className="py-20 md:py-28">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl text-foreground mb-12" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 200 }}>
           Popular categories
