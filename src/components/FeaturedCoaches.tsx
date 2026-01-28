@@ -1,10 +1,18 @@
 import { useState, useRef } from "react";
-import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import coachSarah from "@/assets/coach-sarah.jpg";
 import coachDavid from "@/assets/coach-david.jpg";
 import coachJames from "@/assets/coach-james.jpg";
 import coachEmily from "@/assets/coach-emily.jpg";
+import logoOxford from "@/assets/logo-oxford.png";
+import logoCambridge from "@/assets/logo-cambridge.png";
+import logoImperial from "@/assets/logo-imperial-new.png";
+import logoLSE from "@/assets/logo-lse-new.png";
+import logoGoldman from "@/assets/logo-goldman-sachs.png";
+import logoMcKinsey from "@/assets/logo-mckinsey-new.png";
+import logoMeta from "@/assets/logo-meta.png";
+import logoCliffordChance from "@/assets/logo-clifford-chance.png";
 
 const coaches = [
   {
@@ -12,42 +20,60 @@ const coaches = [
     image: coachSarah,
     university: "Oxford PPE '24",
     role: "Incoming Analyst at Goldman Sachs",
-    badges: ["Oxford", "J.P.Morgan"],
+    universityLogo: logoOxford,
+    companyLogo: logoGoldman,
+    rating: 4.9,
+    sessions: 127,
   },
   {
     name: "David W.",
     image: coachDavid,
     university: "Cambridge Economics",
     role: "Summer Associate at McKinsey",
-    badges: ["Cambridge", "McKinsey"],
+    universityLogo: logoCambridge,
+    companyLogo: logoMcKinsey,
+    rating: 5.0,
+    sessions: 89,
   },
   {
     name: "James L.",
     image: coachJames,
     university: "Imperial Computing",
     role: "Software Engineer at Meta",
-    badges: ["Imperial", "Meta"],
+    universityLogo: logoImperial,
+    companyLogo: logoMeta,
+    rating: 4.8,
+    sessions: 156,
   },
   {
     name: "Emily R.",
     image: coachEmily,
     university: "LSE Law",
     role: "Trainee Solicitor at Clifford Chance",
-    badges: ["LSE", "Clifford Chance"],
+    universityLogo: logoLSE,
+    companyLogo: logoCliffordChance,
+    rating: 4.9,
+    sessions: 74,
   },
   {
     name: "Sarah K.",
     image: coachSarah,
     university: "Oxford PPE '24",
     role: "Incoming Analyst at Goldman Sachs",
-    badges: ["Oxford", "J.P.Morgan"],
+    universityLogo: logoOxford,
+    companyLogo: logoGoldman,
+    rating: 4.9,
+    sessions: 127,
   },
   {
     name: "David W.",
     image: coachDavid,
     university: "Cambridge Economics",
     role: "Summer Associate at McKinsey",
-    badges: ["Cambridge", "McKinsey"],
+    universityLogo: logoCambridge,
+    companyLogo: logoMcKinsey,
+    rating: 5.0,
+    sessions: 89,
   },
 ];
 
@@ -117,47 +143,110 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden card-shadow hover:shadow-lg transition-shadow"
-              style={{ scrollSnapAlign: "start" }}
+              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer"
+              style={{ 
+                scrollSnapAlign: "start",
+                transformStyle: "preserve-3d",
+                perspective: "1000px",
+              }}
             >
-              {/* Photo with badges */}
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <img
-                  src={coach.image}
-                  alt={coach.name}
-                  className="w-full h-full object-cover"
-                />
-                {/* Logo badges */}
-                <div className="absolute bottom-3 right-3 flex gap-2">
-                  {coach.badges.map((badge, i) => (
-                    <div
-                      key={i}
-                      className="bg-card/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-medium text-foreground"
-                    >
-                      {badge}
+              {/* Card with tilt effect */}
+              <div 
+                className="transition-all duration-300 ease-out group-hover:shadow-lg"
+                style={{
+                  transform: "rotateX(0deg) rotateY(0deg)",
+                  transition: "transform 0.3s ease-out, box-shadow 0.3s ease-out",
+                }}
+                onMouseMove={(e) => {
+                  const card = e.currentTarget;
+                  const rect = card.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  const centerX = rect.width / 2;
+                  const centerY = rect.height / 2;
+                  const rotateX = (y - centerY) / 20;
+                  const rotateY = (centerX - x) / 20;
+                  card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "rotateX(0deg) rotateY(0deg) scale(1)";
+                }}
+              >
+                {/* Photo with gradient overlay and glassmorphism badges */}
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img
+                    src={coach.image}
+                    alt={coach.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  
+                  {/* Gradient overlay */}
+                  <div 
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 30%, transparent 60%)"
+                    }}
+                  />
+                  
+                  {/* Glassmorphism logo badges */}
+                  <div className="absolute bottom-3 right-3 flex gap-2">
+                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110">
+                      <img 
+                        src={coach.universityLogo} 
+                        alt="University" 
+                        className="w-full h-full object-contain"
+                      />
                     </div>
-                  ))}
+                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5">
+                      <img 
+                        src={coach.companyLogo} 
+                        alt="Company" 
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Rating badge - top left */}
+                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-white/50 shadow-lg">
+                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                    <span className="text-xs font-semibold text-foreground">{coach.rating}</span>
+                  </div>
                 </div>
-              </div>
-              
-              {/* Info */}
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-foreground mb-1">
-                  {coach.name}
-                </h3>
-                <p className="text-primary font-medium text-sm mb-1">
-                  {coach.university}
-                </p>
-                <p className="text-muted-foreground text-sm mb-4">
-                  {coach.role}
-                </p>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors"
+                
+                {/* Info section with gradient background */}
+                <div 
+                  className="p-5 relative"
+                  style={{
+                    background: "linear-gradient(to bottom, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%)"
+                  }}
                 >
-                  View profile
-                  <ArrowRight className="w-4 h-4" />
-                </a>
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="font-semibold text-lg text-foreground">
+                        {coach.name}
+                      </h3>
+                      <p className="text-primary font-medium text-sm">
+                        {coach.university}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-muted-foreground">Sessions</span>
+                      <p className="text-sm font-semibold text-foreground">{coach.sessions}+</p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-muted-foreground text-sm mb-4">
+                    {coach.role}
+                  </p>
+                  
+                  <a
+                    href="#"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors group/link"
+                  >
+                    View profile
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                  </a>
+                </div>
               </div>
             </div>
           ))}
