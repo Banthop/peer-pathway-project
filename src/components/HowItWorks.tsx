@@ -28,17 +28,17 @@ const steps = [
 
 const MiniCoachCard = () => {
   return (
-    <div className="w-44 bg-background border-2 border-border rounded-lg shadow-sm p-3 transition-all duration-300 hover:shadow-xs">
+    <div className="w-40 bg-background border-2 border-border rounded-lg shadow-sm p-2.5 transition-all duration-300 hover:shadow-xs">
       {/* Coach Photo */}
-      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 border border-border">
+      <div className="relative w-full aspect-[3/2] rounded-md overflow-hidden mb-2 border border-border">
         <img
           src={coachSarah}
           alt="Coach"
           className="w-full h-full object-cover"
         />
         {/* University Badge */}
-        <div className="absolute bottom-1.5 right-1.5 w-7 h-7 bg-background rounded-md border border-border flex items-center justify-center overflow-hidden">
-          <img src={logoOxford} alt="Oxford" className="w-5 h-5 object-contain" />
+        <div className="absolute bottom-1 right-1 w-6 h-6 bg-background rounded-md border border-border flex items-center justify-center overflow-hidden">
+          <img src={logoOxford} alt="Oxford" className="w-4 h-4 object-contain" />
         </div>
       </div>
       
