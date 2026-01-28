@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight, Star, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import coachSarah from "@/assets/coach-sarah.jpg";
 import coachDavid from "@/assets/coach-david.jpg";
@@ -102,11 +102,14 @@ const FeaturedCoaches = () => {
   };
 
   return (
-    <section className="py-20 md:py-28 bg-secondary/30">
+    <section className="py-20 md:py-28 bg-background">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground">
+          <h2 
+            className="text-3xl md:text-4xl text-foreground"
+            style={{ fontFamily: '"Source Serif 4", serif', fontWeight: 600 }}
+          >
             Featured coaches
           </h2>
           
@@ -117,7 +120,7 @@ const FeaturedCoaches = () => {
               size="icon"
               onClick={() => scroll("left")}
               disabled={!canScrollLeft}
-              className="rounded-full border-border hover:bg-card"
+              className="border-2 border-foreground hover:bg-secondary disabled:opacity-30"
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
@@ -126,7 +129,7 @@ const FeaturedCoaches = () => {
               size="icon"
               onClick={() => scroll("right")}
               disabled={!canScrollRight}
-              className="rounded-full border-border hover:bg-card"
+              className="border-2 border-foreground hover:bg-secondary disabled:opacity-30"
             >
               <ChevronRight className="w-5 h-5" />
             </Button>
@@ -143,84 +146,81 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer transition-shadow duration-300 hover:shadow-lg"
+              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card border-2 border-foreground shadow-sm hover:shadow-md transition-shadow duration-200 group cursor-pointer"
               style={{ scrollSnapAlign: "start" }}
             >
-                {/* Photo with gradient overlay and glassmorphism badges */}
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={coach.image}
-                    alt={coach.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  
-                  {/* Gradient overlay */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 30%, transparent 60%)"
-                    }}
-                  />
-                  
-                  {/* Glassmorphism logo badges */}
-                  <div className="absolute bottom-3 right-3 flex gap-2">
-                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110">
-                      <img 
-                        src={coach.universityLogo} 
-                        alt="University" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5">
-                      <img 
-                        src={coach.companyLogo} 
-                        alt="Company" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
+              {/* Photo with badges */}
+              <div className="relative aspect-[4/5] overflow-hidden border-b-2 border-foreground">
+                <img
+                  src={coach.image}
+                  alt={coach.name}
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Logo badges */}
+                <div className="absolute bottom-3 right-3 flex gap-2">
+                  <div className="w-9 h-9 bg-card border-2 border-foreground shadow-xs flex items-center justify-center p-1">
+                    <img 
+                      src={coach.universityLogo} 
+                      alt="University" 
+                      className="w-full h-full object-contain"
+                    />
                   </div>
-                  
-                  {/* Rating badge - top left */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-white/50 shadow-lg">
-                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-semibold text-foreground">{coach.rating}</span>
+                  <div className="w-9 h-9 bg-card border-2 border-foreground shadow-xs flex items-center justify-center p-1">
+                    <img 
+                      src={coach.companyLogo} 
+                      alt="Company" 
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
                 
-                {/* Info section with gradient background */}
-                <div 
-                  className="p-5 relative"
-                  style={{
-                    background: "linear-gradient(to bottom, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%)"
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold text-lg text-foreground">
-                        {coach.name}
-                      </h3>
-                      <p className="text-primary font-medium text-sm">
-                        {coach.university}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-xs text-muted-foreground">Sessions</span>
-                      <p className="text-sm font-semibold text-foreground">{coach.sessions}+</p>
-                    </div>
+                {/* Rating badge - top left */}
+                <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 bg-card border-2 border-foreground shadow-xs">
+                  <Star className="w-3.5 h-3.5 fill-foreground text-foreground" />
+                  <span className="text-xs font-semibold text-foreground">{coach.rating}</span>
+                </div>
+              </div>
+              
+              {/* Info section */}
+              <div className="p-5">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="font-semibold text-lg text-foreground">
+                      {coach.name}
+                    </h3>
+                    <p className="text-foreground font-medium text-sm">
+                      {coach.university}
+                    </p>
                   </div>
-                  
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {coach.role}
-                  </p>
-                  
+                  <div className="text-right">
+                    <span className="text-xs text-muted-foreground">Sessions</span>
+                    <p className="text-sm font-semibold text-foreground">{coach.sessions}+</p>
+                  </div>
+                </div>
+                
+                <p className="text-muted-foreground text-sm mb-4">
+                  {coach.role}
+                </p>
+                
+                {/* CTAs */}
+                <div className="flex items-center gap-4">
                   <a
                     href="#"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors group/link"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:underline underline-offset-4"
                   >
                     View profile
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="#"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    Free intro call
                   </a>
                 </div>
+              </div>
             </div>
           ))}
         </div>
