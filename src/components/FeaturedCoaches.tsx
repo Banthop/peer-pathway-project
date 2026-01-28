@@ -149,7 +149,7 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border"
+              className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border flex flex-col"
               style={{ scrollSnapAlign: "start", fontFamily: 'Inter, sans-serif' }}
             >
               {/* Top row: Photo + Name/University */}
