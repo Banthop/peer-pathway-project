@@ -21,7 +21,7 @@ const SocialProof = () => {
         {/* Stats Line */}
         <h2 
           className="text-center text-2xl md:text-3xl tracking-wide text-foreground mb-8 px-4"
-          style={{ fontFamily: 'Inter, sans-serif', fontWeight: 200 }}
+          style={{ fontFamily: '"Source Serif 4", serif', fontWeight: 600 }}
         >
           Coaches From 50+ Universities and Firms
         </h2>
