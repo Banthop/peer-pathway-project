@@ -155,7 +155,7 @@ const Hero = () => {
           <img 
             src={logoLse} 
             alt="LSE" 
-            className="w-full h-auto rounded-xl"
+            className="w-full h-auto"
             style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
           />
         </div>
