@@ -178,7 +178,7 @@ const Hero = () => {
         {/* Citadel Logo - upper right */}
         <FloatingLogo 
           className="hidden lg:block animate-float-slow"
-          style={{ top: '28%', right: '2%', width: '75px', animationDelay: '1.2s' }}
+          style={{ top: '34%', right: '2%', width: '75px', animationDelay: '1.2s' }}
         >
           <img src={logoCitadel} alt="Citadel Securities" className="w-full h-auto" />
         </FloatingLogo>
