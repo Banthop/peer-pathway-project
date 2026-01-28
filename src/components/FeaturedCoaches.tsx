@@ -181,14 +181,14 @@ const FeaturedCoaches = () => {
 
               {/* Logo badges */}
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-10 rounded-md bg-secondary flex items-center justify-center overflow-hidden">
+                <div className="h-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden">
                   <img 
                     src={coach.universityLogo} 
                     alt="University" 
                     className="h-full w-auto object-contain"
                   />
                 </div>
-                <div className="h-10 rounded-md bg-secondary flex items-center justify-center overflow-hidden">
+                <div className="h-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden">
                   <img 
                     src={coach.companyLogo} 
                     alt="Company" 
