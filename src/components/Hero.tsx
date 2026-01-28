@@ -170,13 +170,12 @@ const Hero = () => {
         {/* Goldman Sachs Logo - under David, slightly left */}
         <div 
           className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s' }}
+          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s', filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.35)) drop-shadow(0 12px 24px rgba(0,0,0,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.2))' }}
         >
           <img 
             src={logoGoldmanSachs} 
             alt="Goldman Sachs" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
