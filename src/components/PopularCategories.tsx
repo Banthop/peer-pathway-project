@@ -47,7 +47,7 @@ const PopularCategories = () => {
               </div>
               
               {/* Category name */}
-              <p className="text-sm text-foreground group-hover:text-primary transition-colors text-center" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 500 }}>
+              <p className="text-sm text-foreground group-hover:text-primary transition-colors text-center" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 200 }}>
                 {category.name}
               </p>
             </a>
