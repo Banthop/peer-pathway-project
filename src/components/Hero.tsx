@@ -100,10 +100,10 @@ const Hero = () => {
           />
         </div>
 
-        {/* Cambridge Logo - upper left */}
+        {/* Cambridge Logo - bottom left corner */}
         <div 
           className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '34%', left: '2%', width: '75px', animationDelay: '0.5s' }}
+          style={{ top: '62%', left: '6%', width: '75px', animationDelay: '0.5s' }}
         >
           <img 
             src={logoCambridge} 
@@ -126,10 +126,10 @@ const Hero = () => {
           }}
         />
 
-        {/* UCL Logo - bottom left corner */}
+        {/* UCL Logo - upper left */}
         <div 
           className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '62%', left: '6%', width: '80px', animationDelay: '1s' }}
+          style={{ top: '34%', left: '2%', width: '80px', animationDelay: '1s' }}
         >
           <img 
             src={logoUcl} 
@@ -180,10 +180,10 @@ const Hero = () => {
           />
         </div>
 
-        {/* Citadel Logo - upper right */}
+        {/* Citadel Logo - bottom right corner */}
         <div 
           className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '34%', right: '2%', width: '75px', animationDelay: '0.8s' }}
+          style={{ top: '62%', right: '6%', width: '75px', animationDelay: '0.8s' }}
         >
           <img 
             src={logoCitadel} 
@@ -206,10 +206,10 @@ const Hero = () => {
           }}
         />
 
-        {/* Clifford Chance Logo - bottom right corner */}
+        {/* Clifford Chance Logo - upper right */}
         <div 
           className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.3s' }}
+          style={{ top: '34%', right: '2%', width: '80px', animationDelay: '1.3s' }}
         >
           <img 
             src={logoCliffordChance} 
