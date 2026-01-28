@@ -168,20 +168,30 @@ const Hero = () => {
         {/* RIGHT CLUSTER - Companies */}
         
         {/* Goldman Sachs Logo - under David, slightly left */}
-        <FloatingLogo 
-          className="hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '160px', transform: 'rotate(8deg)', animationDelay: '0.8s' }}
+        <div 
+          className="absolute hidden xl:block animate-float-gentle"
+          style={{ top: '65%', right: '16%', width: '160px', animationDelay: '0.8s' }}
         >
-          <img src={logoGoldmanSachs} alt="Goldman Sachs" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoGoldmanSachs} 
+            alt="Goldman Sachs" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
 
         {/* Citadel Logo - upper right */}
-        <FloatingLogo 
-          className="hidden lg:block animate-float-slow"
+        <div 
+          className="absolute hidden lg:block animate-float-slow"
           style={{ top: '34%', right: '2%', width: '75px', animationDelay: '1.2s' }}
         >
-          <img src={logoCitadel} alt="Citadel Securities" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoCitadel} 
+            alt="Citadel Securities" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
 
         {/* David Coach Card - moved more right */}
         <FloatingCoachCard 
@@ -197,28 +207,44 @@ const Hero = () => {
         />
 
         {/* Clifford Chance Logo - bottom right corner */}
-        <FloatingLogo 
-          className="hidden lg:block animate-float-gentle"
+        <div 
+          className="absolute hidden lg:block animate-float-gentle"
           style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s' }}
         >
-          <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoCliffordChance} 
+            alt="Clifford Chance" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
 
         {/* McKinsey Logo - moved more inward bottom */}
-        <FloatingLogo 
-          className="hidden xl:block animate-float-slow"
+        <div 
+          className="absolute hidden xl:block animate-float-slow"
           style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
         >
-          <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoMckinsey} 
+            alt="McKinsey & Company" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
 
         {/* Meta Logo - far bottom right */}
-        <FloatingLogo 
-          className="hidden xl:block animate-float"
+        <div 
+          className="absolute hidden xl:block animate-float"
           style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s' }}
         >
-          <img src={logoMeta} alt="Meta" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoMeta} 
+            alt="Meta" 
+            className="w-full h-auto"
+            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
+          />
+        </div>
+        
 
       </div>
 
