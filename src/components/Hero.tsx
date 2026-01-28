@@ -98,7 +98,7 @@ const Hero = () => {
         {/* Cambridge Logo - upper left */}
         <FloatingLogo 
           className="hidden lg:block animate-float-slow"
-          style={{ top: '34%', left: '2%', width: '75px', transform: 'rotate(8deg)', animationDelay: '1s' }}
+          style={{ top: '34%', left: '2%', width: '75px', transform: 'rotate(8deg)', animationDelay: '1s', filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.25)) drop-shadow(0 6px 10px rgba(0,0,0,0.15))' }}
         >
           <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
         </FloatingLogo>
@@ -119,7 +119,7 @@ const Hero = () => {
         {/* UCL Logo - bottom left corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-gentle"
-          style={{ top: '62%', left: '6%', width: '80px', transform: 'rotate(10deg)', animationDelay: '2s' }}
+          style={{ top: '62%', left: '6%', width: '80px', transform: 'rotate(10deg)', animationDelay: '2s', filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.25)) drop-shadow(0 6px 10px rgba(0,0,0,0.15))' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
@@ -127,7 +127,7 @@ const Hero = () => {
         {/* Imperial Logo - far bottom left */}
         <FloatingLogo 
           className="hidden xl:block animate-float-slow"
-          style={{ top: '88%', left: '4%', width: '85px', transform: 'rotate(-8deg)', animationDelay: '1.5s' }}
+          style={{ top: '88%', left: '4%', width: '85px', transform: 'rotate(-8deg)', animationDelay: '1.5s', filter: 'drop-shadow(0 12px 24px rgba(0,0,0,0.25)) drop-shadow(0 6px 10px rgba(0,0,0,0.15))' }}
         >
           <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
         </FloatingLogo>
