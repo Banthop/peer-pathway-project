@@ -106,7 +106,7 @@ const FeaturedCoaches = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground">
+          <h2 className="text-3xl md:text-4xl font-sans font-semibold text-foreground">
             Featured coaches
           </h2>
           
@@ -143,7 +143,7 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer transition-shadow duration-300 hover:shadow-lg"
+              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer"
               style={{ scrollSnapAlign: "start" }}
             >
                 {/* Photo with gradient overlay and glassmorphism badges */}
