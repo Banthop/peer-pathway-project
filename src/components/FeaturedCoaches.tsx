@@ -112,7 +112,7 @@ const FeaturedCoaches = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
-          <h2 className="text-3xl md:text-4xl font-sans font-semibold text-foreground" style={{ fontFamily: 'Inter, sans-serif' }}>
+          <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground">
             Featured coaches
           </h2>
           
@@ -149,8 +149,8 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border hover:scale-[1.02] flex flex-col"
-              style={{ scrollSnapAlign: "start", fontFamily: 'Inter, sans-serif' }}
+              className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border hover:scale-[1.02] flex flex-col font-sans"
+              style={{ scrollSnapAlign: "start" }}
             >
               {/* Top row: Photo + Name/University */}
               <div className="flex items-start gap-4 mb-4">
