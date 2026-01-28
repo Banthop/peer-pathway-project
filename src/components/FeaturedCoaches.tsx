@@ -150,7 +150,7 @@ const FeaturedCoaches = () => {
             <div
               key={index}
               className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border"
-              style={{ scrollSnapAlign: "start" }}
+              style={{ scrollSnapAlign: "start", fontFamily: 'Inter, sans-serif' }}
             >
               {/* Top row: Photo + Name/University */}
               <div className="flex items-start gap-4 mb-4">
