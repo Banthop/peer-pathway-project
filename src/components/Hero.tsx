@@ -170,7 +170,7 @@ const Hero = () => {
         {/* Goldman Sachs Logo - under David, slightly left */}
         <div 
           className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '160px', animationDelay: '0.8s' }}
+          style={{ top: '65%', right: '16%', width: '80px', animationDelay: '0.8s' }}
         >
           <img 
             src={logoGoldmanSachs} 
