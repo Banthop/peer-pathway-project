@@ -210,13 +210,21 @@ const FeaturedCoaches = () => {
               </div>
 
               {/* CTA */}
-              <a
-                href="#"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group/link"
-              >
-                View profile
-                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-0.5" />
-              </a>
+              <div className="flex items-center justify-between mt-auto pt-2">
+                <a
+                  href="#"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group/link"
+                >
+                  View profile
+                  <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-0.5" />
+                </a>
+                <Button
+                  size="sm"
+                  className="bg-foreground text-background hover:bg-foreground/90 text-xs px-3"
+                >
+                  Book a free intro
+                </Button>
+              </div>
             </div>
           ))}
         </div>
