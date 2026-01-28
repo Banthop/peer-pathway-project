@@ -66,7 +66,7 @@ const StepVisual = ({ type }: { type: string }) => {
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 md:py-28 overflow-hidden">
+    <section className="py-16 md:py-24 overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Section Heading */}
         <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-16 md:mb-20 text-center">
