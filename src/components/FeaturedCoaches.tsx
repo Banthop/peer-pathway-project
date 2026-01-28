@@ -24,6 +24,7 @@ const coaches = [
     companyLogo: logoGoldman,
     rating: 4.9,
     sessions: 127,
+    specialties: ["Interview Prep", "CV Review", "Banking"],
   },
   {
     name: "David W.",
@@ -34,6 +35,7 @@ const coaches = [
     companyLogo: logoMcKinsey,
     rating: 5.0,
     sessions: 89,
+    specialties: ["Case Studies", "Consulting", "Strategy"],
   },
   {
     name: "James L.",
@@ -44,6 +46,7 @@ const coaches = [
     companyLogo: logoMeta,
     rating: 4.8,
     sessions: 156,
+    specialties: ["Coding Interview", "System Design", "Tech"],
   },
   {
     name: "Emily R.",
@@ -54,6 +57,7 @@ const coaches = [
     companyLogo: logoCliffordChance,
     rating: 4.9,
     sessions: 74,
+    specialties: ["Law Applications", "Interview Prep", "LNAT"],
   },
   {
     name: "Sarah K.",
@@ -64,6 +68,7 @@ const coaches = [
     companyLogo: logoGoldman,
     rating: 4.9,
     sessions: 127,
+    specialties: ["Interview Prep", "CV Review", "Banking"],
   },
   {
     name: "David W.",
@@ -74,6 +79,7 @@ const coaches = [
     companyLogo: logoMcKinsey,
     rating: 5.0,
     sessions: 89,
+    specialties: ["Case Studies", "Consulting", "Strategy"],
   },
 ];
 
@@ -169,24 +175,36 @@ const FeaturedCoaches = () => {
               </div>
 
               {/* Role */}
-              <p className="text-sm text-foreground mb-4 line-clamp-2">
+              <p className="text-sm text-foreground mb-3 line-clamp-2">
                 {coach.role}
               </p>
 
+              {/* Specialty tags */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {coach.specialties.map((specialty, i) => (
+                  <span
+                    key={i}
+                    className="px-2.5 py-1 text-xs font-medium text-muted-foreground bg-secondary rounded-full"
+                  >
+                    {specialty}
+                  </span>
+                ))}
+              </div>
+
               {/* Logo badges */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-8 px-3 rounded-lg bg-secondary flex items-center justify-center">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-7 px-2.5 rounded-md bg-secondary/70 flex items-center justify-center">
                   <img 
                     src={coach.universityLogo} 
                     alt="University" 
-                    className="h-5 w-auto object-contain"
+                    className="h-4 w-auto object-contain"
                   />
                 </div>
-                <div className="h-8 px-3 rounded-lg bg-secondary flex items-center justify-center">
+                <div className="h-7 px-2.5 rounded-md bg-secondary/70 flex items-center justify-center">
                   <img 
                     src={coach.companyLogo} 
                     alt="Company" 
-                    className="h-5 w-auto object-contain"
+                    className="h-4 w-auto object-contain"
                   />
                 </div>
               </div>
