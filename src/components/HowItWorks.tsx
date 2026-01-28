@@ -1,6 +1,7 @@
-import { Video, Trophy } from "lucide-react";
+import { Video, Trophy, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import coachSarahCard from "@/assets/coach-sarah-card.png";
+import coachSarah from "@/assets/coach-sarah.jpg";
+import logoOxford from "@/assets/logo-oxford.png";
 
 const steps = [
   {
@@ -23,24 +24,50 @@ const steps = [
   },
 ];
 
+const MiniCoachCard = () => {
+  return (
+    <div className="w-44 bg-background border-2 border-border rounded-lg shadow-sm p-3 transition-all duration-300 hover:shadow-xs">
+      {/* Coach Photo */}
+      <div className="relative w-full aspect-[4/3] rounded-md overflow-hidden mb-3 border border-border">
+        <img
+          src={coachSarah}
+          alt="Coach"
+          className="w-full h-full object-cover"
+        />
+        {/* University Badge */}
+        <div className="absolute bottom-1.5 right-1.5 w-7 h-7 bg-background rounded-md border border-border flex items-center justify-center overflow-hidden">
+          <img src={logoOxford} alt="Oxford" className="w-5 h-5 object-contain" />
+        </div>
+      </div>
+      
+      {/* Coach Info */}
+      <div className="space-y-1">
+        <h4 className="font-sans font-medium text-sm text-foreground truncate">Sarah Mitchell</h4>
+        <p className="font-sans font-light text-xs text-muted-foreground truncate">Investment Banking</p>
+        <div className="flex items-center gap-1">
+          <Star className="w-3 h-3 fill-foreground text-foreground" />
+          <span className="font-sans text-xs text-foreground">5.0</span>
+          <span className="font-sans text-xs text-muted-foreground">(24)</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const StepVisual = ({ type }: { type: string }) => {
   if (type === "coach-card") {
     return (
-      <div className="relative w-full h-32 md:h-40 flex items-center justify-center">
-        <img
-          src={coachSarahCard}
-          alt="Coach card preview"
-          className="h-full w-auto object-contain rounded-lg shadow-sm border border-border"
-        />
+      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+        <MiniCoachCard />
       </div>
     );
   }
 
   if (type === "video") {
     return (
-      <div className="relative w-full h-32 md:h-40 flex items-center justify-center">
-        <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
-          <Video className="w-10 h-10 md:w-12 md:h-12 text-foreground" strokeWidth={1.5} />
+      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+        <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
+          <Video className="w-12 h-12 md:w-14 md:h-14 text-foreground" strokeWidth={1.5} />
         </div>
       </div>
     );
@@ -48,9 +75,9 @@ const StepVisual = ({ type }: { type: string }) => {
 
   if (type === "trophy") {
     return (
-      <div className="relative w-full h-32 md:h-40 flex items-center justify-center">
-        <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
-          <Trophy className="w-10 h-10 md:w-12 md:h-12 text-foreground" strokeWidth={1.5} />
+      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
+        <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
+          <Trophy className="w-12 h-12 md:w-14 md:h-14 text-foreground" strokeWidth={1.5} />
         </div>
       </div>
     );
