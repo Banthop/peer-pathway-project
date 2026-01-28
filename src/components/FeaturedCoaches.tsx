@@ -179,6 +179,24 @@ const FeaturedCoaches = () => {
                 {coach.role}
               </p>
 
+              {/* Logo badges */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-8 px-3 rounded-md bg-secondary flex items-center justify-center">
+                  <img 
+                    src={coach.universityLogo} 
+                    alt="University" 
+                    className="h-5 w-auto object-contain"
+                  />
+                </div>
+                <div className="h-8 px-3 rounded-md bg-secondary flex items-center justify-center">
+                  <img 
+                    src={coach.companyLogo} 
+                    alt="Company" 
+                    className="h-5 w-auto object-contain"
+                  />
+                </div>
+              </div>
+
               {/* Specialty tags */}
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {coach.specialties.map((specialty, i) => (
@@ -189,24 +207,6 @@ const FeaturedCoaches = () => {
                     {specialty}
                   </span>
                 ))}
-              </div>
-
-              {/* Logo badges */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-7 px-2.5 rounded-md bg-secondary/70 flex items-center justify-center">
-                  <img 
-                    src={coach.universityLogo} 
-                    alt="University" 
-                    className="h-4 w-auto object-contain"
-                  />
-                </div>
-                <div className="h-7 px-2.5 rounded-md bg-secondary/70 flex items-center justify-center">
-                  <img 
-                    src={coach.companyLogo} 
-                    alt="Company" 
-                    className="h-4 w-auto object-contain"
-                  />
-                </div>
               </div>
 
               {/* CTA */}
