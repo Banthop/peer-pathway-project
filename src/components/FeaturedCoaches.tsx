@@ -143,92 +143,62 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-2xl overflow-hidden border border-border/30 group cursor-pointer transition-all duration-500 hover:border-primary/20 hover:scale-[1.02] relative"
+              className="flex-shrink-0 w-[300px] md:w-[320px] bg-card rounded-xl p-5 border border-border/40 group cursor-pointer transition-all duration-300 hover:border-border"
               style={{ scrollSnapAlign: "start" }}
             >
-              {/* Shimmer overlay on hover */}
-              <div 
-                className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-2xl"
-                style={{
-                  background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)",
-                  backgroundSize: "200% 100%",
-                  animation: "shimmer 1.5s ease-in-out infinite",
-                }}
-              />
-              
-              {/* Glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm -z-10" />
-              
-                {/* Photo with gradient overlay and glassmorphism badges */}
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={coach.image}
-                    alt={coach.name}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                  
-                  {/* Gradient overlay - more refined */}
-                  <div 
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 35%, transparent 65%)"
-                    }}
-                  />
-                  
-                  {/* Glassmorphism logo badges - refined styling */}
-                  <div className="absolute bottom-4 right-4 flex gap-2.5">
-                    <div className="w-11 h-11 rounded-xl bg-white/90 backdrop-blur-xl border border-white/60 shadow-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
-                      <img 
-                        src={coach.universityLogo} 
-                        alt="University" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="w-11 h-11 rounded-xl bg-white/90 backdrop-blur-xl border border-white/60 shadow-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl group-hover:translate-x-0.5">
-                      <img 
-                        src={coach.companyLogo} 
-                        alt="Company" 
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Rating badge - refined with subtle glow */}
-                  <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-xl border border-white/60 shadow-lg transition-all duration-300 group-hover:shadow-xl">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span className="text-xs font-semibold text-foreground tracking-wide">{coach.rating}</span>
-                  </div>
-                </div>
-                
-                {/* Info section - more refined spacing */}
-                <div className="p-6 relative bg-gradient-to-b from-card to-secondary/30">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="font-semibold text-lg text-foreground tracking-tight">
-                        {coach.name}
-                      </h3>
-                      <p className="text-primary font-medium text-sm mt-0.5">
-                        {coach.university}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Sessions</span>
-                      <p className="text-sm font-semibold text-foreground">{coach.sessions}+</p>
-                    </div>
-                  </div>
-                  
-                  <p className="text-muted-foreground text-sm mb-5 leading-relaxed">
-                    {coach.role}
+              {/* Top row: Photo + Name/University */}
+              <div className="flex items-start gap-4 mb-4">
+                <img
+                  src={coach.image}
+                  alt={coach.name}
+                  className="w-16 h-16 rounded-full object-cover flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-base text-foreground truncate">
+                    {coach.name}
+                  </h3>
+                  <p className="text-sm text-muted-foreground truncate">
+                    {coach.university}
                   </p>
-                  
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 hover:text-primary transition-colors duration-300 group/link"
-                  >
-                    View profile
-                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
-                  </a>
+                  <div className="flex items-center gap-1 mt-1">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    <span className="text-xs font-medium text-foreground">{coach.rating}</span>
+                    <span className="text-xs text-muted-foreground">· {coach.sessions} sessions</span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Role */}
+              <p className="text-sm text-foreground mb-4 line-clamp-2">
+                {coach.role}
+              </p>
+
+              {/* Logo badges */}
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-8 px-3 rounded-lg bg-secondary flex items-center justify-center">
+                  <img 
+                    src={coach.universityLogo} 
+                    alt="University" 
+                    className="h-5 w-auto object-contain"
+                  />
+                </div>
+                <div className="h-8 px-3 rounded-lg bg-secondary flex items-center justify-center">
+                  <img 
+                    src={coach.companyLogo} 
+                    alt="Company" 
+                    className="h-5 w-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* CTA */}
+              <a
+                href="#"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200 group/link"
+              >
+                View profile
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-0.5" />
+              </a>
             </div>
           ))}
         </div>
