@@ -119,7 +119,7 @@ const Hero = () => {
         {/* UCL Logo - bottom left corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-gentle"
-          style={{ top: '58%', left: '2%', width: '80px', transform: 'rotate(10deg)', animationDelay: '2s' }}
+          style={{ top: '62%', left: '6%', width: '80px', transform: 'rotate(10deg)', animationDelay: '2s' }}
         >
           <img src={logoUcl} alt="UCL" className="w-full h-auto" />
         </FloatingLogo>
