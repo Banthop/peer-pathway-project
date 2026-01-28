@@ -1,7 +1,5 @@
-import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import coachSarah from "@/assets/coach-sarah.jpg";
-import logoOxford from "@/assets/logo-oxford.png";
+import stepFindCoach from "@/assets/step-find-coach.png";
 import stepCoaching from "@/assets/step-coaching.png";
 import stepResults from "@/assets/step-results.png";
 
@@ -26,41 +24,15 @@ const steps = [
   },
 ];
 
-const MiniCoachCard = () => {
-  return (
-    <div className="w-40 bg-background border-2 border-border rounded-lg shadow-sm p-2.5 transition-all duration-300 hover:shadow-xs">
-      {/* Coach Photo */}
-      <div className="relative w-full aspect-[3/2] rounded-md overflow-hidden mb-2 border border-border">
-        <img
-          src={coachSarah}
-          alt="Coach"
-          className="w-full h-full object-cover"
-        />
-        {/* University Badge */}
-        <div className="absolute bottom-1 right-1 w-6 h-6 bg-background rounded-md border border-border flex items-center justify-center overflow-hidden">
-          <img src={logoOxford} alt="Oxford" className="w-4 h-4 object-contain" />
-        </div>
-      </div>
-      
-      {/* Coach Info */}
-      <div className="space-y-1">
-        <h4 className="font-sans font-medium text-sm text-foreground truncate">Sarah Mitchell</h4>
-        <p className="font-sans font-light text-xs text-muted-foreground truncate">Investment Banking</p>
-        <div className="flex items-center gap-1">
-          <Star className="w-3 h-3 fill-foreground text-foreground" />
-          <span className="font-sans text-xs text-foreground">5.0</span>
-          <span className="font-sans text-xs text-muted-foreground">(24)</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const StepVisual = ({ type }: { type: string }) => {
   if (type === "coach-card") {
     return (
       <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <MiniCoachCard />
+        <img 
+          src={stepFindCoach} 
+          alt="Find your coach" 
+          className="w-32 h-32 md:w-40 md:h-40 object-contain"
+        />
       </div>
     );
   }
