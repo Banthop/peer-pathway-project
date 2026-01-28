@@ -137,7 +137,7 @@ const Hero = () => {
         {/* Imperial Logo - far bottom left */}
         <div 
           className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '88%', left: '4%', width: '85px', animationDelay: '1.5s' }}
+          style={{ top: '88%', left: '4%', width: '65px', animationDelay: '1.5s' }}
         >
           <img 
             src={logoImperial} 
