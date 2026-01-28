@@ -170,7 +170,7 @@ const Hero = () => {
         {/* Goldman Sachs Logo - under David, slightly left */}
         <div 
           className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s', filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.5)) drop-shadow(0 12px 24px rgba(0,0,0,0.4)) drop-shadow(0 6px 10px rgba(0,0,0,0.3))' }}
+          style={{ top: '65%', right: '16%', width: '150px', animationDelay: '0.8s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
         >
           <img 
             src={logoGoldmanSachs} 
@@ -208,7 +208,7 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <div 
           className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s', filter: 'drop-shadow(0 25px 50px rgba(0,0,0,0.5)) drop-shadow(0 12px 24px rgba(0,0,0,0.4)) drop-shadow(0 6px 10px rgba(0,0,0,0.3))' }}
+          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
         >
           <img 
             src={logoCliffordChance} 
@@ -220,26 +220,24 @@ const Hero = () => {
         {/* McKinsey Logo - moved more inward bottom */}
         <div 
           className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
+          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
         >
           <img 
             src={logoMckinsey} 
             alt="McKinsey & Company" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Meta Logo - far bottom right */}
         <div 
           className="absolute hidden xl:block animate-float"
-          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s' }}
+          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s', filter: 'drop-shadow(0 30px 60px rgba(0,0,0,0.55)) drop-shadow(0 15px 30px rgba(0,0,0,0.45)) drop-shadow(0 8px 15px rgba(0,0,0,0.35)) drop-shadow(0 3px 6px rgba(0,0,0,0.25))' }}
         >
           <img 
             src={logoMeta} 
             alt="Meta" 
             className="w-full h-auto"
-            style={{ boxShadow: '0 35px 60px -15px rgba(0,0,0,0.6), 0 20px 35px -10px rgba(0,0,0,0.5), 0 8px 16px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3)' }}
           />
         </div>
         
