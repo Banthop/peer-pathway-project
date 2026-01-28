@@ -89,8 +89,8 @@ const Hero = () => {
         
         {/* Oxford Logo - under Sarah, slightly right */}
         <div 
-          className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', left: '16%', width: '75px', animationDelay: '0.5s' }}
+          className="absolute hidden xl:block animate-float"
+          style={{ top: '65%', left: '16%', width: '75px', animationDelay: '0s' }}
         >
           <img 
             src={logoOxford} 
@@ -102,8 +102,8 @@ const Hero = () => {
 
         {/* Cambridge Logo - upper left */}
         <div 
-          className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '34%', left: '2%', width: '75px', transform: 'rotate(8deg)', animationDelay: '1s' }}
+          className="absolute hidden lg:block animate-float-gentle"
+          style={{ top: '34%', left: '2%', width: '75px', animationDelay: '0.5s' }}
         >
           <img 
             src={logoCambridge} 
@@ -128,8 +128,8 @@ const Hero = () => {
 
         {/* UCL Logo - bottom left corner */}
         <div 
-          className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', left: '6%', width: '80px', animationDelay: '2s' }}
+          className="absolute hidden lg:block animate-float-slow"
+          style={{ top: '62%', left: '6%', width: '80px', animationDelay: '1s' }}
         >
           <img 
             src={logoUcl} 
@@ -141,7 +141,7 @@ const Hero = () => {
 
         {/* Imperial Logo - far bottom left */}
         <div 
-          className="absolute hidden xl:block animate-float-slow"
+          className="absolute hidden xl:block animate-float-gentle"
           style={{ top: '88%', left: '4%', width: '65px', animationDelay: '1.5s' }}
         >
           <img 
@@ -154,8 +154,8 @@ const Hero = () => {
 
         {/* LSE Logo - moved more inward bottom */}
         <div 
-          className="absolute hidden xl:block animate-float"
-          style={{ top: '85%', left: '22%', width: '65px', animationDelay: '2.5s' }}
+          className="absolute hidden xl:block animate-float-slow"
+          style={{ top: '85%', left: '22%', width: '65px', animationDelay: '2s' }}
         >
           <img 
             src={logoLse} 
@@ -169,8 +169,8 @@ const Hero = () => {
         
         {/* Goldman Sachs Logo - under David, slightly left */}
         <div 
-          className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '65%', right: '16%', width: '75px', animationDelay: '0.8s' }}
+          className="absolute hidden xl:block animate-float"
+          style={{ top: '65%', right: '16%', width: '75px', animationDelay: '0.3s' }}
         >
           <img 
             src={logoGoldmanSachs} 
@@ -182,8 +182,8 @@ const Hero = () => {
 
         {/* Citadel Logo - upper right */}
         <div 
-          className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '34%', right: '2%', width: '75px', animationDelay: '1.2s' }}
+          className="absolute hidden lg:block animate-float-gentle"
+          style={{ top: '34%', right: '2%', width: '75px', animationDelay: '0.8s' }}
         >
           <img 
             src={logoCitadel} 
@@ -208,8 +208,8 @@ const Hero = () => {
 
         {/* Clifford Chance Logo - bottom right corner */}
         <div 
-          className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s' }}
+          className="absolute hidden lg:block animate-float-slow"
+          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.3s' }}
         >
           <img 
             src={logoCliffordChance} 
@@ -221,8 +221,8 @@ const Hero = () => {
 
         {/* McKinsey Logo - moved more inward bottom */}
         <div 
-          className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '2.2s' }}
+          className="absolute hidden xl:block animate-float-gentle"
+          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '1.8s' }}
         >
           <img 
             src={logoMckinsey} 
@@ -234,8 +234,8 @@ const Hero = () => {
 
         {/* Meta Logo - far bottom right */}
         <div 
-          className="absolute hidden xl:block animate-float"
-          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s' }}
+          className="absolute hidden xl:block animate-float-slow"
+          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '2.3s' }}
         >
           <img 
             src={logoMeta} 
