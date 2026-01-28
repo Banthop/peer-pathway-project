@@ -7,19 +7,19 @@ const steps = [
   {
     number: 1,
     title: "Find your coach",
-    description: "Browse by category. Book a free intro call.",
+    description: "Browse coaches who've been where you want to go. Book a free intro call to find your fit.",
     visual: "coach-card",
   },
   {
     number: 2,
-    title: "Get coaching",
-    description: "Sessions on CVs, applications, interviews—whatever you need.",
+    title: "Get coached",
+    description: "Work 1-on-1 on applications, interviews, and strategy—tailored to your goals.",
     visual: "video",
   },
   {
     number: 3,
-    title: "Get results",
-    description: "Land the offer. Join the university. Achieve your goals.",
+    title: "Land your offer",
+    description: "Join thousands who've secured spots at top universities and firms.",
     visual: "trophy",
   },
 ];
