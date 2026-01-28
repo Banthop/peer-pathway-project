@@ -199,7 +199,7 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-gentle"
-          style={{ top: '72%', right: '2%', width: '160px', animationDelay: '1.8s' }}
+          style={{ top: '72%', right: '2%', width: '80px', animationDelay: '1.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
@@ -215,7 +215,7 @@ const Hero = () => {
         {/* Meta Logo - far bottom right */}
         <FloatingLogo 
           className="hidden xl:block animate-float"
-          style={{ top: '88%', right: '4%', width: '120px', transform: 'rotate(15deg)', animationDelay: '3s' }}
+          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '3s' }}
         >
           <img src={logoMeta} alt="Meta" className="w-full h-auto" />
         </FloatingLogo>
