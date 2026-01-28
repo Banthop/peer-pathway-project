@@ -23,7 +23,7 @@ const LogosBar = () => {
           {logos.map((logo) => (
             <div
               key={logo}
-              className="text-muted-foreground/50 font-medium text-sm md:text-base"
+              className="text-foreground font-medium text-sm md:text-base"
             >
               {logo}
             </div>
