@@ -272,7 +272,7 @@ const Hero = () => {
 
         {/* Search Bar */}
         <div 
-          className="relative max-w-2xl w-full mx-auto mb-8 animate-fade-up"
+          className="relative max-w-2xl w-full mx-auto mb-4 animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
@@ -282,6 +282,16 @@ const Hero = () => {
             className="w-full pl-12 pr-4 py-6 text-base rounded-full border-2 border-primary bg-card shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary/70"
           />
         </div>
+
+        {/* Pricing Hint */}
+        <p 
+          className="text-muted-foreground mb-6 animate-fade-up"
+          style={{ animationDelay: "0.25s", fontFamily: 'Inter, sans-serif', fontWeight: 300, fontSize: '14px' }}
+        >
+          <span className="text-green-600 font-medium">Free intro call</span>
+          <span className="mx-2">•</span>
+          Sessions from £25
+        </p>
 
         {/* Popular Categories - 3 rows: 5, 4, 1 */}
         <div 
