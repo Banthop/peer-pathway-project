@@ -90,7 +90,7 @@ const Hero = () => {
         {/* Oxford Logo - under Sarah, slightly right */}
         <div 
           className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '72%', left: '18%', width: '75px', animationDelay: '0.5s' }}
+          style={{ top: '65%', left: '16%', width: '75px', animationDelay: '0.5s' }}
         >
           <img 
             src={logoOxford} 
