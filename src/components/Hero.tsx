@@ -199,7 +199,7 @@ const Hero = () => {
         {/* Clifford Chance Logo - bottom right corner */}
         <FloatingLogo 
           className="hidden lg:block animate-float-gentle"
-          style={{ top: '72%', right: '2%', width: '80px', animationDelay: '1.8s' }}
+          style={{ top: '62%', right: '6%', width: '80px', animationDelay: '1.8s' }}
         >
           <img src={logoCliffordChance} alt="Clifford Chance" className="w-full h-auto" />
         </FloatingLogo>
