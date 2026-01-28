@@ -236,3 +236,23 @@
 .card-shadow-hover:hover {
   box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.15);
 }
+
+/* Shimmer animation for premium cards */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

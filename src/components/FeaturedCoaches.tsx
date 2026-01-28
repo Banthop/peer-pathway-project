@@ -143,35 +143,48 @@ const FeaturedCoaches = () => {
           {coaches.map((coach, index) => (
             <div
               key={index}
-              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-xl overflow-hidden border border-border/50 group cursor-pointer"
+              className="flex-shrink-0 w-[280px] md:w-[300px] bg-card rounded-2xl overflow-hidden border border-border/30 group cursor-pointer transition-all duration-500 hover:border-primary/20 hover:scale-[1.02] relative"
               style={{ scrollSnapAlign: "start" }}
             >
+              {/* Shimmer overlay on hover */}
+              <div 
+                className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-2xl"
+                style={{
+                  background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)",
+                  backgroundSize: "200% 100%",
+                  animation: "shimmer 1.5s ease-in-out infinite",
+                }}
+              />
+              
+              {/* Glow effect */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm -z-10" />
+              
                 {/* Photo with gradient overlay and glassmorphism badges */}
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <img
                     src={coach.image}
                     alt={coach.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   
-                  {/* Gradient overlay */}
+                  {/* Gradient overlay - more refined */}
                   <div 
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 30%, transparent 60%)"
+                      background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 35%, transparent 65%)"
                     }}
                   />
                   
-                  {/* Glassmorphism logo badges */}
-                  <div className="absolute bottom-3 right-3 flex gap-2">
-                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110">
+                  {/* Glassmorphism logo badges - refined styling */}
+                  <div className="absolute bottom-4 right-4 flex gap-2.5">
+                    <div className="w-11 h-11 rounded-xl bg-white/90 backdrop-blur-xl border border-white/60 shadow-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl">
                       <img 
                         src={coach.universityLogo} 
                         alt="University" 
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="w-10 h-10 rounded-lg bg-white/80 backdrop-blur-md border border-white/50 shadow-lg flex items-center justify-center p-1.5 transition-transform duration-300 group-hover:scale-110 group-hover:translate-x-0.5">
+                    <div className="w-11 h-11 rounded-xl bg-white/90 backdrop-blur-xl border border-white/60 shadow-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl group-hover:translate-x-0.5">
                       <img 
                         src={coach.companyLogo} 
                         alt="Company" 
@@ -180,45 +193,40 @@ const FeaturedCoaches = () => {
                     </div>
                   </div>
                   
-                  {/* Rating badge - top left */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md border border-white/50 shadow-lg">
-                    <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-semibold text-foreground">{coach.rating}</span>
+                  {/* Rating badge - refined with subtle glow */}
+                  <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-xl border border-white/60 shadow-lg transition-all duration-300 group-hover:shadow-xl">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    <span className="text-xs font-semibold text-foreground tracking-wide">{coach.rating}</span>
                   </div>
                 </div>
                 
-                {/* Info section with gradient background */}
-                <div 
-                  className="p-5 relative"
-                  style={{
-                    background: "linear-gradient(to bottom, hsl(var(--card)) 0%, hsl(var(--secondary)) 100%)"
-                  }}
-                >
-                  <div className="flex items-start justify-between mb-2">
+                {/* Info section - more refined spacing */}
+                <div className="p-6 relative bg-gradient-to-b from-card to-secondary/30">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-semibold text-lg text-foreground">
+                      <h3 className="font-semibold text-lg text-foreground tracking-tight">
                         {coach.name}
                       </h3>
-                      <p className="text-primary font-medium text-sm">
+                      <p className="text-primary font-medium text-sm mt-0.5">
                         {coach.university}
                       </p>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs text-muted-foreground">Sessions</span>
+                      <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70">Sessions</span>
                       <p className="text-sm font-semibold text-foreground">{coach.sessions}+</p>
                     </div>
                   </div>
                   
-                  <p className="text-muted-foreground text-sm mb-4">
+                  <p className="text-muted-foreground text-sm mb-5 leading-relaxed">
                     {coach.role}
                   </p>
                   
                   <a
                     href="#"
-                    className="inline-flex items-center gap-1 text-sm font-medium text-foreground hover:text-primary transition-colors group/link"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 hover:text-primary transition-colors duration-300 group/link"
                   >
                     View profile
-                    <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-1" />
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" />
                   </a>
                 </div>
             </div>
