@@ -1,7 +1,9 @@
-import { Video, Trophy, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import coachSarah from "@/assets/coach-sarah.jpg";
 import logoOxford from "@/assets/logo-oxford.png";
+import stepCoaching from "@/assets/step-coaching.png";
+import stepResults from "@/assets/step-results.png";
 
 const steps = [
   {
@@ -66,9 +68,11 @@ const StepVisual = ({ type }: { type: string }) => {
   if (type === "video") {
     return (
       <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
-          <Video className="w-12 h-12 md:w-14 md:h-14 text-foreground" strokeWidth={1.5} />
-        </div>
+        <img 
+          src={stepCoaching} 
+          alt="Coaching session" 
+          className="w-32 h-32 md:w-40 md:h-40 object-contain"
+        />
       </div>
     );
   }
@@ -76,9 +80,11 @@ const StepVisual = ({ type }: { type: string }) => {
   if (type === "trophy") {
     return (
       <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-secondary border-2 border-border flex items-center justify-center shadow-xs">
-          <Trophy className="w-12 h-12 md:w-14 md:h-14 text-foreground" strokeWidth={1.5} />
-        </div>
+        <img 
+          src={stepResults} 
+          alt="Success trophy" 
+          className="w-32 h-32 md:w-40 md:h-40 object-contain"
+        />
       </div>
     );
   }
