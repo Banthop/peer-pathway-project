@@ -20,7 +20,7 @@ export default {
   	extend: {
   		fontFamily: {
   			sans: [
-  				'Space Grotesk',
+  				'Inter',
   				'ui-sans-serif',
   				'system-ui',
   				'-apple-system',
@@ -112,40 +112,66 @@ export default {
   			'22': '5.5rem',
   			'30': '7.5rem'
   		},
-		keyframes: {
-			'float': {
-				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
-				'50%': { transform: 'translateY(-12px) rotate(var(--tw-rotate, 0deg))' }
-			},
-			'float-reverse': {
-				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
-				'50%': { transform: 'translateY(10px) rotate(var(--tw-rotate, 0deg))' }
-			},
-			'float-gentle': {
-				'0%, 100%': { transform: 'translateY(0) translateX(0) rotate(var(--tw-rotate, 0deg))' },
-				'33%': { transform: 'translateY(-8px) translateX(3px) rotate(var(--tw-rotate, 0deg))' },
-				'66%': { transform: 'translateY(-4px) translateX(-2px) rotate(var(--tw-rotate, 0deg))' }
-			},
-			'float-slow': {
-				'0%, 100%': { transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))' },
-				'50%': { transform: 'translateY(-6px) rotate(var(--tw-rotate, 0deg))' }
-			},
-			'ripple': {
-				'0%, 100%': { transform: 'translate(-50%, -50%) scale(1)' },
-				'50%': { transform: 'translate(-50%, -50%) scale(0.9)' }
-			},
-			'grid': {
-				'0%': { transform: 'translateY(-50%)' },
-				'100%': { transform: 'translateY(0)' }
-			},
-			'accordion-down': {
-				from: {
-					height: '0'
-				},
-				to: {
-					height: 'var(--radix-accordion-content-height)'
-				}
-			},
+  		keyframes: {
+  			float: {
+  				'0%, 100%': {
+  					transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))'
+  				},
+  				'50%': {
+  					transform: 'translateY(-12px) rotate(var(--tw-rotate, 0deg))'
+  				}
+  			},
+  			'float-reverse': {
+  				'0%, 100%': {
+  					transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))'
+  				},
+  				'50%': {
+  					transform: 'translateY(10px) rotate(var(--tw-rotate, 0deg))'
+  				}
+  			},
+  			'float-gentle': {
+  				'0%, 100%': {
+  					transform: 'translateY(0) translateX(0) rotate(var(--tw-rotate, 0deg))'
+  				},
+  				'33%': {
+  					transform: 'translateY(-8px) translateX(3px) rotate(var(--tw-rotate, 0deg))'
+  				},
+  				'66%': {
+  					transform: 'translateY(-4px) translateX(-2px) rotate(var(--tw-rotate, 0deg))'
+  				}
+  			},
+  			'float-slow': {
+  				'0%, 100%': {
+  					transform: 'translateY(0) rotate(var(--tw-rotate, 0deg))'
+  				},
+  				'50%': {
+  					transform: 'translateY(-6px) rotate(var(--tw-rotate, 0deg))'
+  				}
+  			},
+  			ripple: {
+  				'0%, 100%': {
+  					transform: 'translate(-50%, -50%) scale(1)'
+  				},
+  				'50%': {
+  					transform: 'translate(-50%, -50%) scale(0.9)'
+  				}
+  			},
+  			grid: {
+  				'0%': {
+  					transform: 'translateY(-50%)'
+  				},
+  				'100%': {
+  					transform: 'translateY(0)'
+  				}
+  			},
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
   			'accordion-up': {
   				from: {
   					height: 'var(--radix-accordion-content-height)'
@@ -181,19 +207,19 @@ export default {
   				}
   			}
   		},
-		animation: {
-			'float': 'float 6s ease-in-out infinite',
-			'float-reverse': 'float-reverse 7s ease-in-out infinite',
-			'float-gentle': 'float-gentle 8s ease-in-out infinite',
-			'float-slow': 'float-slow 10s ease-in-out infinite',
-			'ripple': 'ripple 3s ease-in-out infinite',
-			'grid': 'grid 60s linear infinite',
-			'accordion-down': 'accordion-down 0.2s ease-out',
-			'accordion-up': 'accordion-up 0.2s ease-out',
-			'fade-in': 'fade-in 0.5s ease-out',
-			'fade-up': 'fade-up 0.6s ease-out',
-			'slide-left': 'slide-left 25s linear infinite'
-		},
+  		animation: {
+  			float: 'float 6s ease-in-out infinite',
+  			'float-reverse': 'float-reverse 7s ease-in-out infinite',
+  			'float-gentle': 'float-gentle 8s ease-in-out infinite',
+  			'float-slow': 'float-slow 10s ease-in-out infinite',
+  			ripple: 'ripple 3s ease-in-out infinite',
+  			grid: 'grid 60s linear infinite',
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'fade-in': 'fade-in 0.5s ease-out',
+  			'fade-up': 'fade-up 0.6s ease-out',
+  			'slide-left': 'slide-left 25s linear infinite'
+  		},
   		boxShadow: {
   			'2xs': 'var(--shadow-2xs)',
   			xs: 'var(--shadow-xs)',
