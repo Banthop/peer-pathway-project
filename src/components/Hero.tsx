@@ -181,8 +181,8 @@ const Hero = () => {
 
         {/* McKinsey Logo - far bottom right */}
         <FloatingLogo 
-          className="hidden xl:block animate-float-slow"
-          style={{ top: '88%', right: '4%', width: '65px', transform: 'rotate(18deg)', animationDelay: '2.2s' }}
+          className="hidden xl:block animate-float-slow rotate-[18deg]"
+          style={{ top: '88%', right: '4%', width: '65px', animationDelay: '2.2s' }}
         >
           <img src={logoMckinsey} alt="McKinsey & Company" className="w-full h-auto" />
         </FloatingLogo>
