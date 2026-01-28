@@ -96,12 +96,17 @@ const Hero = () => {
         </FloatingLogo>
 
         {/* Cambridge Logo - upper left */}
-        <FloatingLogo 
-          className="hidden lg:block animate-float-slow"
-          style={{ top: '34%', left: '2%', width: '75px', transform: 'rotate(8deg)', animationDelay: '1s', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) drop-shadow(0 8px 16px rgba(0,0,0,0.3)) drop-shadow(0 4px 6px rgba(0,0,0,0.2))' }}
+        <div 
+          className="absolute hidden lg:block animate-float-slow"
+          style={{ top: '34%', left: '2%', width: '75px', transform: 'rotate(8deg)', animationDelay: '1s' }}
         >
-          <img src={logoCambridge} alt="University of Cambridge" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoCambridge} 
+            alt="University of Cambridge" 
+            className="w-full h-auto rounded-lg"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+          />
+        </div>
 
         {/* Sarah Coach Card - moved more left */}
         <FloatingCoachCard 
@@ -117,20 +122,30 @@ const Hero = () => {
         />
 
         {/* UCL Logo - bottom left corner */}
-        <FloatingLogo 
-          className="hidden lg:block animate-float-gentle"
-          style={{ top: '62%', left: '6%', width: '80px', transform: 'rotate(10deg)', animationDelay: '2s', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) drop-shadow(0 8px 16px rgba(0,0,0,0.3)) drop-shadow(0 4px 6px rgba(0,0,0,0.2))' }}
+        <div 
+          className="absolute hidden lg:block animate-float-gentle"
+          style={{ top: '62%', left: '6%', width: '80px', animationDelay: '2s' }}
         >
-          <img src={logoUcl} alt="UCL" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoUcl} 
+            alt="UCL" 
+            className="w-full h-auto rounded-lg"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+          />
+        </div>
 
         {/* Imperial Logo - far bottom left */}
-        <FloatingLogo 
-          className="hidden xl:block animate-float-slow"
-          style={{ top: '88%', left: '4%', width: '85px', transform: 'rotate(-8deg)', animationDelay: '1.5s', filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.4)) drop-shadow(0 8px 16px rgba(0,0,0,0.3)) drop-shadow(0 4px 6px rgba(0,0,0,0.2))' }}
+        <div 
+          className="absolute hidden xl:block animate-float-slow"
+          style={{ top: '88%', left: '4%', width: '85px', animationDelay: '1.5s' }}
         >
-          <img src={logoImperial} alt="Imperial College London" className="w-full h-auto" />
-        </FloatingLogo>
+          <img 
+            src={logoImperial} 
+            alt="Imperial College London" 
+            className="w-full h-auto rounded-lg"
+            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
+          />
+        </div>
 
         {/* LSE Logo - moved more inward bottom */}
         <FloatingLogo 
