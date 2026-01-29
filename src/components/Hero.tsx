@@ -263,12 +263,20 @@ const Hero = () => {
           Your edge, unlocked.
         </h1>
         
-        <p 
-          className="text-foreground mb-10 max-w-xl mx-auto animate-fade-up" 
-          style={{ animationDelay: "0.1s", fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
-        >
-          Get prepped for uni applications, tests, and internships.
-        </p>
+        <div className="mb-10 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: "0.1s" }}>
+          <p 
+            className="text-foreground" 
+            style={{ fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+          >
+            Get prepped for uni applications, tests, and internships.
+          </p>
+          <p 
+            className="text-muted-foreground mt-1" 
+            style={{ fontSize: '15px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+          >
+            From students and recent grads who just did it.
+          </p>
+        </div>
 
         {/* Search Bar */}
         <div 
