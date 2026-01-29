@@ -80,29 +80,26 @@ const WhyEarlyEdge = () => {
         </p>
 
         {/* Three Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {reasons.map((reason) => (
             <ScrollReveal key={reason.title} delay={reason.delay}>
-              <div className="group relative flex flex-col items-center text-center p-8 md:p-10 rounded-3xl bg-background border border-border/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.15)] transition-all duration-500 hover:-translate-y-1 overflow-hidden">
-                {/* Subtle gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Icon Container - Gradient background */}
-                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-foreground to-foreground/80 flex items-center justify-center mb-6 shadow-lg group-hover:scale-105 transition-transform duration-300">
+              <div className="group flex flex-col items-center text-center p-8 md:p-10 rounded-3xl bg-gradient-to-b from-secondary/40 to-secondary/20 border border-border/50 hover:border-border hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                {/* Icon Container - Dark circle with white icon */}
+                <div className="w-16 h-16 rounded-full bg-foreground flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
                   <reason.icon
                     className="text-background"
-                    size={24}
-                    strokeWidth={1.75}
+                    size={28}
+                    strokeWidth={1.5}
                   />
                 </div>
 
                 {/* Title */}
-                <h3 className="relative text-foreground mb-4 font-sans font-semibold text-lg tracking-tight">
+                <h3 className="text-foreground mb-3 font-sans font-semibold text-xl">
                   {reason.title}
                 </h3>
 
                 {/* Body Text */}
-                <p className="relative max-w-[300px] font-sans font-light text-[15px] leading-relaxed text-muted-foreground">
+                <p className="max-w-[280px] font-sans font-light text-base leading-relaxed text-muted-foreground">
                   <RenderBody segments={reason.body} />
                 </p>
               </div>
