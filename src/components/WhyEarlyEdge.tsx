@@ -83,12 +83,12 @@ const WhyEarlyEdge = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {reasons.map((reason) => (
             <ScrollReveal key={reason.title} delay={reason.delay}>
-              <div className="flex flex-col items-center text-center p-6 md:p-8 rounded-2xl bg-secondary/30 hover:bg-secondary/50 transition-all duration-300 hover:scale-[1.02]">
-                {/* Icon Container */}
-                <div className="w-20 h-20 rounded-full bg-secondary/60 flex items-center justify-center mb-6">
+              <div className="group flex flex-col items-center text-center p-8 md:p-10 rounded-3xl bg-gradient-to-b from-secondary/40 to-secondary/20 border border-border/50 hover:border-border hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
+                {/* Icon Container - Dark circle with white icon */}
+                <div className="w-16 h-16 rounded-full bg-foreground flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
                   <reason.icon
-                    className="text-foreground"
-                    size={36}
+                    className="text-background"
+                    size={28}
                     strokeWidth={1.5}
                   />
                 </div>
