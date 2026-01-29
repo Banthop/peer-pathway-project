@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
+import WhyEarlyEdge from "@/components/WhyEarlyEdge";
 import PopularCategories from "@/components/PopularCategories";
 import FeaturedCoaches from "@/components/FeaturedCoaches";
 import HowItWorks from "@/components/HowItWorks";
@@ -18,6 +19,9 @@ const Index = () => {
         <Hero />
         <ScrollReveal>
           <SocialProof />
+        </ScrollReveal>
+        <ScrollReveal delay={0.1}>
+          <WhyEarlyEdge />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <PopularCategories />
