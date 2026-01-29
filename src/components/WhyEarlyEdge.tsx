@@ -1,82 +1,109 @@
 import { Clock, PoundSterling, Users } from "lucide-react";
+import { ReactNode } from "react";
+import ScrollReveal from "./ScrollReveal";
 
-const reasons = [
+interface ReasonBody {
+  text: string;
+  bold?: boolean;
+}
+
+interface Reason {
+  icon: typeof Clock;
+  title: string;
+  body: ReasonBody[];
+  delay: number;
+}
+
+const reasons: Reason[] = [
   {
     icon: Clock,
     title: "Fresher knowledge",
-    body: "Your coach got their offer months ago, not years. They remember the exact questions, the current process, and what actually worked — because they just went through it.",
+    body: [
+      { text: "Your coach got their offer " },
+      { text: "months ago", bold: true },
+      { text: ", not years. They remember the exact questions, the current process, and what actually worked — because they just went through it." },
+    ],
     delay: 0,
   },
   {
     icon: PoundSterling,
     title: "Affordable by design",
-    body: "Career coaches charge £150+/hour. Our coaches are students and recent grads earning on the side — so you get insider knowledge at prices that won't break the bank.",
+    body: [
+      { text: "Career coaches charge " },
+      { text: "£150+/hour", bold: true },
+      { text: ". Our coaches are students and recent grads earning on the side — so you get insider knowledge from " },
+      { text: "£25", bold: true },
+      { text: "." },
+    ],
     delay: 0.1,
   },
   {
     icon: Users,
     title: "They were just you",
-    body: "No corporate advice from people who forgot what it's like. Your coach was in your exact position recently. They get the stress, the deadlines, and what you're going through.",
+    body: [
+      { text: "No corporate advice from people who forgot what it's like. Your coach was in your " },
+      { text: "exact position", bold: true },
+      { text: " recently. They get the stress, the deadlines, and what you're going through." },
+    ],
     delay: 0.2,
   },
 ];
 
+const RenderBody = ({ segments }: { segments: ReasonBody[] }): ReactNode => {
+  return (
+    <>
+      {segments.map((segment, index) => 
+        segment.bold ? (
+          <span key={index} className="font-semibold text-foreground">
+            {segment.text}
+          </span>
+        ) : (
+          <span key={index}>{segment.text}</span>
+        )
+      )}
+    </>
+  );
+};
+
 const WhyEarlyEdge = () => {
   return (
-    <section className="w-full bg-white py-12 md:py-20 lg:py-20">
+    <section className="w-full bg-background py-16 md:py-24">
       <div className="max-w-[1200px] mx-auto px-4">
         {/* Section Headline */}
-        <h2
-          className="text-center mb-12"
-          style={{
-            fontFamily: '"Source Serif 4", Georgia, serif',
-            fontWeight: 600,
-            fontSize: "clamp(28px, 4vw, 36px)",
-          }}
-        >
+        <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4 text-center">
           Why students choose EarlyEdge
         </h2>
 
+        {/* Subheadline */}
+        <p className="text-center text-muted-foreground mb-12 md:mb-16 max-w-md mx-auto font-sans font-light">
+          The advantages of learning from someone who was just in your shoes.
+        </p>
+
         {/* Three Columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-8">
-          {reasons.map((reason, index) => (
-            <div
-              key={reason.title}
-              className="flex flex-col items-center text-center"
-            >
-              {/* Icon */}
-              <reason.icon
-                className="text-foreground mb-4"
-                size={48}
-                strokeWidth={1.5}
-              />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {reasons.map((reason) => (
+            <ScrollReveal key={reason.title} delay={reason.delay}>
+              <div className="flex flex-col items-center text-center p-6 md:p-8 rounded-2xl bg-secondary/30 hover:bg-secondary/50 transition-all duration-300 hover:scale-[1.02]">
+                {/* Icon Container */}
+                <div className="w-20 h-20 rounded-full bg-secondary/60 flex items-center justify-center mb-6">
+                  <reason.icon
+                    className="text-foreground"
+                    size={36}
+                    strokeWidth={1.5}
+                  />
+                </div>
 
-              {/* Title */}
-              <h3
-                className="text-foreground mb-3"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "20px",
-                }}
-              >
-                {reason.title}
-              </h3>
+                {/* Title */}
+                <h3 className="text-foreground mb-3 font-sans font-semibold text-xl">
+                  {reason.title}
+                </h3>
 
-              {/* Body Text */}
-              <p
-                className="max-w-[300px]"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontWeight: 400,
-                  fontSize: "16px",
-                  lineHeight: 1.6,
-                  color: "#4B5563",
-                }}
-              >
-                {reason.body}
-              </p>
-            </div>
+                {/* Body Text */}
+                <p className="max-w-[280px] font-sans font-light text-base leading-relaxed text-muted-foreground">
+                  <RenderBody segments={reason.body} />
+                </p>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
