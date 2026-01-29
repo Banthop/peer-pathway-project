@@ -19,9 +19,9 @@ const reasons: Reason[] = [
     icon: Clock,
     title: "Fresh from the frontlines",
     body: [
-      { text: "Your coach landed their offer " },
+      { text: "Your coach succeeded " },
       { text: "months ago", bold: true },
-      { text: ", not years. They know the exact interview questions being asked right now, the skills recruiters actually care about, and the mistakes that knock candidates out." },
+      { text: ", not years. Whether it's Oxbridge interviews, UCAT prep, or landing a spring week, they remember exactly what worked because they just did it." },
     ],
     delay: 0,
   },
@@ -29,9 +29,9 @@ const reasons: Reason[] = [
     icon: PoundSterling,
     title: "Quality without the price tag",
     body: [
-      { text: "Traditional career coaches charge " },
+      { text: "Tutors and consultants charge " },
       { text: "£150+ per hour", bold: true },
-      { text: ". Our coaches are high-achievers earning on the side, which means you get the same caliber of advice starting from just " },
+      { text: ". Our coaches are high-achievers earning on the side, which means you get the same caliber of guidance starting from just " },
       { text: "£25", bold: true },
       { text: "." },
     ],
@@ -43,7 +43,7 @@ const reasons: Reason[] = [
     body: [
       { text: "Forget generic advice from people who applied a decade ago. Your coach was in your " },
       { text: "exact position", bold: true },
-      { text: " recently. They understand the pressure, the tight deadlines, and what it actually takes to stand out today." },
+      { text: " recently. They understand the pressure, the tight deadlines, and what it actually takes to stand out." },
     ],
     delay: 0.2,
   },
