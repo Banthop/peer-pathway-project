@@ -17,21 +17,21 @@ interface Reason {
 const reasons: Reason[] = [
   {
     icon: Clock,
-    title: "Fresher knowledge",
+    title: "Fresh from the frontlines",
     body: [
-      { text: "Your coach got their offer " },
+      { text: "Your coach landed their offer " },
       { text: "months ago", bold: true },
-      { text: ", not years. They remember the exact questions, the current process, and what actually worked — because they just went through it." },
+      { text: ", not years. They know the exact interview questions being asked right now, the skills recruiters actually care about, and the mistakes that knock candidates out." },
     ],
     delay: 0,
   },
   {
     icon: PoundSterling,
-    title: "Affordable by design",
+    title: "Quality without the price tag",
     body: [
-      { text: "Career coaches charge " },
-      { text: "£150+/hour", bold: true },
-      { text: ". Our coaches are students and recent grads earning on the side — so you get insider knowledge from " },
+      { text: "Traditional career coaches charge " },
+      { text: "£150+ per hour", bold: true },
+      { text: ". Our coaches are high-achievers earning on the side, which means you get the same caliber of advice starting from just " },
       { text: "£25", bold: true },
       { text: "." },
     ],
@@ -39,11 +39,11 @@ const reasons: Reason[] = [
   },
   {
     icon: Users,
-    title: "They were just you",
+    title: "Someone who truly gets it",
     body: [
-      { text: "No corporate advice from people who forgot what it's like. Your coach was in your " },
+      { text: "Forget generic advice from people who applied a decade ago. Your coach was in your " },
       { text: "exact position", bold: true },
-      { text: " recently. They get the stress, the deadlines, and what you're going through." },
+      { text: " recently. They understand the pressure, the tight deadlines, and what it actually takes to stand out today." },
     ],
     delay: 0.2,
   },
