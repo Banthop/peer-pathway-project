@@ -1,139 +1,159 @@
 
-# How It Works Section Redesign
 
-## Overview
+# Improving "Why Students Choose EarlyEdge" Section
 
-Transforming the current simple 3-step grid into an engaging, visual section with:
-- **Illustrated visuals** for each step
-- **Connected timeline** linking the steps together
-- **CTA button** at the end to drive action
+## Understanding the Context
+
+Since EarlyEdge hasn't launched yet, I'm avoiding fake statistics (like "500+ students helped") that could undermine trust. Instead, the enhancements focus on visual polish, better hierarchy, and copy that emphasizes the inherent advantages without making unverifiable claims.
 
 ---
 
-## Visual Design
+## Recommended Changes
 
-### Layout Structure
+### 1. Visual Hierarchy with Icon Containers
+
+Currently, the icons float above text without visual weight. Adding subtle circular backgrounds creates visual anchors:
 
 ```text
-+----------------------------------------------------------+
-|                     "How it works"                        |
-|                    (Inter, semibold)                      |
-+----------------------------------------------------------+
-|                                                          |
-|  +--------+          +--------+          +--------+      |
-|  |  [1]   |----------|  [2]   |----------|  [3]   |      |
-|  | Visual |          | Visual |          | Visual |      |
-|  +--------+          +--------+          +--------+      |
-|   Find your           Get                 Get            |
-|   coach              coaching            results         |
-|                                                          |
-|                  [ Get Started ]                         |
-|                                                          |
-+----------------------------------------------------------+
+Current:             Proposed:
+                     
+   [icon]            ┌─────────┐
+                     │ [icon]  │  <- subtle bg circle
+   Title             └─────────┘
+   Body text...         Title
+                     Body text...
 ```
 
-### Step Illustrations
+- Circle: `bg-secondary/60` (subtle gray)
+- Size: 80px diameter with 40px icon inside
+- Creates visual "stops" as users scan
 
-Each step will feature a visual element instead of just an icon:
+### 2. Emphasize Key Phrases in Copy
 
-1. **Step 1 - Find your coach**
-   - Visual: Mini coach card preview (reuse Sarah's card image or create a small mockup)
-   - Shows the browsing/discovery experience
+Bold the most persuasive parts to improve scannability:
 
-2. **Step 2 - Get coaching**
-   - Visual: Video call or chat bubble illustration
-   - Represents the coaching session experience
+| Column | Current | Enhanced |
+|--------|---------|----------|
+| 1 | "months ago, not years" | "**months ago**, not years" |
+| 2 | "£150+/hour... from £25" | "**£150+/hour**... from **£25**" |
+| 3 | "exact position recently" | "**exact position** recently" |
 
-3. **Step 3 - Get results**
-   - Visual: Trophy or success badge with confetti
-   - Celebration of achieving goals
+### 3. Subtle Card Treatment with Hover
 
-### Timeline Connector
+Wrap each column in a card that responds to interaction:
+- Background: `bg-secondary/30` (very subtle)
+- Rounded corners: `rounded-2xl`
+- Padding: `p-6 md:p-8`
+- Hover: `hover:bg-secondary/50` with slight scale
 
-A horizontal line or dotted path connecting all 3 steps:
-- On desktop: Horizontal line with step numbers as circles on the line
-- On mobile: Vertical line on the left side
+This adds depth without feeling heavy.
 
-### Styling Details
+### 4. Better Section Subheadline
 
-| Element | Font | Weight | Color |
-|---------|------|--------|-------|
-| Section heading | Inter | 200 (extralight) | foreground |
-| Step numbers | Inter | 600 (semibold) | white on black circle |
-| Step titles | Inter | 500 (medium) | foreground |
-| Step descriptions | Inter | 300 (light) | muted-foreground |
-| CTA button | Inter | 200 (extralight) | white on black |
+Add a brief subhead under the main title that reinforces the message without claiming unverified stats:
+
+> **"Why students choose EarlyEdge"**
+> *The advantages of learning from someone who was just in your shoes.*
+
+### 5. Staggered Entry Animations
+
+Each card animates in with a slight delay (0s, 0.1s, 0.2s) using the existing `ScrollReveal` pattern. The `delay` property is already in the data but unused.
+
+### 6. Typography Refinement
+
+Match the design system used in other sections:
+- Section title: Inter font-extralight (200) like "How it works"
+- Card titles: Inter font-semibold (600)
+- Body: Inter font-light (300)
+
+---
+
+## Visual Preview
+
+```text
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│           Why students choose EarlyEdge                      │
+│    The advantages of learning from someone who was           │
+│                  just in your shoes.                         │
+│                                                              │
+│  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐  │
+│  │                │  │                │  │                │  │
+│  │    ┌────┐      │  │    ┌────┐      │  │    ┌────┐      │  │
+│  │    │ 🕐 │      │  │    │ £  │      │  │    │ 👥 │      │  │
+│  │    └────┘      │  │    └────┘      │  │    └────┘      │  │
+│  │                │  │                │  │                │  │
+│  │ Fresher        │  │ Affordable     │  │ They were      │  │
+│  │ knowledge      │  │ by design      │  │ just you       │  │
+│  │                │  │                │  │                │  │
+│  │ Your coach got │  │ Career coaches │  │ No corporate   │  │
+│  │ their offer    │  │ charge £150+   │  │ advice from    │  │
+│  │ **months ago** │  │ /hour...       │  │ people who     │  │
+│  │ not years...   │  │                │  │ forgot...      │  │
+│  │                │  │                │  │                │  │
+│  └────────────────┘  └────────────────┘  └────────────────┘  │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## Technical Implementation
 
-### Files to Modify
+### File to Modify
+- `src/components/WhyEarlyEdge.tsx`
 
-**src/components/HowItWorks.tsx**
-- Complete redesign of the component structure
-- Add timeline connector element (CSS-based lines or SVG)
-- Import illustration images or create styled placeholder components
-- Add CTA button at the bottom
-- Apply Inter font family throughout
-- Add subtle hover animations on step cards
+### Key Changes
 
-### Visual Options for Illustrations
+**1. Add Subheadline**
+```tsx
+<p className="text-center text-muted-foreground mb-12 max-w-md mx-auto font-sans font-light">
+  The advantages of learning from someone who was just in your shoes.
+</p>
+```
 
-**Option A: Use Existing Assets**
-- Use `coach-sarah-card.png` as a small preview for Step 1
-- Use Lucide icons with decorative backgrounds for Steps 2 & 3
-- Add decorative elements (circles, lines) with CSS
+**2. Icon Container Styling**
+```tsx
+<div className="w-20 h-20 rounded-full bg-secondary/60 flex items-center justify-center mb-6">
+  <reason.icon className="text-foreground" size={36} strokeWidth={1.5} />
+</div>
+```
 
-**Option B: Create Styled Components**
-- Build illustrated cards using existing coach photos
-- Create styled containers with gradients and shadows
-- More custom but stays within current design system
+**3. Card Wrapper**
+```tsx
+<div className="flex flex-col items-center text-center p-6 md:p-8 rounded-2xl bg-secondary/30 hover:bg-secondary/50 transition-all duration-300 hover:scale-[1.02]">
+```
 
-**Recommendation**: Option A is faster and maintains consistency
+**4. Enhanced Body Text with Bold Phrases**
+Store highlighted portions in data, then render with `<strong>` tags or use a simple approach with `dangerouslySetInnerHTML` for the bolded segments.
 
-### Timeline Implementation
+Alternative: Split body text into segments:
+```tsx
+body: [
+  "Your coach got their offer ",
+  { bold: "months ago" },
+  ", not years. They remember the exact questions..."
+]
+```
 
-Using CSS pseudo-elements:
-- Create a horizontal line behind the step circles
-- Step number circles positioned on the line
-- Responsive: switches to vertical on mobile
+Simpler approach: Just use `<span className="font-semibold">` inline in JSX.
 
-### CTA Button
-
-Match the header/hero button styling:
-- Black background, white text
-- `font-extralight` (200 weight)
-- Padding similar to "Get Started" button in header
-- Links to `/browse` or scrolls to coaches section
-
----
-
-## Animation Touches
-
-- **Fade-up on scroll**: Each step fades in as user scrolls
-- **Hover on cards**: Subtle scale (1.02) like coach cards
-- **Line draw**: Optional - animate the timeline line as user scrolls
-
----
-
-## Responsive Behavior
-
-| Breakpoint | Layout |
-|------------|--------|
-| Mobile (< 768px) | Vertical stack with timeline on left |
-| Tablet (768px+) | Horizontal 3-column with connecting line |
-| Desktop (1024px+) | Same as tablet with larger illustrations |
+**5. Typography Updates**
+- Section title: Change from `fontWeight: 600` to `font-extralight` (200)
+- Match "How it works" and "Popular categories" styling
 
 ---
 
 ## Summary of Changes
 
-1. Update section heading to use Inter font (extralight 200)
-2. Replace icon boxes with illustrated visuals
-3. Add horizontal timeline connector with numbered circles
-4. Update step titles to Inter medium (500)
-5. Update descriptions to Inter light (300)
-6. Add "Get Started" CTA button at bottom
-7. Add subtle hover animations
-8. Ensure mobile-responsive vertical layout
+| Element | Before | After |
+|---------|--------|-------|
+| Section title | Source Serif 600 | Inter font-extralight (200) |
+| Subheadline | None | Soft supporting line |
+| Icons | Floating, no container | Inside subtle circles |
+| Cards | No container | Rounded cards with hover |
+| Body text | Plain | Key phrases bolded |
+| Animations | Unused delay prop | Staggered fade-in |
+
+These changes create visual consistency with the rest of the site while making the value propositions more scannable and engaging, all without making claims that can't yet be backed up.
+
