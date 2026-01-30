@@ -17,11 +17,9 @@ interface Reason {
 const reasons: Reason[] = [
   {
     icon: Clock,
-    title: "Fresh from the frontlines",
+    title: "Months ago, not years",
     body: [
-      { text: "Your coach succeeded " },
-      { text: "months ago", bold: true },
-      { text: ", not years. Whether it's Oxbridge interviews, UCAT prep, or landing a spring week, they remember exactly what worked because they just did it." },
+      { text: "Your coach succeeded recently. They remember exactly what worked because they just did it." },
     ],
     delay: 0,
   },
@@ -29,21 +27,15 @@ const reasons: Reason[] = [
     icon: PoundSterling,
     title: "Quality without the price tag",
     body: [
-      { text: "Tutors and consultants charge " },
-      { text: "£150+ per hour", bold: true },
-      { text: ". Our coaches are high-achievers earning on the side, which means you get the same caliber of guidance starting from just " },
-      { text: "£25", bold: true },
-      { text: "." },
+      { text: "What consultants charge £150+/hour for, starting at £25/hour." },
     ],
     delay: 0.1,
   },
   {
     icon: Users,
-    title: "Someone who truly gets it",
+    title: "Insider knowledge",
     body: [
-      { text: "Forget generic advice from people who applied a decade ago. Your coach was in your " },
-      { text: "exact position", bold: true },
-      { text: " recently. They understand the pressure, the tight deadlines, and what it actually takes to stand out." },
+      { text: "What the process is really like. The stuff you won't find online." },
     ],
     delay: 0.2,
   },
@@ -70,14 +62,9 @@ const WhyEarlyEdge = () => {
     <section className="w-full bg-background py-16 md:py-24">
       <div className="max-w-[1200px] mx-auto px-4">
         {/* Section Headline */}
-        <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
           Why students choose EarlyEdge
         </h2>
-
-        {/* Subheadline */}
-        <p className="text-center text-muted-foreground mb-12 md:mb-16 max-w-md mx-auto font-sans font-light">
-          The advantages of learning from someone who was just in your shoes.
-        </p>
 
         {/* Three Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
