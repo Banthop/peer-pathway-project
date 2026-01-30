@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import stepFindCoach from "@/assets/step-find-coach.png";
 import stepCoaching from "@/assets/step-coaching.png";
 import stepResults from "@/assets/step-results.png";
@@ -8,61 +9,39 @@ const steps = [
     number: 1,
     title: "Find your coach",
     description: "Browse coaches who've been where you want to go. Book a free intro call to find your fit.",
-    visual: "coach-card",
+    image: stepFindCoach,
+    imageAlt: "Find your coach",
+    features: [
+      { label: "Search by goal", description: "Find coaches for your specific target" },
+      { label: "Filter by background", description: "University, company, field" },
+      { label: "Free intro call", description: "No commitment to start" },
+    ],
   },
   {
     number: 2,
     title: "Get coached",
     description: "Work 1-on-1 on applications, interviews, and strategy—tailored to your goals.",
-    visual: "video",
+    image: stepCoaching,
+    imageAlt: "Coaching session",
+    features: [
+      { label: "Application review", description: "CVs, personal statements, cover letters" },
+      { label: "Interview practice", description: "Mock interviews with feedback" },
+      { label: "Strategy sessions", description: "Planning and timeline guidance" },
+    ],
   },
   {
     number: 3,
     title: "Land your offer",
     description: "Join thousands who've secured spots at top universities and firms.",
-    visual: "trophy",
+    image: stepResults,
+    imageAlt: "Success trophy",
+    features: [
+      { label: "University offers", description: "Oxbridge, Russell Group, US schools" },
+      { label: "Internships", description: "Spring weeks, summer programs" },
+      { label: "Graduate roles", description: "Full-time positions at top firms" },
+    ],
   },
 ];
-
-const StepVisual = ({ type }: { type: string }) => {
-  if (type === "coach-card") {
-    return (
-      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <img 
-          src={stepFindCoach} 
-          alt="Find your coach" 
-          className="w-32 h-32 md:w-40 md:h-40 object-contain"
-        />
-      </div>
-    );
-  }
-
-  if (type === "video") {
-    return (
-      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <img 
-          src={stepCoaching} 
-          alt="Coaching session" 
-          className="w-32 h-32 md:w-40 md:h-40 object-contain"
-        />
-      </div>
-    );
-  }
-
-  if (type === "trophy") {
-    return (
-      <div className="relative w-full h-40 md:h-48 flex items-center justify-center">
-        <img 
-          src={stepResults} 
-          alt="Success trophy" 
-          className="w-32 h-32 md:w-40 md:h-40 object-contain"
-        />
-      </div>
-    );
-  }
-
-  return null;
-};
 
 const HowItWorks = () => {
   return (
@@ -73,81 +52,77 @@ const HowItWorks = () => {
           How it works
         </h2>
 
-        {/* Timeline Container */}
-        <div className="max-w-5xl mx-auto">
-          {/* Desktop: Horizontal Timeline */}
-          <div className="hidden md:block relative">
-            {/* Timeline Line */}
-            <div className="absolute top-6 left-[16.67%] right-[16.67%] h-0.5 bg-border" />
+        {/* Vertical Timeline */}
+        <div className="max-w-4xl mx-auto relative">
+          {/* Timeline Line - Desktop */}
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2" />
 
-            {/* Steps Grid */}
-            <div className="grid grid-cols-3 gap-8">
-              {steps.map((step) => (
-                <div
-                  key={step.number}
-                  className="relative flex flex-col items-center text-center group"
-                >
-                  {/* Step Number Circle */}
-                  <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center font-sans font-semibold text-lg mb-8 z-10 transition-transform duration-300 group-hover:scale-110">
+          {/* Steps */}
+          <div className="space-y-8 md:space-y-0">
+            {steps.map((step, index) => {
+              const isEven = index % 2 === 0;
+              const isLast = index === steps.length - 1;
+
+              return (
+                <div key={step.number} className="relative">
+                  {/* Step Number Circle - Desktop (centered on timeline) */}
+                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-8 w-12 h-12 rounded-full bg-foreground text-background items-center justify-center font-sans font-semibold text-lg z-10">
                     {step.number}
                   </div>
 
-                  {/* Visual */}
-                  <div className="mb-6 transition-transform duration-300 group-hover:scale-[1.02]">
-                    <StepVisual type={step.visual} />
-                  </div>
+                  {/* Card Container - Alternating sides on desktop */}
+                  <div className={`md:w-[calc(50%-2rem)] ${isEven ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
+                    {/* Card */}
+                    <div className="bg-card rounded-xl border border-border p-6 md:p-8 relative">
+                      {/* Step Number Circle - Mobile */}
+                      <div className="md:hidden absolute -left-3 top-6 w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center font-sans font-semibold text-base z-10">
+                        {step.number}
+                      </div>
 
-                  {/* Title */}
-                  <h3 className="text-xl font-sans font-medium text-foreground mb-3">
-                    {step.title}
-                  </h3>
+                      {/* Mobile: Add left padding to account for circle */}
+                      <div className="md:pl-0 pl-6">
+                        {/* Illustration */}
+                        <div className="flex justify-center mb-6">
+                          <img
+                            src={step.image}
+                            alt={step.imageAlt}
+                            className="w-28 h-28 md:w-36 md:h-36 object-contain"
+                          />
+                        </div>
 
-                  {/* Description */}
-                  <p className="font-sans font-light text-muted-foreground max-w-[220px]">
-                    {step.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
+                        {/* Title */}
+                        <h3 className="text-xl md:text-2xl font-sans font-medium text-foreground mb-3 text-center">
+                          {step.title}
+                        </h3>
 
-          {/* Mobile: Vertical Timeline */}
-          <div className="md:hidden relative">
-            {/* Timeline Line - Vertical on left */}
-            <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-border" />
+                        {/* Description */}
+                        <p className="font-sans font-light text-muted-foreground text-center mb-6">
+                          {step.description}
+                        </p>
 
-            {/* Steps */}
-            <div className="space-y-12">
-              {steps.map((step) => (
-                <div
-                  key={step.number}
-                  className="relative flex gap-6"
-                >
-                  {/* Step Number Circle */}
-                  <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center font-sans font-semibold text-lg z-10 flex-shrink-0">
-                    {step.number}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex-1 pt-1">
-                    {/* Visual */}
-                    <div className="mb-4">
-                      <StepVisual type={step.visual} />
+                        {/* Feature Pills */}
+                        <div className="flex flex-wrap justify-center gap-2">
+                          {step.features.map((feature) => (
+                            <Badge
+                              key={feature.label}
+                              variant="secondary"
+                              className="px-3 py-1.5 text-xs font-sans font-normal bg-secondary/80 text-secondary-foreground hover:bg-secondary cursor-default"
+                            >
+                              {feature.label}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-
-                    {/* Title */}
-                    <h3 className="text-lg font-sans font-medium text-foreground mb-2">
-                      {step.title}
-                    </h3>
-
-                    {/* Description */}
-                    <p className="font-sans font-light text-muted-foreground">
-                      {step.description}
-                    </p>
                   </div>
+
+                  {/* Connector to next step - Desktop */}
+                  {!isLast && (
+                    <div className="hidden md:block h-16" />
+                  )}
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
 
