@@ -1,12 +1,10 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
-import WhyEarlyEdge from "@/components/WhyEarlyEdge";
-import PopularCategories from "@/components/PopularCategories";
-import FeaturedCoaches from "@/components/FeaturedCoaches";
 import HowItWorks from "@/components/HowItWorks";
+import FeaturedCoaches from "@/components/FeaturedCoaches";
+import WhyEarlyEdge from "@/components/WhyEarlyEdge";
 import Reviews from "@/components/Reviews";
-import LogosBar from "@/components/LogosBar";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -21,22 +19,16 @@ const Index = () => {
           <SocialProof />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <WhyEarlyEdge />
-        </ScrollReveal>
-        <ScrollReveal delay={0.1}>
-          <PopularCategories />
+          <HowItWorks />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <FeaturedCoaches />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <HowItWorks />
+          <WhyEarlyEdge />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <Reviews />
-        </ScrollReveal>
-        <ScrollReveal delay={0.1}>
-          <LogosBar />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <FinalCTA />
