@@ -61,12 +61,12 @@ const Reviews = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-foreground">
+          <h2 className="text-3xl md:text-4xl font-sans font-light text-foreground">
             Reviews
           </h2>
           <a
             href="#all-reviews"
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-sans font-light text-primary hover:underline"
           >
             See all
             <ArrowRight className="w-4 h-4" />
@@ -82,17 +82,17 @@ const Reviews = () => {
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-4">
-                <p className="font-medium text-foreground">{review.name}</p>
-                <p className="text-sm text-muted-foreground">{review.date}</p>
+                <p className="font-sans font-medium text-foreground">{review.name}</p>
+                <p className="text-sm text-muted-foreground font-sans font-light">{review.date}</p>
               </div>
               
               {/* Quote */}
-              <p className="text-muted-foreground mb-4 line-clamp-3">
+              <p className="text-muted-foreground mb-4 line-clamp-3 font-sans font-light">
                 "{review.quote}"
               </p>
               
               {/* Outcome Badge */}
-              <div className="inline-block bg-primary text-primary-foreground text-xs font-medium px-3 py-1.5 rounded-full mb-4">
+              <div className="inline-block bg-primary text-primary-foreground text-xs font-sans font-light px-3 py-1.5 rounded-full mb-4">
                 {review.outcome}
               </div>
               
@@ -103,7 +103,7 @@ const Reviews = () => {
                   alt={review.coachName}
                   className="w-8 h-8 rounded-full object-cover"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground font-sans font-light">
                   Coached by <span className="text-foreground font-medium">{review.coachName}</span>
                 </p>
               </div>

@@ -160,22 +160,22 @@ const FeaturedCoaches = () => {
                   className="w-16 h-16 rounded-full object-cover flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-base text-foreground truncate">
+                  <h3 className="font-sans font-medium text-base text-foreground truncate">
                     {coach.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground truncate">
+                  <p className="text-sm text-muted-foreground truncate font-sans font-light">
                     {coach.university}
                   </p>
                   <div className="flex items-center gap-1 mt-1">
                     <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span className="text-xs font-medium text-foreground">{coach.rating}</span>
-                    <span className="text-xs text-muted-foreground">· {coach.sessions} sessions</span>
+                    <span className="text-xs font-sans font-light text-foreground">{coach.rating}</span>
+                    <span className="text-xs text-muted-foreground font-sans font-light">· {coach.sessions} sessions</span>
                   </div>
                 </div>
               </div>
 
               {/* Role */}
-              <p className="text-sm text-foreground mb-3 line-clamp-2">
+              <p className="text-sm text-foreground mb-3 line-clamp-2 font-sans font-light">
                 {coach.role}
               </p>
 
@@ -202,7 +202,7 @@ const FeaturedCoaches = () => {
                 {coach.specialties.map((specialty, i) => (
                   <span
                     key={i}
-                    className="px-2.5 py-1 text-xs font-medium text-muted-foreground bg-secondary rounded-full"
+                    className="px-2.5 py-1 text-xs font-sans font-light text-muted-foreground bg-secondary rounded-full"
                   >
                     {specialty}
                   </span>

@@ -264,16 +264,10 @@ const Hero = () => {
         </h1>
         
         <div className="mb-10 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: "0.1s" }}>
-          <p 
-            className="text-foreground" 
-            style={{ fontSize: '19px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
-          >
+          <p className="text-foreground text-lg font-sans font-light">
             Get prepped for uni applications, tests, and internships.
           </p>
-          <p 
-            className="text-muted-foreground mt-1" 
-            style={{ fontSize: '15px', fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
-          >
+          <p className="text-muted-foreground mt-1 text-sm font-sans font-light">
             From students and recent grads who just did it.
           </p>
         </div>
@@ -293,8 +287,8 @@ const Hero = () => {
 
         {/* Pricing Hint */}
         <p 
-          className="text-muted-foreground mb-6 animate-fade-up"
-          style={{ animationDelay: "0.25s", fontFamily: 'Inter, sans-serif', fontWeight: 300, fontSize: '14px' }}
+          className="text-muted-foreground mb-6 animate-fade-up text-sm font-sans font-light"
+          style={{ animationDelay: "0.25s" }}
         >
           <span className="text-green-600 font-medium">Book a free intro call</span>
           <span className="mx-2">•</span>
@@ -312,8 +306,7 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
               >
                 {category}
               </Badge>
@@ -325,8 +318,7 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
               >
                 {category}
               </Badge>
@@ -338,8 +330,7 @@ const Hero = () => {
               <Badge
                 key={category}
                 variant="outline"
-                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors"
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
               >
                 {category}
               </Badge>

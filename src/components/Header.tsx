@@ -12,22 +12,21 @@ const Header = () => {
           {/* Logo and Navigation - left side */}
           <div className="flex items-center gap-8">
             <a href="/" className="flex items-center">
-              <span className="text-xl md:text-2xl text-foreground" style={{ fontFamily: 'Inter, sans-serif' }}>
-                <span style={{ fontWeight: 400 }}>Early</span>
-                <span style={{ fontWeight: 700 }}>Edge</span>
+              <span className="text-xl md:text-2xl text-foreground font-sans">
+                <span className="font-light">Early</span>
+                <span className="font-bold">Edge</span>
               </span>
             </a>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <button className="flex items-center gap-1 text-sm text-foreground hover:text-primary transition-colors" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              <button className="flex items-center gap-1 text-sm text-foreground hover:text-primary transition-colors font-sans font-light">
                 Browse
                 <ChevronDown className="w-4 h-4" />
               </button>
               <a
                 href="#become-coach"
-                className="text-sm text-foreground hover:text-primary transition-colors"
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
               >
                 Become a Coach
               </a>
@@ -36,10 +35,10 @@ const Header = () => {
 
           {/* Desktop CTA - pushed to right */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-foreground" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+            <Button variant="ghost" size="sm" className="text-foreground font-sans font-light">
               Log In
             </Button>
-            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-sans font-light">
               Get Started
             </Button>
           </div>
@@ -61,22 +60,21 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-4">
-              <button className="flex items-center gap-1 text-sm text-foreground" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+              <button className="flex items-center gap-1 text-sm text-foreground font-sans font-light">
                 Browse
                 <ChevronDown className="w-4 h-4" />
               </button>
               <a
                 href="#become-coach"
-                className="text-sm text-foreground"
-                style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}
+                className="text-sm text-foreground font-sans font-light"
               >
                 Become a Coach
               </a>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" className="justify-start" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                <Button variant="ghost" className="justify-start font-sans font-light">
                   Log In
                 </Button>
-                <Button className="bg-primary text-primary-foreground" style={{ fontFamily: 'Inter, sans-serif', fontWeight: 300 }}>
+                <Button className="bg-primary text-primary-foreground font-sans font-light">
                   Get Started
                 </Button>
               </div>

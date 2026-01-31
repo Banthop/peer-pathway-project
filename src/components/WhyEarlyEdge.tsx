@@ -81,7 +81,7 @@ const WhyEarlyEdge = () => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-foreground mb-3 font-sans font-semibold text-xl">
+                <h3 className="text-foreground mb-3 font-sans font-medium text-xl">
                   {reason.title}
                 </h3>
 
