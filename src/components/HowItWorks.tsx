@@ -1,125 +1,87 @@
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import stepFindCoach from "@/assets/step-find-coach.png";
-import stepCoaching from "@/assets/step-coaching.png";
-import stepResults from "@/assets/step-results.png";
+import { Search, User, MessageCircle, Calendar, Video, Star, LucideIcon } from "lucide-react";
 
-const steps = [
+interface Step {
+  icon: LucideIcon;
+  headline: string;
+  body: string;
+}
+
+const steps: Step[] = [
   {
-    number: 1,
-    title: "Find your coach",
-    description: "Browse coaches who've been where you want to go. Book a free intro call to find your fit.",
-    image: stepFindCoach,
-    imageAlt: "Find your coach",
-    features: [
-      { label: "Search by goal", description: "Find coaches for your specific target" },
-      { label: "Filter by background", description: "University, company, field" },
-      { label: "Free intro call", description: "No commitment to start" },
-    ],
+    icon: Search,
+    headline: "Browse coaches",
+    body: "Filter by goal, uni, firm, or background. Find someone who's done exactly what you're aiming for.",
   },
   {
-    number: 2,
-    title: "Get coached",
-    description: "Work 1-on-1 on applications, interviews, and strategy—tailored to your goals.",
-    image: stepCoaching,
-    imageAlt: "Coaching session",
-    features: [
-      { label: "Application review", description: "CVs, personal statements, cover letters" },
-      { label: "Interview practice", description: "Mock interviews with feedback" },
-      { label: "Strategy sessions", description: "Planning and timeline guidance" },
-    ],
+    icon: User,
+    headline: "Check their profile",
+    body: "See their experience, LinkedIn, and reviews from other students.",
   },
   {
-    number: 3,
-    title: "Land your offer",
-    description: "Join thousands who've secured spots at top universities and firms.",
-    image: stepResults,
-    imageAlt: "Success trophy",
-    features: [
-      { label: "University offers", description: "Oxbridge, Russell Group, US schools" },
-      { label: "Internships", description: "Spring weeks, summer programs" },
-      { label: "Graduate roles", description: "Full-time positions at top firms" },
-    ],
+    icon: MessageCircle,
+    headline: "Book a free intro",
+    body: "A 15-minute call to see if they're the right fit. No payment, no commitment.",
+  },
+  {
+    icon: Calendar,
+    headline: "Book a session",
+    body: "Pick a time that works. Pay securely — you're only charged after the session is confirmed.",
+  },
+  {
+    icon: Video,
+    headline: "Meet 1-on-1",
+    body: "A private call to go through your questions. CVs, prep, what to expect — whatever you need.",
+  },
+  {
+    icon: Star,
+    headline: "Leave a review",
+    body: "Help other students find great coaches. Book again anytime — same coach or someone new.",
   },
 ];
 
 const HowItWorks = () => {
   return (
-    <section className="py-16 md:py-24 overflow-hidden">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         {/* Section Heading */}
-        <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-16 md:mb-20 text-center">
+        <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
           How it works
         </h2>
 
         {/* Vertical Timeline */}
-        <div className="max-w-4xl mx-auto relative">
-          {/* Timeline Line - Desktop */}
-          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2" />
+        <div className="max-w-xl mx-auto relative">
+          {/* Vertical line */}
+          <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
 
           {/* Steps */}
-          <div className="space-y-8 md:space-y-0">
+          <div className="space-y-0">
             {steps.map((step, index) => {
-              const isEven = index % 2 === 0;
+              const Icon = step.icon;
               const isLast = index === steps.length - 1;
 
               return (
-                <div key={step.number} className="relative">
-                  {/* Step Number Circle - Desktop (centered on timeline) */}
-                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-8 w-12 h-12 rounded-full bg-foreground text-background items-center justify-center font-sans font-semibold text-lg z-10">
-                    {step.number}
+                <div
+                  key={step.headline}
+                  className={`relative flex gap-5 ${isLast ? "" : "pb-8"}`}
+                >
+                  {/* Icon node on timeline */}
+                  <div className="relative z-10 w-10 h-10 rounded-full bg-background border border-border flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4 text-foreground" />
                   </div>
 
-                  {/* Card Container - Alternating sides on desktop */}
-                  <div className={`md:w-[calc(50%-2rem)] ${isEven ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
-                    {/* Card */}
-                    <div className="bg-card rounded-xl border border-border p-6 md:p-8 relative">
-                      {/* Step Number Circle - Mobile */}
-                      <div className="md:hidden absolute -left-3 top-6 w-10 h-10 rounded-full bg-foreground text-background flex items-center justify-center font-sans font-semibold text-base z-10">
-                        {step.number}
-                      </div>
+                  {/* Horizontal branch connector */}
+                  <div className="absolute left-10 top-5 w-4 h-px bg-border" />
 
-                      {/* Mobile: Add left padding to account for circle */}
-                      <div className="md:pl-0 pl-6">
-                        {/* Illustration */}
-                        <div className="flex justify-center mb-6">
-                          <img
-                            src={step.image}
-                            alt={step.imageAlt}
-                            className="w-28 h-28 md:w-36 md:h-36 object-contain"
-                          />
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-sans font-medium text-foreground mb-3 text-center">
-                          {step.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="font-sans font-light text-muted-foreground text-center mb-6">
-                          {step.description}
-                        </p>
-
-                        {/* Feature Pills */}
-                        <div className="flex flex-wrap justify-center gap-2">
-                          {step.features.map((feature) => (
-                            <Badge
-                              key={feature.label}
-                              variant="secondary"
-                              className="px-3 py-1.5 text-xs font-sans font-normal bg-secondary/80 text-secondary-foreground hover:bg-secondary cursor-default"
-                            >
-                              {feature.label}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                  {/* Content */}
+                  <div className="flex-1 pt-1.5 pl-2">
+                    <h3 className="font-sans font-medium text-foreground mb-1 text-base">
+                      {step.headline}
+                    </h3>
+                    <p className="font-sans font-light text-muted-foreground text-sm leading-relaxed">
+                      {step.body}
+                    </p>
                   </div>
-
-                  {/* Connector to next step - Desktop */}
-                  {!isLast && (
-                    <div className="hidden md:block h-16" />
-                  )}
                 </div>
               );
             })}
@@ -127,7 +89,7 @@ const HowItWorks = () => {
         </div>
 
         {/* CTA Button */}
-        <div className="text-center mt-16 md:mt-20">
+        <div className="text-center mt-12 md:mt-16">
           <Button
             size="lg"
             className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"
