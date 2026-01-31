@@ -37,8 +37,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8">
           {/* Logo & Socials */}
           <div className="col-span-2 md:col-span-1">
-            <a href="/" className="text-2xl font-serif font-semibold mb-6 block">
-              EarlyEdge
+            <a href="/" className="text-2xl font-sans mb-6 block">
+              <span className="font-light">Early</span><span className="font-bold">Edge</span>
             </a>
             <div className="flex gap-4">
               <a
@@ -65,7 +65,7 @@ const Footer = () => {
           {/* Link Columns */}
           {Object.values(footerLinks).map((column) => (
             <div key={column.title}>
-              <h4 className="font-medium text-dark-foreground mb-4">
+              <h4 className="font-sans font-medium text-dark-foreground mb-4">
                 {column.title}
               </h4>
               <ul className="space-y-3">
@@ -73,7 +73,7 @@ const Footer = () => {
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-sm text-dark-foreground/60 hover:text-dark-foreground transition-colors"
+                      className="text-sm text-dark-foreground/60 hover:text-dark-foreground transition-colors font-sans font-light"
                     >
                       {link.name}
                     </a>
@@ -86,7 +86,7 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-dark-foreground/10">
-          <p className="text-sm text-dark-foreground/40">
+          <p className="text-sm text-dark-foreground/40 font-sans font-light">
             © 2025 EarlyEdge. All rights reserved.
           </p>
         </div>
