@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import coachSarah from "@/assets/coach-sarah.jpg";
@@ -13,9 +14,9 @@ import logoGoldman from "@/assets/logo-goldman-sachs.png";
 import logoMcKinsey from "@/assets/logo-mckinsey-new.png";
 import logoMeta from "@/assets/logo-meta.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
-
 const coaches = [
   {
+    id: "sarah-k",
     name: "Sarah K.",
     image: coachSarah,
     university: "Oxford PPE '24",
@@ -27,6 +28,7 @@ const coaches = [
     specialties: ["Interview Prep", "CV Review", "Banking"],
   },
   {
+    id: "david-w",
     name: "David W.",
     image: coachDavid,
     university: "Cambridge Economics",
@@ -38,6 +40,7 @@ const coaches = [
     specialties: ["Case Studies", "Consulting", "Strategy"],
   },
   {
+    id: "james-l",
     name: "James L.",
     image: coachJames,
     university: "Imperial Computing",
@@ -49,6 +52,7 @@ const coaches = [
     specialties: ["Coding Interview", "System Design", "Tech"],
   },
   {
+    id: "emily-r",
     name: "Emily R.",
     image: coachEmily,
     university: "LSE Law",
@@ -60,6 +64,7 @@ const coaches = [
     specialties: ["Law Applications", "Interview Prep", "LNAT"],
   },
   {
+    id: "sarah-k",
     name: "Sarah K.",
     image: coachSarah,
     university: "Oxford PPE '24",
@@ -71,6 +76,7 @@ const coaches = [
     specialties: ["Interview Prep", "CV Review", "Banking"],
   },
   {
+    id: "david-w",
     name: "David W.",
     image: coachDavid,
     university: "Cambridge Economics",
@@ -209,15 +215,14 @@ const FeaturedCoaches = () => {
                 ))}
               </div>
 
-              {/* CTA */}
               <div className="flex items-center justify-between mt-auto pt-2">
-                <a
-                  href="#"
+                <Link
+                  to={`/coach/${coach.id}`}
                   className="inline-flex items-center gap-1.5 text-sm font-extralight text-foreground hover:text-foreground/80 transition-colors duration-200 group/link"
                 >
                   View profile
                   <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-0.5" />
-                </a>
+                </Link>
                 <Button
                   size="sm"
                   className="bg-foreground text-background hover:bg-foreground/90 text-xs px-3 font-extralight"
