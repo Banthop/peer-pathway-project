@@ -19,10 +19,7 @@ const SocialProof = () => {
     <section className="py-12 md:py-16 bg-background border-y border-border/50 w-full">
       <div className="w-full px-0">
         {/* Stats Line */}
-        <h2 
-          className="text-center text-2xl md:text-3xl tracking-wide text-foreground mb-8 px-4"
-          style={{ fontFamily: '"Source Serif 4", serif', fontWeight: 600 }}
-        >
+        <h2 className="text-center text-2xl md:text-3xl tracking-wide text-foreground mb-8 px-4 font-sans font-light">
           Coaches From 50+ Universities and Firms
         </h2>
 
