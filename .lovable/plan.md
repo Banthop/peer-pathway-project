@@ -1,142 +1,369 @@
 
 
-# Compact Vertical Timeline "How It Works" Redesign
+# Individual Coach Profile Page
 
 ## Overview
 
-Replace the current 3-step card-based timeline with a compact, minimal 6-step vertical timeline featuring small icons, short text, and subtle branch connectors. The design will be visually elegant while keeping spacing tight.
+Create a comprehensive coach profile page inspired by Leland's design but tailored to EarlyEdge's minimal, Inter Light aesthetic. The page will showcase coach credentials, services, experience, and reviews in a clean, conversion-focused layout.
 
 ---
 
-## Design Concept
+## Page Structure (Desktop: Two-Column Layout)
 
 ```text
-                    How it works
-                         
-         ○───── Browse coaches
-         │      Filter by goal, uni, firm...
-         │
-         ○───── Check their profile
-         │      See their experience, LinkedIn...
-         │
-         ○───── Book a free intro
-         │      A 15-minute call to see if...
-         │
-         ○───── Book a session
-         │      Pick a time that works...
-         │
-         ○───── Meet 1-on-1
-         │      A private call to go through...
-         │
-         ○───── Leave a review
-                Help other students find...
++------------------------------------------------------------------+
+|                           HEADER                                  |
++------------------------------------------------------------------+
+|  Breadcrumb: Home / Coaches / Sarah K.                           |
++------------------------------------------------------------------+
+|                                                                   |
+|  +-------------------------------------------+  +---------------+ |
+|  |                                           |  |  STICKY       | |
+|  |  MAIN CONTENT                             |  |  BOOKING      | |
+|  |                                           |  |  SIDEBAR      | |
+|  |  - Hero Section (photo, name, stats)      |  |               | |
+|  |  - About / Bio                            |  |  - Avail.     | |
+|  |  - Services/Offerings                     |  |  - Trial btn  | |
+|  |  - Experience                             |  |  - Book btn   | |
+|  |  - Education                              |  |  - Message    | |
+|  |  - Reviews                                |  |               | |
+|  |                                           |  +---------------+ |
+|  +-------------------------------------------+                    |
+|                                                                   |
++------------------------------------------------------------------+
+|                           FOOTER                                  |
++------------------------------------------------------------------+
 ```
-
-### Visual Elements
-- **Vertical timeline line**: Subtle border color running down the left side
-- **Step nodes**: Small circles (icons inside) positioned on the timeline
-- **Branch connectors**: Horizontal line from node to content
-- **Content**: Headline + short body, aligned to the right of the timeline
-- **Tight spacing**: Compact gaps between steps (~24-32px)
 
 ---
 
-## Step Content
+## Section-by-Section Breakdown
 
-| Step | Icon | Headline | Body |
-|------|------|----------|------|
-| 1 | Search | Browse coaches | Filter by goal, uni, firm, or background. Find someone who's done exactly what you're aiming for. |
-| 2 | User | Check their profile | See their experience, LinkedIn, and reviews from other students. |
-| 3 | MessageCircle | Book a free intro | A 15-minute call to see if they're the right fit. No payment, no commitment. |
-| 4 | Calendar | Book a session | Pick a time that works. Pay securely - you're only charged after the session is confirmed. |
-| 5 | Video | Meet 1-on-1 | A private call to go through your questions. CVs, prep, what to expect - whatever you need. |
-| 6 | Star | Leave a review | Help other students find great coaches. Book again anytime - same coach or someone new. |
+### 1. Breadcrumb Navigation
+- Simple text breadcrumb: `Home / Coaches / Sarah K.`
+- Helps with SEO and navigation context
+
+### 2. Hero Section (Profile Header)
+
+```text
++------------------------------------------------------------------+
+|  +--------+                                                       |
+|  |        |   Sarah K.  ★ 4.9 (127 reviews)                      |
+|  | PHOTO  |                                                       |
+|  |  96px  |   "Helping you land your dream offer at top firms"   |
+|  |        |                                                       |
+|  +--------+   127 sessions  ·  24 followers                       |
+|                                                                   |
+|  [Oxford icon] Studied at Oxford     [GS icon] Works at Goldman   |
+|                                                                   |
+|  Successful clients at:  [GS] [McK] [JPM] [Bain] +12             |
++------------------------------------------------------------------+
+```
+
+**Content:**
+- Large profile photo (96px circle)
+- Name + star rating + review count
+- One-line tagline/headline
+- Stats: sessions completed, followers
+- Education badge (uni logo + text)
+- Work badge (company logo + text)
+- Success logos: companies where clients got offers
+
+### 3. About Section
+
+```text
++------------------------------------------------------------------+
+|  About Sarah                                                      |
+|  ------------------------------------------------------------------
+|  3-4 paragraphs about the coach's background, approach, and       |
+|  what makes them unique. Expandable with "Read more" if long.     |
+|                                                                   |
+|  Can help with:                                                   |
+|  [Interview Prep] [CV Review] [Banking] [Spring Week Apps]        |
++------------------------------------------------------------------+
+```
+
+**Content:**
+- Coach bio (expandable if > 200 words)
+- Skills/expertise tags
+
+### 4. Coaching Offerings Section
+
+```text
++------------------------------------------------------------------+
+|  Coaching Services                                                |
+|  ------------------------------------------------------------------
+|  +---------------------------+  +---------------------------+     |
+|  | CV Review                 |  | Mock Interview            |     |
+|  | 45 min session            |  | 60 min session            |     |
+|  | Starting at £40           |  | Starting at £60           |     |
+|  | [Book Now]                |  | [Book Now]                |     |
+|  +---------------------------+  +---------------------------+     |
+|                                                                   |
+|  Custom Hourly · £50/hr                                           |
+|  Get help with specific questions or topics.  [Buy coaching]      |
++------------------------------------------------------------------+
+```
+
+**Content:**
+- Service cards with name, duration, price, description
+- Custom hourly rate option
+
+### 5. Experience Section
+
+```text
++------------------------------------------------------------------+
+|  Experience                                                       |
+|  ------------------------------------------------------------------
+|  [GS Logo]  Incoming Analyst                                      |
+|             Goldman Sachs                                         |
+|             Starting 2025                                         |
+|                                                                   |
+|  [Oxford]   PPE Student                                           |
+|             University of Oxford                                  |
+|             2021 - 2024                                           |
++------------------------------------------------------------------+
+```
+
+**Content:**
+- Vertical timeline of work/education experience
+- Logo + role + company + dates
+- Optional skills tags per role
+
+### 6. Education Section
+
+```text
++------------------------------------------------------------------+
+|  Education                                                        |
+|  ------------------------------------------------------------------
+|  [Oxford Logo]  University of Oxford                              |
+|                 BA Philosophy, Politics & Economics               |
+|                 2021 - 2024                                       |
+|                 First Class Honours                               |
++------------------------------------------------------------------+
+```
+
+### 7. Reviews Section
+
+```text
++------------------------------------------------------------------+
+|  91 Reviews                                                       |
+|  ------------------------------------------------------------------
+|  Overall: ★★★★★ 4.9                                              |
+|                                                                   |
+|  Knowledge: 5.0  |  Value: 4.8  |  Responsiveness: 5.0            |
+|  ------------------------------------------------------------------
+|  Successful clients at: [GS] [McK] [Oxford] [Cambridge]           |
+|  ------------------------------------------------------------------
+|                                                                   |
+|  [Review Card 1]  [Review Card 2]  [Review Card 3]                |
+|                                                                   |
+|  [Load more reviews]                                              |
++------------------------------------------------------------------+
+```
+
+**Content:**
+- Aggregate rating summary
+- Category ratings (Knowledge, Value, Responsiveness, Supportiveness)
+- Success logos (where clients got offers)
+- Individual review cards
+- Pagination/load more
+
+### 8. Sticky Booking Sidebar (Desktop Only)
+
+```text
++---------------------------+
+|  Available Today 6:00 PM  |  <- green dot indicator
++---------------------------+
+|  [Schedule a free intro]  |  <- primary button
+|  [Book a session]         |  <- secondary button
++---------------------------+
+|  Protected by EarlyEdge   |
+|  Quality Guarantee        |
++---------------------------+
+|  Questions? Message Sarah |
+|  before you get started.  |
+|  [Send a message]         |  <- link
++---------------------------+
+```
+
+---
+
+## Mobile Layout
+
+On mobile, the sidebar content moves to:
+1. **Floating bottom bar** with "Book a free intro" button
+2. Or inline at the top after the hero section
+
+The main content stacks vertically in the same order.
 
 ---
 
 ## Technical Implementation
 
-### File to Modify
-`src/components/HowItWorks.tsx`
+### Files to Create
 
-### Key Changes
+| File | Purpose |
+|------|---------|
+| `src/pages/CoachProfile.tsx` | Main page component |
+| `src/components/coach/CoachHero.tsx` | Hero section with photo, name, stats |
+| `src/components/coach/CoachAbout.tsx` | Bio and skills |
+| `src/components/coach/CoachServices.tsx` | Service offerings cards |
+| `src/components/coach/CoachExperience.tsx` | Work experience timeline |
+| `src/components/coach/CoachEducation.tsx` | Education section |
+| `src/components/coach/CoachReviews.tsx` | Reviews with ratings |
+| `src/components/coach/BookingSidebar.tsx` | Sticky booking sidebar |
 
-1. **Replace data structure**: Update the `steps` array with 6 new steps including Lucide icons
+### Route Setup
 
-2. **New layout structure**:
+Add to `src/App.tsx`:
 ```tsx
-<div className="relative">
-  {/* Vertical line */}
-  <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
-  
-  {/* Steps */}
-  {steps.map((step) => (
-    <div className="relative flex gap-6 pb-8">
-      {/* Icon node on timeline */}
-      <div className="relative z-10 w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center">
-        <step.icon className="w-4 h-4 text-foreground" />
-      </div>
-      
-      {/* Content */}
-      <div className="flex-1 pt-1">
-        <h3 className="font-sans font-medium text-foreground mb-1">
-          {step.headline}
-        </h3>
-        <p className="font-sans font-light text-muted-foreground text-sm">
-          {step.body}
-        </p>
-      </div>
-    </div>
-  ))}
-</div>
+<Route path="/coach/:coachId" element={<CoachProfile />} />
 ```
 
-3. **Styling details**:
-   - Icon circles: `w-10 h-10` (40px) with subtle border
-   - Timeline line: `w-px bg-border` positioned behind icons
-   - Step spacing: `pb-8` (32px) between steps
-   - Text: Small body text (`text-sm`), medium headline weight
-   - Max width: `max-w-2xl` centered for readability
+### Data Structure
 
-4. **Remove**: 
-   - Image assets (no longer needed)
-   - Badge/pill components
-   - Alternating card layout
-   - Large step numbers
+```typescript
+interface Coach {
+  id: string;
+  name: string;
+  tagline: string;
+  photo: string;
+  rating: number;
+  reviewCount: number;
+  sessionsCompleted: number;
+  followers: number;
+  university: {
+    name: string;
+    logo: string;
+    degree: string;
+    years: string;
+  };
+  company: {
+    name: string;
+    logo: string;
+    role: string;
+  };
+  successCompanies: { name: string; logo: string }[];
+  bio: string;
+  skills: string[];
+  services: {
+    name: string;
+    duration: string;
+    price: number;
+    description: string;
+  }[];
+  hourlyRate: number;
+  experience: {
+    logo: string;
+    role: string;
+    company: string;
+    dates: string;
+    description?: string;
+    skills?: string[];
+  }[];
+  education: {
+    logo: string;
+    institution: string;
+    degree: string;
+    years: string;
+    achievement?: string;
+  }[];
+  reviews: {
+    name: string;
+    date: string;
+    rating: number;
+    text: string;
+    outcome?: string;
+  }[];
+  availability: {
+    nextSlot: string;
+    timezone: string;
+  };
+}
+```
 
-5. **Keep**:
-   - Section heading style (`font-sans font-extralight`)
-   - "Get Started" CTA button at bottom
-   - Responsive padding
+### Styling Approach
+
+- Use existing Inter Light typography (`font-sans font-light`)
+- White background (`bg-background`) throughout
+- Subtle borders (`border-border`)
+- Cards with `bg-card` and `card-shadow`
+- Primary buttons for main CTAs
+- Sticky sidebar with `sticky top-24`
 
 ---
 
-## Visual Comparison
+## Implementation Steps
 
-| Aspect | Current | New |
-|--------|---------|-----|
-| Steps | 3 | 6 |
-| Icons | Image illustrations | Lucide icons (small) |
-| Layout | Alternating cards | Single column timeline |
-| Spacing | Large gaps with cards | Compact, tight |
-| Content | Long descriptions + badges | Short headline + 1-2 sentences |
-| Visual weight | Heavy (cards, images) | Light, minimal |
+1. **Create route and page shell**
+   - Add route in App.tsx
+   - Create CoachProfile.tsx with basic layout structure
+   - Two-column grid: main content + sidebar
+
+2. **Build CoachHero component**
+   - Profile photo, name, rating
+   - Stats row (sessions, followers)
+   - University/company badges
+   - Success logos row
+
+3. **Build CoachAbout component**
+   - Bio text with "Read more" expansion
+   - Skills tags grid
+
+4. **Build CoachServices component**
+   - Service cards in grid
+   - Custom hourly rate row
+
+5. **Build CoachExperience component**
+   - Vertical timeline with logos
+   - Role, company, dates
+
+6. **Build CoachEducation component**
+   - Similar timeline format for education
+
+7. **Build CoachReviews component**
+   - Rating summary with category breakdowns
+   - Review cards grid
+   - Load more functionality
+
+8. **Build BookingSidebar component**
+   - Availability indicator
+   - CTA buttons
+   - Quality guarantee
+   - Message option
+
+9. **Mobile responsiveness**
+   - Hide sidebar on mobile
+   - Add floating bottom booking bar
+   - Stack all sections vertically
+
+10. **Link from FeaturedCoaches**
+    - Update "View profile" links to go to `/coach/:id`
 
 ---
 
-## Responsive Behavior
+## Sample Content (Using Sarah K.)
 
-- **Desktop**: Timeline left-aligned with content, centered in container
-- **Mobile**: Same layout, just narrower - timeline works well at any width
-- No layout changes needed between breakpoints (unlike current alternating design)
+| Field | Value |
+|-------|-------|
+| Name | Sarah K. |
+| Tagline | Helping you land your dream offer at top investment banks |
+| University | Oxford, PPE, 2021-2024 |
+| Company | Goldman Sachs, Incoming Analyst |
+| Sessions | 127 |
+| Rating | 4.9 |
+| Skills | Interview Prep, CV Review, Spring Week, Investment Banking, Assessment Centres |
+| Hourly Rate | £50/hr |
 
 ---
 
-## Summary
+## Design Notes
 
-This redesign transforms the "How It Works" section from a heavy 3-step card layout to an elegant 6-step vertical timeline that:
-- Communicates the full user journey clearly
-- Uses compact, scannable formatting
-- Matches the site's minimal aesthetic
-- Feels modern and refined
+- Keep the page clean and scannable
+- Use logos prominently (builds trust)
+- Sticky sidebar keeps booking CTA always visible on desktop
+- Mobile bottom bar ensures conversion on mobile too
+- Match the minimal, light aesthetic from the rest of the site
+- No heavy animations - subtle hovers only
 
