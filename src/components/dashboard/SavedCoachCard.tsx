@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
  
  export function SavedCoachCard({ coach, onUnsave }: SavedCoachCardProps) {
    return (
-    <div className="group rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50">
+    <div className="group rounded-lg border border-border/60 bg-muted/50 p-4 transition-all duration-200 hover:border-border">
        <div className="flex items-start justify-between mb-3">
          <div className="flex items-start gap-3">
            <Avatar className="h-11 w-11 border border-border">

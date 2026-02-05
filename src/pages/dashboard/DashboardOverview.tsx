@@ -24,7 +24,7 @@
    const hasMorePastSessions = pastSessions.length > 3;
  
    return (
-     <div className="px-6 py-8 md:px-8 lg:px-12 space-y-8">
+     <div className="px-6 py-8 md:px-8 lg:px-12 space-y-6">
        {/* Header */}
        <div>
          <h1 className="text-3xl font-light text-foreground font-sans">Welcome back, Alex</h1>
@@ -39,7 +39,7 @@
        )}
  
        {/* Upcoming Sessions */}
-       <section className="rounded-xl border border-border bg-background p-6">
+       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
          <h2 className="mb-4 text-lg font-medium text-foreground font-sans">Upcoming sessions</h2>
          {upcomingSessions.length > 0 ? (
            <div className="grid gap-4 md:grid-cols-2">
@@ -59,7 +59,7 @@
        </section>
  
        {/* Past Sessions */}
-       <section className="rounded-xl border border-border bg-background p-6">
+       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
          <div className="mb-4 flex items-center justify-between">
            <h2 className="text-lg font-medium text-foreground font-sans">Past sessions</h2>
            {hasMorePastSessions && (
@@ -83,7 +83,7 @@
        </section>
  
        {/* Recommended Coaches */}
-       <section className="rounded-xl border border-border bg-background p-6">
+       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
          <div className="mb-4 flex items-center justify-between">
            <h2 className="text-lg font-medium text-foreground font-sans">Coaches you might like</h2>
            <Link
