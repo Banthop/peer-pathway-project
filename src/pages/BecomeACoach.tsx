@@ -69,7 +69,7 @@
              </ScrollReveal>
              <ScrollReveal delay={0.1}>
                <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-8 max-w-2xl mx-auto">
-                You landed the offer, got into the uni, aced the test. Help students one step behind you - and get paid while you're at it.
+                 You landed the offer, got into the uni, aced the test. Help students one step behind you, and get paid while you're at it.
                </p>
              </ScrollReveal>
              <ScrollReveal delay={0.2}>
@@ -122,7 +122,7 @@
          </section>
  
         {/* Why Coach Section */}
-           <section className="py-12 md:py-16 bg-background">
+            <section className="pt-12 md:pt-16 pb-6 md:pb-8 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
                  <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
@@ -131,7 +131,7 @@
              </ScrollReveal>
 
               {/* Benefit cards */}
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-6 md:mb-8">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
@@ -150,8 +150,8 @@
             </div>
 
               {/* Time commitment - FEATURED CALLOUT */}
-               <ScrollReveal delay={0.3} className="w-full">
-                 <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center w-full">
+               <ScrollReveal delay={0.3} className="flex justify-center">
+                 <div className="w-full max-w-xl py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center">
                    <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
                   </p>
@@ -164,7 +164,7 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-           <section className="py-12 md:py-16 bg-background">
+            <section className="pt-8 md:pt-10 pb-12 md:pb-16 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
                  <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-3">
