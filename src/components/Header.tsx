@@ -36,11 +36,11 @@ const Header = () => {
 
           {/* Desktop CTA - pushed to right */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-foreground font-sans font-light">
-              Log In
+            <Button variant="ghost" size="sm" className="text-foreground font-sans font-light" asChild>
+              <Link to="/login">Log In</Link>
             </Button>
-            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-sans font-light">
-              Get Started
+            <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-sans font-light" asChild>
+              <Link to="/signup">Get Started</Link>
             </Button>
           </div>
 
@@ -72,11 +72,11 @@ const Header = () => {
                 Become a Coach
                </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" className="justify-start font-sans font-light">
-                  Log In
+                <Button variant="ghost" className="justify-start font-sans font-light" asChild>
+                  <Link to="/login">Log In</Link>
                 </Button>
-                <Button className="bg-primary text-primary-foreground font-sans font-light">
-                  Get Started
+                <Button className="bg-primary text-primary-foreground font-sans font-light" asChild>
+                  <Link to="/signup">Get Started</Link>
                 </Button>
               </div>
             </nav>
