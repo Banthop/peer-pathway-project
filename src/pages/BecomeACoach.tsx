@@ -60,7 +60,7 @@
        <Header />
        <main>
          {/* Hero Section */}
-         <section className="pt-24 pb-16 md:pt-32 md:pb-24 bg-background">
+          <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-background">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground mb-6 max-w-4xl mx-auto leading-tight">
@@ -89,10 +89,10 @@
          </section>
  
           {/* How It Works Section */}
-          <section className="py-16 md:py-24 bg-background">
+           <section className="py-12 md:py-16 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
-               <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
+                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
                  How it works
                </h2>
              </ScrollReveal>
@@ -122,16 +122,16 @@
          </section>
  
         {/* Why Coach Section */}
-          <section className="py-16 md:py-24 bg-background">
+           <section className="py-12 md:py-16 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
-                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
+                 <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
                   Why coach on EarlyEdge
                </h2>
              </ScrollReveal>
 
               {/* Benefit cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
@@ -151,11 +151,11 @@
 
               {/* Time commitment - FEATURED CALLOUT */}
               <ScrollReveal delay={0.3}>
-                <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-2xl bg-secondary/50 border border-border/50 text-center">
-                  <p className="text-xl md:text-2xl font-sans font-medium text-foreground mb-2">
+                 <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center">
+                   <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
                   </p>
-                  <p className="text-base md:text-lg font-sans font-light text-muted-foreground">
+                   <p className="text-sm md:text-base font-sans font-light text-muted-foreground">
                     A couple hours a week, on your schedule, from your laptop.
                   </p>
                 </div>
@@ -164,20 +164,20 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-          <section className="py-16 md:py-24 bg-background border-t border-border/30">
+           <section className="py-12 md:py-16 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
-                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4">
+                 <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-3">
                   Did you...
                 </h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-6 max-w-3xl mx-auto">
+                 <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-4 max-w-3xl mx-auto">
                   Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.2}>
-                <p className="text-xl md:text-2xl font-sans font-medium text-foreground mb-6">
+                 <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-5">
                   Then you're ready.
                 </p>
               </ScrollReveal>
@@ -193,7 +193,7 @@
           </section>
  
          {/* Final CTA Section */}
-         <section className="py-16 md:py-24 bg-foreground">
+          <section className="py-12 md:py-16 bg-foreground">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
