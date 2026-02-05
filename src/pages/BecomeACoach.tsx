@@ -88,8 +88,8 @@
            </div>
          </section>
  
-         {/* How It Works Section */}
-         <section className="py-16 md:py-24 bg-secondary/30">
+          {/* How It Works Section */}
+          <section className="py-16 md:py-24 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
@@ -131,7 +131,7 @@
                </h2>
              </ScrollReveal>
               <ScrollReveal delay={0.1}>
-              <p className="text-lg md:text-xl font-sans font-light text-foreground mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed text-center">
+              <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed text-center">
                 Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
                 </p>
               </ScrollReveal>
