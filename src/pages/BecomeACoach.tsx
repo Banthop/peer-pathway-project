@@ -14,6 +14,14 @@
   Clock,
  } from "lucide-react";
  
+const achievements = [
+  "Get into Oxford",
+  "Land a Spring Week",
+  "Score 3000+ on UCAT",
+  "Secure a TC at a magic circle firm",
+  "Break into consulting",
+];
+
  const steps = [
    {
      icon: ClipboardCheck,
@@ -157,39 +165,52 @@
            </div>
          </section>
 
-         {/* Final CTA Section */}
-          <section className="py-16 md:py-24 bg-foreground">
+        {/* Are You Ready Section */}
+        <section className="py-16 md:py-24 bg-background">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
-                <p className="text-base md:text-lg font-sans font-light text-background/70 mb-4 max-w-3xl mx-auto">
-                  Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
-                </p>
-              </ScrollReveal>
-              <ScrollReveal delay={0.1}>
-                <p className="text-xl md:text-2xl font-sans font-medium text-background mb-2">
-                  Then you're ready.
-                </p>
-              </ScrollReveal>
-               <ScrollReveal delay={0.2}>
-                <h2 className="text-2xl md:text-3xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
-                  Your experience is valuable. Literally.
-               </h2>
+              <div className="flex flex-wrap justify-center gap-3 mb-10 max-w-3xl mx-auto">
+                {achievements.map((achievement, index) => (
+                  <span
+                    key={achievement}
+                    className="px-4 py-2 bg-secondary/50 border border-border/50 rounded-full text-sm font-sans font-light text-foreground"
+                  >
+                    {achievement}
+                  </span>
+                ))}
+              </div>
              </ScrollReveal>
-               <ScrollReveal delay={0.3}>
-                 <p className="text-lg font-sans font-light text-background/80 mb-8">
-                  Students want help from someone who just did what they're trying to do. That's you.
+            <ScrollReveal delay={0.1}>
+              <p className="text-2xl md:text-3xl font-sans font-medium text-foreground">
+                Then you're ready.
                </p>
              </ScrollReveal>
-               <ScrollReveal delay={0.4}>
-                <div className="flex flex-col items-center gap-4">
+          </div>
+        </section>
+
+        {/* Final CTA Section */}
+        <section className="py-20 md:py-32 bg-foreground">
+          <div className="container mx-auto px-4 text-center">
+            <ScrollReveal>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-extralight text-background mb-6 max-w-3xl mx-auto">
+                Your experience is valuable. Literally.
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={0.1}>
+              <p className="text-lg font-sans font-light text-background/80 mb-10">
+                Students want help from someone who just did what they're trying to do.
+              </p>
+            </ScrollReveal>
+            <ScrollReveal delay={0.2}>
+              <div className="flex flex-col items-center gap-4">
                  <Button
                    size="lg"
                    className="bg-background text-foreground hover:bg-background/90 font-sans font-medium px-8 py-6 text-base"
                  >
-                    Become a Coach
+                  Become a Coach
                  </Button>
                  <span className="text-sm font-sans font-light text-background/60">
-                    No commitment. Leave whenever.
+                  No commitment. Leave whenever.
                  </span>
                </div>
              </ScrollReveal>
