@@ -177,7 +177,7 @@
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.2}>
-                 <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-5">
+                  <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-8">
                   Then you're ready.
                 </p>
               </ScrollReveal>
