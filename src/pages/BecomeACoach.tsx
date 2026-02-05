@@ -150,8 +150,8 @@
             </div>
 
               {/* Time commitment - FEATURED CALLOUT */}
-              <ScrollReveal delay={0.3}>
-                 <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center">
+               <ScrollReveal delay={0.3} className="w-full">
+                 <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center w-full">
                    <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
                   </p>
