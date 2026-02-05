@@ -1,50 +1,50 @@
 
 
 ## Goal
-Fix the awkward bottom layout where two "Become a Coach" buttons appear back-to-back, making the page feel repetitive and the flow feel off.
+Make the "Then you're ready." line feel less awkward and flow better into the final CTA section.
 
 ## Current Issue
-The page currently has 3 "Become a Coach" buttons:
-1. Hero section (top)
-2. "Did you..." section
-3. Final dark CTA section
-
-The last two are essentially stacked on top of each other with minimal content between them, which feels odd and repetitive.
+After removing the button, "Then you're ready." sits alone as a short punchy line that feels disconnected - it ends the section abruptly without a clear payoff.
 
 ## Recommended Fix
-Remove the button from the "Did you..." section, keeping it as a qualifier/lead-in that flows naturally into the final dark CTA.
+**Merge "Then you're ready." into the final dark CTA section** as the opening hook, rather than leaving it floating in the "Did you..." section.
 
 **New flow:**
-- "Did you..." → achievements list → "Then you're ready." (no button, acts as lead-in)
-- Final dark CTA → "Your experience is valuable. Literally." → Button
+- "Did you..." section ends with the achievements list (no punchline)
+- Final dark CTA opens with "Then you're ready." as a bold lead-in, followed by the existing content
 
-This way "Then you're ready." becomes the perfect transition into the final CTA.
+This creates a stronger narrative arc where the dark section provides the payoff.
 
 ## File to Update
 `src/pages/BecomeACoach.tsx`
 
 ## Changes
 
-### Remove button from "Did you..." section (lines 184-191)
-Delete this entire `ScrollReveal` block containing the button:
+### 1. Remove "Then you're ready." from the "Did you..." section
+Delete lines 179-183 (the ScrollReveal block containing "Then you're ready.").
+
+Also reduce the bottom margin on the achievements text from `mb-6` to `mb-0` since it's now the last element.
+
+### 2. Add "Then you're ready." to the Final CTA section
+Insert it as the first element inside the dark CTA, above "Your experience is valuable. Literally."
+
 ```tsx
-<ScrollReveal delay={0.3}>
-  <Button
-    size="lg"
-    className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-6 text-base"
-  >
-    Become a Coach
-  </Button>
+<ScrollReveal>
+  <p className="text-xl md:text-2xl font-sans font-medium text-background mb-2">
+    Then you're ready.
+  </p>
 </ScrollReveal>
 ```
 
-### Adjust "Did you..." section bottom padding
-Since we're removing the button, reduce the bottom padding slightly so it flows better into the dark CTA:
-- From: `pb-16 md:pb-24`
-- To: `pb-12 md:pb-16`
+### 3. Adjust the headline styling
+Make "Your experience is valuable. Literally." slightly smaller since "Then you're ready." is now the lead-in:
+- From: `text-3xl md:text-4xl`
+- To: `text-2xl md:text-3xl`
 
 ## Result
-- Page has 2 buttons total: Hero (top) and Final CTA (bottom)
-- The "Did you..." section now reads as a natural build-up: "Did you [achievements]? Then you're ready." → flows directly into the dark CTA with the button
-- Bottom of page feels cohesive instead of repetitive
+The page now reads:
+1. "Did you... [achievements]?" - ends with a question
+2. Dark CTA: "Then you're ready. Your experience is valuable. Literally." - provides the answer and payoff
+
+The punchline lands in the dark section where the button lives, creating a cohesive call-to-action block.
 
