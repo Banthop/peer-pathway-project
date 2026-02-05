@@ -131,13 +131,13 @@
                </h2>
              </ScrollReveal>
               <ScrollReveal delay={0.1}>
-              <p className="text-lg md:text-xl font-sans font-light text-foreground mb-12 md:mb-16 max-w-3xl mx-auto leading-relaxed text-center">
+              <p className="text-lg md:text-xl font-sans font-light text-foreground mb-8 md:mb-10 max-w-3xl mx-auto leading-relaxed text-center">
                 Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
                 </p>
               </ScrollReveal>
 
             {/* Benefit cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
