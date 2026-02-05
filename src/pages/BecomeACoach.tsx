@@ -55,12 +55,6 @@
    },
  ];
  
- const stats = [
-  { value: "£30–50/hr", label: "typical rate" },
-   { value: "80%", label: "yours after 5 sessions" },
-  { value: "£200+/month", label: "at just 5 hrs/week" },
- ];
- 
  const testimonials = [
    {
     quote: "I wished someone had been there when I was applying. Now I get to be that person — and make money doing it.",
@@ -199,28 +193,19 @@
            </div>
          </section>
  
-          {/* The Maths Section */}
+          {/* Less Effort Section */}
          <section className="py-16 md:py-24 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
-               <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
-                  The maths
+                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4 text-center">
+                  Less effort than a part-time job
                </h2>
              </ScrollReveal>
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-               {stats.map((stat, index) => (
-                 <ScrollReveal key={stat.label} delay={index * 0.1}>
-                   <div className="text-center">
-                     <div className="text-4xl md:text-5xl font-sans font-light text-foreground mb-2">
-                       {stat.value}
-                     </div>
-                     <div className="font-sans font-light text-muted-foreground">
-                       {stat.label}
-                     </div>
-                   </div>
-                 </ScrollReveal>
-               ))}
-             </div>
+              <ScrollReveal delay={0.1}>
+                <p className="text-lg md:text-xl font-sans font-light text-muted-foreground text-center max-w-xl mx-auto">
+                  A couple hours a week, on your schedule, from your laptop.
+                </p>
+              </ScrollReveal>
            </div>
          </section>
  
