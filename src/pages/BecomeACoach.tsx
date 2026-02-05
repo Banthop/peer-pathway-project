@@ -131,7 +131,7 @@
              </ScrollReveal>
 
               {/* Benefit cards */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
@@ -164,7 +164,7 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-          <section className="py-12 md:py-16 bg-background">
+          <section className="py-16 md:py-24 bg-background border-t border-border/30">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
                 <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4">
