@@ -69,9 +69,9 @@
           <section className="pt-28 pb-16 md:pt-40 md:pb-24 bg-background">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
-               <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground mb-6 max-w-4xl mx-auto leading-tight">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-light text-foreground mb-6 max-w-4xl mx-auto leading-tight">
                   You figured it out. Now earn from it.
-               </h1>
+                </h1>
              </ScrollReveal>
              <ScrollReveal delay={0.1}>
                 <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-10 max-w-2xl mx-auto">
