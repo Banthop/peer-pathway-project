@@ -32,7 +32,7 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
    };
  
    return (
-    <div className="group rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
+    <div className="group rounded-lg border-2 border-foreground/20 bg-background p-4 transition-all duration-200 hover:border-foreground/40">
       <div className="flex items-start gap-3 mb-3">
         <Avatar className="h-12 w-12 border-2 border-foreground">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />

@@ -11,7 +11,7 @@ import { Star } from "lucide-react";
  
  export function RecommendedCoachCard({ coach }: RecommendedCoachCardProps) {
    return (
-    <div className="min-w-[260px] flex flex-col rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
+    <div className="min-w-[260px] flex flex-col rounded-lg border-2 border-foreground/20 bg-background p-4 transition-all duration-200 hover:border-foreground/40">
       <div className="flex items-start gap-3 mb-3">
         <Avatar className="h-11 w-11 border-2 border-foreground">
            <AvatarImage src={coach.photo} alt={coach.name} />

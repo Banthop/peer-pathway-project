@@ -23,7 +23,7 @@ import { Link } from "react-router-dom";
   };
 
    return (
-    <div className="group rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
+    <div className="group rounded-lg border-2 border-foreground/20 bg-background p-4 transition-all duration-200 hover:border-foreground/40">
       <div className="flex items-start gap-4">
         <Avatar className="h-10 w-10 shrink-0 border-2 border-foreground">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />
