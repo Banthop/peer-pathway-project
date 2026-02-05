@@ -3,6 +3,14 @@
  import coachDavid from "@/assets/coach-david.jpg";
  import coachEmily from "@/assets/coach-emily.jpg";
  import coachJames from "@/assets/coach-james.jpg";
+import logoGoldman from "@/assets/logo-goldman-sachs.png";
+import logoMcKinsey from "@/assets/logo-mckinsey-new.png";
+import logoMeta from "@/assets/logo-meta.png";
+import logoClifford from "@/assets/logo-clifford-chance.png";
+import logoOxford from "@/assets/logo-oxford.png";
+import logoCambridge from "@/assets/logo-cambridge.png";
+import logoLSE from "@/assets/logo-lse-new.png";
+import logoImperial from "@/assets/logo-imperial-new.png";
  
  // Helper to get dates relative to today
  const today = new Date();
@@ -24,6 +32,8 @@
      coachName: "Sarah K.",
      coachPhoto: coachSarah,
      coachCredential: "Goldman Sachs Spring Week '24",
+    coachUniversityLogo: logoOxford,
+    coachCompanyLogo: logoGoldman,
      date: tomorrow,
      time: "2:00 PM",
      duration: "45 min",
@@ -36,6 +46,8 @@
      coachName: "David W.",
      coachPhoto: coachDavid,
      coachCredential: "McKinsey Summer Associate",
+    coachUniversityLogo: logoCambridge,
+    coachCompanyLogo: logoMcKinsey,
      date: dayAfterTomorrow,
      time: "10:00 AM",
      duration: "60 min",
@@ -51,6 +63,8 @@
      coachName: "Sarah K.",
      coachPhoto: coachSarah,
      coachCredential: "Goldman Sachs Spring Week '24",
+    coachUniversityLogo: logoOxford,
+    coachCompanyLogo: logoGoldman,
      date: lastWeek,
      time: "3:00 PM",
      duration: "45 min",
@@ -65,6 +79,8 @@
      coachName: "James L.",
      coachPhoto: coachJames,
      coachCredential: "Meta Software Engineer",
+    coachUniversityLogo: logoImperial,
+    coachCompanyLogo: logoMeta,
      date: twoWeeksAgo,
      time: "11:00 AM",
      duration: "60 min",
@@ -78,6 +94,8 @@
      coachName: "Emily R.",
      coachPhoto: coachEmily,
      coachCredential: "Clifford Chance Trainee",
+    coachUniversityLogo: logoLSE,
+    coachCompanyLogo: logoClifford,
      date: threeWeeksAgo,
      time: "4:00 PM",
      duration: "45 min",
@@ -96,6 +114,10 @@
      credential: "Goldman Sachs Incoming Analyst",
      hourlyRate: 50,
      tags: ["Investment Banking", "CV Review"],
+    universityLogo: logoOxford,
+    companyLogo: logoGoldman,
+    rating: 4.9,
+    reviewCount: 47,
    },
    {
      id: "david-w",
@@ -104,6 +126,10 @@
      credential: "McKinsey Summer Associate",
      hourlyRate: 60,
      tags: ["Consulting", "Case Studies"],
+    universityLogo: logoCambridge,
+    companyLogo: logoMcKinsey,
+    rating: 5.0,
+    reviewCount: 32,
    },
  ];
  
@@ -116,6 +142,10 @@
      year: "Oxford '24",
      tags: ["Investment Banking", "Spring Week", "CV Review"],
      hourlyRate: 50,
+    universityLogo: logoOxford,
+    companyLogo: logoGoldman,
+    rating: 4.9,
+    reviewCount: 47,
    },
    {
      id: "david-w",
@@ -125,6 +155,10 @@
      year: "Cambridge '23",
      tags: ["Consulting", "Case Studies", "Strategy"],
      hourlyRate: 60,
+    universityLogo: logoCambridge,
+    companyLogo: logoMcKinsey,
+    rating: 5.0,
+    reviewCount: 32,
    },
    {
      id: "emily-r",
@@ -134,6 +168,10 @@
      year: "LSE '23",
      tags: ["Law", "TC Applications", "LNAT"],
      hourlyRate: 45,
+    universityLogo: logoLSE,
+    companyLogo: logoClifford,
+    rating: 4.8,
+    reviewCount: 28,
    },
    {
      id: "james-l",
@@ -143,5 +181,9 @@
      year: "Imperial '22",
      tags: ["Software Engineering", "Coding", "System Design"],
      hourlyRate: 55,
+    universityLogo: logoImperial,
+    companyLogo: logoMeta,
+    rating: 4.9,
+    reviewCount: 41,
    },
  ];
