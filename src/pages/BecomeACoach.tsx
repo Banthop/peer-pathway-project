@@ -122,7 +122,7 @@
          </section>
  
         {/* Why Coach Section */}
-           <section className="pt-16 md:pt-24 pb-12 md:pb-16 bg-background">
+           <section className="pt-16 md:pt-24 pb-16 md:pb-24 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
                  <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
@@ -131,7 +131,7 @@
              </ScrollReveal>
 
               {/* Benefit cards */}
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
@@ -150,7 +150,7 @@
             </div>
 
               {/* Time commitment - FEATURED CALLOUT */}
-               <ScrollReveal delay={0.3} className="w-full pt-12 md:pt-16">
+               <ScrollReveal delay={0.3} className="w-full">
                   <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-background border-2 border-foreground text-center w-full shadow-sm">
                    <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
