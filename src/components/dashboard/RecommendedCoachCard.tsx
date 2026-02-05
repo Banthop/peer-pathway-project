@@ -21,28 +21,6 @@ import { Star } from "lucide-react";
          <div className="flex-1 min-w-0">
            <h3 className="font-medium text-foreground font-sans text-sm">{coach.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-1">{coach.credential}</p>
-          
-          {/* Logo badges */}
-          <div className="mt-2 flex items-center gap-2">
-            {coach.universityLogo && (
-              <div className="h-5 w-5 rounded border border-border bg-background flex items-center justify-center overflow-hidden">
-                <img 
-                  src={coach.universityLogo} 
-                  alt="University" 
-                  className="h-3.5 w-3.5 object-contain"
-                />
-              </div>
-            )}
-            {coach.companyLogo && (
-              <div className="h-5 w-5 rounded border border-border bg-background flex items-center justify-center overflow-hidden">
-                <img 
-                  src={coach.companyLogo} 
-                  alt="Company" 
-                  className="h-3.5 w-3.5 object-contain"
-                />
-              </div>
-            )}
-          </div>
          </div>
        </div>
       
