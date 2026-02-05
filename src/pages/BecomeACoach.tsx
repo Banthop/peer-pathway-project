@@ -66,7 +66,7 @@
        <Header />
        <main>
          {/* Hero Section */}
-          <section className="pt-28 pb-16 md:pt-40 md:pb-24 bg-background">
+           <section className="pt-28 pb-8 md:pt-40 md:pb-12 bg-background">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-light text-foreground mb-6 max-w-4xl mx-auto leading-tight">
@@ -75,7 +75,7 @@
              </ScrollReveal>
              <ScrollReveal delay={0.1}>
                 <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-10 max-w-2xl mx-auto">
-                You landed the offer, got into the uni, aced the test. Help students one step behind you - and get paid while you're at it.
+                 You landed the offer, got into the uni, aced the test. Help students one step behind you, and get paid while you're at it.
                </p>
              </ScrollReveal>
              <ScrollReveal delay={0.2}>
@@ -95,10 +95,10 @@
          </section>
  
           {/* How It Works Section */}
-           <section className="py-16 md:py-24 bg-background">
+            <section className="py-12 md:py-16 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
-                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
+                 <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
                  How it works
                </h2>
              </ScrollReveal>
@@ -128,10 +128,10 @@
          </section>
  
         {/* Why Coach Section */}
-           <section className="pt-16 md:pt-24 pb-16 md:pb-24 bg-background">
+            <section className="py-12 md:py-16 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
-                 <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
+                  <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
                   Why coach on EarlyEdge
                </h2>
              </ScrollReveal>
