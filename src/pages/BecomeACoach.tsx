@@ -151,11 +151,11 @@
 
               {/* Time commitment - FEATURED CALLOUT */}
               <ScrollReveal delay={0.3}>
-                <div className="max-w-2xl mx-auto mt-4 md:mt-6 p-8 md:p-10 rounded-2xl bg-secondary/50 border border-border/50 text-center">
+                <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-2xl bg-secondary/50 border border-border/50 text-center">
                   <p className="text-xl md:text-2xl font-sans font-medium text-foreground mb-2">
                     Less effort than a part-time job.
                   </p>
-                  <p className="text-base md:text-lg font-sans font-light text-muted-foreground leading-relaxed">
+                  <p className="text-base md:text-lg font-sans font-light text-muted-foreground">
                     A couple hours a week, on your schedule, from your laptop.
                   </p>
                 </div>
