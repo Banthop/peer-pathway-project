@@ -26,9 +26,9 @@
    return (
      <div className="px-6 py-8 md:px-8 lg:px-12 space-y-6">
        {/* Header */}
-       <div>
-         <h1 className="text-3xl font-light text-foreground font-sans">Welcome back, Alex</h1>
-         <p className="mt-1 text-muted-foreground">Here's what's coming up</p>
+       <div className="rounded-lg bg-foreground p-6">
+         <h1 className="text-3xl font-light text-background font-sans">Welcome back, Alex</h1>
+         <p className="mt-1 text-background/70">Here's what's coming up</p>
        </div>
  
        {/* Alert Banner */}
@@ -39,8 +39,11 @@
        )}
  
        {/* Upcoming Sessions */}
-       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
-         <h2 className="mb-4 text-lg font-medium text-foreground font-sans">Upcoming sessions</h2>
+       <section className="rounded-lg border border-border bg-background p-5">
+         <div className="flex items-center gap-3 mb-4">
+           <div className="h-8 w-1 rounded-full bg-foreground"></div>
+           <h2 className="text-lg font-medium text-foreground font-sans">Upcoming sessions</h2>
+         </div>
          {upcomingSessions.length > 0 ? (
            <div className="grid gap-4 md:grid-cols-2">
              {upcomingSessions.map((session) => (
@@ -59,9 +62,12 @@
        </section>
  
        {/* Past Sessions */}
-       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
+       <section className="rounded-lg border border-border bg-background p-5">
          <div className="mb-4 flex items-center justify-between">
-           <h2 className="text-lg font-medium text-foreground font-sans">Past sessions</h2>
+           <div className="flex items-center gap-3">
+             <div className="h-8 w-1 rounded-full bg-foreground"></div>
+             <h2 className="text-lg font-medium text-foreground font-sans">Past sessions</h2>
+           </div>
            {hasMorePastSessions && (
              <Link
                to="/dashboard/bookings?tab=past"
@@ -83,9 +89,12 @@
        </section>
  
        {/* Recommended Coaches */}
-       <section className="rounded-lg border border-border bg-background p-5 shadow-sm">
+       <section className="rounded-lg border border-border bg-background p-5">
          <div className="mb-4 flex items-center justify-between">
-           <h2 className="text-lg font-medium text-foreground font-sans">Coaches you might like</h2>
+           <div className="flex items-center gap-3">
+             <div className="h-8 w-1 rounded-full bg-foreground"></div>
+             <h2 className="text-lg font-medium text-foreground font-sans">Coaches you might like</h2>
+           </div>
            <Link
              to="/"
              className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"

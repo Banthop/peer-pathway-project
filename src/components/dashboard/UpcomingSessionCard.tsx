@@ -32,9 +32,9 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
    };
  
    return (
-    <div className="group rounded-lg border border-border/60 bg-muted/50 p-4 transition-all duration-200 hover:border-border">
+    <div className="group rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
       <div className="flex items-start gap-3 mb-3">
-        <Avatar className="h-12 w-12 border border-border">
+        <Avatar className="h-12 w-12 border-2 border-foreground">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />
            <AvatarFallback>{session.coachName.charAt(0)}</AvatarFallback>
          </Avatar>
@@ -45,7 +45,7 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
                <h3 className="font-medium text-foreground font-sans">{session.coachName}</h3>
               <p className="text-sm text-muted-foreground line-clamp-1">{session.coachCredential}</p>
              </div>
-            <Badge variant="outline" className="shrink-0 border-border text-foreground font-normal text-xs">
+            <Badge className="shrink-0 bg-foreground text-background font-normal text-xs">
                {session.type}
              </Badge>
            </div>

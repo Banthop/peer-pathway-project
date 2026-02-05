@@ -40,7 +40,7 @@ const userData = {
  
    return (
     <Sidebar collapsible="icon" className="border-r border-border/40 bg-background">
-      <SidebarHeader className="p-5">
+      <SidebarHeader className="p-5 border-b border-border">
          <NavLink to="/" className="flex items-center gap-2">
           {isCollapsed ? (
             <span className="text-xl font-bold tracking-tight text-foreground font-sans">E</span>
@@ -78,26 +78,25 @@ const userData = {
        </SidebarContent>
  
        <SidebarFooter>
-        <SidebarSeparator className="mx-3" />
         
         {/* User Section */}
-        <div className={`px-3 py-3 ${isCollapsed ? 'flex justify-center' : ''}`}>
+        <div className={`px-3 py-3 border-t border-border ${isCollapsed ? 'flex justify-center' : ''}`}>
           {isCollapsed ? (
-            <Avatar className="h-8 w-8 border border-border/40">
+            <Avatar className="h-8 w-8 border-2 border-foreground">
               <AvatarImage src={userData.photo} alt={userData.name} />
               <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
             </Avatar>
           ) : (
-            <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3 transition-colors hover:bg-muted">
-              <Avatar className="h-9 w-9 border border-border/40">
+            <div className="flex items-center gap-3 rounded-lg bg-foreground p-3">
+              <Avatar className="h-9 w-9 border-2 border-background">
                 <AvatarImage src={userData.photo} alt={userData.name} />
                 <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">{userData.name}</p>
-                <p className="text-xs text-muted-foreground truncate">{userData.email}</p>
+                <p className="text-sm font-medium text-background truncate">{userData.name}</p>
+                <p className="text-xs text-background/70 truncate">{userData.email}</p>
               </div>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+              <ChevronRight className="h-4 w-4 text-background/70" />
             </div>
           )}
         </div>
