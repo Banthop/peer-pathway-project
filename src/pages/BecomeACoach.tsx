@@ -151,7 +151,7 @@
 
               {/* Time commitment - FEATURED CALLOUT */}
                <ScrollReveal delay={0.3} className="w-full pt-12 md:pt-16">
-                  <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-gradient-to-b from-background to-secondary/20 border-2 border-foreground text-center w-full shadow-md">
+                  <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-background border-2 border-foreground text-center w-full shadow-sm">
                    <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
                   </p>
@@ -164,7 +164,7 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-           <section className="pt-12 md:pt-16 pb-8 md:pb-12 bg-background">
+           <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
                   <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-6">
@@ -172,16 +172,8 @@
                 </h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                <p className="text-base md:text-lg font-sans font-light text-muted-foreground max-w-3xl mx-auto">
-                  <span className="inline-block">Get into Oxford?</span>
-                  <span className="mx-2 text-border">|</span>
-                  <span className="inline-block">Land a Spring Week?</span>
-                  <span className="mx-2 text-border">|</span>
-                  <span className="inline-block">Score 3000+ on UCAT?</span>
-                  <span className="mx-2 text-border">|</span>
-                  <span className="inline-block">Secure a TC?</span>
-                  <span className="mx-2 text-border">|</span>
-                  <span className="inline-block">Break into consulting?</span>
+                <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-0 max-w-3xl mx-auto">
+                  Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
                 </p>
               </ScrollReveal>
             </div>
@@ -191,12 +183,12 @@
           <section className="py-16 md:py-24 bg-foreground">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
-                <p className="text-2xl md:text-3xl font-sans font-semibold text-background mb-3">
+                <p className="text-xl md:text-2xl font-sans font-medium text-background mb-2">
                   Then you're ready.
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                <h2 className="text-xl md:text-2xl font-sans font-light text-background/90 mb-4 max-w-3xl mx-auto">
+                <h2 className="text-2xl md:text-3xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
                   Your experience is valuable. Literally.
                </h2>
              </ScrollReveal>
