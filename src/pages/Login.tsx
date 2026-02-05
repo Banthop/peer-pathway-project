@@ -8,6 +8,7 @@
  const Login = () => {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
+  const [role, setRole] = useState<'student' | 'coach'>('student');
  
    const handleSubmit = (e: React.FormEvent) => {
      e.preventDefault();
@@ -22,6 +23,34 @@
          </h1>
        </div>
  
+      {/* Role Toggle */}
+      <div className="flex justify-center mb-6">
+        <div className="inline-flex rounded-full p-1 bg-muted">
+          <button
+            type="button"
+            onClick={() => setRole('student')}
+            className={`px-6 py-2 rounded-full text-sm font-sans transition-colors ${
+              role === 'student'
+                ? 'bg-foreground text-background'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Student
+          </button>
+          <button
+            type="button"
+            onClick={() => setRole('coach')}
+            className={`px-6 py-2 rounded-full text-sm font-sans transition-colors ${
+              role === 'coach'
+                ? 'bg-foreground text-background'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Coach
+          </button>
+        </div>
+      </div>
+
        <form onSubmit={handleSubmit} className="space-y-4">
          <div className="space-y-2">
            <Label htmlFor="email" className="font-sans font-light">
@@ -69,26 +98,23 @@
          
          <p className="text-sm font-sans text-muted-foreground">
            Don't have an account?{" "}
-           <Link
-             to="/signup"
-             className="text-foreground hover:underline"
-           >
-             Sign up
-           </Link>
+            {role === 'student' ? (
+              <Link
+                to="/signup"
+                className="text-foreground hover:underline"
+              >
+                Sign up
+              </Link>
+            ) : (
+              <Link
+                to="/coach/signup"
+                className="text-foreground hover:underline"
+              >
+                Apply to coach
+              </Link>
+            )}
          </p>
        </div>
-
-        <div className="mt-8 pt-6 border-t border-border/50 text-center">
-          <p className="text-sm font-sans text-muted-foreground">
-            Want to coach on EarlyEdge?{" "}
-            <Link
-              to="/coach/signup"
-              className="text-foreground hover:underline"
-            >
-              Apply here
-            </Link>
-          </p>
-        </div>
      </AuthLayout>
    );
  };
