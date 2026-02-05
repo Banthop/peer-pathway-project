@@ -4,6 +4,8 @@
    coachName: string;
    coachPhoto: string;
    coachCredential: string;
+  coachUniversityLogo?: string;
+  coachCompanyLogo?: string;
    date: Date;
    time: string;
    duration: string;
@@ -20,6 +22,10 @@
    credential: string;
    hourlyRate: number;
    tags: string[];
+  universityLogo?: string;
+  companyLogo?: string;
+  rating?: number;
+  reviewCount?: number;
  }
  
  export interface RecommendedCoach {
@@ -30,4 +36,8 @@
    year: string;
    tags: string[];
    hourlyRate: number;
+  universityLogo?: string;
+  companyLogo?: string;
+  rating?: number;
+  reviewCount?: number;
  }
