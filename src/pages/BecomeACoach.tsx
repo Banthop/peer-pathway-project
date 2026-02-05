@@ -60,7 +60,7 @@
        <Header />
        <main>
          {/* Hero Section */}
-          <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-background">
+          <section className="pt-28 pb-16 md:pt-40 md:pb-24 bg-background">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-foreground mb-6 max-w-4xl mx-auto leading-tight">
@@ -68,7 +68,7 @@
                </h1>
              </ScrollReveal>
              <ScrollReveal delay={0.1}>
-               <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-8 max-w-2xl mx-auto">
+                <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-10 max-w-2xl mx-auto">
                 You landed the offer, got into the uni, aced the test. Help students one step behind you - and get paid while you're at it.
                </p>
              </ScrollReveal>
@@ -89,7 +89,7 @@
          </section>
  
           {/* How It Works Section */}
-           <section className="py-12 md:py-16 bg-background">
+           <section className="py-16 md:py-24 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
                 <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
@@ -122,7 +122,7 @@
          </section>
  
         {/* Why Coach Section */}
-           <section className="py-12 md:py-16 bg-background">
+           <section className="pt-16 md:pt-24 pb-12 md:pb-16 bg-background">
            <div className="container mx-auto px-4">
              <ScrollReveal>
                  <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-10 md:mb-12 text-center">
@@ -131,7 +131,7 @@
              </ScrollReveal>
 
               {/* Benefit cards */}
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
@@ -164,7 +164,7 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-           <section className="py-12 md:py-16 bg-background">
+           <section className="pt-12 md:pt-16 pb-16 md:pb-24 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
                  <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-3">
@@ -172,12 +172,12 @@
                 </h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                 <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-4 max-w-3xl mx-auto">
+                 <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-6 max-w-3xl mx-auto">
                   Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.2}>
-                  <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-8">
+                  <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-10">
                   Then you're ready.
                 </p>
               </ScrollReveal>
@@ -193,7 +193,7 @@
           </section>
  
          {/* Final CTA Section */}
-          <section className="py-12 md:py-16 bg-foreground">
+          <section className="py-16 md:py-24 bg-foreground">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
                <h2 className="text-3xl md:text-4xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
@@ -201,12 +201,12 @@
                </h2>
              </ScrollReveal>
              <ScrollReveal delay={0.1}>
-               <p className="text-lg font-sans font-light text-background/80 mb-8">
+                <p className="text-lg font-sans font-light text-background/80 mb-10">
                   Students want help from someone who just did what they're trying to do. That's you.
                </p>
              </ScrollReveal>
              <ScrollReveal delay={0.2}>
-               <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-4">
                  <Button
                    size="lg"
                    className="bg-background text-foreground hover:bg-background/90 font-sans font-medium px-8 py-6 text-base"
