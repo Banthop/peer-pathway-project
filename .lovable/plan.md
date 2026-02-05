@@ -1,136 +1,93 @@
 
 
-# Fix Become a Coach Page Structure
+# Fix Coloring on Become a Coach Page
 
 ## The Problem
 
-The current "Did you..." combined section feels off because it's trying to do too much in one place without clear visual or narrative flow:
+Comparing the Become a Coach page to the main landing page, I can see several color inconsistencies that make the page feel "off":
 
-```text
-Current Flow:
-"Did you..." headline
-  ↓
-Achievement questions (Oxford, Spring Week, etc.)
-  ↓
-3 Benefit cards (abrupt jump - no connection)
-  ↓
-Time commitment line (floating, feels like afterthought)
-  ↓
-Final CTA (dark section)
-```
+### Current Issues
 
-The benefit cards appear without context after the achievement questions, and the time commitment line just dangles at the end.
+1. **How It Works section uses `bg-secondary/30`** - This creates a grayish tinted background, but the main site's How It Works section has no background (just `bg-background`). This breaks the clean white consistency.
+
+2. **The "Did you..." achievement text uses `text-foreground`** - This makes it the same weight as the headline visually. On the main site, body text consistently uses `text-muted-foreground` for hierarchy.
+
+3. **Step number badges use `bg-primary`** - The primary color in your theme is a dark gray (`266 4% 20.8%`), which is almost identical to `foreground`. This makes the numbered badges blend into the dark icon circles rather than providing contrast.
+
+4. **Final CTA section uses `bg-foreground`** - This is fine (dark section), but the main site's FinalCTA uses `bg-background` (white). The inconsistency between pages may feel jarring.
+
+### Color Comparison
+
+| Element | Become a Coach | Main Site |
+|---------|----------------|-----------|
+| How It Works bg | `bg-secondary/30` (gray tint) | `bg-background` (white) |
+| Achievement text | `text-foreground` (dark) | `text-muted-foreground` |
+| Final CTA bg | `bg-foreground` (dark) | `bg-background` (white) |
 
 ---
 
 ## The Solution
 
-Restructure for better narrative flow by giving the benefit cards their own visual context, and moving the time commitment line to strengthen the Final CTA:
+Align the Become a Coach page with the main site's color approach for consistency:
 
-```text
-New Flow:
-"Did you..." headline
-  ↓
-Achievement questions
-  ↓
-3 Benefit cards (now clearly part of "Did you..." answer)
-  ↓
-Time commitment line (closing the section)
-  ↓
-Final CTA (stronger close)
-```
+### 1. Remove the Gray Background from How It Works
 
-The key changes:
-1. Reduce spacing between "Did you" text and benefit cards to feel more connected
-2. Style the benefit cards as the "answer" to the question (you achieved something → here's what you get)
-3. Keep the time commitment as the section closer, styled consistently
-4. Tighten the overall section so it reads as one cohesive unit
+Change from `bg-secondary/30` to `bg-background` to match the clean white approach used across the main site.
+
+### 2. Fix Achievement Text Color
+
+The flowing "Get into Oxford? Land a Spring Week?..." text should use `text-muted-foreground` instead of `text-foreground` to create proper visual hierarchy under the "Did you..." headline.
+
+### 3. Keep the Dark Final CTA (Optional Discussion)
+
+The dark final CTA actually works well as a page closer - it creates a strong call to action. However, if you want consistency with the main site, we can switch it to white. I'd recommend keeping it dark since it serves a different purpose (recruitment vs. student conversion).
 
 ---
 
 ## Changes to Make
 
-### 1. Adjust Section Spacing and Flow
+### File: `src/pages/BecomeACoach.tsx`
 
-Update the combined section structure:
+**Change 1: How It Works background**
+```tsx
+// Before (line 92)
+<section className="py-16 md:py-24 bg-secondary/30">
 
-- Reduce margin between achievements text and benefit cards (`mb-12 md:mb-16` → `mb-8 md:mb-10`)
-- Add a subtle connecting phrase or keep the cards as the natural "answer"
-- Keep the time commitment line but ensure proper visual separation
+// After
+<section className="py-16 md:py-24 bg-background">
+```
 
-### 2. Typography Adjustments
+**Change 2: Achievement questions text color**
+```tsx
+// Before (line 134)
+<p className="text-lg md:text-xl font-sans font-light text-foreground mb-8 md:mb-10 ...">
 
-- Make the achievements text slightly smaller or style differently to not compete with the headline
-- Ensure benefit card titles have proper weight contrast
-
-### 3. Keep the Minimal Time Commitment Line
-
-The line "Less effort than a part-time job. A couple hours a week, on your schedule, from your laptop." stays but with proper spacing to close the section naturally before the dark CTA.
+// After
+<p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-8 md:mb-10 ...">
+```
 
 ---
 
-## Code Changes
+## Visual Result
 
-Update `src/pages/BecomeACoach.tsx`:
-
-**Before (problematic spacing):**
-```tsx
-<p className="... mb-12 md:mb-16 ...">
-  Get into Oxford? Land a Spring Week?...
-</p>
-
-{/* Benefit cards */}
-<div className="... mb-12 md:mb-16">
-```
-
-**After (tighter, connected flow):**
-```tsx
-<p className="... mb-8 md:mb-10 ...">
-  Get into Oxford? Land a Spring Week?...
-</p>
-
-{/* Benefit cards - reduced bottom margin */}
-<div className="... mb-10 md:mb-12">
-```
-
-Also ensure the time commitment line has appropriate top margin to breathe but not feel disconnected.
-
----
-
-## Final Page Structure
+After these changes:
 
 ```text
 +------------------------------------------------------------------+
-|                           HEADER                                  |
+|  HERO (white bg)                                                  |
+|  Dark headline, muted subtext, dark button                        |
 +------------------------------------------------------------------+
-|                                                                   |
-|  HERO                                                             |
-|  "You figured it out. Now earn from it."                          |
-|  [Become a Coach]                                                 |
-|                                                                   |
+|  HOW IT WORKS (white bg - now matches main site)                  |
+|  Dark icon circles, step descriptions in muted gray               |
 +------------------------------------------------------------------+
-|                                                                   |
-|  HOW IT WORKS (gray bg)                                           |
-|  4 steps: Apply → Verify → Set Terms → Earn                       |
-|                                                                   |
+|  DID YOU... (white bg)                                            |
+|  "Did you..." in dark                                             |
+|  Achievement questions in muted gray (now hierarchy is clear)     |
+|  Benefit cards with dark icons                                    |
+|  Time commitment in muted gray                                    |
 +------------------------------------------------------------------+
-|                                                                   |
-|  DID YOU... + BENEFITS (white bg, single cohesive section)        |
-|                                                                   |
-|  "Did you..."                                                     |
-|  Achievement questions (tighter spacing below)                    |
-|                                                                   |
-|  [Card 1] [Card 2] [Card 3]                                       |
-|  Qualified  Reputation  Schedule                                  |
-|                                                                   |
-|  "Less effort than a part-time job..."                            |
-|                                                                   |
-+------------------------------------------------------------------+
-|                                                                   |
-|  FINAL CTA (dark bg)                                              |
-|  "Your experience is valuable. Literally."                        |
-|  [Become a Coach]                                                 |
-|                                                                   |
+|  FINAL CTA (dark bg - strong closer)                              |
+|  White text, white button                                         |
 +------------------------------------------------------------------+
 ```
 
@@ -138,9 +95,9 @@ Also ensure the time commitment line has appropriate top margin to breathe but n
 
 ## Summary
 
-The fix tightens the visual flow of the combined section by:
-1. Reducing excessive spacing between elements
-2. Making the benefit cards feel like the natural answer to "Did you..."
-3. Keeping the time commitment as a clean section closer
-4. Maintaining the 4-section structure: Hero → How It Works → Combined → Final CTA
+Two simple color fixes:
+1. Remove the gray tint from How It Works (`bg-secondary/30` to `bg-background`)
+2. Make achievement questions use muted text (`text-foreground` to `text-muted-foreground`)
+
+This aligns the page with the main site's clean, high-contrast aesthetic while keeping the dark Final CTA as an intentional design choice for the recruitment page.
 
