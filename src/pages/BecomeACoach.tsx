@@ -151,7 +151,7 @@
 
               {/* Time commitment - FEATURED CALLOUT */}
                <ScrollReveal delay={0.3} className="w-full pt-12 md:pt-16">
-                 <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-secondary/30 text-center w-full">
+                  <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-background border-2 border-foreground text-center w-full shadow-sm">
                    <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
                     Less effort than a part-time job.
                   </p>
@@ -167,7 +167,7 @@
            <section className="pt-12 md:pt-16 pb-16 md:pb-24 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
-                 <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-3">
+                  <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-6">
                   Did you...
                 </h2>
               </ScrollReveal>
