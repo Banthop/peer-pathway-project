@@ -32,9 +32,9 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
    };
  
    return (
-    <div className="group rounded-xl border border-border/40 bg-background p-5 transition-all duration-200 hover:border-border hover:shadow-md">
-      <div className="flex items-start gap-4 mb-4">
-        <Avatar className="h-14 w-14 border-2 border-background shadow-sm">
+    <div className="group rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50">
+      <div className="flex items-start gap-3 mb-3">
+        <Avatar className="h-12 w-12 border border-border">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />
            <AvatarFallback>{session.coachName.charAt(0)}</AvatarFallback>
          </Avatar>
@@ -42,10 +42,10 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
          <div className="flex-1 min-w-0">
            <div className="flex items-start justify-between gap-2">
              <div>
-               <h3 className="font-medium text-foreground">{session.coachName}</h3>
+               <h3 className="font-medium text-foreground font-sans">{session.coachName}</h3>
               <p className="text-sm text-muted-foreground line-clamp-1">{session.coachCredential}</p>
              </div>
-            <Badge variant="secondary" className="shrink-0 bg-foreground text-background font-medium">
+            <Badge variant="outline" className="shrink-0 border-border text-foreground font-normal text-xs">
                {session.type}
              </Badge>
            </div>
@@ -53,20 +53,20 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
           {/* Logo badges */}
           <div className="mt-2 flex items-center gap-2">
             {session.coachUniversityLogo && (
-              <div className="h-6 w-6 rounded bg-secondary flex items-center justify-center overflow-hidden">
+              <div className="h-5 w-5 rounded border border-border bg-background flex items-center justify-center overflow-hidden">
                 <img 
                   src={session.coachUniversityLogo} 
                   alt="University" 
-                  className="h-4 w-4 object-contain"
+                  className="h-3.5 w-3.5 object-contain"
                 />
               </div>
             )}
             {session.coachCompanyLogo && (
-              <div className="h-6 w-6 rounded bg-secondary flex items-center justify-center overflow-hidden">
+              <div className="h-5 w-5 rounded border border-border bg-background flex items-center justify-center overflow-hidden">
                 <img 
                   src={session.coachCompanyLogo} 
                   alt="Company" 
-                  className="h-4 w-4 object-contain"
+                  className="h-3.5 w-3.5 object-contain"
                 />
               </div>
             )}
@@ -75,19 +75,19 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
        </div>
       
       {/* Date and time section */}
-      <div className="flex items-center gap-4 mb-4 py-3 border-t border-border/40">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex items-center gap-4 mb-3 py-2 border-t border-border">
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
           <span>{formatDate()}</span>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <Clock className="h-4 w-4" />
           <span>{session.time} · {session.duration}</span>
         </div>
       </div>
       
       {/* Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-2 border-t border-border">
         <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
           Reschedule
         </Button>
@@ -95,7 +95,7 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
           <Button
             asChild
             size="sm"
-            className="bg-foreground text-background hover:bg-foreground/90"
+            className="bg-foreground text-background hover:bg-foreground/90 font-sans"
           >
             <Link to={`/call/${session.id}`} className="flex items-center gap-1">
               Join call <ArrowRight className="h-3.5 w-3.5" />
@@ -106,7 +106,7 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
             asChild
             variant="outline"
             size="sm"
-            className="border-border text-foreground hover:bg-muted"
+            className="border-border text-foreground hover:bg-muted font-sans"
           >
             <Link to={`/call/${session.id}`}>View details</Link>
           </Button>

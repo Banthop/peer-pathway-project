@@ -43,9 +43,9 @@ const userData = {
       <SidebarHeader className="p-5">
          <NavLink to="/" className="flex items-center gap-2">
           {isCollapsed ? (
-            <span className="text-xl font-bold tracking-tight text-foreground">E</span>
+            <span className="text-xl font-bold tracking-tight text-foreground font-sans">E</span>
           ) : (
-            <span className="text-xl tracking-tight text-foreground">
+            <span className="text-xl tracking-tight text-foreground font-sans">
               <span className="font-light">Early</span>
               <span className="font-bold">Edge</span>
             </span>
