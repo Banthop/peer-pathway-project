@@ -164,7 +164,7 @@
          </section>
 
           {/* Did You Section - Qualifier */}
-           <section className="pt-12 md:pt-16 pb-16 md:pb-24 bg-background">
+           <section className="pt-12 md:pt-16 pb-12 md:pb-16 bg-background">
             <div className="container mx-auto px-4 text-center">
               <ScrollReveal>
                   <h2 className="text-2xl md:text-3xl font-sans font-extralight text-foreground mb-6">
@@ -177,17 +177,9 @@
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.2}>
-                  <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-10">
+                  <p className="text-lg md:text-xl font-sans font-medium text-foreground">
                   Then you're ready.
                 </p>
-              </ScrollReveal>
-              <ScrollReveal delay={0.3}>
-                <Button
-                  size="lg"
-                  className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-6 text-base"
-                >
-                  Become a Coach
-                </Button>
               </ScrollReveal>
             </div>
           </section>
