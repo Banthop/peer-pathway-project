@@ -25,13 +25,19 @@
  
       {/* Role Toggle */}
       <div className="flex justify-center mb-6">
-        <div className="inline-flex rounded-full p-1 bg-muted">
+        <div className="relative inline-flex rounded-full p-1 bg-muted">
+          {/* Sliding indicator */}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-2px)] bg-foreground rounded-full transition-transform duration-200 ease-out ${
+              role === 'coach' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+            }`}
+          />
           <button
             type="button"
             onClick={() => setRole('student')}
-            className={`px-6 py-2 rounded-full text-sm font-sans transition-colors ${
+            className={`relative z-10 px-6 py-2 rounded-full text-sm font-sans transition-colors duration-200 ${
               role === 'student'
-                ? 'bg-foreground text-background'
+                ? 'text-background'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -40,9 +46,9 @@
           <button
             type="button"
             onClick={() => setRole('coach')}
-            className={`px-6 py-2 rounded-full text-sm font-sans transition-colors ${
+            className={`relative z-10 px-6 py-2 rounded-full text-sm font-sans transition-colors duration-200 ${
               role === 'coach'
-                ? 'bg-foreground text-background'
+                ? 'text-background'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
