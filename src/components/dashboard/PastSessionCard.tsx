@@ -23,9 +23,9 @@ import { Link } from "react-router-dom";
   };
 
    return (
-    <div className="group rounded-xl border border-border/40 bg-background p-5 transition-all duration-200 hover:border-border hover:shadow-md">
+    <div className="group rounded-lg border border-border bg-muted/30 p-4 transition-all duration-200 hover:bg-muted/50">
       <div className="flex items-start gap-4">
-        <Avatar className="h-12 w-12 shrink-0 border-2 border-background shadow-sm">
+        <Avatar className="h-10 w-10 shrink-0 border border-border">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />
            <AvatarFallback>{session.coachName.charAt(0)}</AvatarFallback>
          </Avatar>
@@ -33,20 +33,20 @@ import { Link } from "react-router-dom";
         <div className="flex-1 min-w-0 space-y-2">
            <div className="flex items-start justify-between gap-2">
              <div>
-               <h3 className="font-medium text-foreground">{session.coachName}</h3>
+               <h3 className="font-medium text-foreground font-sans text-sm">{session.coachName}</h3>
               <p className="text-sm text-muted-foreground line-clamp-1">{session.coachCredential}</p>
              </div>
-            <Badge variant="secondary" className="shrink-0 bg-muted text-muted-foreground font-normal">
+            <Badge variant="outline" className="shrink-0 border-border text-muted-foreground font-normal text-xs">
                {session.type}
              </Badge>
            </div>
            
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <Calendar className="h-3.5 w-3.5" />
             <span>{format(session.date, "MMM d, yyyy")}</span>
           </div>
            
-          <div className="flex items-center justify-between pt-2 border-t border-border/40">
+          <div className="flex items-center justify-between pt-2 border-t border-border">
              {session.reviewed ? (
               <div className="flex items-center gap-1">{renderStars(session.rating || 0)}</div>
              ) : (
@@ -54,7 +54,7 @@ import { Link } from "react-router-dom";
                 asChild
                  variant="outline"
                  size="sm"
-                className="h-8 border-border text-foreground hover:bg-muted"
+                className="h-7 border-border text-foreground hover:bg-muted font-sans text-xs"
                >
                 <Link to={`/review/${session.id}`}>Leave review</Link>
                </Button>
@@ -63,7 +63,7 @@ import { Link } from "react-router-dom";
               asChild
               variant="ghost"
               size="sm"
-              className="h-8 px-3 text-sm text-muted-foreground hover:text-foreground"
+              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground font-sans"
             >
               <Link to={`/coach/${session.coachId}`}>View coach</Link>
             </Button>

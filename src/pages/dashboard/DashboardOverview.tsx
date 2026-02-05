@@ -24,23 +24,23 @@
    const hasMorePastSessions = pastSessions.length > 3;
  
    return (
-     <div className="px-6 py-8 md:px-8 lg:px-12">
+     <div className="px-6 py-8 md:px-8 lg:px-12 space-y-8">
        {/* Header */}
-       <div className="mb-8">
-         <h1 className="text-3xl font-light text-foreground">Welcome back, Alex</h1>
+       <div>
+         <h1 className="text-3xl font-light text-foreground font-sans">Welcome back, Alex</h1>
          <p className="mt-1 text-muted-foreground">Here's what's coming up</p>
        </div>
  
        {/* Alert Banner */}
        {imminentSession && (
-         <div className="mb-8">
+         <div>
            <SessionAlertBanner session={imminentSession} />
          </div>
        )}
  
        {/* Upcoming Sessions */}
-       <section className="mb-10">
-         <h2 className="mb-4 text-lg font-medium text-foreground">Upcoming sessions</h2>
+       <section className="rounded-xl border border-border bg-background p-6">
+         <h2 className="mb-4 text-lg font-medium text-foreground font-sans">Upcoming sessions</h2>
          {upcomingSessions.length > 0 ? (
            <div className="grid gap-4 md:grid-cols-2">
              {upcomingSessions.map((session) => (
@@ -59,9 +59,9 @@
        </section>
  
        {/* Past Sessions */}
-       <section className="mb-10">
+       <section className="rounded-xl border border-border bg-background p-6">
          <div className="mb-4 flex items-center justify-between">
-           <h2 className="text-lg font-medium text-foreground">Past sessions</h2>
+           <h2 className="text-lg font-medium text-foreground font-sans">Past sessions</h2>
            {hasMorePastSessions && (
              <Link
                to="/dashboard/bookings?tab=past"
@@ -83,9 +83,9 @@
        </section>
  
        {/* Recommended Coaches */}
-       <section>
+       <section className="rounded-xl border border-border bg-background p-6">
          <div className="mb-4 flex items-center justify-between">
-           <h2 className="text-lg font-medium text-foreground">Coaches you might like</h2>
+           <h2 className="text-lg font-medium text-foreground font-sans">Coaches you might like</h2>
            <Link
              to="/"
              className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
