@@ -11,6 +11,7 @@
    Trophy,
    UserCircle,
    PoundSterling,
+  Clock,
  } from "lucide-react";
  
  const steps = [
@@ -52,6 +53,11 @@
     title: "Earn on your schedule",
      description: "Set your own rate (most charge £30–50/hr). Coach 2 hours a week or 20, your call.",
    },
+  {
+    icon: Clock,
+    title: "Less effort than a part-time job",
+    description: "A couple hours a week, on your schedule, from your laptop.",
+  },
  ];
  
  const BecomeACoach = () => {
@@ -131,10 +137,10 @@
              </ScrollReveal>
 
               {/* Benefit cards */}
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
               {benefits.map((benefit, index) => (
                 <ScrollReveal key={benefit.title} delay={index * 0.1}>
-                  <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02]">
+                   <div className="group flex flex-col items-center text-center p-6 md:p-8 rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-md hover:border-border transition-all duration-300 hover:scale-[1.02] h-full">
                     <div className="w-16 h-16 rounded-full bg-foreground flex items-center justify-center mb-6 shadow-md group-hover:scale-110 transition-transform duration-300">
                       <benefit.icon className="text-background" size={28} strokeWidth={1.5} />
                     </div>
@@ -148,18 +154,6 @@
                 </ScrollReveal>
               ))}
             </div>
-
-              {/* Time commitment - FEATURED CALLOUT */}
-               <ScrollReveal delay={0.3} className="w-full">
-                  <div className="max-w-xl mx-auto py-5 px-6 md:py-6 md:px-8 rounded-xl bg-background border-2 border-foreground text-center w-full shadow-sm">
-                   <p className="text-lg md:text-xl font-sans font-medium text-foreground mb-1">
-                    Less effort than a part-time job.
-                  </p>
-                   <p className="text-sm md:text-base font-sans font-light text-muted-foreground">
-                    A couple hours a week, on your schedule, from your laptop.
-                  </p>
-                </div>
-              </ScrollReveal>
            </div>
          </section>
 
