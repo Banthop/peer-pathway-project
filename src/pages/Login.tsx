@@ -77,6 +77,18 @@
            </Link>
          </p>
        </div>
+
+        <div className="mt-8 pt-6 border-t border-border/50 text-center">
+          <p className="text-sm font-sans text-muted-foreground">
+            Want to coach on EarlyEdge?{" "}
+            <Link
+              to="/coach/signup"
+              className="text-foreground hover:underline"
+            >
+              Apply here
+            </Link>
+          </p>
+        </div>
      </AuthLayout>
    );
  };
