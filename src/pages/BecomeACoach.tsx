@@ -14,14 +14,6 @@
   Clock,
  } from "lucide-react";
  
-const achievements = [
-  "Get into Oxford",
-  "Land a Spring Week",
-  "Score 3000+ on UCAT",
-  "Secure a TC at a magic circle firm",
-  "Break into consulting",
-];
-
  const steps = [
    {
      icon: ClipboardCheck,
@@ -164,29 +156,6 @@ const achievements = [
             </div>
            </div>
          </section>
-
-        {/* Are You Ready Section */}
-        <section className="py-16 md:py-24 bg-background">
-           <div className="container mx-auto px-4 text-center">
-             <ScrollReveal>
-              <div className="flex flex-wrap justify-center gap-3 mb-10 max-w-3xl mx-auto">
-                {achievements.map((achievement, index) => (
-                  <span
-                    key={achievement}
-                    className="px-4 py-2 bg-secondary/50 border border-border/50 rounded-full text-sm font-sans font-light text-foreground"
-                  >
-                    {achievement}
-                  </span>
-                ))}
-              </div>
-             </ScrollReveal>
-            <ScrollReveal delay={0.1}>
-              <p className="text-2xl md:text-3xl font-sans font-medium text-foreground">
-                Then you're ready.
-               </p>
-             </ScrollReveal>
-          </div>
-        </section>
 
         {/* Final CTA Section */}
         <section className="py-20 md:py-32 bg-foreground">
