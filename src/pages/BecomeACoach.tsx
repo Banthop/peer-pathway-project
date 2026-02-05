@@ -162,12 +162,12 @@
           <div className="container mx-auto px-4 text-center">
             <ScrollReveal>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-extralight text-background mb-6 max-w-3xl mx-auto">
-                Your experience is valuable. Literally.
+                What you know matters.
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <p className="text-lg font-sans font-light text-background/80 mb-10">
-                Students want help from someone who just did what they're trying to do.
+                Share it with someone who needs it.
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.2}>
