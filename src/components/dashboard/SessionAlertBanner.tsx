@@ -21,7 +21,7 @@ export function SessionAlertBanner({ session }: SessionAlertBannerProps) {
   };
 
   return (
-     <div className="flex flex-col gap-4 rounded-lg border border-border bg-muted/50 p-4 sm:flex-row sm:items-center sm:justify-between">
+     <div className="flex flex-col gap-4 rounded-lg border border-border bg-background p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-4">
          <Avatar className="h-10 w-10 border border-border">
           <AvatarImage src={session.coachPhoto} alt={session.coachName} />
