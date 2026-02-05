@@ -11,9 +11,9 @@ import { Star } from "lucide-react";
  
  export function RecommendedCoachCard({ coach }: RecommendedCoachCardProps) {
    return (
-    <div className="min-w-[260px] flex flex-col rounded-lg border border-border/60 bg-muted/50 p-4 transition-all duration-200 hover:border-border">
+    <div className="min-w-[260px] flex flex-col rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
       <div className="flex items-start gap-3 mb-3">
-        <Avatar className="h-11 w-11 border border-border">
+        <Avatar className="h-11 w-11 border-2 border-foreground">
            <AvatarImage src={coach.photo} alt={coach.name} />
            <AvatarFallback>{coach.name.charAt(0)}</AvatarFallback>
          </Avatar>
@@ -76,8 +76,7 @@ import { Star } from "lucide-react";
          <Button
            asChild
            size="sm"
-           variant="outline"
-           className="border-border text-foreground hover:bg-muted font-sans h-8 text-xs"
+           className="bg-foreground text-background hover:bg-foreground/90 font-sans h-8 text-xs"
          >
            <Link to={`/coach/${coach.id}`}>View profile</Link>
          </Button>

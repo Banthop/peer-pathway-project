@@ -23,9 +23,9 @@ import { Link } from "react-router-dom";
   };
 
    return (
-    <div className="group rounded-lg border border-border/60 bg-muted/50 p-4 transition-all duration-200 hover:border-border">
+    <div className="group rounded-lg border border-border bg-background p-4 transition-all duration-200 hover:shadow-md">
       <div className="flex items-start gap-4">
-        <Avatar className="h-10 w-10 shrink-0 border border-border">
+        <Avatar className="h-10 w-10 shrink-0 border-2 border-foreground">
            <AvatarImage src={session.coachPhoto} alt={session.coachName} />
            <AvatarFallback>{session.coachName.charAt(0)}</AvatarFallback>
          </Avatar>
