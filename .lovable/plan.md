@@ -1,409 +1,349 @@
 
 
-# Booking Flow Implementation Plan
+# Become a Coach Page
 
 ## Overview
 
-Create a complete booking experience for both "Schedule a free intro" and "Book a session" actions. The flow will use modal dialogs with a multi-step process, maintaining the minimal Inter Light aesthetic.
+Create a comprehensive landing page at `/become-a-coach` to recruit students and recent graduates as coaches. The page will have multiple sections designed to inspire, inform, and convert visitors into coach applicants.
 
 ---
 
-## User Flow Diagrams
-
-### Flow 1: Schedule a Free Intro (15-minute discovery call)
+## Page Structure
 
 ```text
-+------------------+     +------------------+     +------------------+
-|   Click Button   | --> |  Select Date &   | --> |  Confirmation    |
-|  "Schedule free  |     |  Time Slot       |     |  + Details Form  |
-|   intro"         |     |                  |     |                  |
-+------------------+     +------------------+     +------------------+
-                                                           |
-                                                           v
-                                                  +------------------+
-                                                  |  Success Screen  |
-                                                  |  (Add to Cal)    |
-                                                  +------------------+
-```
-
-### Flow 2: Book a Session (Paid coaching)
-
-```text
-+------------------+     +------------------+     +------------------+
-|   Click Button   | --> |  Select Service  | --> |  Select Date &   |
-|  "Book session"  |     |  Type            |     |  Time Slot       |
-+------------------+     +------------------+     +------------------+
-                                                           |
-                                                           v
-                         +------------------+     +------------------+
-                         |  Success Screen  | <-- |  Details + Topic |
-                         |  (Add to Cal)    |     |  Description     |
-                         +------------------+     +------------------+
-```
-
----
-
-## Modal Designs
-
-### Free Intro Modal - Step 1: Select Date & Time
-
-```text
-+----------------------------------------------------------+
-|  x                                                        |
-|                                                           |
-|  Schedule a free intro with Sarah                         |
-|  A 15-minute call to see if we're a good fit             |
-|                                                           |
-|  +------------------------+  +------------------------+   |
-|  |                        |  |  Available times       |   |
-|  |      CALENDAR          |  |                        |   |
-|  |      January 2026      |  |  ○ 10:00 AM            |   |
-|  |   < Mon Tue Wed ... >  |  |  ○ 11:00 AM            |   |
-|  |      1   2   3         |  |  ○ 2:00 PM             |   |
-|  |      [4]  5   6        |  |  ● 6:00 PM  ← selected |   |
-|  |                        |  |  ○ 7:00 PM             |   |
-|  +------------------------+  +------------------------+   |
-|                                                           |
-|                              [Continue →]                 |
-+----------------------------------------------------------+
-```
-
-### Free Intro Modal - Step 2: Your Details
-
-```text
-+----------------------------------------------------------+
-|  ← Back                                                 x |
-|                                                           |
-|  Almost there!                                            |
-|  Confirm your details for Friday, Feb 7 at 6:00 PM       |
-|                                                           |
-|  Full Name *                                              |
-|  +------------------------------------------------------+ |
-|  | John Smith                                           | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  Email *                                                  |
-|  +------------------------------------------------------+ |
-|  | john@example.com                                     | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  Anything you'd like Sarah to know? (optional)           |
-|  +------------------------------------------------------+ |
-|  | I'm applying for spring week programmes...           | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|                    [Confirm Booking]                      |
-+----------------------------------------------------------+
-```
-
-### Free Intro Modal - Step 3: Success
-
-```text
-+----------------------------------------------------------+
-|                                                         x |
-|                                                           |
-|                         ✓                                 |
-|                                                           |
-|  You're all set!                                          |
-|                                                           |
-|  Your free intro with Sarah is booked for:               |
-|  Friday, February 7, 2026 at 6:00 PM GMT                 |
-|                                                           |
-|  A confirmation email has been sent to                    |
-|  john@example.com                                         |
-|                                                           |
-|  +--------------------+  +--------------------+           |
-|  | Add to Google Cal  |  | Add to Apple Cal   |           |
-|  +--------------------+  +--------------------+           |
-|                                                           |
-|                      [Done]                               |
-+----------------------------------------------------------+
++------------------------------------------------------------------+
+|                           HEADER                                  |
++------------------------------------------------------------------+
+|                                                                   |
+|  HERO SECTION                                                     |
+|  "You did it. Now get paid to teach it."                         |
+|  [Apply to Coach] - Takes 3 minutes                               |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  HOW IT WORKS (4 Steps)                                           |
+|  Apply -> Get Verified -> Set Terms -> Start Earning              |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  WHY COACH ON EARLYEDGE (3 Benefit Cards)                         |
+|  Qualified | Build Brand | Earn on Terms                          |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  WHO WE'RE LOOKING FOR (Category Pills)                           |
+|  IB | Consulting | Law | Oxbridge | UCAT | SWE                   |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  EARNINGS SECTION (Stats Row)                                     |
+|  £30-50/hr | 80% yours | £200+/month                              |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  COACH TESTIMONIALS (3 Quote Cards)                               |
+|  Placeholder testimonials from current coaches                    |
+|                                                                   |
++------------------------------------------------------------------+
+|                                                                   |
+|  FINAL CTA (Dark Background)                                      |
+|  "Got into Oxford? Landed Goldman?..."                            |
+|  [Apply to Coach]                                                 |
+|                                                                   |
++------------------------------------------------------------------+
+|                           FOOTER                                  |
++------------------------------------------------------------------+
 ```
 
 ---
 
-### Book Session Modal - Step 1: Select Service
+## Section Details
 
-```text
-+----------------------------------------------------------+
-|  x                                                        |
-|                                                           |
-|  Book a session with Sarah                                |
-|  Choose the type of coaching you need                     |
-|                                                           |
-|  +------------------------------------------------------+ |
-|  | ○  CV & Cover Letter Review                          | |
-|  |    45 min · £40                                       | |
-|  |    Detailed feedback on your application materials    | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  +------------------------------------------------------+ |
-|  | ●  Mock Interview                         ← selected | |
-|  |    60 min · £60                                       | |
-|  |    Realistic practice with feedback                   | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  +------------------------------------------------------+ |
-|  | ○  Application Strategy                              | |
-|  |    45 min · £45                                       | |
-|  |    Personalised guidance on approach                  | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  +------------------------------------------------------+ |
-|  | ○  Custom Hourly · £50/hr                            | |
-|  |    Flexible time for specific questions               | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|                              [Continue →]                 |
-+----------------------------------------------------------+
-```
+### 1. Hero Section
 
-### Book Session Modal - Step 2: Select Date & Time
-(Same as Free Intro Step 1, but with selected service shown at top)
+**Content:**
+- Headline: "You did it. Now get paid to teach it."
+- Subheadline: "Got a Spring Week, training contract, or top uni offer? Students will pay to learn exactly how you did it."
+- Primary CTA: "Apply to Coach" button (dark, prominent)
+- Secondary text: "Takes 3 minutes"
 
-### Book Session Modal - Step 3: Details + Topic
+**Design:**
+- Centered layout, clean and minimal
+- Large headline using Source Serif 4 (matches main hero)
+- White background
+- No floating elements (simpler than main hero)
 
-```text
-+----------------------------------------------------------+
-|  ← Back                                                 x |
-|                                                           |
-|  Booking: Mock Interview (60 min)                         |
-|  Friday, Feb 7, 2026 at 6:00 PM · £60                    |
-|                                                           |
-|  Full Name *                                              |
-|  +------------------------------------------------------+ |
-|  | John Smith                                           | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  Email *                                                  |
-|  +------------------------------------------------------+ |
-|  | john@example.com                                     | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  What would you like to focus on? *                       |
-|  +------------------------------------------------------+ |
-|  | I have a Goldman Sachs superday coming up and want   | |
-|  | to practice market sizing questions and...           | |
-|  +------------------------------------------------------+ |
-|                                                           |
-|  +--------------------------+                             |
-|  | Total: £60               |    [Confirm & Pay →]       |
-|  +--------------------------+                             |
-+----------------------------------------------------------+
-```
+### 2. How It Works (4 Steps)
 
-### Book Session Modal - Step 4: Success
-(Similar to Free Intro success, but includes payment confirmation)
+**Steps:**
+| Step | Icon | Title | Description |
+|------|------|-------|-------------|
+| 1 | ClipboardCheck | Apply | Fill out a quick form with your credentials and what you'd coach on |
+| 2 | BadgeCheck | Get verified | We check your LinkedIn to make sure you're legit |
+| 3 | Settings | Set your terms | Choose your prices, availability, and services |
+| 4 | Wallet | Start earning | Students book you, we handle payments, you coach and get paid |
+
+**Design:**
+- Horizontal layout on desktop (4 columns)
+- Vertical stack on mobile
+- Numbered steps with icons in dark circles
+- Similar to existing HowItWorks but adapted for 4 steps
+
+### 3. Why Coach on EarlyEdge (3 Benefit Cards)
+
+**Cards:**
+| Card | Icon | Title | Description |
+|------|------|-------|-------------|
+| 1 | Trophy | You're more qualified than you think | You don't need 10 years of experience. You just did it - that's exactly what students need. |
+| 2 | UserCircle | Build your personal brand | Your profile, reviews, and sessions help you stand out. Some coaches add "EarlyEdge Coach" to their LinkedIn. |
+| 3 | PoundSterling | Earn on your terms | Set your own prices (most charge £30-50/hr). Keep 80% after your first 5 sessions. Coach 2 hours a week or 20. |
+
+**Design:**
+- Match existing WhyEarlyEdge card styling
+- 3-column grid on desktop, stacked on mobile
+- Dark circle icons, subtle border cards
+- Hover lift effect
+
+### 4. Who We're Looking For
+
+**Categories (Pills):**
+- Investment Banking (Spring Weeks, Internships)
+- Consulting (MBB, Big 4)
+- Law (Vacation Schemes, Training Contracts)
+- Oxbridge Applications
+- UCAT / Medicine
+- Software Engineering
+
+**Design:**
+- Section heading + subtext
+- Category pills in a flex wrap layout
+- Pills styled like hero category badges (outline, hover fill)
+- Text below: "Recently achieved something competitive? You're exactly who students want to learn from."
+
+### 5. Earnings Section (Stats Row)
+
+**Stats:**
+| Stat | Value | Label |
+|------|-------|-------|
+| 1 | £30-50 | per hour, typical |
+| 2 | 80% | yours after 5 sessions |
+| 3 | £200+ | average monthly (5 hrs/week) |
+
+**Design:**
+- 3-column stats row
+- Large numbers, smaller labels
+- Clean horizontal dividers or card style
+- Subtle background differentiation
+
+### 6. Coach Testimonials
+
+**Placeholder Testimonials:**
+1. "I wished I had someone like me when I was applying. Now I get to be that person - and get paid for it." - James T., Goldman Spring Week '24
+2. "Coaching fits perfectly around my degree. I do 3-4 sessions a week and it covers my rent." - Priya M., Oxford Law '25
+3. "Students message me saying they got the offer. That feeling is incredible - and the money doesn't hurt either." - Alex R., McKinsey Intern '24
+
+**Design:**
+- 3-column grid of quote cards
+- Avatar placeholder (circle with initials)
+- Quote text, name, credential
+- Subtle card styling
+
+### 7. Final CTA Section (Dark Background)
+
+**Content:**
+- Headline: "Got into Oxford? Landed Goldman? Secured a TC at a magic circle firm?"
+- Subheadline: "Students are looking for someone exactly like you."
+- Button: "Apply to Coach"
+- Small text: "Takes 3 minutes. No commitment. Leave anytime."
+
+**Design:**
+- Dark background (`bg-foreground` or `bg-dark`)
+- White/light text
+- Centered layout
+- High contrast CTA button
 
 ---
 
 ## Technical Implementation
 
-### New Files to Create
+### Files to Create
 
 | File | Purpose |
 |------|---------|
-| `src/components/coach/booking/BookingDialog.tsx` | Main dialog wrapper with state management |
-| `src/components/coach/booking/FreeIntroFlow.tsx` | Multi-step flow for free intro |
-| `src/components/coach/booking/BookSessionFlow.tsx` | Multi-step flow for paid sessions |
-| `src/components/coach/booking/DateTimePicker.tsx` | Calendar + time slot selection |
-| `src/components/coach/booking/ServiceSelector.tsx` | Service type selection with radio cards |
-| `src/components/coach/booking/BookingDetailsForm.tsx` | Name, email, notes form |
-| `src/components/coach/booking/BookingSuccess.tsx` | Confirmation screen with calendar links |
-| `src/types/booking.ts` | Type definitions for booking data |
+| `src/pages/BecomeACoach.tsx` | Main page component |
 
-### Type Definitions
+### Route Setup
 
-```typescript
-// src/types/booking.ts
+Add to `src/App.tsx`:
+```tsx
+import BecomeACoach from "./pages/BecomeACoach";
 
-export type BookingType = 'free-intro' | 'session';
-
-export interface TimeSlot {
-  time: string;      // "10:00 AM"
-  available: boolean;
-}
-
-export interface BookingFormData {
-  fullName: string;
-  email: string;
-  notes?: string;
-  focusTopic?: string;  // Required for paid sessions
-}
-
-export interface BookingState {
-  type: BookingType;
-  selectedService?: CoachService | { name: 'Custom Hourly'; price: number };
-  selectedDate?: Date;
-  selectedTime?: string;
-  formData?: BookingFormData;
-}
+// In Routes:
+<Route path="/become-a-coach" element={<BecomeACoach />} />
 ```
 
-### Component Architecture
+### Update Header
 
-```text
-BookingDialog (manages open/close state)
-├── FreeIntroFlow (type="free-intro")
-│   ├── Step 1: DateTimePicker
-│   ├── Step 2: BookingDetailsForm
-│   └── Step 3: BookingSuccess
-│
-└── BookSessionFlow (type="session")
-    ├── Step 1: ServiceSelector
-    ├── Step 2: DateTimePicker
-    ├── Step 3: BookingDetailsForm
-    └── Step 4: BookingSuccess
-```
-
-### State Management
-
-Use React `useState` within `BookingDialog` to track:
-- Current step (number)
-- Booking type ('free-intro' | 'session')
-- Selected service (for paid bookings)
-- Selected date
-- Selected time
-- Form data (name, email, notes)
-
-### Mock Time Slots
-
-For now, generate mock availability data. The slots will be based on the coach's `availability.nextSlot` as a starting point:
-
-```typescript
-const generateTimeSlots = (date: Date): TimeSlot[] => {
-  const slots = [
-    { time: "9:00 AM", available: true },
-    { time: "10:00 AM", available: true },
-    { time: "11:00 AM", available: false },
-    { time: "2:00 PM", available: true },
-    { time: "3:00 PM", available: true },
-    { time: "4:00 PM", available: false },
-    { time: "5:00 PM", available: true },
-    { time: "6:00 PM", available: true },
-  ];
-  return slots;
-};
-```
+Update the "Become a Coach" link in Header.tsx to point to `/become-a-coach` instead of `#become-coach`.
 
 ---
 
-## Implementation Steps
+## Component Structure
 
-### Step 1: Create Types and Utilities
-- Create `src/types/booking.ts` with type definitions
-- Add utility functions for date formatting and mock slot generation
+```tsx
+const BecomeACoach = () => {
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
+        {/* Hero */}
+        <section className="pt-24 pb-16 md:pt-32 md:pb-24">
+          {/* Centered headline, subheadline, CTA */}
+        </section>
 
-### Step 2: Build DateTimePicker Component
-- Calendar on left (using existing Calendar component)
-- Time slots on right as selectable pills/buttons
-- Handle date selection updating available times
-- Add `pointer-events-auto` to calendar for dialog interaction
+        {/* How It Works */}
+        <section className="py-16 md:py-24 bg-secondary/30">
+          {/* 4-step process */}
+        </section>
 
-### Step 3: Build ServiceSelector Component
-- Radio group with styled cards for each service
-- Show service name, duration, price, description
-- Include "Custom Hourly" option
+        {/* Why Coach */}
+        <section className="py-16 md:py-24">
+          {/* 3 benefit cards */}
+        </section>
 
-### Step 4: Build BookingDetailsForm Component
-- Form with react-hook-form + zod validation
-- Fields: fullName (required), email (required), notes/focusTopic
-- Different validation for free intro vs paid session
+        {/* Who We're Looking For */}
+        <section className="py-16 md:py-24 bg-secondary/30">
+          {/* Category pills */}
+        </section>
 
-### Step 5: Build BookingSuccess Component
-- Checkmark icon animation
-- Booking summary details
-- "Add to Calendar" buttons (Google, Apple)
-- "Done" button to close
+        {/* Earnings Stats */}
+        <section className="py-16 md:py-24">
+          {/* Stats row */}
+        </section>
 
-### Step 6: Build FreeIntroFlow Component
-- 2-step flow: DateTimePicker -> BookingDetailsForm -> Success
-- Back button navigation
-- Progress indicator (optional)
+        {/* Testimonials */}
+        <section className="py-16 md:py-24 bg-secondary/30">
+          {/* Quote cards */}
+        </section>
 
-### Step 7: Build BookSessionFlow Component
-- 3-step flow: ServiceSelector -> DateTimePicker -> BookingDetailsForm -> Success
-- Back button navigation
-- Show selected service throughout
-
-### Step 8: Build BookingDialog Component
-- Wrap flows in Dialog component
-- Manage which flow to show based on booking type
-- Reset state when dialog closes
-
-### Step 9: Connect to BookingSidebar and MobileBookingBar
-- Add onClick handlers to buttons
-- Pass coach data to booking dialog
-- Handle dialog open/close state
+        {/* Final CTA */}
+        <section className="py-16 md:py-24 bg-foreground text-background">
+          {/* Dark CTA box */}
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+```
 
 ---
 
 ## Styling Guidelines
 
-- Use `font-sans font-light` for body text
-- Use `font-sans font-medium` for headings
-- White backgrounds with subtle borders
-- Primary button for main CTA, outline for secondary
-- Time slots: outline style, filled when selected
-- Form inputs: standard shadcn styling
-- Success checkmark: green with subtle animation
+### Typography
+- **Hero headline**: `font-serif font-semibold` (Source Serif 4, like main hero)
+- **Section headings**: `text-3xl md:text-4xl font-sans font-extralight`
+- **Body text**: `font-sans font-light text-muted-foreground`
+- **Card titles**: `font-sans font-medium text-xl`
+- **Stats numbers**: `text-4xl md:text-5xl font-sans font-light`
+
+### Colors
+- White background for main sections (`bg-background`)
+- Light gray for alternating sections (`bg-secondary/30`)
+- Dark section for final CTA (`bg-foreground text-background`)
+- Accent color for interactive elements
+
+### Spacing
+- Consistent section padding: `py-16 md:py-24`
+- Container max-width with padding: `container mx-auto px-4`
+
+### Cards
+- Match existing card styling: `bg-card border border-border/50 rounded-xl`
+- Hover effects: `hover:shadow-md hover:border-border transition-all`
 
 ---
 
-## Form Validation (using Zod)
+## Implementation Steps
 
-```typescript
-const bookingFormSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email"),
-  notes: z.string().optional(),
-  focusTopic: z.string().optional(),
-});
+1. **Create page file and basic structure**
+   - Create `src/pages/BecomeACoach.tsx`
+   - Set up page shell with Header and Footer
+   - Add route in App.tsx
 
-// For paid sessions, focusTopic becomes required
-const paidBookingSchema = bookingFormSchema.extend({
-  focusTopic: z.string().min(10, "Please describe what you'd like to focus on"),
-});
-```
+2. **Build Hero section**
+   - Centered headline with Source Serif 4
+   - Subheadline in Inter Light
+   - Primary CTA button
+   - Secondary text
+
+3. **Build How It Works section**
+   - Define steps data array
+   - Create 4-column grid layout
+   - Add step numbers, icons, and descriptions
+   - Mobile responsive stacking
+
+4. **Build Why Coach section**
+   - Define benefits data array
+   - Create 3-column card grid
+   - Match WhyEarlyEdge styling
+   - Add icons and hover effects
+
+5. **Build Who We're Looking For section**
+   - Define categories array
+   - Create flex wrap pills layout
+   - Style pills like hero badges
+   - Add supporting text
+
+6. **Build Earnings Stats section**
+   - Create 3-column stats layout
+   - Large numbers with labels
+   - Responsive grid
+
+7. **Build Testimonials section**
+   - Define testimonials data with placeholders
+   - Create quote card components
+   - 3-column grid layout
+   - Avatar placeholders with initials
+
+8. **Build Final CTA section**
+   - Dark background section
+   - Centered content
+   - CTA button with inverted colors
+   - Trust text
+
+9. **Update Header link**
+   - Change "Become a Coach" href to `/become-a-coach`
+   - Use Link component from react-router-dom
+
+10. **Add scroll animations**
+    - Wrap sections in ScrollReveal for entrance animations
 
 ---
 
-## Calendar Integration (Add to Calendar)
+## Mobile Responsiveness
 
-Generate calendar links using URL parameters:
-
-```typescript
-const generateGoogleCalendarUrl = (booking: BookingState, coach: Coach) => {
-  const startDate = // format booking date + time
-  const endDate = // add duration
-  const title = encodeURIComponent(`Coaching with ${coach.name}`);
-  const details = encodeURIComponent(`${booking.selectedService?.name}`);
-  
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}`;
-};
-```
-
----
-
-## Mobile Considerations
-
-- Dialog should be full-screen on mobile (drawer style)
-- Calendar and time slots stack vertically on mobile
-- Form fields full width
-- Larger touch targets for time slot selection
+- Hero: Stack content vertically, reduce font sizes
+- How It Works: Vertical timeline on mobile
+- Benefit Cards: Stack to single column
+- Category Pills: Wrap naturally
+- Stats: Stack to single column
+- Testimonials: Stack to single column
+- Final CTA: Full width, adjusted padding
 
 ---
 
 ## Summary
 
-This implementation creates a polished, multi-step booking experience with:
+This page creates a compelling recruitment experience for potential coaches with:
 
-1. **Free Intro Flow**: Quick 2-step process (select time -> confirm details)
-2. **Book Session Flow**: 3-step process (select service -> select time -> confirm details)
-3. **Shared Components**: Reusable DateTimePicker, form, and success screen
-4. **Consistent Styling**: Matches the minimal Inter Light aesthetic
-5. **Form Validation**: Proper error handling with Zod
-6. **Calendar Integration**: Easy addition to Google/Apple calendars
+1. **Aspirational Hero**: Bold headline that speaks to achievement
+2. **Clear Process**: 4-step visual showing simplicity of joining
+3. **Value Proposition**: 3 key benefits that resonate with target audience
+4. **Target Clarity**: Category pills showing who fits
+5. **Earnings Transparency**: Clear stats on potential income
+6. **Social Proof**: Testimonials from current coaches
+7. **Strong Close**: Dark CTA section with urgency
 
-The flow is designed to be straightforward and conversion-focused, removing friction while collecting the necessary information for a successful coaching session.
+The design maintains consistency with the existing EarlyEdge style while creating a dedicated, conversion-focused experience for coach recruitment.
 
