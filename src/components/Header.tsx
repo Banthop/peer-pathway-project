@@ -1,4 +1,5 @@
 import { useState } from "react";
+ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, X } from "lucide-react";
 
@@ -24,12 +25,12 @@ const Header = () => {
                 Browse
                 <ChevronDown className="w-4 h-4" />
               </button>
-              <a
-                href="#become-coach"
+               <Link
+                 to="/become-a-coach"
                 className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
               >
                 Become a Coach
-              </a>
+               </Link>
             </nav>
           </div>
 
@@ -64,12 +65,12 @@ const Header = () => {
                 Browse
                 <ChevronDown className="w-4 h-4" />
               </button>
-              <a
-                href="#become-coach"
+               <Link
+                 to="/become-a-coach"
                 className="text-sm text-foreground font-sans font-light"
               >
                 Become a Coach
-              </a>
+               </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 <Button variant="ghost" className="justify-start font-sans font-light">
                   Log In
