@@ -1,103 +1,170 @@
 
 
-# Fix Coloring on Become a Coach Page
+# Restructure Become a Coach Page for Better Visibility
 
 ## The Problem
 
-Comparing the Become a Coach page to the main landing page, I can see several color inconsistencies that make the page feel "off":
+The current structure hides key selling points:
 
-### Current Issues
+```text
+Current Flow:
+"Did you..." headline (weak, vague)
+  ↓
+Achievement questions (muted gray - blends in)
+  ↓
+3 Benefit cards
+  ↓
+"Less effort than a part-time job..." (muted, buried, hidden)
+  ↓
+Final CTA
+```
 
-1. **How It Works section uses `bg-secondary/30`** - This creates a grayish tinted background, but the main site's How It Works section has no background (just `bg-background`). This breaks the clean white consistency.
-
-2. **The "Did you..." achievement text uses `text-foreground`** - This makes it the same weight as the headline visually. On the main site, body text consistently uses `text-muted-foreground` for hierarchy.
-
-3. **Step number badges use `bg-primary`** - The primary color in your theme is a dark gray (`266 4% 20.8%`), which is almost identical to `foreground`. This makes the numbered badges blend into the dark icon circles rather than providing contrast.
-
-4. **Final CTA section uses `bg-foreground`** - This is fine (dark section), but the main site's FinalCTA uses `bg-background` (white). The inconsistency between pages may feel jarring.
-
-### Color Comparison
-
-| Element | Become a Coach | Main Site |
-|---------|----------------|-----------|
-| How It Works bg | `bg-secondary/30` (gray tint) | `bg-background` (white) |
-| Achievement text | `text-foreground` (dark) | `text-muted-foreground` |
-| Final CTA bg | `bg-foreground` (dark) | `bg-background` (white) |
+**Issues:**
+1. "Less effort than a part-time job" is a killer selling point but it's styled as an afterthought in muted gray at the bottom
+2. The "Did you..." headline is vague - it doesn't tell you what to expect
+3. The achievement questions and time commitment are all muted - nothing pops
 
 ---
 
 ## The Solution
 
-Align the Become a Coach page with the main site's color approach for consistency:
+Restructure so the benefits section has a strong headline, and make the time commitment line stand out:
 
-### 1. Remove the Gray Background from How It Works
+```text
+New Flow:
+HERO (unchanged)
+  ↓
+HOW IT WORKS (unchanged)
+  ↓
+WHY COACH section (renamed, clearer)
+  - Strong headline: "Why coach on EarlyEdge"
+  - 3 Benefit cards (same as before)
+  - Time commitment as a featured callout box (stands out!)
+  ↓
+DID YOU section (now separate, punchy)
+  - "Did you..." + achievements
+  - Direct CTA: "Then you're ready."
+  ↓
+FINAL CTA (unchanged)
+```
 
-Change from `bg-secondary/30` to `bg-background` to match the clean white approach used across the main site.
-
-### 2. Fix Achievement Text Color
-
-The flowing "Get into Oxford? Land a Spring Week?..." text should use `text-muted-foreground` instead of `text-foreground` to create proper visual hierarchy under the "Did you..." headline.
-
-### 3. Keep the Dark Final CTA (Optional Discussion)
-
-The dark final CTA actually works well as a page closer - it creates a strong call to action. However, if you want consistency with the main site, we can switch it to white. I'd recommend keeping it dark since it serves a different purpose (recruitment vs. student conversion).
+**Key changes:**
+1. Split the merged section back into two distinct parts for clarity
+2. Make "Less effort than a part-time job" a standout callout box with a subtle background
+3. Give the benefits a proper headline ("Why coach on EarlyEdge")
+4. Make "Did you..." section a punchy qualifier that leads directly to action
 
 ---
 
-## Changes to Make
-
-### File: `src/pages/BecomeACoach.tsx`
-
-**Change 1: How It Works background**
-```tsx
-// Before (line 92)
-<section className="py-16 md:py-24 bg-secondary/30">
-
-// After
-<section className="py-16 md:py-24 bg-background">
-```
-
-**Change 2: Achievement questions text color**
-```tsx
-// Before (line 134)
-<p className="text-lg md:text-xl font-sans font-light text-foreground mb-8 md:mb-10 ...">
-
-// After
-<p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-8 md:mb-10 ...">
-```
-
----
-
-## Visual Result
-
-After these changes:
+## Page Structure After Changes
 
 ```text
 +------------------------------------------------------------------+
-|  HERO (white bg)                                                  |
-|  Dark headline, muted subtext, dark button                        |
+|  HERO                                                             |
+|  "You figured it out. Now earn from it."                          |
+|  [Become a Coach]                                                 |
 +------------------------------------------------------------------+
-|  HOW IT WORKS (white bg - now matches main site)                  |
-|  Dark icon circles, step descriptions in muted gray               |
+|  HOW IT WORKS                                                     |
+|  4 steps: Apply - Verify - Set Terms - Earn                       |
 +------------------------------------------------------------------+
-|  DID YOU... (white bg)                                            |
-|  "Did you..." in dark                                             |
-|  Achievement questions in muted gray (now hierarchy is clear)     |
-|  Benefit cards with dark icons                                    |
-|  Time commitment in muted gray                                    |
+|  WHY COACH ON EARLYEDGE                                           |
+|                                                                   |
+|  [Card 1]       [Card 2]       [Card 3]                          |
+|  Qualified      Reputation     Schedule                           |
+|                                                                   |
+|  +------------------------------------------------------------+   |
+|  |  Less effort than a part-time job.                         |   |
+|  |  A couple hours a week, on your schedule, from laptop.     |   |
+|  +------------------------------------------------------------+   |
 +------------------------------------------------------------------+
-|  FINAL CTA (dark bg - strong closer)                              |
-|  White text, white button                                         |
+|  DID YOU...                                                       |
+|  Oxford? Spring Week? UCAT? TC? Consulting?                       |
+|  "Then you're ready."                                             |
+|  [Become a Coach]                                                 |
 +------------------------------------------------------------------+
+|  FINAL CTA (dark)                                                 |
+|  "Your experience is valuable. Literally."                        |
++------------------------------------------------------------------+
+```
+
+---
+
+## Code Changes
+
+### File: `src/pages/BecomeACoach.tsx`
+
+**1. Rename and restructure the combined section into "Why Coach" section:**
+
+```tsx
+{/* Why Coach Section */}
+<section className="py-16 md:py-24 bg-background">
+  <div className="container mx-auto px-4">
+    <ScrollReveal>
+      <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-12 md:mb-16 text-center">
+        Why coach on EarlyEdge
+      </h2>
+    </ScrollReveal>
+
+    {/* Benefit cards */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
+      {benefits.map(...)}
+    </div>
+
+    {/* Time commitment - FEATURED CALLOUT */}
+    <ScrollReveal delay={0.3}>
+      <div className="max-w-2xl mx-auto p-6 md:p-8 rounded-2xl bg-secondary/50 border border-border/50 text-center">
+        <p className="text-xl md:text-2xl font-sans font-medium text-foreground mb-2">
+          Less effort than a part-time job.
+        </p>
+        <p className="text-base md:text-lg font-sans font-light text-muted-foreground">
+          A couple hours a week, on your schedule, from your laptop.
+        </p>
+      </div>
+    </ScrollReveal>
+  </div>
+</section>
+```
+
+**2. Add new "Did You" section as a qualifier:**
+
+```tsx
+{/* Did You Section - Qualifier */}
+<section className="py-12 md:py-16 bg-background">
+  <div className="container mx-auto px-4 text-center">
+    <ScrollReveal>
+      <h2 className="text-3xl md:text-4xl font-sans font-extralight text-foreground mb-4">
+        Did you...
+      </h2>
+    </ScrollReveal>
+    <ScrollReveal delay={0.1}>
+      <p className="text-lg md:text-xl font-sans font-light text-muted-foreground mb-6 max-w-3xl mx-auto">
+        Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
+      </p>
+    </ScrollReveal>
+    <ScrollReveal delay={0.2}>
+      <p className="text-xl md:text-2xl font-sans font-medium text-foreground mb-6">
+        Then you're ready.
+      </p>
+    </ScrollReveal>
+    <ScrollReveal delay={0.3}>
+      <Button
+        size="lg"
+        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-6 text-base"
+      >
+        Become a Coach
+      </Button>
+    </ScrollReveal>
+  </div>
+</section>
 ```
 
 ---
 
 ## Summary
 
-Two simple color fixes:
-1. Remove the gray tint from How It Works (`bg-secondary/30` to `bg-background`)
-2. Make achievement questions use muted text (`text-foreground` to `text-muted-foreground`)
-
-This aligns the page with the main site's clean, high-contrast aesthetic while keeping the dark Final CTA as an intentional design choice for the recruitment page.
+1. **Split sections** - "Why Coach" and "Did You" become distinct sections with clear purposes
+2. **Featured callout** - "Less effort than a part-time job" gets a standout box with background
+3. **Strong headline** - "Why coach on EarlyEdge" is clear and direct
+4. **Punchy qualifier** - "Did you..." becomes a short section that ends with "Then you're ready." and a CTA
+5. **Better flow** - Benefits explain why, qualifier confirms who, final CTA closes
 
