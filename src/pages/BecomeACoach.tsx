@@ -172,13 +172,8 @@
                 </h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                 <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-6 max-w-3xl mx-auto">
+                <p className="text-base md:text-lg font-sans font-light text-muted-foreground mb-0 max-w-3xl mx-auto">
                   Get into Oxford? Land a Spring Week? Score 3000+ on UCAT? Secure a TC at a magic circle firm? Break into consulting?
-                </p>
-              </ScrollReveal>
-              <ScrollReveal delay={0.2}>
-                  <p className="text-lg md:text-xl font-sans font-medium text-foreground">
-                  Then you're ready.
                 </p>
               </ScrollReveal>
             </div>
@@ -188,16 +183,21 @@
           <section className="py-16 md:py-24 bg-foreground">
            <div className="container mx-auto px-4 text-center">
              <ScrollReveal>
-               <h2 className="text-3xl md:text-4xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
+                <p className="text-xl md:text-2xl font-sans font-medium text-background mb-2">
+                  Then you're ready.
+                </p>
+              </ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <h2 className="text-2xl md:text-3xl font-sans font-extralight text-background mb-4 max-w-3xl mx-auto">
                   Your experience is valuable. Literally.
                </h2>
              </ScrollReveal>
-             <ScrollReveal delay={0.1}>
+              <ScrollReveal delay={0.2}>
                 <p className="text-lg font-sans font-light text-background/80 mb-10">
                   Students want help from someone who just did what they're trying to do. That's you.
                </p>
              </ScrollReveal>
-             <ScrollReveal delay={0.2}>
+              <ScrollReveal delay={0.3}>
                 <div className="flex flex-col items-center gap-4">
                  <Button
                    size="lg"
