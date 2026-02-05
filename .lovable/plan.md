@@ -1,88 +1,165 @@
 
-## Goal
-Redesign the final dark CTA section to feel more spacious and impactful rather than crammed and forced.
+# Authentication Pages Implementation Plan
 
-## Current Problem
-The dark section currently has 5 text elements stacked tightly together:
-1. "Get into Oxford? Land a Spring Week?..." (qualifier questions)
-2. "Then you're ready." (punchline)
-3. "Your experience is valuable. Literally." (headline)
-4. "Students want help from someone..." (supporting text)
-5. Button + subtext
+## Overview
+Create four clean, minimal authentication pages that match the EarlyEdge design system. These are frontend-only with static forms that will be connected to Supabase later.
 
-This creates a wall of text that feels overwhelming and squashed - too many ideas competing for attention in one block.
+## Design Approach
+- Centered card layout on white background
+- Clean, minimal styling matching existing EarlyEdge aesthetic
+- Inter font family with light weights (matching current style)
+- Mobile responsive
+- No Header/Footer on auth pages (cleaner auth experience)
+- EarlyEdge logo links back to home
 
-## Recommended Solution
-Simplify the dark CTA to focus on ONE clear message with more breathing room. Move the qualifier questions back to a light section that builds anticipation, then let the dark section deliver a clean, punchy payoff.
+---
 
-## File to Update
-`src/pages/BecomeACoach.tsx`
+## Files to Create
 
-## Changes
+### 1. `/login` - Login Page
+**File:** `src/pages/Login.tsx`
 
-### 1. Create a new "Are you ready?" transition section (light background)
-Add a new section between "Why Coach" and the final CTA:
-- Light background (`bg-background`)
-- Display the achievement questions as individual styled items (not a paragraph)
-- End with "Then you're ready." as the section closer
-- More vertical padding for breathing room
+**Layout:**
+- Centered card (max-width ~400px)
+- EarlyEdge logo at top (links to home)
+- Headline: "Welcome back"
+- Email input
+- Password input
+- "Log in" button (full width, dark bg)
+- "Forgot password?" link
+- "Don't have an account? Sign up" link
 
-### 2. Simplify the dark CTA section
-Strip it down to just:
-- One bold headline: "Your experience is valuable. Literally."
-- One supporting line
-- Button + subtext
-- More generous vertical padding (`py-20 md:py-32`)
+---
 
-### 3. Style the achievements as a visual list
-Instead of cramming achievements into a paragraph, display them as:
-- A centered grid or flex-wrap layout
-- Each achievement as a subtle chip/badge style
-- Creates visual interest and breaks up the text
+### 2. `/signup` - Student Signup Page
+**File:** `src/pages/Signup.tsx`
 
-## Technical Summary
+**Layout:**
+- Centered card
+- EarlyEdge logo at top
+- Headline: "Create your account"
+- Name input
+- Email input
+- Password input
+- "Create account" button
+- "Already have an account? Log in" link
+- Small footer: "Want to coach instead?" link to /become-a-coach
 
-**New "Are you ready?" section structure:**
-```tsx
-<section className="py-16 md:py-24 bg-background">
-  <div className="container mx-auto px-4 text-center">
-    {/* Achievement chips in a flex-wrap layout */}
-    <div className="flex flex-wrap justify-center gap-3 mb-8 max-w-3xl mx-auto">
-      {achievements.map(...)}
-    </div>
-    
-    <p className="text-2xl md:text-3xl font-sans font-medium text-foreground">
-      Then you're ready.
-    </p>
-  </div>
-</section>
+---
+
+### 3. `/forgot-password` - Password Reset Page
+**File:** `src/pages/ForgotPassword.tsx`
+
+**Layout:**
+- Centered card
+- EarlyEdge logo at top
+- Headline: "Reset your password"
+- Subtext: "Enter your email and we'll send you a reset link."
+- Email input
+- "Send reset link" button
+- "Back to login" link
+
+---
+
+### 4. `/coach/signup` - Coach Application Page
+**File:** `src/pages/CoachSignup.tsx`
+
+**Layout:**
+- Centered card
+- EarlyEdge logo at top
+- Headline: "Apply to coach"
+- Subtext: "This takes about 3 minutes"
+- "Continue with LinkedIn" button (primary, prominent, with LinkedIn icon)
+- Divider with "or"
+- Name input
+- Email input
+- Password input
+- "Continue" button
+- "Already have an account? Log in" link
+
+---
+
+### 5. Shared Auth Layout Component
+**File:** `src/components/auth/AuthLayout.tsx`
+
+Reusable wrapper for all auth pages:
+- Full viewport height
+- Centered content
+- EarlyEdge logo at top
+- Consistent padding and spacing
+
+---
+
+### 6. Update Routes
+**File:** `src/App.tsx`
+
+Add routes:
+- `/login` -> Login
+- `/signup` -> Signup
+- `/forgot-password` -> ForgotPassword
+- `/coach/signup` -> CoachSignup
+
+---
+
+## Technical Details
+
+### Styling Patterns (matching existing codebase)
+```text
+Typography:
+- Headlines: font-sans font-light text-foreground
+- Subtext: font-sans font-light text-muted-foreground
+- Links: text-sm font-sans hover:underline
+
+Inputs:
+- Use existing Input component from @/components/ui/input
+- Full width, consistent spacing
+
+Buttons:
+- Primary: bg-foreground text-background hover:bg-foreground/90
+- LinkedIn: bg-[#0A66C2] text-white (LinkedIn brand color)
+
+Card Container:
+- w-full max-w-md mx-auto p-8
+- No visible card border (clean look)
 ```
 
-**Simplified dark CTA structure:**
-```tsx
-<section className="py-20 md:py-32 bg-foreground">
-  <div className="container mx-auto px-4 text-center">
-    <h2 className="text-3xl md:text-4xl lg:text-5xl font-sans font-extralight text-background mb-6">
-      Your experience is valuable. Literally.
-    </h2>
-    <p className="text-lg font-sans font-light text-background/80 mb-10">
-      Students want help from someone who just did what they're trying to do.
-    </p>
-    <Button ...>Become a Coach</Button>
-    <span>No commitment. Leave whenever.</span>
-  </div>
-</section>
+### Component Structure
+```text
+AuthLayout
++-- Logo (links to /)
++-- Children (form content)
+
+LoginPage
++-- AuthLayout
+    +-- h1 "Welcome back"
+    +-- form
+        +-- Email Input
+        +-- Password Input
+        +-- Submit Button
+    +-- Links (forgot password, signup)
 ```
 
-## Visual Result
-- **Light section**: Achievement badges create visual rhythm, ending with "Then you're ready."
-- **Dark section**: Clean, spacious, focused - just the value prop and CTA
-- More breathing room throughout
-- Stronger visual hierarchy
+### Form Handling
+- Forms are non-functional (frontend only)
+- Use React state for controlled inputs
+- Buttons have onClick handlers that do nothing yet
+- Ready for Supabase integration later
 
-## Why This Works
-1. Separates the "build-up" (achievements) from the "payoff" (CTA)
-2. Gives each section a single job rather than cramming everything together
-3. Achievement chips add visual interest and scannability
-4. Generous padding prevents the "squashed" feeling
-5. Matches the cleaner FinalCTA pattern used on the homepage
+---
+
+## Implementation Order
+1. Create AuthLayout component
+2. Create Login page
+3. Create Signup page
+4. Create ForgotPassword page
+5. Create CoachSignup page
+6. Add all routes to App.tsx
+7. Update Header "Log In" button to link to /login
+
+---
+
+## Mobile Responsiveness
+- Card takes full width on mobile with horizontal padding
+- All elements stack vertically
+- Touch-friendly input sizes
+- Buttons full width on all screen sizes
