@@ -6,9 +6,9 @@ import student1 from "@/assets/student-1.jpg";
 
 const navItems = [
   { title: "Overview", url: "/dashboard", end: true },
-  { title: "Browse Coaches", url: "/", end: false },
+  { title: "Browse Coaches", url: "/dashboard/browse", end: false },
   { title: "My Bookings", url: "/dashboard/bookings", end: false },
-  { title: "Saved Coaches", url: "/dashboard/saved", end: false },
+  { title: "Messages", url: "/dashboard/messages", end: false },
 ];
 
 const userData = {

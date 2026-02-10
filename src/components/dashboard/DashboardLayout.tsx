@@ -4,7 +4,7 @@ import { DashboardMobileHeader } from "./DashboardMobileHeader";
 
 export default function DashboardLayout() {
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex min-h-screen w-full bg-muted/30">
       <DashboardSidebar />
       <div className="flex-1 flex flex-col min-w-0">
         <DashboardMobileHeader />
