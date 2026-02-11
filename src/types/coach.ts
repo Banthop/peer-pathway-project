@@ -68,4 +68,23 @@ export interface Coach {
     nextSlot: string;
     timezone: string;
   };
+  package?: {
+    name: string;
+    sessions: number;
+    price: number;
+    originalPrice: number;
+    includes: string;
+  };
+  availableSlots?: { day: string; time: string }[];
+  ucatScores?: { section: string; score: number; max: number }[];
+  ucatSJTBand?: number;
+  landedOfferLabels?: string[];
+  upcomingEvent?: {
+    title: string;
+    description: string;
+    date: string;
+    time: string;
+    price: string;
+    spotsLeft: number;
+  };
 }

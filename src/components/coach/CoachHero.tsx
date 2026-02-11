@@ -10,11 +10,19 @@ const CoachHero = ({ coach }: CoachHeroProps) => {
     <section className="pb-8">
       {/* Photo + Name + Rating */}
       <div className="flex items-start gap-5 mb-4">
-        <img
-          src={coach.photo}
-          alt={coach.name}
-          className="w-24 h-24 rounded-full object-cover flex-shrink-0"
-        />
+        {coach.photo ? (
+          <img
+            src={coach.photo}
+            alt={coach.name}
+            className="w-24 h-24 rounded-full object-cover flex-shrink-0"
+          />
+        ) : (
+          <div className="w-24 h-24 rounded-full bg-muted border-2 border-border flex items-center justify-center flex-shrink-0">
+            <span className="text-2xl font-semibold text-muted-foreground">
+              {coach.name.split(" ").map(n => n[0]).join("")}
+            </span>
+          </div>
+        )}
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-2xl md:text-3xl font-sans font-medium text-foreground">

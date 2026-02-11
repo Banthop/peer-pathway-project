@@ -7,6 +7,7 @@ import student1 from "@/assets/student-1.jpg";
 const navItems = [
   { title: "Overview", url: "/dashboard", end: true },
   { title: "Browse Coaches", url: "/dashboard/browse", end: false },
+  { title: "Free Events", url: "/dashboard/events", end: false },
   { title: "My Bookings", url: "/dashboard/bookings", end: false },
   { title: "Messages", url: "/dashboard/messages", end: false },
 ];

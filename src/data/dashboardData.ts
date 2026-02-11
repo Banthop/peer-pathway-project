@@ -4,6 +4,7 @@
 
 export interface Coach {
     id: number;
+    slug: string;
     name: string;
     credential: string;
     uni: string;
@@ -48,6 +49,7 @@ export interface ChatMessage {
 export const allCoaches: Coach[] = [
     {
         id: 1,
+        slug: "sarah-k",
         name: "Sarah K.",
         credential: "Goldman Sachs Incoming Analyst",
         uni: "Oxford '24",
@@ -68,6 +70,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 2,
+        slug: "david-w",
         name: "David W.",
         credential: "McKinsey Summer Associate",
         uni: "Cambridge '23",
@@ -88,6 +91,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 3,
+        slug: "emily-r",
         name: "Emily R.",
         credential: "Clifford Chance Trainee",
         uni: "LSE '23",
@@ -108,6 +112,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 4,
+        slug: "james-l",
         name: "James L.",
         credential: "Meta Software Engineer",
         uni: "Imperial '22",
@@ -128,6 +133,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 5,
+        slug: "priya-m",
         name: "Priya M.",
         credential: "UCAT Score 3150",
         uni: "UCL Medicine '24",
@@ -148,6 +154,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 6,
+        slug: "tom-h",
         name: "Tom H.",
         credential: "Oxford PPE '24",
         uni: "Eton College",
@@ -168,6 +175,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 7,
+        slug: "aisha-n",
         name: "Aisha N.",
         credential: "J.P. Morgan Spring Week '24",
         uni: "Warwick '25",
@@ -188,6 +196,7 @@ export const allCoaches: Coach[] = [
     },
     {
         id: 8,
+        slug: "marcus-d",
         name: "Marcus D.",
         credential: "BCG Summer Consultant",
         uni: "LSE '23",

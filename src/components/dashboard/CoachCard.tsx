@@ -9,34 +9,33 @@ interface CoachCardProps {
     large?: boolean;
 }
 
-export function CoachCard({ coach, hovered, onHover, large }: CoachCardProps) {
+export function CoachCard({ coach, hovered, onHover }: CoachCardProps) {
     return (
         <Link
-            to={`/coach/${coach.id}`}
+            to={`/coach/${coach.slug}`}
             onMouseEnter={() => onHover(coach.id)}
             onMouseLeave={() => onHover(null)}
-            className={`block bg-background border rounded-xl cursor-pointer transition-all duration-200 ${large ? "p-6" : "p-5"
-                } ${hovered
+            className={`block bg-background border rounded-xl cursor-pointer transition-all duration-200 p-5 md:p-6 ${hovered
                     ? "border-foreground/30 -translate-y-0.5 shadow-md"
                     : "border-border"
                 }`}
         >
             {/* Top: Avatar + Name + Price */}
-            <div className="flex items-start justify-between mb-2.5">
+            <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center text-xs font-semibold text-muted-foreground">
+                    <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center text-xs font-semibold text-muted-foreground flex-shrink-0">
                         {coach.avatar}
                     </div>
                     <div>
                         <p className="text-[15px] font-semibold tracking-tight text-foreground">
                             {coach.name}
                         </p>
-                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                        <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
                             {coach.credential} · {coach.uni}
                         </p>
                     </div>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0 ml-4">
                     <span className="text-[17px] font-bold tracking-tight text-foreground">
                         £{coach.rate}
                     </span>
@@ -47,12 +46,12 @@ export function CoachCard({ coach, hovered, onHover, large }: CoachCardProps) {
             </div>
 
             {/* Bio */}
-            <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-3">
+            <p className="text-[12.5px] text-muted-foreground leading-relaxed mb-4">
                 {coach.bio}
             </p>
 
             {/* Stats Row */}
-            <div className="flex items-center gap-4 mb-3 pb-3 border-b border-border">
+            <div className="flex items-center gap-4 mb-4 pb-3.5 border-b border-border">
                 <div className="flex items-center gap-1.5">
                     <Star className="w-3 h-3 fill-foreground text-foreground" />
                     <span className="text-xs font-semibold text-foreground">
@@ -79,7 +78,7 @@ export function CoachCard({ coach, hovered, onHover, large }: CoachCardProps) {
             </div>
 
             {/* Package */}
-            <div className="bg-muted rounded-lg px-3.5 py-2.5 mb-3.5 flex items-center justify-between">
+            <div className="bg-muted rounded-lg px-3.5 py-2.5 mb-4 flex items-center justify-between">
                 <div>
                     <p className="text-xs font-semibold text-foreground">
                         {coach.packageName}
@@ -89,7 +88,7 @@ export function CoachCard({ coach, hovered, onHover, large }: CoachCardProps) {
                         {Math.round(coach.packagePrice / coach.packageSessions)}/session
                     </p>
                 </div>
-                <span className="text-sm font-bold text-foreground">
+                <span className="text-sm font-bold text-foreground whitespace-nowrap">
                     £{coach.packagePrice}
                 </span>
             </div>
@@ -112,7 +111,7 @@ export function CoachCard({ coach, hovered, onHover, large }: CoachCardProps) {
                             : "bg-transparent text-foreground"
                         }`}
                 >
-                    {coach.hasBooked ? "Book again →" : "Free intro →"}
+                    {coach.hasBooked ? "Book again →" : "Book free intro →"}
                 </span>
             </div>
         </Link>

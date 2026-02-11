@@ -16,6 +16,7 @@ const totalUnread = conversations.reduce((sum, c) => sum + c.unread, 0);
 const navItems = [
   { title: "Overview", url: "/dashboard", end: true, dot: false },
   { title: "Browse Coaches", url: "/dashboard/browse", end: false, dot: false },
+  { title: "Free Events", url: "/dashboard/events", end: false, dot: false },
   {
     title: "My Bookings",
     url: "/dashboard/bookings",
