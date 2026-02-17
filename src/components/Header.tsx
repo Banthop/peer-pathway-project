@@ -1,7 +1,8 @@
 import { useState } from "react";
- import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { Logo } from "@/components/Logo";
+import { Menu, X } from "lucide-react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -12,25 +13,28 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo and Navigation - left side */}
           <div className="flex items-center gap-8">
-            <a href="/" className="flex items-center">
-              <span className="text-xl md:text-2xl text-foreground font-sans">
-                <span className="font-light">Early</span>
-                <span className="font-bold">Edge</span>
-              </span>
-            </a>
+            <Logo className="text-xl md:text-2xl" />
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <button className="flex items-center gap-1 text-sm text-foreground hover:text-primary transition-colors font-sans font-light">
+              <Link
+                to="/dashboard/browse"
+                className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
+              >
                 Browse
-                <ChevronDown className="w-4 h-4" />
-              </button>
-               <Link
-                 to="/become-a-coach"
+              </Link>
+              <Link
+                to="/become-a-coach"
                 className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
               >
                 Become a Coach
-               </Link>
+              </Link>
+              <Link
+                to="/coach-dashboard"
+                className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
+              >
+                Coach Dashboard
+              </Link>
             </nav>
           </div>
 
@@ -61,16 +65,27 @@ const Header = () => {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-4">
-              <button className="flex items-center gap-1 text-sm text-foreground font-sans font-light">
-                Browse
-                <ChevronDown className="w-4 h-4" />
-              </button>
-               <Link
-                 to="/become-a-coach"
+              <Link
+                to="/dashboard/browse"
                 className="text-sm text-foreground font-sans font-light"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Browse
+              </Link>
+              <Link
+                to="/become-a-coach"
+                className="text-sm text-foreground font-sans font-light"
+                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Become a Coach
-               </Link>
+              </Link>
+              <Link
+                to="/coach-dashboard"
+                className="text-sm text-foreground font-sans font-light"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Coach Dashboard
+              </Link>
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 <Button variant="ghost" className="justify-start font-sans font-light" asChild>
                   <Link to="/login">Log In</Link>

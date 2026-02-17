@@ -1,4 +1,5 @@
 import { NavLink } from "@/components/NavLink";
+import { Logo } from "@/components/Logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, ChevronDown } from "lucide-react";
+import { Settings, LogOut, ChevronDown, ArrowRightLeft } from "lucide-react";
 import { pastBookings, conversations } from "@/data/dashboardData";
 
 const unreviewedCount = pastBookings.filter((s) => !s.reviewed).length;
@@ -41,13 +42,7 @@ export function DashboardSidebar() {
     <aside className="hidden md:flex md:w-56 lg:w-64 flex-col border-r border-border bg-background">
       {/* Logo */}
       <div className="px-7 py-8">
-        <NavLink
-          to="/"
-          className="text-[22px] tracking-tight text-foreground font-serif"
-        >
-          <span className="font-normal">Early</span>
-          <span className="font-bold">Edge</span>
-        </NavLink>
+        <Logo />
       </div>
 
       {/* Navigation */}
@@ -95,6 +90,15 @@ export function DashboardSidebar() {
               >
                 <Settings className="h-4 w-4" />
                 Settings
+              </NavLink>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <NavLink
+                to="/coach-dashboard"
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <ArrowRightLeft className="h-4 w-4" />
+                Switch to Coach
               </NavLink>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

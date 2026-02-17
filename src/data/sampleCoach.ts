@@ -3,16 +3,22 @@ import coachSarah from "@/assets/coach-sarah.jpg";
 import coachDavid from "@/assets/coach-david.jpg";
 import coachEmily from "@/assets/coach-emily.jpg";
 import coachJames from "@/assets/coach-james.jpg";
-import logoOxford from "@/assets/logo-oxford.png";
-import logoCambridge from "@/assets/logo-cambridge.png";
-import logoGoldman from "@/assets/logo-goldman-sachs.png";
-import logoMcKinsey from "@/assets/logo-mckinsey-new.png";
-import logoJPMorgan from "@/assets/logo-jpmorgan-new.png";
-import logoImperial from "@/assets/logo-imperial-new.png";
-import logoLSE from "@/assets/logo-lse-new.png";
-import logoUCL from "@/assets/logo-ucl-new.png";
-import logoMeta from "@/assets/logo-meta.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
+
+const LOGO_TOKEN = "pk_Z3IZl0C_TzO4RqLGSGD5LQ";
+const logo = (domain: string) => `https://img.logo.dev/${domain}?token=${LOGO_TOKEN}&size=128&format=png`;
+
+const logoOxford = logo("ox.ac.uk");
+const logoCambridge = logo("cam.ac.uk");
+const logoGoldman = logo("goldmansachsbdc.com");
+const logoJPMorgan = logo("jpmorganchasecc.com");
+const logoMorganStanley = logo("morganstanley.com");
+const logoClifford = logoCliffordChance; // Local asset
+const logoMcKinsey = logo("mckinsey.com");
+const logoImperial = logo("imperial.ac.uk");
+const logoLSE = logo("lse.ac.uk");
+const logoUCL = logo("ucl.ac.uk");
+const logoMeta = logo("meta.com");
 
 export const sampleCoaches: Record<string, Coach> = {
   "sarah-k": {
@@ -249,7 +255,7 @@ I believe everyone can learn to crack cases with the right framework and practic
         role: "Spring Intern",
         company: "Goldman Sachs",
         dates: "Spring 2023",
-        description: "Investment Banking Division — also explored finance before choosing consulting",
+        description: "Investment Banking Division. also explored finance before choosing consulting",
       },
     ],
     education: [
@@ -280,14 +286,14 @@ I believe everyone can learn to crack cases with the right framework and practic
         name: "Chris P.",
         date: "1 month ago",
         rating: 5,
-        text: "David's frameworks are incredibly practical. He doesn't just teach theory — he makes you actually solve cases in a way that clicks. Best money I've spent on prep.",
+        text: "David's frameworks are incredibly practical. He doesn't just teach theory. he makes you actually solve cases in a way that clicks. Best money I've spent on prep.",
         outcome: "Bain Offer",
       },
       {
         name: "Anya M.",
         date: "2 months ago",
         rating: 5,
-        text: "Had 3 sessions with David before my McKinsey final round. His feedback on my PEI stories was game-changing — I felt completely prepared going in.",
+        text: "Had 3 sessions with David before my McKinsey final round. His feedback on my PEI stories was game-changing. I felt completely prepared going in.",
         outcome: "McKinsey Final Round",
       },
     ],
@@ -341,11 +347,11 @@ I believe everyone can learn to crack cases with the right framework and practic
     successCompanies: [
       { name: "Clifford Chance", logo: logoCliffordChance },
     ],
-    bio: `I'm a trainee solicitor at Clifford Chance starting in September 2025. During my time at LSE, I secured vacation schemes at Clifford Chance, Linklaters, Freshfields, and Slaughter and May — so I know exactly what these firms look for in their application forms and interviews.
+    bio: `I'm a trainee solicitor at Clifford Chance starting in September 2025. During my time at LSE, I secured vacation schemes at Clifford Chance, Linklaters, Freshfields, and Slaughter and May, so I know exactly what these firms look for in their application forms and interviews.
 
 I specialise in helping with commercial awareness, Watson Glaser prep, and TC application strategy. I also scored in the top 5% for the LNAT, so can help with university law applications too.
 
-My approach is practical and no-nonsense. I'll review your applications, run mock interviews, and give you honest, constructive feedback. I've been through the process — I know what works and what doesn't.`,
+My approach is practical and no-nonsense. I'll review your applications, run mock interviews, and give you honest, constructive feedback. I've been through the process. I know what works and what doesn't.`,
     skills: [
       "Training Contracts",
       "Vac Schemes",
@@ -415,7 +421,7 @@ My approach is practical and no-nonsense. I'll review your applications, run moc
         name: "Ben F.",
         date: "1 month ago",
         rating: 5,
-        text: "Had Emily review three training contract applications. Her feedback was incredibly detailed — she rewrote sections and explained exactly why. Got two interviews!",
+        text: "Had Emily review three training contract applications. Her feedback was incredibly detailed. She rewrote sections and explained exactly why. Got two interviews!",
         outcome: "Freshfields Interview",
       },
       {
@@ -474,7 +480,7 @@ My approach is practical and no-nonsense. I'll review your applications, run moc
     successCompanies: [
       { name: "Meta", logo: logoMeta },
     ],
-    bio: `I graduated from Imperial in 2022 with a First in Computer Science, and I've been working at Meta London since. I went through the full interview loop at Meta, Google, Amazon, and several startups — so I know exactly what each company expects.
+    bio: `I graduated from Imperial in 2022 with a First in Computer Science, and I've been working at Meta London since. I went through the full interview loop at Meta, Google, Amazon, and several startups, so I know exactly what each company expects.
 
 I've solved 100+ LeetCode problems and can teach you the patterns rather than individual solutions. My approach is about building problem-solving intuition so you can handle any question, not just the ones you've memorised.
 
@@ -610,7 +616,7 @@ I also cover system design for more senior roles, behavioural questions, and the
   "priya-m": {
     id: "priya-m",
     name: "Priya M.",
-    tagline: "Top 2% UCAT scorer — I'll teach you strategies that actually work under pressure",
+    tagline: "Top 2% UCAT scorer! I'll teach you strategies that actually work under pressure",
     photo: "",
     rating: 4.7,
     reviewCount: 19,
@@ -630,7 +636,7 @@ I also cover system design for more senior roles, behavioural questions, and the
     successCompanies: [],
     bio: `I'm a first-year medical student at UCL. I scored 3150 on the UCAT (top 2%) and received offers from UCL, King's, Bristol, and Leeds.
 
-I struggled with timing initially but developed specific strategies for each section that dramatically improved my score. I went from a 2600 in my first practice test to 3150 on test day — so I know exactly what it takes to make a big jump.
+I struggled with timing initially but developed specific strategies for each section that dramatically improved my score. I went from a 2600 in my first practice test to 3150 on test day, so I know exactly what it takes to make a big jump.
 
 I focus on teaching timed strategies so you can apply them under real test conditions. I also help with MMI interview prep and personal statement reviewing, drawing from my own successful experience.
 
@@ -760,7 +766,7 @@ I'm especially passionate about helping students from state schools who don't ha
   "tom-h": {
     id: "tom-h",
     name: "Tom H.",
-    tagline: "First-generation Oxbridge student — I'll show you how to stand out",
+    tagline: "First-generation Oxbridge student! I'll show you how to stand out",
     photo: "",
     rating: 4.9,
     reviewCount: 35,
@@ -895,7 +901,7 @@ I'm particularly passionate about helping state school students who don't have a
   "aisha-n": {
     id: "aisha-n",
     name: "Aisha N.",
-    tagline: "Landed JPM Spring Week with zero connections — let me show you how",
+    tagline: "Landed JPM Spring Week with zero connections! Let me show you how",
     photo: "",
     rating: 4.6,
     reviewCount: 14,
@@ -903,7 +909,7 @@ I'm particularly passionate about helping state school students who don't have a
     followers: 9,
     university: {
       name: "University of Warwick",
-      logo: logoLSE, // Using LSE as placeholder — Warwick logo not in assets
+      logo: logoLSE, // Using LSE as placeholder. Warwick logo not in assets
       degree: "BSc Economics",
       years: "2023 - 2026",
     },
@@ -915,7 +921,7 @@ I'm particularly passionate about helping state school students who don't have a
     successCompanies: [
       { name: "JP Morgan", logo: logoJPMorgan },
     ],
-    bio: `I'm a second-year Economics student at Warwick. I had no connections in finance and no prior internship experience when I started applying. I landed my J.P. Morgan Spring Week entirely through cold emailing and networking — and I've refined that process into a repeatable system.
+    bio: `I'm a second-year Economics student at Warwick. I had no connections in finance and no prior internship experience when I started applying. I landed my J.P. Morgan Spring Week entirely through cold emailing and networking, and I've refined that process into a repeatable system.
 
 If you don't have a finance background or connections, I'm the coach for you. I specialise in helping students from non-target universities and non-traditional backgrounds break into investment banking.
 
@@ -1013,7 +1019,7 @@ My coaching covers cold email strategy, LinkedIn networking, CV tailoring for fi
   "marcus-d": {
     id: "marcus-d",
     name: "Marcus D.",
-    tagline: "Non-traditional to BCG — I'll help you break into MBB your way",
+    tagline: "Non-traditional to BCG! I'll help you break into MBB your way",
     photo: "",
     rating: 4.8,
     reviewCount: 22,
@@ -1033,11 +1039,11 @@ My coaching covers cold email strategy, LinkedIn networking, CV tailoring for fi
     successCompanies: [
       { name: "McKinsey", logo: logoMcKinsey },
     ],
-    bio: `I studied Management at LSE and landed a summer consulting role at BCG. What makes me different is that I came from a completely non-traditional background — no family in consulting, no prior internships, state school educated.
+    bio: `I studied Management at LSE and landed a summer consulting role at BCG. What makes me different is that I came from a completely non-traditional background, no family in consulting, no prior internships, state school educated.
 
 I know exactly what it takes to stand out when you don't have the 'typical' profile. I focus on authentic PEI stories, case fundamentals, and application positioning.
 
-My coaching style is direct and practical. I'll help you develop genuine, compelling stories from your real experiences — not fabricated answers. I also specialise in the written case format used by BCG and McKinsey.
+My coaching style is direct and practical. I'll help you develop genuine, compelling stories from your real experiences, not fabricated answers. I also specialise in the written case format used by BCG and McKinsey.
 
 If you're from a non-traditional background and want to break into MBB, I can show you exactly how I did it.`,
     skills: [

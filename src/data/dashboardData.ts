@@ -59,14 +59,14 @@ export const allCoaches: Coach[] = [
         rate: 50,
         avatar: "SK",
         category: "Investment Banking",
-        bio: "Landed Spring Weeks at Goldman & Citi. Helped 15+ friends get offers — I know exactly what recruiters look for.",
+        bio: "Landed Spring Weeks at Goldman & Citi. Helped 15+ friends get offers. I know exactly what recruiters look for.",
         sessions: 63,
         packageName: "Spring Week Sprint",
         packageSessions: 5,
         packagePrice: 150,
         hasBooked: true,
         fullBio:
-            "I'm a final-year PPE student at Oxford, joining Goldman Sachs as an Analyst in 2025. I secured Spring Weeks at Goldman, Citi, and Barclays in 2024 — and I've since helped 15+ friends successfully land their own Spring Week offers. I specialise in CV optimisation, cover letter strategy, and behavioural interview prep. I remember exactly what the process was like, what questions came up, and what made the difference between getting through and getting cut.",
+            "I'm a final-year PPE student at Oxford, joining Goldman Sachs as an Analyst in 2025. I secured Spring Weeks at Goldman, Citi, and Barclays in 2024, and I've since helped 15+ friends successfully land their own Spring Week offers. I specialise in CV optimisation, cover letter strategy, and behavioural interview prep. I remember exactly what the process was like, what questions came up, and what made the difference between getting through and getting cut.",
     },
     {
         id: 2,
@@ -87,7 +87,7 @@ export const allCoaches: Coach[] = [
         packagePrice: 200,
         hasBooked: true,
         fullBio:
-            "Economics at Cambridge, spent my summer at McKinsey London and returning full-time in September. Before landing McKinsey, I went through 20+ case interviews across MBB and Big 4 firms. I've developed a structured approach to case interviews that goes beyond the standard frameworks — it's about genuinely thinking through problems in a way that impresses interviewers. I also help with PEI stories, written cases, and overall application strategy.",
+            "Economics at Cambridge, spent my summer at McKinsey London and returning full-time in September. Before landing McKinsey, I went through 20+ case interviews across MBB and Big 4 firms. I've developed a structured approach to case interviews that goes beyond the standard frameworks. it's about genuinely thinking through problems in a way that impresses interviewers. I also help with PEI stories, written cases, and overall application strategy.",
     },
     {
         id: 3,
@@ -122,14 +122,14 @@ export const allCoaches: Coach[] = [
         rate: 55,
         avatar: "JL",
         category: "Software Engineering",
-        bio: "SWE at Meta. Did 100+ LeetCode problems and went through the full tech interview loop — I'll get you ready.",
+        bio: "SWE at Meta. Did 100+ LeetCode problems and went through the full tech interview loop! I'll get you ready.",
         sessions: 52,
         packageName: "Tech Interview Prep",
         packageSessions: 5,
         packagePrice: 225,
         hasBooked: false,
         fullBio:
-            "I graduated from Imperial in 2022 with a First in Computer Science, and I've been working at Meta London since. I went through the full interview loop at Meta, Google, Amazon, and several startups — so I know exactly what each company expects. I've solved 100+ LeetCode problems and can teach you the patterns rather than individual solutions. I also cover system design for more senior roles.",
+            "I graduated from Imperial in 2022 with a First in Computer Science, and I've been working at Meta London since. I went through the full interview loop at Meta, Google, Amazon, and several startups, so I know exactly what each company expects. I've solved 100+ LeetCode problems and can teach you the patterns rather than individual solutions. I also cover system design for more senior roles.",
     },
     {
         id: 5,
@@ -192,7 +192,7 @@ export const allCoaches: Coach[] = [
         packagePrice: 90,
         hasBooked: false,
         fullBio:
-            "I'm a second-year Economics student at Warwick. I had no connections in finance and no prior internship experience when I started applying. I landed my J.P. Morgan Spring Week entirely through cold emailing and networking — and I've refined that process into a repeatable system. If you don't have a finance background or connections, I'm the coach for you.",
+            "I'm a second-year Economics student at Warwick. I had no connections in finance and no prior internship experience when I started applying. I landed my J.P. Morgan Spring Week entirely through cold emailing and networking, and I've refined that process into a repeatable system. If you don't have a finance background or connections, I'm the coach for you.",
     },
     {
         id: 8,
@@ -213,7 +213,7 @@ export const allCoaches: Coach[] = [
         packagePrice: 200,
         hasBooked: false,
         fullBio:
-            "I studied Management at LSE and landed a summer consulting role at BCG. What makes me different is that I came from a completely non-traditional background — no family in consulting, no prior internships, state school educated. I know exactly what it takes to stand out when you don't have the 'typical' profile. I focus on authentic PEI stories, case fundamentals, and application positioning.",
+            "I studied Management at LSE and landed a summer consulting role at BCG. What makes me different is that I came from a completely non-traditional background, no family in consulting, no prior internships, state school educated. I know exactly what it takes to stand out when you don't have the 'typical' profile. I focus on authentic PEI stories, case fundamentals, and application positioning.",
     },
 ];
 
@@ -353,7 +353,7 @@ export const conversations: Conversation[] = [
         avatar: "DW",
         credential: "McKinsey Summer Associate",
         lastMessage:
-            "For Sunday's mock, prepare a market sizing case — I'll throw you something you haven't seen before",
+            "For Sunday's mock, prepare a market sizing case, I'll throw you something you haven't seen before",
         lastTime: "5 hours ago",
         unread: 1,
         online: false,
@@ -367,7 +367,7 @@ export const conversations: Conversation[] = [
             {
                 id: 2,
                 sender: "coach",
-                text: "For Sunday's mock, prepare a market sizing case — I'll throw you something you haven't seen before",
+                text: "For Sunday's mock, prepare a market sizing case, I'll throw you something you haven't seen before",
                 time: "5 hours ago",
             },
         ],
@@ -392,13 +392,13 @@ export const conversations: Conversation[] = [
             {
                 id: 2,
                 sender: "coach",
-                text: "That's totally normal — graph problems are one of the trickier areas. I'd recommend doing 5-6 BFS/DFS problems on LeetCode this week. Start with 'Number of Islands' and 'Course Schedule'.",
+                text: "That's totally normal, graph problems are one of the trickier areas. I'd recommend doing 5-6 BFS/DFS problems on LeetCode this week. Start with 'Number of Islands' and 'Course Schedule'.",
                 time: "Jan 23, 7:45 PM",
             },
             {
                 id: 3,
                 sender: "student",
-                text: "Will do. Also, I tried the problem you mentioned about longest substring — I went with DP but got stuck on the edge cases.",
+                text: "Will do. Also, I tried the problem you mentioned about longest substring, I went with DP but got stuck on the edge cases.",
                 time: "Jan 24, 10:00 AM",
             },
             {

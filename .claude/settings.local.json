@@ -4,7 +4,9 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nDashboard visual overhaul: two-column layout, data widgets, colour system\n\n- Replace single-column \\(920px\\) layout with responsive two-column grid \\(1fr + 380px\\)\n- Add sidebar widgets: QuickStats, SessionChart, DeadlineTimeline, ReferralCard, ProgressRing, TrendingCategories\n- Add functional accent colours for data viz \\(blue, emerald, amber, rose, violet, indigo, cyan\\)\n- Add category colour coding with 3px left-border accents on session/booking cards\n- Hero card now uses gradient background \\(#111 to #1a1a2e\\)\n- Review nudge uses amber-tinted glow background\n- Messages: student bubbles now blue, session context in header, schedule button\n- Bookings: segmented control tabs replacing underline tabs\n- Browse: hero banner, sticky filter bar with backdrop-blur\n- Add useCountUp hook for animated number counters\n- Remove Lovable dependencies and old unused components\n- Add business context \\(early.md\\) and migration guide \\(cursor-migration.md\\)\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git config:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run build:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

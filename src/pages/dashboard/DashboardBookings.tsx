@@ -65,7 +65,7 @@ export default function DashboardBookings() {
               <span className="font-medium">Spring Week season is open</span>
               <span className="text-muted-foreground">
                 {" "}
-                — applications close in 6 weeks
+               . applications close in 6 weeks
               </span>
             </p>
           </div>
@@ -105,7 +105,7 @@ export default function DashboardBookings() {
             {/* Upcoming Tab */}
             {bookingsTab === "upcoming" && (
               <div className="flex flex-col gap-3">
-                {/* Next Session — dark hero card */}
+                {/* Next Session. dark hero card */}
                 {nextSession && (
                   <div className="gradient-hero rounded-[14px] p-6 text-white">
                     <div className="flex items-center justify-between mb-4">
@@ -159,7 +159,7 @@ export default function DashboardBookings() {
                   </div>
                 )}
 
-                {/* Other upcoming sessions — standard white cards */}
+                {/* Other upcoming sessions. standard white cards */}
                 {otherUpcoming.map((session) => (
                   <div
                     key={session.id}

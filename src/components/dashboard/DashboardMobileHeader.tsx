@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X, Settings, LogOut } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { Logo } from "@/components/Logo";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import student1 from "@/assets/student-1.jpg";
 
@@ -24,10 +25,7 @@ export function DashboardMobileHeader() {
   return (
     <div className="md:hidden">
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
-        <NavLink to="/" className="text-lg tracking-tight text-foreground font-sans">
-          <span className="font-light">Early</span>
-          <span className="font-bold">Edge</span>
-        </NavLink>
+        <Logo className="text-lg" />
         <div className="flex items-center gap-3">
           <Avatar className="h-7 w-7">
             <AvatarImage src={userData.photo} alt={userData.name} />

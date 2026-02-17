@@ -22,7 +22,12 @@ function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
 
 /* ─── Calendar View ─────────────────────────────────────────── */
 
-function CalendarView() {
+interface CalendarViewProps {
+    selectedDay: number | null;
+    onSelectDay: (day: number | null) => void;
+}
+
+function CalendarView({ selectedDay, onSelectDay }: CalendarViewProps) {
     const now = new Date();
     const [year, setYear] = useState(now.getFullYear());
     const [month, setMonth] = useState(now.getMonth());
@@ -31,12 +36,17 @@ function CalendarView() {
     const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const days = getCalendarDays(year, month);
 
-    const prev = () => { if (month === 0) { setMonth(11); setYear(year - 1); } else { setMonth(month - 1); } };
-    const next = () => { if (month === 11) { setMonth(0); setYear(year + 1); } else { setMonth(month + 1); } };
+    const prev = () => { if (month === 0) { setMonth(11); setYear(year - 1); } else { setMonth(month - 1); } onSelectDay(null); };
+    const next = () => { if (month === 11) { setMonth(0); setYear(year + 1); } else { setMonth(month + 1); } onSelectDay(null); };
 
     // Map sessions to specific days (mock — put a few dots on some days)
     const sessionDays = new Set([3, 7, 8, 12, 14, 17, 19, 22, 25, 28]);
     const pastDays = new Set([1, 4, 6, 9, 11, 15]);
+
+    const handleDayClick = (day: typeof days[0]) => {
+        if (!day.isCurrentMonth) return;
+        onSelectDay(selectedDay === day.day ? null : day.day);
+    };
 
     return (
         <div className="bg-background border border-border rounded-xl p-6">
@@ -67,12 +77,17 @@ function CalendarView() {
                 {days.map((day, i) => {
                     const hasUpcoming = day.isCurrentMonth && sessionDays.has(day.day);
                     const hasPast = day.isCurrentMonth && pastDays.has(day.day);
+                    const isSelected = day.isCurrentMonth && selectedDay === day.day;
                     return (
-                        <div
+                        <button
                             key={i}
-                            className={`relative py-3 text-center text-sm cursor-pointer rounded-lg transition-colors hover:bg-muted/50 ${day.isToday ? "bg-foreground text-background font-bold rounded-lg" :
-                                    day.isCurrentMonth ? "text-foreground" : "text-muted-foreground/40"
-                                }`}
+                            onClick={() => handleDayClick(day)}
+                            className={`relative py-3 text-center text-sm rounded-lg transition-colors ${
+                                day.isToday && !isSelected ? "bg-foreground text-background font-bold" :
+                                isSelected ? "bg-foreground/10 ring-1 ring-foreground font-semibold text-foreground" :
+                                day.isCurrentMonth ? "text-foreground hover:bg-muted/50 cursor-pointer" : "text-muted-foreground/40"
+                            }`}
+                            disabled={!day.isCurrentMonth}
                         >
                             {day.day}
                             {(hasUpcoming || hasPast) && !day.isToday && (
@@ -81,7 +96,7 @@ function CalendarView() {
                                     {hasPast && <div className="w-1 h-1 rounded-full bg-muted-foreground/40" />}
                                 </div>
                             )}
-                        </div>
+                        </button>
                     );
                 })}
             </div>
@@ -101,9 +116,24 @@ function CalendarView() {
 
 /* ─── Main Page ─────────────────────────────────────────────── */
 
+// Build a mock mapping from day-of-month to sessions
+function getSessionsForDay(day: number): { upcoming: typeof upcomingCoachSessions; past: typeof pastCoachSessions } {
+    const upcomingDays = [3, 7, 8, 12, 14, 17, 19, 22, 25, 28];
+    const pastDayNums = [1, 4, 6, 9, 11, 15];
+
+    const upcoming = upcomingDays.includes(day)
+        ? upcomingCoachSessions.filter((_, i) => upcomingDays.indexOf(day) % upcomingCoachSessions.length === i % upcomingCoachSessions.length)
+        : [];
+    const past = pastDayNums.includes(day)
+        ? pastCoachSessions.filter((_, i) => pastDayNums.indexOf(day) % pastCoachSessions.length === i % pastCoachSessions.length)
+        : [];
+    return { upcoming, past };
+}
+
 export default function CoachSessions() {
     const [tab, setTab] = useState<"upcoming" | "past" | "calendar">("upcoming");
     const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+    const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
@@ -233,7 +263,60 @@ export default function CoachSessions() {
 
             {tab === "calendar" && (
                 <div className="max-w-[600px]">
-                    <CalendarView />
+                    <CalendarView selectedDay={selectedDay} onSelectDay={setSelectedDay} />
+
+                    {/* Sessions for selected day */}
+                    {selectedDay !== null && (() => {
+                        const daySessions = getSessionsForDay(selectedDay);
+                        const hasAny = daySessions.upcoming.length > 0 || daySessions.past.length > 0;
+                        return (
+                            <div className="mt-4 bg-background border border-border rounded-xl p-5">
+                                <h4 className="text-sm font-semibold text-foreground mb-3">
+                                    Sessions on the {selectedDay}{selectedDay === 1 || selectedDay === 21 || selectedDay === 31 ? "st" : selectedDay === 2 || selectedDay === 22 ? "nd" : selectedDay === 3 || selectedDay === 23 ? "rd" : "th"}
+                                </h4>
+                                {!hasAny ? (
+                                    <p className="text-sm text-muted-foreground">No sessions scheduled for this day.</p>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {daySessions.upcoming.map((s) => (
+                                            <div key={`u-${s.id}`} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-muted/30">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground">
+                                                        {s.avatar}
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-sm font-medium text-foreground">{s.type}</span>
+                                                        <span className="text-xs text-muted-foreground ml-2">with {s.student}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-xs font-semibold text-foreground">{s.time}</div>
+                                                    <div className="text-[10px] text-muted-foreground">{s.duration}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {daySessions.past.map((s) => (
+                                            <div key={`p-${s.id}`} className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-muted/20 opacity-70">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-[10px] font-semibold text-muted-foreground">
+                                                        {s.avatar}
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-sm font-medium text-foreground">{s.type}</span>
+                                                        <span className="text-xs text-muted-foreground ml-2">with {s.student}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-xs text-muted-foreground">{s.time}</div>
+                                                    <div className="text-[10px] text-muted-foreground">Completed</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })()}
                 </div>
             )}
         </div>

@@ -12,7 +12,7 @@ export function ReferralCard() {
   };
 
   const shareWhatsApp = () => {
-    const text = `Hey! Use my code ${referralInfo.code} to get ${referralInfo.discount}% off your first session on EarlyEdge — peer coaching from people who just got the offers you're aiming for.`;
+    const text = `Hey! Use my code ${referralInfo.code} to get ${referralInfo.discount}% off your first session on EarlyEdge. peer coaching from people who just got the offers you're aiming for.`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 

@@ -161,7 +161,7 @@ export const serviceBreakdown = [
 /* ─── Reviews ───────────────────────────────────────────────── */
 
 export const coachReviews: StudentReview[] = [
-    { id: 1, student: "Alex C.", avatar: "AC", rating: 5, text: "Sarah was incredibly helpful and gave me actionable feedback that I could implement immediately. My CV is so much stronger now.", date: "Jan 30, 2026", sessionType: "Application Strategy", outcome: "Goldman Sachs Spring Week", replied: true, reply: "Thanks Alex! So glad to hear about the Goldman offer — you earned it!" },
+    { id: 1, student: "Alex C.", avatar: "AC", rating: 5, text: "Sarah was incredibly helpful and gave me actionable feedback that I could implement immediately. My CV is so much stronger now.", date: "Jan 30, 2026", sessionType: "Application Strategy", outcome: "Goldman Sachs Spring Week", replied: true, reply: "Thanks Alex! So glad to hear about the Goldman offer! You earned it!" },
     { id: 2, student: "Omar K.", avatar: "OK", rating: 5, text: "Really thorough CV review. Sarah spotted things I would never have noticed and knew exactly what recruiters are looking for.", date: "Jan 28, 2026", sessionType: "CV Review" },
     { id: 3, student: "Sophie L.", avatar: "SL", rating: 4, text: "Good mock interview session. The behavioural questions were very realistic. Would have liked a bit more time on technical questions but overall very solid.", date: "Jan 25, 2026", sessionType: "Mock Interview" },
     { id: 4, student: "Priya S.", avatar: "PS", rating: 5, text: "Sarah's strategy session changed my whole approach to applications. She helped me prioritise firms and create a timeline that actually worked.", date: "Jan 18, 2026", sessionType: "Application Strategy", outcome: "J.P. Morgan Spring Week" },

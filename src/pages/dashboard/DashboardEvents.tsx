@@ -120,7 +120,7 @@ export default function DashboardEvents() {
           Free Events
         </h1>
         <p className="text-sm text-muted-foreground">
-          Live sessions, workshops, and AMAs — all free
+          Live sessions, workshops, and AMAs. All free
         </p>
       </div>
 

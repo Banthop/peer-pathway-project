@@ -155,7 +155,7 @@ background: #fff; border: 1px dashed #d0d0d0; border-radius: 10px; padding: 14px
 **Star Rating:** Black filled stars (#111) for rated, #ccc stroke for unrated. SVG-based.
 
 ### Logo
-`Early` in Instrument Serif regular + `Edge` in Instrument Serif bold. No icon. Text only. Font size ~22px in sidebar.
+`Early` in Inter Light (weight 300) + `Edge` in Inter Bold (weight 700). No icon. Text only. Font size ~22px in sidebar.
 
 ### Sidebar Navigation
 - Width: 220px, fixed position

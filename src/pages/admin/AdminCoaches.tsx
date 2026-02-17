@@ -1052,7 +1052,7 @@ function LivePreview({ coach, form }: { coach: StoredCoach | null; form: FormSta
                     Schedule a free intro
                 </button>
                 <button className="w-full py-2.5 rounded-xl border border-border text-foreground text-xs font-medium">
-                    Book a session — £{p.hourlyRate}/hr
+                    Book a session. £{p.hourlyRate}/hr
                 </button>
                 <div className="mt-3 p-2.5 rounded-xl bg-muted/40 flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />

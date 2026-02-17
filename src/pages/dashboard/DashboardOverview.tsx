@@ -198,7 +198,7 @@ function NewUserView() {
                 Book a free intro
               </h3>
               <p className="text-[12px] text-muted-foreground leading-relaxed flex-1">
-                15-minute call to see if they're the right fit — no charge
+                15-minute call to see if they're the right fit. No charge
               </p>
             </div>
 
@@ -463,7 +463,7 @@ function ActiveUserView() {
               </div>
               <p className="text-[13px] text-muted-foreground">
                 <span className="font-medium text-foreground">James L.</span>{" "}
-                session on Jan 23, 2026 — you haven't left a review yet
+                session on Jan 23, 2026. you haven't left a review yet
               </p>
             </div>
             <Link
@@ -652,7 +652,7 @@ export default function DashboardOverview() {
             <span className="font-medium">Spring Week season is open</span>
             <span className="text-muted-foreground">
               {" "}
-              — applications close in 6 weeks
+             . applications close in 6 weeks
             </span>
           </p>
         </div>

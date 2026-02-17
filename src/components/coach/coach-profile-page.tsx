@@ -63,9 +63,9 @@ const similarCoaches = [
 function StarRating({ rating, size = 13 }) {
   return (
     <div style={{ display: "flex", gap: 1 }}>
-      {[1,2,3,4,5].map(i => (
+      {[1, 2, 3, 4, 5].map(i => (
         <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i <= Math.round(rating) ? "#111" : "#ddd"} stroke="none">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
       ))}
     </div>
@@ -112,7 +112,7 @@ export default function CoachProfile() {
         top: 0, background: "#fff", zIndex: 100,
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontStyle: "italic", color: "#111", fontWeight: 400 }}>EarlyEdge</span>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, color: "#111" }}><span style={{ fontWeight: 300 }}>Early</span><span style={{ fontWeight: 700 }}>Edge</span></span>
           <div style={{ display: "flex", gap: 24, fontSize: 13.5, color: "#666" }}>
             <span style={{ cursor: "pointer" }}>Browse ▾</span>
             <span style={{ cursor: "pointer" }}>Become a Coach</span>
@@ -230,11 +230,11 @@ export default function CoachProfile() {
                   display: "flex", flexDirection: "column", justifyContent: "space-between",
                   transition: "border-color 0.15s ease", cursor: "pointer",
                 }} onMouseEnter={e => e.currentTarget.style.borderColor = "#ccc"}
-                   onMouseLeave={e => e.currentTarget.style.borderColor = "#eee"}>
+                  onMouseLeave={e => e.currentTarget.style.borderColor = "#eee"}>
                   <div>
                     <div style={{ fontSize: 14.5, fontWeight: 600, color: "#111", marginBottom: 4 }}>{s.name}</div>
                     <div style={{ fontSize: 12, color: "#999", marginBottom: 8, display: "flex", alignItems: "center", gap: 4 }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                       {s.duration}
                     </div>
                     <p style={{ fontSize: 13, color: "#666", lineHeight: 1.5, margin: 0 }}>{s.desc}</p>
@@ -421,7 +421,7 @@ export default function CoachProfile() {
                         background: "#f0f0f0", padding: "3px 10px", borderRadius: 100,
                         display: "flex", alignItems: "center", gap: 4,
                       }}>
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
                         {r.outcome}
                       </span>
                     )}
@@ -451,7 +451,7 @@ export default function CoachProfile() {
                   border: "1px solid #eee", borderRadius: 12, padding: "16px",
                   cursor: "pointer", transition: "border-color 0.15s ease",
                 }} onMouseEnter={e => e.currentTarget.style.borderColor = "#ccc"}
-                   onMouseLeave={e => e.currentTarget.style.borderColor = "#eee"}>
+                  onMouseLeave={e => e.currentTarget.style.borderColor = "#eee"}>
                   <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 10 }}>
                     <Avatar initials={c.initials} size={36} />
                     <div>
@@ -510,7 +510,7 @@ export default function CoachProfile() {
                 display: "flex", alignItems: "center", gap: 8,
               }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 600, color: "#111" }}>Protected by EarlyEdge</div>
@@ -525,7 +525,7 @@ export default function CoachProfile() {
                   border: "none", color: "#111", fontSize: 12.5, fontWeight: 600,
                   cursor: "pointer", fontFamily: "'DM Sans', sans-serif", padding: 0,
                 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
                   Send a message
                 </button>
               </div>
@@ -612,11 +612,11 @@ export default function CoachProfile() {
               </p>
               <div style={{ display: "flex", gap: 14, fontSize: 12, color: "#fff", marginBottom: 16 }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                   Sat, Feb 15
                 </span>
                 <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
                   4:00 PM
                 </span>
               </div>
@@ -642,7 +642,7 @@ export default function CoachProfile() {
       }}>
         <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", justifyContent: "space-between" }}>
           <div>
-            <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: 20, fontStyle: "italic", color: "#111" }}>EarlyEdge</span>
+            <span style={{ fontFamily: "'Inter', sans-serif", fontSize: 20, color: "#111" }}><span style={{ fontWeight: 300 }}>Early</span><span style={{ fontWeight: 700 }}>Edge</span></span>
             <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
               {["𝕏", "in", "📷"].map((s, i) => (
                 <span key={i} style={{

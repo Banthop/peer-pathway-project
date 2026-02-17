@@ -57,7 +57,7 @@ export default function DashboardBrowse() {
             </div>
             <p className="text-sm text-foreground">
               <span className="font-medium">Spring Week season is open</span>
-              <span className="text-muted-foreground"> — applications close in 6 weeks</span>
+              <span className="text-muted-foreground">. applications close in 6 weeks</span>
             </p>
           </div>
           <button className="flex items-center gap-1.5 text-sm font-medium text-foreground hover:underline whitespace-nowrap">
@@ -133,7 +133,7 @@ export default function DashboardBrowse() {
         </div>
       </div>
 
-      {/* Coach Grid — full width */}
+      {/* Coach Grid. full width */}
       <div className="px-6 md:px-10 lg:px-12 pb-10">
         {filteredCoaches.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">

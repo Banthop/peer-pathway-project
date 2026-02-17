@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { ArrowLeft } from "lucide-react";
 import {
@@ -21,6 +21,9 @@ interface BookingDialogProps {
   type: BookingType;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialService?: SelectedService;
+  initialDate?: Date;
+  initialTime?: string;
 }
 
 const BookingDialog = ({
@@ -28,6 +31,9 @@ const BookingDialog = ({
   type,
   open,
   onOpenChange,
+  initialService,
+  initialDate,
+  initialTime,
 }: BookingDialogProps) => {
   const isMobile = useIsMobile();
   const firstName = coach.name.split(" ")[0];
@@ -62,6 +68,18 @@ const BookingDialog = ({
     setFormData(undefined);
     setIsSubmitting(false);
   };
+
+  // Apply initial values when dialog opens
+  useEffect(() => {
+    if (open) {
+      if (initialService && type === "session") {
+        setSelectedService(initialService);
+        setStep(2); // skip service selection, go straight to date/time
+      }
+      if (initialDate) setSelectedDate(initialDate);
+      if (initialTime) setSelectedTime(initialTime);
+    }
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => {
     onOpenChange(false);

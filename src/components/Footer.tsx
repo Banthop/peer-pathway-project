@@ -1,4 +1,5 @@
 import { Twitter, Linkedin, Instagram } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 const footerLinks = {
   welcome: {
@@ -37,9 +38,7 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8">
           {/* Logo & Socials */}
           <div className="col-span-2 md:col-span-1">
-            <a href="/" className="text-2xl font-sans mb-6 block">
-              <span className="font-light">Early</span><span className="font-bold">Edge</span>
-            </a>
+            <Logo className="text-2xl mb-6 block" />
             <div className="flex gap-4">
               <a
                 href="#"

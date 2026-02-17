@@ -115,7 +115,7 @@ export const freeEvents: FreeEvent[] = [
     id: 8,
     title: "Ask Me Anything: Life at McKinsey",
     description:
-      "Candid Q&A about what it's actually like working at McKinsey — the culture, the hours, the projects, and whether it's worth it.",
+      "Candid Q&A about what it's actually like working at McKinsey. the culture, the hours, the projects, and whether it's worth it.",
     host: { name: "David W.", avatar: "DW", rating: 5.0, reviews: 32 },
     category: "Consulting",
     date: "2026-03-06",

@@ -32,7 +32,7 @@ const defaultForm: ProfileForm = {
     uniName: "University of Oxford", uniLogo: "", uniDegree: "BA Philosophy, Politics & Economics",
     uniYears: "2021 – 2024",
     companyName: "Goldman Sachs", companyLogo: "", companyRole: "Incoming Analyst",
-    bio: "I'm a final-year PPE student at Oxford, joining Goldman Sachs as an Analyst in 2025. I secured Spring Weeks at Goldman, Citi, and Barclays in 2024 — and I've since helped 15+ friends successfully land their own Spring Week offers.",
+    bio: "I'm a final-year PPE student at Oxford, joining Goldman Sachs as an Analyst in 2025. I secured Spring Weeks at Goldman, Citi, and Barclays in 2024. and I've since helped 15+ friends successfully land their own Spring Week offers.",
     skills: "Investment Banking, Spring Week, CV Review, Cover Letters, Interview Prep",
     services: [
         { name: "CV Review", duration: "45 min", price: "50", description: "Full CV review with recruiter-level feedback" },

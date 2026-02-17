@@ -26,17 +26,17 @@ const steps: Step[] = [
   {
     icon: Calendar,
     headline: "Book a session",
-    body: "Pick a time that works. Pay securely — you're only charged after the session is confirmed.",
+    body: "Pick a time that works. Pay securely. you're only charged after the session is confirmed.",
   },
   {
     icon: Video,
     headline: "Meet 1-on-1",
-    body: "A private call to go through your questions. CVs, prep, what to expect — whatever you need.",
+    body: "A private call to go through your questions. CVs, prep, what to expect. whatever you need.",
   },
   {
     icon: Star,
     headline: "Leave a review",
-    body: "Help other students find great coaches. Book again anytime — same coach or someone new.",
+    body: "Help other students find great coaches. Book again anytime. same coach or someone new.",
   },
 ];
 
