@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
@@ -29,24 +30,24 @@ const popularCategories = [
 ];
 
 // Floating Coach Card Image Component
-const FloatingCoachCard = ({ 
+const FloatingCoachCard = ({
   imageSrc,
   className,
   style
-}: { 
+}: {
   imageSrc: string;
   className?: string;
   style?: React.CSSProperties;
 }) => (
-  <div 
+  <div
     className={`absolute ${className}`}
     style={{
       filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
       ...style
     }}
   >
-    <img 
-      src={imageSrc} 
+    <img
+      src={imageSrc}
       alt="Coach card"
       className="w-full h-auto"
     />
@@ -55,16 +56,16 @@ const FloatingCoachCard = ({
 
 
 // Floating Logo Component
-const FloatingLogo = ({ 
-  children, 
+const FloatingLogo = ({
+  children,
   className,
   style
-}: { 
-  children: React.ReactNode; 
+}: {
+  children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }) => (
-  <div 
+  <div
     className={`absolute ${className}`}
     style={{
       filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15)) drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
@@ -76,50 +77,51 @@ const FloatingLogo = ({
 );
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
-    <section 
+    <section
       className="relative flex items-center justify-center pt-20 pb-12 overflow-hidden bg-white"
       style={{ minHeight: '78vh', maxHeight: '820px' }}
     >
 
       {/* Background Layer - Floating Elements */}
       <div className="absolute inset-0 pointer-events-none z-[1]">
-        
+
         {/* LEFT CLUSTER - Universities */}
-        
+
         {/* Oxford Logo - under Sarah, slightly right */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float"
           style={{ top: '65%', left: '16%', width: '75px', animationDelay: '0s' }}
         >
-          <img 
-            src={logoOxford} 
-            alt="University of Oxford" 
+          <img
+            src={logoOxford}
+            alt="University of Oxford"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Cambridge Logo - bottom left corner */}
-        <div 
+        <div
           className="absolute hidden lg:block animate-float-gentle"
           style={{ top: '62%', left: '6%', width: '75px', animationDelay: '0.5s' }}
         >
-          <img 
-            src={logoCambridge} 
-            alt="University of Cambridge" 
+          <img
+            src={logoCambridge}
+            alt="University of Cambridge"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Sarah Coach Card - moved more left */}
-        <FloatingCoachCard 
+        <FloatingCoachCard
           className="hidden xl:block animate-float"
           imageSrc={coachSarahCard}
-          style={{ 
-            top: '38%', 
-            left: '14%', 
+          style={{
+            top: '38%',
+            left: '14%',
             width: '220px',
             transform: 'rotate(-12deg)',
             animationDelay: '0.3s'
@@ -127,79 +129,79 @@ const Hero = () => {
         />
 
         {/* UCL Logo - upper left */}
-        <div 
+        <div
           className="absolute hidden lg:block animate-float-slow"
           style={{ top: '34%', left: '2%', width: '80px', animationDelay: '1s' }}
         >
-          <img 
-            src={logoUcl} 
-            alt="UCL" 
+          <img
+            src={logoUcl}
+            alt="UCL"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Imperial Logo - far bottom left */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float-gentle"
           style={{ top: '88%', left: '4%', width: '65px', animationDelay: '1.5s' }}
         >
-          <img 
-            src={logoImperial} 
-            alt="Imperial College London" 
+          <img
+            src={logoImperial}
+            alt="Imperial College London"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* LSE Logo - moved more inward bottom */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float-slow"
           style={{ top: '85%', left: '22%', width: '65px', animationDelay: '2s' }}
         >
-          <img 
-            src={logoLse} 
-            alt="LSE" 
+          <img
+            src={logoLse}
+            alt="LSE"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* RIGHT CLUSTER - Companies */}
-        
+
         {/* Goldman Sachs Logo - under David, slightly left */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float"
           style={{ top: '65%', right: '16%', width: '75px', animationDelay: '0.3s' }}
         >
-          <img 
-            src={logoGoldmanSachs} 
-            alt="Goldman Sachs" 
+          <img
+            src={logoGoldmanSachs}
+            alt="Goldman Sachs"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Citadel Logo - bottom right corner */}
-        <div 
+        <div
           className="absolute hidden lg:block animate-float-gentle"
           style={{ top: '62%', right: '6%', width: '75px', animationDelay: '0.8s' }}
         >
-          <img 
-            src={logoCitadel} 
-            alt="Citadel Securities" 
+          <img
+            src={logoCitadel}
+            alt="Citadel Securities"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* David Coach Card - moved more right */}
-        <FloatingCoachCard 
+        <FloatingCoachCard
           className="hidden xl:block animate-float-reverse"
           imageSrc={coachDavidCard}
-          style={{ 
-            top: '42%', 
-            right: '12%', 
+          style={{
+            top: '42%',
+            right: '12%',
             width: '280px',
             transform: 'rotate(12deg)',
             animationDelay: '0.6s'
@@ -207,62 +209,62 @@ const Hero = () => {
         />
 
         {/* Clifford Chance Logo - upper right */}
-        <div 
+        <div
           className="absolute hidden lg:block animate-float-slow"
           style={{ top: '34%', right: '2%', width: '80px', animationDelay: '1.3s' }}
         >
-          <img 
-            src={logoCliffordChance} 
-            alt="Clifford Chance" 
+          <img
+            src={logoCliffordChance}
+            alt="Clifford Chance"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* McKinsey Logo - moved more inward bottom */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float-gentle"
           style={{ top: '85%', right: '22%', width: '65px', animationDelay: '1.8s' }}
         >
-          <img 
-            src={logoMckinsey} 
-            alt="McKinsey & Company" 
+          <img
+            src={logoMckinsey}
+            alt="McKinsey & Company"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
 
         {/* Meta Logo - far bottom right */}
-        <div 
+        <div
           className="absolute hidden xl:block animate-float-slow"
           style={{ top: '88%', right: '4%', width: '75px', animationDelay: '2.3s' }}
         >
-          <img 
-            src={logoMeta} 
-            alt="Meta" 
+          <img
+            src={logoMeta}
+            alt="Meta"
             className="w-full h-auto"
             style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
           />
         </div>
-        
+
 
       </div>
 
       {/* Foreground Content */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
-        <h1 
+        <h1
           className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
-          style={{ 
+          style={{
             fontFamily: '"Source Serif 4", Georgia, serif',
             fontWeight: 600,
-            fontSize: 'clamp(40px, 8vw, 84px)', 
+            fontSize: 'clamp(40px, 8vw, 84px)',
             lineHeight: '0.98',
             textAlign: 'center'
           }}
         >
           Your edge, unlocked.
         </h1>
-        
+
         <div className="mb-10 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: "0.1s" }}>
           <p className="text-foreground text-lg font-sans font-light">
             Get prepped for uni applications, tests, and internships.
@@ -273,7 +275,7 @@ const Hero = () => {
         </div>
 
         {/* Search Bar */}
-        <div 
+        <div
           className="relative max-w-2xl w-full mx-auto mb-4 animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
@@ -281,12 +283,14 @@ const Hero = () => {
           <Input
             type="text"
             placeholder="Search for coaches..."
-            className="w-full pl-12 pr-4 py-6 text-base rounded-full border-2 border-primary bg-card shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary/70"
+            className="w-full pl-12 pr-4 py-6 text-base rounded-full border-2 border-primary bg-card shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary/70 cursor-pointer"
+            readOnly
+            onClick={() => navigate("/dashboard/browse")}
           />
         </div>
 
         {/* Pricing Hint */}
-        <p 
+        <p
           className="text-muted-foreground mb-6 animate-fade-up text-sm font-sans font-light"
           style={{ animationDelay: "0.25s" }}
         >
@@ -296,7 +300,7 @@ const Hero = () => {
         </p>
 
         {/* Popular Categories - 3 rows: 5, 4, 1 */}
-        <div 
+        <div
           className="flex flex-col items-center gap-2 animate-fade-up"
           style={{ animationDelay: "0.3s" }}
         >
@@ -307,6 +311,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
+                onClick={() => navigate("/dashboard/browse")}
               >
                 {category}
               </Badge>
@@ -319,6 +324,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
+                onClick={() => navigate("/dashboard/browse")}
               >
                 {category}
               </Badge>
@@ -331,6 +337,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
+                onClick={() => navigate("/dashboard/browse")}
               >
                 {category}
               </Badge>

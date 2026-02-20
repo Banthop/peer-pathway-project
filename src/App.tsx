@@ -25,6 +25,8 @@ import CoachEarnings from "./pages/coach-dashboard/CoachEarnings";
 import CoachReviews from "./pages/coach-dashboard/CoachReviews";
 import CoachEditProfile from "./pages/coach-dashboard/CoachEditProfile";
 import CoachAnalytics from "./pages/coach-dashboard/CoachAnalytics";
+import CoachMessages from "./pages/coach-dashboard/CoachMessages";
+import Guarantee from "./pages/Guarantee";
 
 const queryClient = new QueryClient();
 
@@ -52,11 +54,13 @@ const App = () => (
           <Route path="/coach-dashboard" element={<CoachDashboardLayout />}>
             <Route index element={<CoachOverview />} />
             <Route path="sessions" element={<CoachSessions />} />
+            <Route path="messages" element={<CoachMessages />} />
             <Route path="earnings" element={<CoachEarnings />} />
             <Route path="reviews" element={<CoachReviews />} />
             <Route path="edit-profile" element={<CoachEditProfile />} />
             <Route path="analytics" element={<CoachAnalytics />} />
           </Route>
+          <Route path="/guarantee" element={<Guarantee />} />
           <Route path="/admin/coaches" element={<AdminCoaches />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

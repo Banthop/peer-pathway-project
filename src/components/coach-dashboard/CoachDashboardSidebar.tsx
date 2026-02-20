@@ -9,15 +9,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Settings, ChevronDown, ExternalLink, ArrowRightLeft } from "lucide-react";
-import { coachProfile } from "@/data/coachDashboardData";
+import { coachProfile, totalCoachUnread } from "@/data/coachDashboardData";
 
 const navItems = [
-    { title: "Overview", url: "/coach-dashboard", end: true },
-    { title: "My Sessions", url: "/coach-dashboard/sessions", end: false },
-    { title: "Earnings", url: "/coach-dashboard/earnings", end: false },
-    { title: "Reviews", url: "/coach-dashboard/reviews", end: false },
-    { title: "Edit Profile", url: "/coach-dashboard/edit-profile", end: false },
-    { title: "Analytics", url: "/coach-dashboard/analytics", end: false },
+    { title: "Overview", url: "/coach-dashboard", end: true, dot: false },
+    { title: "My Sessions", url: "/coach-dashboard/sessions", end: false, dot: false },
+    { title: "Messages", url: "/coach-dashboard/messages", end: false, dot: totalCoachUnread > 0 },
+    { title: "Earnings", url: "/coach-dashboard/earnings", end: false, dot: false },
+    { title: "Reviews", url: "/coach-dashboard/reviews", end: false, dot: false },
+    { title: "Edit Profile", url: "/coach-dashboard/edit-profile", end: false, dot: false },
+    { title: "Analytics", url: "/coach-dashboard/analytics", end: false, dot: false },
 ];
 
 export function CoachDashboardSidebar() {
@@ -46,6 +47,9 @@ export function CoachDashboardSidebar() {
                         activeClassName="text-foreground font-semibold !border-foreground"
                     >
                         {item.title}
+                        {item.dot && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
+                        )}
                     </NavLink>
                 ))}
             </nav>

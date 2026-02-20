@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { Search, User, MessageCircle, Calendar, Video, Star, LucideIcon } from "lucide-react";
 
 interface Step {
@@ -90,12 +91,14 @@ const HowItWorks = () => {
 
         {/* CTA Button */}
         <div className="text-center mt-12 md:mt-16">
-          <Button
-            size="lg"
-            className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"
-          >
-            Get Started
-          </Button>
+          <Link to="/dashboard/browse">
+            <Button
+              size="lg"
+              className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"
+            >
+              Get Started
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

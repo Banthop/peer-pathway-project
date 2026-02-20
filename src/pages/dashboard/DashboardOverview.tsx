@@ -10,6 +10,7 @@ import {
   Check,
   Gift,
 } from "lucide-react";
+import { RescheduleModal } from "@/components/RescheduleModal";
 import {
   allCoaches,
   upcomingSessions,
@@ -333,6 +334,8 @@ function RecommendedEvents() {
 function ActiveUserView() {
   const [hoveredCoach, setHoveredCoach] = useState<number | null>(null);
   const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleTarget, setRescheduleTarget] = useState("");
 
   const unreviewedCount = pastBookings.filter((s) => !s.reviewed).length;
   const bookedCoaches = allCoaches.filter((c) => c.hasBooked);
@@ -380,7 +383,10 @@ function ActiveUserView() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2">
+              <button
+                onClick={() => { setRescheduleTarget("Sarah K."); setRescheduleOpen(true); }}
+                className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2 cursor-pointer"
+              >
                 Reschedule
               </button>
               <button className="bg-white text-[#111] px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-white/90 transition-colors flex items-center gap-1.5">
@@ -439,7 +445,10 @@ function ActiveUserView() {
                         <MessageSquare className="w-3 h-3" /> 1 new message
                       </span>
                     )}
-                    <span className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                    <span
+                      onClick={() => { setRescheduleTarget(session.coach); setRescheduleOpen(true); }}
+                      className="text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+                    >
                       Reschedule
                     </span>
                     <Link
@@ -597,6 +606,12 @@ function ActiveUserView() {
         <SidebarReferral />
         <SidebarActivity />
       </div>
+
+      <RescheduleModal
+        open={rescheduleOpen}
+        onOpenChange={setRescheduleOpen}
+        personName={rescheduleTarget}
+      />
     </div>
   );
 }
@@ -624,8 +639,8 @@ export default function DashboardOverview() {
           <button
             onClick={() => setView("new")}
             className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${view === "new"
-                ? "bg-foreground text-background shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              ? "bg-foreground text-background shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
               }`}
           >
             New User
@@ -633,8 +648,8 @@ export default function DashboardOverview() {
           <button
             onClick={() => setView("active")}
             className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${view === "active"
-                ? "bg-foreground text-background shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              ? "bg-foreground text-background shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
               }`}
           >
             Active User
@@ -652,7 +667,7 @@ export default function DashboardOverview() {
             <span className="font-medium">Spring Week season is open</span>
             <span className="text-muted-foreground">
               {" "}
-             . applications close in 6 weeks
+              . applications close in 6 weeks
             </span>
           </p>
         </div>

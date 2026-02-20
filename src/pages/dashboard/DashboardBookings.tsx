@@ -12,6 +12,7 @@ import {
   pastBookings,
 } from "@/data/dashboardData";
 import { BookingsCalendar } from "@/components/dashboard/BookingsCalendar";
+import { RescheduleModal } from "@/components/RescheduleModal";
 
 function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -34,10 +35,10 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
 export default function DashboardBookings() {
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get("tab") || "upcoming";
-  const [bookingsTab, setBookingsTab] = useState<"upcoming" | "past">(
-    defaultTab as "upcoming" | "past"
-  );
+  const [bookingsTab, setBookingsTab] = useState(defaultTab);
   const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+  const [rescheduleOpen, setRescheduleOpen] = useState(false);
+  const [rescheduleTarget, setRescheduleTarget] = useState("");
 
   const nextSession = upcomingSessions.find((s) => s.isNext);
   const otherUpcoming = upcomingSessions.filter((s) => !s.isNext);
@@ -65,7 +66,7 @@ export default function DashboardBookings() {
               <span className="font-medium">Spring Week season is open</span>
               <span className="text-muted-foreground">
                 {" "}
-               . applications close in 6 weeks
+                . applications close in 6 weeks
               </span>
             </p>
           </div>
@@ -89,11 +90,10 @@ export default function DashboardBookings() {
                 <button
                   key={tab}
                   onClick={() => setBookingsTab(tab)}
-                  className={`px-5 py-2 text-[13px] capitalize font-sans rounded-md transition-all duration-200 ${
-                    bookingsTab === tab
+                  className={`px-5 py-2 text-[13px] capitalize font-sans rounded-md transition-all duration-200 ${bookingsTab === tab
                       ? "bg-background text-foreground font-semibold shadow-sm"
                       : "text-muted-foreground hover:text-foreground"
-                  }`}
+                    }`}
                 >
                   {tab}{" "}
                   {tab === "upcoming" && `(${upcomingSessions.length})`}
@@ -148,7 +148,10 @@ export default function DashboardBookings() {
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <button className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2">
+                        <button
+                          onClick={() => { setRescheduleTarget(nextSession.coach); setRescheduleOpen(true); }}
+                          className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2 cursor-pointer"
+                        >
                           Reschedule
                         </button>
                         <button className="bg-white text-[#111] px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-white/90 transition-colors flex items-center gap-1.5">
@@ -201,7 +204,10 @@ export default function DashboardBookings() {
                     </div>
 
                     <div className="flex gap-2.5 mt-4">
-                      <button className="px-5 py-2 bg-background text-muted-foreground border border-border rounded-md text-xs font-medium hover:text-foreground transition-colors">
+                      <button
+                        onClick={() => { setRescheduleTarget(session.coach); setRescheduleOpen(true); }}
+                        className="px-5 py-2 bg-background text-muted-foreground border border-border rounded-md text-xs font-medium hover:text-foreground transition-colors cursor-pointer"
+                      >
                         Reschedule
                       </button>
                       <Link
@@ -225,11 +231,10 @@ export default function DashboardBookings() {
                       key={session.id}
                       onMouseEnter={() => setHoveredPast(session.id)}
                       onMouseLeave={() => setHoveredPast(null)}
-                      className={`bg-background border rounded-xl px-6 py-5 transition-all duration-150 ${
-                        hoveredPast === session.id
+                      className={`bg-background border rounded-xl px-6 py-5 transition-all duration-150 ${hoveredPast === session.id
                           ? "border-foreground/20 -translate-y-0.5 shadow-sm"
                           : "border-border"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3.5">
@@ -261,11 +266,10 @@ export default function DashboardBookings() {
                             </button>
                           )}
                           <span
-                            className={`text-xs font-medium text-foreground cursor-pointer transition-opacity duration-200 ${
-                              hoveredPast === session.id
+                            className={`text-xs font-medium text-foreground cursor-pointer transition-opacity duration-200 ${hoveredPast === session.id
                                 ? "opacity-100"
                                 : "opacity-0"
-                            }`}
+                              }`}
                           >
                             Book again →
                           </span>
@@ -284,6 +288,12 @@ export default function DashboardBookings() {
           </div>
         </div>
       </div>
+
+      <RescheduleModal
+        open={rescheduleOpen}
+        onOpenChange={setRescheduleOpen}
+        personName={rescheduleTarget}
+      />
     </div>
   );
 }

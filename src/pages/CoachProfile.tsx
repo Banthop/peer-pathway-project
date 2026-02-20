@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Star, Clock, Calendar, Shield, MessageSquare, ChevronRight } from "lucide-react";
+import { MessageModal } from "@/components/MessageModal";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BookingDialog from "@/components/coach/booking/BookingDialog";
@@ -246,6 +247,7 @@ const CoachProfile = () => {
   const [initialService, setInitialService] = useState<SelectedService | undefined>();
   const [initialDate, setInitialDate] = useState<Date | undefined>();
   const [initialTime, setInitialTime] = useState<string | undefined>();
+  const [messageOpen, setMessageOpen] = useState(false);
 
   const openBooking = (
     type: BookingType,
@@ -312,7 +314,7 @@ const CoachProfile = () => {
           {/* RIGHT SIDEBAR */}
           <div className="hidden lg:block w-[280px] flex-shrink-0">
             <div className="sticky top-24 flex flex-col gap-4">
-              <BookingSidebar coach={coach} onBook={openBooking} />
+              <BookingSidebar coach={coach} onBook={openBooking} onMessage={() => setMessageOpen(true)} />
               <AvailableSlots coach={coach} coachId={coach.id} onSlotClick={(day, time) => {
                 openBooking("session", undefined, parseDayToDate(day), time);
               }} />
@@ -348,6 +350,13 @@ const CoachProfile = () => {
         initialService={initialService}
         initialDate={initialDate}
         initialTime={initialTime}
+      />
+
+      {/* Message Modal */}
+      <MessageModal
+        open={messageOpen}
+        onOpenChange={setMessageOpen}
+        coachName={coach.name}
       />
 
       <Footer />
@@ -864,7 +873,7 @@ function SimilarCoachesSection({ currentCoachId }: { currentCoachId: string }) {
 
 /* ─── Sidebar Components ───────────────────────────────────── */
 
-function BookingSidebar({ coach, onBook }: { coach: Coach; onBook: (type: BookingType) => void }) {
+function BookingSidebar({ coach, onBook, onMessage }: { coach: Coach; onBook: (type: BookingType) => void; onMessage: () => void }) {
   return (
     <div className="border border-border rounded-2xl p-6 bg-background shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
       {/* Availability indicator */}
@@ -887,20 +896,20 @@ function BookingSidebar({ coach, onBook }: { coach: Coach; onBook: (type: Bookin
       </button>
 
       {/* Protected badge */}
-      <div className="mt-5 p-3.5 rounded-xl border border-border flex items-center gap-2.5">
+      <Link to="/guarantee" className="mt-5 p-3.5 rounded-xl border border-border flex items-center gap-2.5 hover:border-foreground/25 hover:shadow-sm transition-all duration-200">
         <Shield className="w-4 h-4 text-foreground flex-shrink-0" />
         <div>
           <div className="text-xs font-semibold text-foreground">Protected by EarlyEdge</div>
           <div className="text-[11px] text-foreground/40 font-light">100% Guarantee</div>
         </div>
-      </div>
+      </Link>
 
       {/* Message */}
       <div className="mt-5 pt-5 border-t border-border">
         <div className="text-xs text-foreground/50 font-light mb-2">
           Questions? Message {coach.name.split(" ")[0]} before you get started.
         </div>
-        <button className="flex items-center gap-1.5 text-xs font-semibold text-foreground hover:underline">
+        <button onClick={onMessage} className="flex items-center gap-1.5 text-xs font-semibold text-foreground hover:underline cursor-pointer">
           <MessageSquare className="w-3.5 h-3.5" />
           Send a message
         </button>

@@ -16,6 +16,8 @@ export interface CoachSession {
     hasMessage?: boolean;
     reviewed?: boolean;
     rating?: number;
+    reviewText?: string;
+    notes?: string;
 }
 
 export interface MonthlyEarning {
@@ -72,6 +74,7 @@ export const coachStats = {
     earningsChange: 18,
     sessionsThisMonth: 16,
     sessionsChange: 12,
+    sessionsAllTime: 48,
     averageRating: 4.9,
     totalReviews: 47,
     profileViews: 342,
@@ -88,11 +91,13 @@ export const upcomingCoachSessions: CoachSession[] = [
         id: 1, student: "Alex C.", avatar: "AC", type: "CV Review",
         date: "Tomorrow", time: "2:00 PM", duration: "45 min", price: 50,
         status: "upcoming", isNext: true, hasMessage: true,
+        notes: "Hi Sarah! I've attached my latest CV draft. I'm applying to Goldman Sachs spring week and would love your feedback on how to tailor it.",
     },
     {
         id: 2, student: "Priya S.", avatar: "PS", type: "Mock Interview",
         date: "Sun, Feb 8", time: "10:00 AM", duration: "60 min", price: 60,
         status: "upcoming", isNext: false, hasMessage: false,
+        notes: "Could we focus on behavioural questions? I have a J.P. Morgan interview next week.",
     },
     {
         id: 3, student: "James R.", avatar: "JR", type: "Application Strategy",
@@ -109,14 +114,14 @@ export const upcomingCoachSessions: CoachSession[] = [
 /* ─── Past Sessions ─────────────────────────────────────────── */
 
 export const pastCoachSessions: CoachSession[] = [
-    { id: 101, student: "Alex C.", avatar: "AC", type: "Application Strategy", date: "Jan 30, 2026", time: "2:00 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5 },
-    { id: 102, student: "Omar K.", avatar: "OK", type: "CV Review", date: "Jan 28, 2026", time: "11:00 AM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5 },
-    { id: 103, student: "Sophie L.", avatar: "SL", type: "Mock Interview", date: "Jan 25, 2026", time: "3:00 PM", duration: "60 min", price: 60, status: "completed", reviewed: true, rating: 4 },
+    { id: 101, student: "Alex C.", avatar: "AC", type: "Application Strategy", date: "Jan 30, 2026", time: "2:00 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5, reviewText: "Sarah was incredibly helpful and gave me actionable feedback that I could implement immediately. My CV is so much stronger now." },
+    { id: 102, student: "Omar K.", avatar: "OK", type: "CV Review", date: "Jan 28, 2026", time: "11:00 AM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5, reviewText: "Really thorough CV review. Sarah spotted things I would never have noticed and knew exactly what recruiters are looking for." },
+    { id: 103, student: "Sophie L.", avatar: "SL", type: "Mock Interview", date: "Jan 25, 2026", time: "3:00 PM", duration: "60 min", price: 60, status: "completed", reviewed: true, rating: 4, reviewText: "Good mock interview session. The behavioural questions were very realistic. Would have liked a bit more time on technical questions." },
     { id: 104, student: "James R.", avatar: "JR", type: "Cover Letter Review", date: "Jan 22, 2026", time: "10:00 AM", duration: "30 min", price: 35, status: "completed", reviewed: false },
-    { id: 105, student: "Priya S.", avatar: "PS", type: "Application Strategy", date: "Jan 18, 2026", time: "1:00 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5 },
-    { id: 106, student: "Lucy W.", avatar: "LW", type: "Mock Interview", date: "Jan 15, 2026", time: "4:00 PM", duration: "60 min", price: 60, status: "completed", reviewed: true, rating: 5 },
-    { id: 107, student: "Ryan M.", avatar: "RM", type: "CV Review", date: "Jan 12, 2026", time: "9:30 AM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 4 },
-    { id: 108, student: "Zara A.", avatar: "ZA", type: "Application Strategy", date: "Jan 8, 2026", time: "2:30 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5 },
+    { id: 105, student: "Priya S.", avatar: "PS", type: "Application Strategy", date: "Jan 18, 2026", time: "1:00 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5, reviewText: "Sarah's strategy session changed my whole approach to applications. She helped me prioritise firms and create a timeline that actually worked." },
+    { id: 106, student: "Lucy W.", avatar: "LW", type: "Mock Interview", date: "Jan 15, 2026", time: "4:00 PM", duration: "60 min", price: 60, status: "completed", reviewed: true, rating: 5, reviewText: "Best mock interview prep I've had. Sarah made it feel like a real interview and her feedback was incredibly detailed." },
+    { id: 107, student: "Ryan M.", avatar: "RM", type: "CV Review", date: "Jan 12, 2026", time: "9:30 AM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 4, reviewText: "Helpful session, Sarah clearly knows what she's talking about. My CV looks much more professional now." },
+    { id: 108, student: "Zara A.", avatar: "ZA", type: "Application Strategy", date: "Jan 8, 2026", time: "2:30 PM", duration: "45 min", price: 50, status: "completed", reviewed: true, rating: 5, reviewText: "Absolutely worth every penny. Sarah helped me craft a narrative across my CV and cover letter that really stood out." },
 ];
 
 /* ─── Today's Schedule ──────────────────────────────────────── */
@@ -220,6 +225,94 @@ export const analyticsData: AnalyticsData = {
     avgSessionLength: 52,
     repeatStudentRate: 64,
 };
+
+/* ─── Coach Conversations (Messages) ───────────────────────── */
+
+export interface CoachChatMessage {
+    id: number;
+    sender: "student" | "coach";
+    text: string;
+    time: string;
+}
+
+export interface CoachConversation {
+    id: number;
+    student: string;
+    avatar: string;
+    lastMessage: string;
+    lastTime: string;
+    unread: number;
+    online: boolean;
+    sessionContext?: string;
+    messages: CoachChatMessage[];
+}
+
+export const coachConversations: CoachConversation[] = [
+    {
+        id: 1,
+        student: "Alex C.",
+        avatar: "AC",
+        lastMessage: "Thanks! I've updated my CV with the changes we discussed. Could you take a quick look before tomorrow?",
+        lastTime: "1 hour ago",
+        unread: 2,
+        online: true,
+        sessionContext: "CV Review · Tomorrow 2:00 PM",
+        messages: [
+            { id: 1, sender: "student", text: "Hi Sarah! Really looking forward to our session tomorrow.", time: "3 hours ago" },
+            { id: 2, sender: "coach", text: "Hi Alex! Me too. Have you had a chance to update your CV with the formatting changes we talked about?", time: "2 hours ago" },
+            { id: 3, sender: "student", text: "Yes! I've restructured the bullet points and added the quantitative metrics you suggested.", time: "1 hour ago" },
+            { id: 4, sender: "student", text: "Thanks! I've updated my CV with the changes we discussed. Could you take a quick look before tomorrow?", time: "1 hour ago" },
+        ],
+    },
+    {
+        id: 2,
+        student: "James R.",
+        avatar: "JR",
+        lastMessage: "That makes sense. I'll prepare a list of firms I'm targeting and we can discuss prioritisation.",
+        lastTime: "5 hours ago",
+        unread: 0,
+        online: false,
+        sessionContext: "Application Strategy · Mon, Feb 9",
+        messages: [
+            { id: 1, sender: "student", text: "Hi Sarah, I wanted to ask about our upcoming session. Should I bring anything specific?", time: "Yesterday" },
+            { id: 2, sender: "coach", text: "Great question! It would really help if you could bring a list of firms you're targeting and any deadlines you know about.", time: "Yesterday" },
+            { id: 3, sender: "student", text: "That makes sense. I'll prepare a list of firms I'm targeting and we can discuss prioritisation.", time: "5 hours ago" },
+        ],
+    },
+    {
+        id: 3,
+        student: "Priya S.",
+        avatar: "PS",
+        lastMessage: "Perfect, see you Sunday! I'll practice the framework you sent.",
+        lastTime: "Yesterday",
+        unread: 0,
+        online: true,
+        sessionContext: "Mock Interview · Sun, Feb 8",
+        messages: [
+            { id: 1, sender: "coach", text: "Hi Priya! For Sunday's mock, I'll be running you through a competency-based interview. Make sure to prepare your STAR examples.", time: "2 days ago" },
+            { id: 2, sender: "student", text: "Thanks for the heads up! Should I focus on any particular competencies?", time: "2 days ago" },
+            { id: 3, sender: "coach", text: "Focus on leadership, teamwork, and problem-solving. I've also sent you a framework doc — check your email!", time: "Yesterday" },
+            { id: 4, sender: "student", text: "Perfect, see you Sunday! I'll practice the framework you sent.", time: "Yesterday" },
+        ],
+    },
+    {
+        id: 4,
+        student: "Sophie L.",
+        avatar: "SL",
+        lastMessage: "Would it be possible to book another mock interview? The last one was really helpful.",
+        lastTime: "2 days ago",
+        unread: 1,
+        online: false,
+        messages: [
+            { id: 1, sender: "student", text: "Hi Sarah! I just wanted to say thank you for the mock interview last week. Your feedback was spot on.", time: "3 days ago" },
+            { id: 2, sender: "coach", text: "So glad to hear that Sophie! How did your real interview go?", time: "3 days ago" },
+            { id: 3, sender: "student", text: "It went really well! I used the structure you taught me and the interviewers seemed impressed.", time: "2 days ago" },
+            { id: 4, sender: "student", text: "Would it be possible to book another mock interview? The last one was really helpful.", time: "2 days ago" },
+        ],
+    },
+];
+
+export const totalCoachUnread = coachConversations.reduce((sum, c) => sum + c.unread, 0);
 
 /* ─── Calendar helper ───────────────────────────────────────── */
 

@@ -6,6 +6,9 @@ import {
 import {
     upcomingCoachSessions, pastCoachSessions, getCalendarDays,
 } from "@/data/coachDashboardData";
+import type { CoachSession } from "@/data/coachDashboardData";
+import { SessionDetailPanel } from "@/components/coach-dashboard/SessionDetailPanel";
+import { RescheduleModal } from "@/components/RescheduleModal";
 
 /* ─── Star Rating ───────────────────────────────────────────── */
 
@@ -82,11 +85,10 @@ function CalendarView({ selectedDay, onSelectDay }: CalendarViewProps) {
                         <button
                             key={i}
                             onClick={() => handleDayClick(day)}
-                            className={`relative py-3 text-center text-sm rounded-lg transition-colors ${
-                                day.isToday && !isSelected ? "bg-foreground text-background font-bold" :
-                                isSelected ? "bg-foreground/10 ring-1 ring-foreground font-semibold text-foreground" :
-                                day.isCurrentMonth ? "text-foreground hover:bg-muted/50 cursor-pointer" : "text-muted-foreground/40"
-                            }`}
+                            className={`relative py-3 text-center text-sm rounded-lg transition-colors ${day.isToday && !isSelected ? "bg-foreground text-background font-bold" :
+                                    isSelected ? "bg-foreground/10 ring-1 ring-foreground font-semibold text-foreground" :
+                                        day.isCurrentMonth ? "text-foreground hover:bg-muted/50 cursor-pointer" : "text-muted-foreground/40"
+                                }`}
                             disabled={!day.isCurrentMonth}
                         >
                             {day.day}
@@ -134,6 +136,15 @@ export default function CoachSessions() {
     const [tab, setTab] = useState<"upcoming" | "past" | "calendar">("upcoming");
     const [hoveredPast, setHoveredPast] = useState<number | null>(null);
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
+    const [selectedSession, setSelectedSession] = useState<CoachSession | null>(null);
+    const [detailOpen, setDetailOpen] = useState(false);
+    const [rescheduleOpen, setRescheduleOpen] = useState(false);
+    const [rescheduleTarget, setRescheduleTarget] = useState("");
+
+    const openDetail = (session: CoachSession) => {
+        setSelectedSession(session);
+        setDetailOpen(true);
+    };
 
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
@@ -149,8 +160,8 @@ export default function CoachSessions() {
             <div className="flex gap-0 mb-6 border-b border-border">
                 {(["upcoming", "past", "calendar"] as const).map((t) => (
                     <button key={t} onClick={() => setTab(t)} className={`px-5 py-2.5 text-sm font-medium transition-all duration-200 border-b-2 capitalize -mb-px ${tab === t
-                            ? "border-foreground text-foreground font-semibold"
-                            : "border-transparent text-muted-foreground hover:text-foreground"
+                        ? "border-foreground text-foreground font-semibold"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
                         }`}>
                         {t === "calendar" ? "Calendar" : t}
                         {t === "upcoming" && ` (${upcomingCoachSessions.length})`}
@@ -169,7 +180,7 @@ export default function CoachSessions() {
                         </div>
                     ) : (
                         upcomingCoachSessions.map((session) => (
-                            <div key={session.id} className="bg-background border border-border rounded-xl p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm">
+                            <div key={session.id} onClick={() => openDetail(session)} className="bg-background border border-border rounded-xl p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm cursor-pointer">
                                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-sm font-semibold text-muted-foreground border-2 border-border flex-shrink-0">
@@ -206,10 +217,10 @@ export default function CoachSessions() {
                                             Join call <ArrowRight className="w-3 h-3" />
                                         </button>
                                     )}
-                                    <button className="px-4 py-2 border border-border rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-1.5">
+                                    <button onClick={(e) => { e.stopPropagation(); }} className="px-4 py-2 border border-border rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-1.5">
                                         <MessageSquare className="w-3 h-3" /> Message
                                     </button>
-                                    <button className="px-4 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                                    <button onClick={(e) => { e.stopPropagation(); setRescheduleTarget(session.student); setRescheduleOpen(true); }} className="px-4 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                                         Reschedule
                                     </button>
                                 </div>
@@ -224,9 +235,10 @@ export default function CoachSessions() {
                     {pastCoachSessions.map((session, i) => (
                         <div
                             key={session.id}
+                            onClick={() => openDetail(session)}
                             onMouseEnter={() => setHoveredPast(session.id)}
                             onMouseLeave={() => setHoveredPast(null)}
-                            className={`bg-background border rounded-xl px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-150 ${hoveredPast === session.id ? "border-border shadow-sm" : "border-border"
+                            className={`bg-background border rounded-xl px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-150 cursor-pointer ${hoveredPast === session.id ? "border-border shadow-sm" : "border-border"
                                 }`}
                         >
                             <div className="flex items-center gap-3.5">
@@ -319,6 +331,17 @@ export default function CoachSessions() {
                     })()}
                 </div>
             )}
+
+            <SessionDetailPanel
+                session={selectedSession}
+                open={detailOpen}
+                onOpenChange={setDetailOpen}
+            />
+            <RescheduleModal
+                open={rescheduleOpen}
+                onOpenChange={setRescheduleOpen}
+                personName={rescheduleTarget}
+            />
         </div>
     );
 }
