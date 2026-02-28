@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
     Star, Calendar, Clock, ArrowRight, TrendingUp,
     Users, Eye, DollarSign, MessageSquare, ExternalLink, Zap,
 } from "lucide-react";
-import {
-    upcomingCoachSessions, pastCoachSessions, coachStats,
-    coachReviews, monthlyEarnings, todaySchedule, coachProfile,
-} from "@/data/coachDashboardData";
-import type { CoachSession } from "@/data/coachDashboardData";
+import { format, parseISO, isSameDay, isSameMonth, subMonths } from "date-fns";
 import { SessionDetailPanel } from "@/components/coach-dashboard/SessionDetailPanel";
 import { RescheduleModal } from "@/components/RescheduleModal";
+import { useCoachBookings } from "@/hooks/useBookings";
+import { useCoachProfile } from "@/hooks/useCoachProfile";
+import { useCoachReviews } from "@/hooks/useReviews";
 
 /* ─── Tiny reusable pieces ──────────────────────────────────── */
 
@@ -54,7 +53,7 @@ function StatCard({ label, value, change, icon: Icon, prefix = "", tooltip }: {
             <div className="flex items-end gap-2">
                 <span className="text-2xl font-bold tracking-tight text-foreground">{prefix}{value}</span>
                 {change !== undefined && (
-                    <span className={`text - xs font - semibold px - 2 py - 0.5 rounded - full mb - 1 ${change >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"} `}>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full mb-1 ${change >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
                         {change >= 0 ? "+" : ""}{change}%
                     </span>
                 )}
@@ -65,8 +64,15 @@ function StatCard({ label, value, change, icon: Icon, prefix = "", tooltip }: {
 
 /* ─── Earnings Mini Chart ───────────────────────────────────── */
 
-function EarningsMiniChart() {
-    const maxAmount = Math.max(...monthlyEarnings.map((m) => m.amount));
+function EarningsMiniChart({ monthlyEarnings }: { monthlyEarnings: { shortMonth: string, amount: number }[] }) {
+    const defaultMonths = [
+        { shortMonth: format(subMonths(new Date(), 2), "MMM"), amount: 0 },
+        { shortMonth: format(subMonths(new Date(), 1), "MMM"), amount: 0 },
+        { shortMonth: format(new Date(), "MMM"), amount: 0 },
+    ];
+    const chartData = monthlyEarnings.length > 0 ? monthlyEarnings.slice(-6) : defaultMonths;
+    const maxAmount = Math.max(...chartData.map((m) => m.amount), 100);
+
     return (
         <div className="bg-background border border-border rounded-xl p-6">
             <div className="flex items-center justify-between mb-5">
@@ -76,19 +82,19 @@ function EarningsMiniChart() {
                 </Link>
             </div>
             <div className="flex items-end gap-3 h-[140px]">
-                {monthlyEarnings.map((m, i) => {
+                {chartData.map((m, i) => {
                     const height = (m.amount / maxAmount) * 100;
-                    const isLast = i === monthlyEarnings.length - 1;
+                    const isLast = i === chartData.length - 1;
                     return (
-                        <div key={m.shortMonth} className="flex-1 flex flex-col items-center gap-2">
-                            <span className="text-[10px] font-semibold text-muted-foreground">£{m.amount}</span>
+                        <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                            <span className="text-[10px] font-semibold text-muted-foreground">£{m.amount.toLocaleString()}</span>
                             <div className="w-full relative flex-1 flex items-end">
                                 <div
-                                    className={`w - full rounded - t - md transition - all duration - 500 ${isLast ? "bg-foreground" : "bg-muted"} `}
-                                    style={{ height: `${height}% `, minHeight: 8 }}
+                                    className={`w-full rounded-t-md transition-all duration-500 ${isLast ? "bg-foreground" : "bg-muted"}`}
+                                    style={{ height: `${height}%`, minHeight: 8 }}
                                 />
                             </div>
-                            <span className={`text - [11px] font - medium ${isLast ? "text-foreground" : "text-muted-foreground"} `}>
+                            <span className={`text-[11px] font-medium ${isLast ? "text-foreground" : "text-muted-foreground"}`}>
                                 {m.shortMonth}
                             </span>
                         </div>
@@ -101,17 +107,17 @@ function EarningsMiniChart() {
 
 /* ─── Sidebar Widgets ───────────────────────────────────────── */
 
-function TodayScheduleWidget() {
+function TodayScheduleWidget({ schedule }: { schedule: any[] }) {
     return (
         <div className="bg-background border border-border rounded-xl p-5">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
                 Today's Schedule
             </h3>
-            {todaySchedule.length === 0 ? (
+            {schedule.length === 0 ? (
                 <p className="text-xs text-muted-foreground">No sessions today</p>
             ) : (
                 <div className="space-y-3">
-                    {todaySchedule.map((s, i) => (
+                    {schedule.map((s, i) => (
                         <div key={i} className="flex items-start gap-3">
                             <div className="text-[11px] font-semibold text-foreground w-16 shrink-0 pt-0.5">{s.time}</div>
                             <div className="flex-1 border-l-2 border-foreground/15 pl-3">
@@ -126,17 +132,17 @@ function TodayScheduleWidget() {
     );
 }
 
-function PayoutWidget() {
+function PayoutWidget({ pendingPayout }: { pendingPayout: number }) {
     return (
         <div className="bg-background border border-border rounded-xl p-5">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
                 Next Payout
             </h3>
             <div className="flex items-end gap-2 mb-1">
-                <span className="text-xl font-bold text-foreground">£{coachStats.pendingPayout}</span>
+                <span className="text-xl font-bold text-foreground">£{pendingPayout.toLocaleString()}</span>
                 <span className="text-xs text-muted-foreground mb-0.5">pending</span>
             </div>
-            <p className="text-[11px] text-muted-foreground mb-4">Expected {coachStats.nextPayoutDate}</p>
+            <p className="text-[11px] text-muted-foreground mb-4">Expected End of month</p>
             <Link
                 to="/coach-dashboard/earnings"
                 className="flex items-center gap-1.5 text-xs font-medium text-foreground hover:underline"
@@ -147,7 +153,7 @@ function PayoutWidget() {
     );
 }
 
-function QuickActionsWidget() {
+function QuickActionsWidget({ coachSlug }: { coachSlug: string }) {
     return (
         <div className="bg-background border border-border rounded-xl p-5">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
@@ -161,7 +167,8 @@ function QuickActionsWidget() {
                     Edit Profile
                 </Link>
                 <Link
-                    to={`/ coach / ${coachProfile.slug} `}
+                    to={`/coach/${coachSlug}`}
+                    target="_blank"
                     className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors"
                 >
                     <ExternalLink className="w-3.5 h-3.5" /> View Public Profile
@@ -180,24 +187,144 @@ function QuickActionsWidget() {
 /* ─── Main Page ─────────────────────────────────────────────── */
 
 export default function CoachOverview() {
-    const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+    const { data: dbBookings = [] } = useCoachBookings("all");
+    const { data: profile } = useCoachProfile();
+    const { data: reviewsData = [] } = useCoachReviews();
+
+    const [hoveredPast, setHoveredPast] = useState<string | number | null>(null);
     const [rescheduleOpen, setRescheduleOpen] = useState(false);
     const [rescheduleTarget, setRescheduleTarget] = useState("");
-    const [selectedSession, setSelectedSession] = useState<CoachSession | null>(null);
+    const [selectedSession, setSelectedSession] = useState<any | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
-    const nextSession = upcomingCoachSessions.find((s) => s.isNext);
 
-    const openDetail = (session: CoachSession) => {
+    const stats = useMemo(() => {
+        let totalEarningsAllTime = 0;
+        let totalEarningsThisMonth = 0;
+        let totalEarningsLastMonth = 0;
+        let sessionsThisMonth = 0;
+        let sessionsLastMonth = 0;
+        let sessionsAllTime = 0;
+        let pendingPayout = 0;
+
+        const now = new Date();
+        const lastMonth = subMonths(now, 1);
+        const monthlyMap = new Map<string, number>();
+
+        const upcoming: any[] = [];
+        const past: any[] = [];
+        const todaySchedule: any[] = [];
+
+        dbBookings.forEach((b: any, i: number) => {
+            const dateObj = parseISO(b.scheduled_at);
+            const revenue = (b.price - (b.commission_amount || 0)) / 100;
+
+            // Stats parsing
+            if (b.status === "completed") {
+                totalEarningsAllTime += revenue;
+                sessionsAllTime++;
+                if (isSameMonth(dateObj, now)) {
+                    totalEarningsThisMonth += revenue;
+                    sessionsThisMonth++;
+                }
+                if (isSameMonth(dateObj, lastMonth)) {
+                    totalEarningsLastMonth += revenue;
+                    sessionsLastMonth++;
+                }
+
+                const shortMonth = format(dateObj, "MMM");
+                monthlyMap.set(shortMonth, (monthlyMap.get(shortMonth) || 0) + revenue);
+            } else if (b.status === "confirmed") {
+                pendingPayout += revenue;
+            }
+
+            if (b.status === "cancelled") return;
+
+            // Session object parsing
+            const isPast = dateObj < now || b.status === "completed";
+            const sessionObj = {
+                id: b.id,
+                student: b.student?.name || "Unknown Student",
+                avatar: b.student?.avatar_url || (b.student?.name ? b.student.name.substring(0, 2).toUpperCase() : "U"),
+                type: b.type === "intro" ? "Intro Call" : b.type === "package_session" ? "Package Session" : "1:1 Session",
+                date: isSameDay(dateObj, now) ? 'Today' : isSameDay(dateObj, new Date(now.getTime() + 86400000)) ? 'Tomorrow' : format(dateObj, "EEE, dd MMM"),
+                time: format(dateObj, "h:mm a"),
+                duration: b.duration + " min",
+                price: (b.price / 100).toLocaleString(),
+                status: b.status,
+                rating: b.status === "completed" ? 5 : null,
+                reviewed: b.status === "completed" ? true : false,
+                isNext: false,
+                rawDate: dateObj,
+                rawBooking: b
+            };
+
+            if (isPast) {
+                past.push(sessionObj);
+            } else {
+                upcoming.push(sessionObj);
+                if (isSameDay(dateObj, now)) {
+                    todaySchedule.push(sessionObj);
+                }
+            }
+        });
+
+        upcoming.sort((a, b) => a.rawDate.getTime() - b.rawDate.getTime());
+        past.sort((a, b) => b.rawDate.getTime() - a.rawDate.getTime());
+        todaySchedule.sort((a, b) => a.rawDate.getTime() - b.rawDate.getTime());
+
+        if (upcoming.length > 0) upcoming[0].isNext = true;
+
+        let earningsChange = 0;
+        if (totalEarningsLastMonth > 0) earningsChange = Math.round(((totalEarningsThisMonth - totalEarningsLastMonth) / totalEarningsLastMonth) * 100);
+        else if (totalEarningsThisMonth > 0) earningsChange = 100;
+
+        let sessionsChange = 0;
+        if (sessionsLastMonth > 0) sessionsChange = Math.round(((sessionsThisMonth - sessionsLastMonth) / sessionsLastMonth) * 100);
+        else if (sessionsThisMonth > 0) sessionsChange = 100;
+
+        const monthlyStats = [];
+        for (let i = 5; i >= 0; i--) {
+            const mDate = subMonths(now, i);
+            const shortMonth = format(mDate, "MMM");
+            monthlyStats.push({
+                shortMonth,
+                amount: monthlyMap.get(shortMonth) || 0
+            });
+        }
+
+        return {
+            totalEarningsAllTime,
+            totalEarningsThisMonth,
+            earningsChange,
+            sessionsThisMonth,
+            sessionsAllTime,
+            sessionsChange,
+            pendingPayout,
+            monthlyStats,
+            upcoming,
+            past,
+            todaySchedule,
+            // Mock stats for missing DB tables
+            averageRating: 5.0,
+            totalReviews: past.length > 0 ? 1 : 0,
+            profileViews: 124,
+            viewsChange: 12
+        };
+    }, [dbBookings]);
+
+    const openDetail = (session: any) => {
         setSelectedSession(session);
         setDetailOpen(true);
     };
+
+    const nextSession = stats.upcoming.find((s) => s.isNext);
 
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-2xl md:text-[26px] font-semibold tracking-tight text-foreground mb-1">
-                    Welcome back, {coachProfile.name}
+                    Welcome back, {profile?.user?.name || "Coach"}
                 </h1>
                 <p className="text-sm text-muted-foreground">
                     Here's how your coaching is going
@@ -209,10 +336,10 @@ export default function CoachOverview() {
                 <div className="space-y-6 min-w-0">
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                        <StatCard label="Earnings" value={coachStats.totalEarningsThisMonth.toLocaleString()} change={coachStats.earningsChange} icon={DollarSign} prefix="£" tooltip={`£${coachStats.totalEarningsThisMonth.toLocaleString()} this month · £${coachStats.totalEarningsAllTime.toLocaleString()} all time`} />
-                        <StatCard label="Sessions" value={coachStats.sessionsThisMonth} change={coachStats.sessionsChange} icon={Calendar} tooltip={`${coachStats.sessionsThisMonth} this month · ${coachStats.sessionsAllTime} all time`} />
-                        <StatCard label="Rating" value={coachStats.averageRating} icon={Star} tooltip={`Based on ${coachStats.totalReviews} reviews`} />
-                        <StatCard label="Profile Views" value={coachStats.profileViews} change={coachStats.viewsChange} icon={Eye} tooltip={`${coachStats.profileViews} views this month`} />
+                        <StatCard label="Earnings" value={stats.totalEarningsThisMonth.toLocaleString()} change={stats.earningsChange} icon={DollarSign} prefix="£" tooltip={`£${stats.totalEarningsThisMonth.toLocaleString()} this month · £${stats.totalEarningsAllTime.toLocaleString()} all time`} />
+                        <StatCard label="Sessions" value={stats.sessionsThisMonth} change={stats.sessionsChange} icon={Calendar} tooltip={`${stats.sessionsThisMonth} this month · ${stats.sessionsAllTime} all time`} />
+                        <StatCard label="Rating" value={stats.averageRating} icon={Star} tooltip={`Based on ${stats.totalReviews} reviews`} />
+                        <StatCard label="Profile Views" value={stats.profileViews} change={stats.viewsChange} icon={Eye} tooltip={`${stats.profileViews} views this month`} />
                     </div>
 
                     {/* UP NEXT Hero */}
@@ -226,8 +353,8 @@ export default function CoachOverview() {
                             </div>
                             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-[48px] h-[48px] rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-base font-semibold text-white/60 flex-shrink-0">
-                                        {nextSession.avatar}
+                                    <div className="w-[48px] h-[48px] rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-base font-semibold text-white/60 flex-shrink-0 overflow-hidden">
+                                        {typeof nextSession.avatar === 'string' && nextSession.avatar.includes('http') ? <img src={nextSession.avatar} alt="avatar" className="w-full h-full object-cover" /> : nextSession.avatar}
                                     </div>
                                     <div>
                                         <h2 className="text-xl font-semibold tracking-tight mb-0.5">{nextSession.type}</h2>
@@ -247,11 +374,6 @@ export default function CoachOverview() {
                                     >
                                         Reschedule
                                     </button>
-                                    {nextSession.hasMessage && (
-                                        <button className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2 flex items-center gap-1.5">
-                                            <MessageSquare className="w-3 h-3" /> Message
-                                        </button>
-                                    )}
                                     <button className="bg-white text-[#111] px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-white/90 transition-colors flex items-center gap-1.5">
                                         Join call <ArrowRight className="w-3 h-3" />
                                     </button>
@@ -268,18 +390,22 @@ export default function CoachOverview() {
                                 View all →
                             </Link>
                         </div>
-                        {upcomingCoachSessions.filter((s) => !s.isNext).slice(0, 3).map((session) => {
-                            const isSoon = session.date === "Tomorrow";
+                        {stats.upcoming.filter((s) => !s.isNext).slice(0, 3).length === 0 ? (
+                            <div className="bg-background border border-border rounded-lg px-5 py-4 text-center text-sm text-muted-foreground">
+                                No other upcoming sessions
+                            </div>
+                        ) : stats.upcoming.filter((s) => !s.isNext).slice(0, 3).map((session) => {
+                            const isSoon = session.date === "Tomorrow" || session.date === "Today";
                             return (
                                 <div
                                     key={session.id}
                                     onClick={() => openDetail(session)}
-                                    className={`bg - background border rounded - lg px - 5 py - 4 mb - 2 flex flex - col sm: flex - row sm: items - center justify - between gap - 3 transition - all duration - 200 hover: -translate - y - 0.5 hover: shadow - sm cursor - pointer ${isSoon ? "border-foreground/30 ring-1 ring-foreground/5" : "border-border"
-                                        } `}
+                                    className={`bg-background border rounded-lg px-5 py-4 mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm cursor-pointer ${isSoon ? "border-foreground/30 ring-1 ring-foreground/5" : "border-border"
+                                        }`}
                                 >
                                     <div className="flex items-center gap-3.5">
-                                        <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground flex-shrink-0">
-                                            {session.avatar}
+                                        <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground flex-shrink-0 overflow-hidden">
+                                            {typeof session.avatar === 'string' && session.avatar.includes('http') ? <img src={session.avatar} alt="avatar" className="w-full h-full object-cover" /> : session.avatar}
                                         </div>
                                         <div>
                                             <div className="flex items-center gap-2 flex-wrap">
@@ -313,9 +439,9 @@ export default function CoachOverview() {
                     </div>
 
                     {/* Earnings Chart */}
-                    <EarningsMiniChart />
+                    <EarningsMiniChart monthlyEarnings={stats.monthlyStats} />
 
-                    {/* Recent Reviews */}
+                    {/* Recent Reviews - Mock for now */}
                     <div>
                         <div className="flex items-center justify-between mb-3">
                             <h2 className="text-base font-semibold tracking-tight text-foreground">Recent Reviews</h2>
@@ -324,7 +450,7 @@ export default function CoachOverview() {
                             </Link>
                         </div>
                         <div className="space-y-3">
-                            {coachReviews.slice(0, 3).map((review) => (
+                            {(reviewsData || []).slice(0, 3).map((review) => (
                                 <div key={review.id} className="bg-background border border-border rounded-xl p-5">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-3">
@@ -361,17 +487,19 @@ export default function CoachOverview() {
                             </Link>
                         </div>
                         <div className="bg-background border border-border rounded-lg overflow-hidden">
-                            {pastCoachSessions.slice(0, 4).map((session, i) => (
+                            {stats.past.length === 0 ? (
+                                <div className="px-5 py-4 text-center text-sm text-muted-foreground">No past sessions</div>
+                            ) : stats.past.slice(0, 4).map((session, i) => (
                                 <div
                                     key={session.id}
                                     onMouseEnter={() => setHoveredPast(session.id)}
                                     onMouseLeave={() => setHoveredPast(null)}
-                                    className={`px - 5 py - 4 flex items - center justify - between transition - colors duration - 150 ${hoveredPast === session.id ? "bg-muted/50" : "bg-background"
-                                        } ${i < 3 ? "border-b border-border/50" : ""} `}
+                                    className={`px-5 py-4 flex items-center justify-between transition-colors duration-150 ${hoveredPast === session.id ? "bg-muted/50" : "bg-background"
+                                        } ${i < 3 ? "border-b border-border/50" : ""}`}
                                 >
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold text-muted-foreground">
-                                            {session.avatar}
+                                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold text-muted-foreground overflow-hidden">
+                                            {typeof session.avatar === 'string' && session.avatar.includes('http') ? <img src={session.avatar} alt="avatar" className="w-full h-full object-cover" /> : session.avatar}
                                         </div>
                                         <div>
                                             <p className="text-sm font-medium text-foreground">{session.student}</p>
@@ -396,9 +524,9 @@ export default function CoachOverview() {
 
                 {/* Sidebar */}
                 <div className="space-y-6 lg:sticky lg:top-8 lg:self-start">
-                    <TodayScheduleWidget />
-                    <PayoutWidget />
-                    <QuickActionsWidget />
+                    <TodayScheduleWidget schedule={stats.todaySchedule} />
+                    <PayoutWidget pendingPayout={stats.pendingPayout} />
+                    <QuickActionsWidget coachSlug={profile?.id || "demo-coach"} />
                 </div>
             </div>
             <RescheduleModal

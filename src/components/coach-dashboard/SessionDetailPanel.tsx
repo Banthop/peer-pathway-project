@@ -7,7 +7,24 @@ import {
     SheetDescription,
 } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
-import type { CoachSession } from "@/data/coachDashboardData";
+
+export interface CoachSession {
+    id: number | string;
+    student: string;
+    avatar: string;
+    type: string;
+    date: string;
+    time: string;
+    duration: string;
+    price: number;
+    status: "upcoming" | "completed" | "cancelled";
+    isNext?: boolean;
+    hasMessage?: boolean;
+    reviewed?: boolean;
+    rating?: number;
+    reviewText?: string;
+    notes?: string;
+}
 
 function StarRating({ rating, size = 13 }: { rating: number; size?: number }) {
     return (

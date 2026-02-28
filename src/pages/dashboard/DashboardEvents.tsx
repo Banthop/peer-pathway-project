@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Star, Users } from "lucide-react";
+import { Star, Users, Calendar, Clock } from "lucide-react";
 import {
   freeEvents,
   eventCategories,
   type FreeEvent,
 } from "@/data/eventsData";
+import { useEvents, useMyEventRegistrations, useRegisterForEvent, useUnregisterFromEvent } from "@/hooks/useEvents";
+import { useAuth } from "@/contexts/AuthContext";
 
 function formatStartsIn(dateStr: string): string {
   const eventDate = new Date(dateStr);
@@ -28,8 +30,11 @@ function formatEventDate(dateStr: string): string {
   });
 }
 
-function EventCard({ event }: { event: FreeEvent }) {
-  const [registered, setRegistered] = useState(false);
+function EventCard({ event, isRegistered, onToggleRegistration }: {
+  event: FreeEvent & { id: string | number };
+  isRegistered: boolean;
+  onToggleRegistration: () => void;
+}) {
   const startsIn = formatStartsIn(event.date);
 
   return (
@@ -81,14 +86,13 @@ function EventCard({ event }: { event: FreeEvent }) {
           </div>
         </div>
         <button
-          onClick={() => setRegistered(!registered)}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex-shrink-0 ${
-            registered
+          onClick={onToggleRegistration}
+          className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 flex-shrink-0 ${isRegistered
               ? "bg-muted text-foreground border border-border"
               : "bg-foreground text-background hover:opacity-90"
-          }`}
+            }`}
         >
-          {registered ? "Registered" : "Register"}
+          {isRegistered ? "Registered ✓" : "Register"}
         </button>
       </div>
     </div>
@@ -97,11 +101,58 @@ function EventCard({ event }: { event: FreeEvent }) {
 
 export default function DashboardEvents() {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const { user } = useAuth();
 
-  const filteredEvents =
-    selectedCategory === "All"
-      ? freeEvents
-      : freeEvents.filter((e) => e.category === selectedCategory);
+  // Try to load from Supabase — fallback to mock data
+  const { data: dbEvents = [] } = useEvents(selectedCategory !== "All" ? selectedCategory : undefined);
+  const { data: myRegistrations = [] } = useMyEventRegistrations();
+  const registerMutation = useRegisterForEvent();
+  const unregisterMutation = useUnregisterFromEvent();
+
+  // Local registration state for mock events
+  const [localRegistrations, setLocalRegistrations] = useState<Set<number | string>>(new Set());
+
+  // If no DB events, use mock data
+  const usingMock = dbEvents.length === 0;
+  const displayEvents = usingMock
+    ? (selectedCategory === "All" ? freeEvents : freeEvents.filter((e) => e.category === selectedCategory))
+    : dbEvents.map((e: any) => ({
+      ...e,
+      host: {
+        name: e.coach?.user?.name || "Coach",
+        avatar: (e.coach?.user?.name || "C").substring(0, 2).toUpperCase(),
+        rating: 4.8,
+        reviews: 0,
+      },
+      time: new Date(e.scheduled_at).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }),
+      date: e.scheduled_at,
+      duration: `${e.duration} min`,
+      registered: e.current_attendees || 0,
+      gradient: "from-blue-600 to-indigo-800",
+      tags: [],
+    }));
+
+  const isRegistered = (eventId: string | number) => {
+    if (usingMock) return localRegistrations.has(eventId);
+    return myRegistrations.includes(eventId as string);
+  };
+
+  const handleToggleRegistration = (eventId: string | number) => {
+    if (usingMock) {
+      setLocalRegistrations(prev => {
+        const next = new Set(prev);
+        if (next.has(eventId)) next.delete(eventId);
+        else next.add(eventId);
+        return next;
+      });
+      return;
+    }
+    if (isRegistered(eventId)) {
+      unregisterMutation.mutate(eventId as string);
+    } else {
+      registerMutation.mutate(eventId as string);
+    }
+  };
 
   const popularCategories = [
     "Investment Banking",
@@ -136,11 +187,10 @@ export default function DashboardEvents() {
               onClick={() =>
                 setSelectedCategory(selectedCategory === cat ? "All" : cat)
               }
-              className={`text-xs font-medium transition-colors ${
-                selectedCategory === cat
+              className={`text-xs font-medium transition-colors ${selectedCategory === cat
                   ? "text-foreground underline underline-offset-4"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
             >
               {cat}
             </button>
@@ -170,8 +220,9 @@ export default function DashboardEvents() {
 
       {/* Event Grid */}
       <div className="px-6 md:px-10 lg:px-12 mt-6 pb-10">
-        {filteredEvents.length === 0 ? (
+        {displayEvents.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
+            <Calendar className="w-10 h-10 mx-auto mb-3 text-muted-foreground/40" />
             <p className="text-base font-medium mb-2">No events found</p>
             <p className="text-[13px]">
               Try selecting a different category
@@ -179,8 +230,13 @@ export default function DashboardEvents() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {displayEvents.map((event: any) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                isRegistered={isRegistered(event.id)}
+                onToggleRegistration={() => handleToggleRegistration(event.id)}
+              />
             ))}
           </div>
         )}

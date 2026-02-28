@@ -6,7 +6,16 @@
       "Bash(git config:*)",
       "Bash(git push:*)",
       "Bash(npm run build:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "Bash(cmd /c \"npx tsc --noEmit --pretty 2>&1\")",
+      "Bash(cmd /c \"npx tsc --noEmit 2>&1\")",
+      "Bash(cmd /c \"npm run build 2>&1\")",
+      "Bash(cmd /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project && npx tsc --noEmit 2>&1\")",
+      "Bash(cmd /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project && npm run build 2>&1\")",
+      "Bash(cmd /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project & npm run build\")",
+      "Bash(cmd.exe /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project && npx tsc --noEmit && echo SUCCESS || echo FAIL\")",
+      "Bash(powershell -Command \"Set-Location ''C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project''; npx tsc --noEmit; Write-Host ''EXIT CODE:'' $LASTEXITCODE\")",
+      "Bash(powershell -Command \"Set-Location 'C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project'; npm run build 2>&1 | Out-String\":*)"
     ]
   }
 }

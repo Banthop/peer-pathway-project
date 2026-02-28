@@ -18,7 +18,10 @@ import DashboardBookings from "./pages/dashboard/DashboardBookings";
 import DashboardBrowse from "./pages/dashboard/DashboardBrowse";
 import DashboardMessages from "./pages/dashboard/DashboardMessages";
 import DashboardEvents from "./pages/dashboard/DashboardEvents";
+import DashboardResources from "./pages/dashboard/DashboardResources";
 import AdminCoaches from "./pages/admin/AdminCoaches";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOutreach from "./pages/admin/AdminOutreach";
 import CoachDashboardLayout from "./components/coach-dashboard/CoachDashboardLayout";
 import CoachOverview from "./pages/coach-dashboard/CoachOverview";
 import CoachSessions from "./pages/coach-dashboard/CoachSessions";
@@ -27,6 +30,9 @@ import CoachReviews from "./pages/coach-dashboard/CoachReviews";
 import CoachEditProfile from "./pages/coach-dashboard/CoachEditProfile";
 import CoachAnalytics from "./pages/coach-dashboard/CoachAnalytics";
 import CoachMessages from "./pages/coach-dashboard/CoachMessages";
+import StripeConnect from "./pages/coach-dashboard/StripeConnect";
+import CoachEvents from "./pages/coach-dashboard/CoachEvents";
+import CoachResources from "./pages/coach-dashboard/CoachResources";
 import Guarantee from "./pages/Guarantee";
 
 const queryClient = new QueryClient();
@@ -72,6 +78,7 @@ const AppRoutes = () => (
       <Route path="browse" element={<DashboardBrowse />} />
       <Route path="messages" element={<DashboardMessages />} />
       <Route path="events" element={<DashboardEvents />} />
+      <Route path="resources" element={<DashboardResources />} />
     </Route>
     <Route path="/coach-dashboard" element={<ProtectedRoute><CoachDashboardLayout /></ProtectedRoute>}>
       <Route index element={<CoachOverview />} />
@@ -81,9 +88,14 @@ const AppRoutes = () => (
       <Route path="reviews" element={<CoachReviews />} />
       <Route path="edit-profile" element={<CoachEditProfile />} />
       <Route path="analytics" element={<CoachAnalytics />} />
+      <Route path="payouts" element={<StripeConnect />} />
+      <Route path="events" element={<CoachEvents />} />
+      <Route path="resources" element={<CoachResources />} />
     </Route>
     <Route path="/guarantee" element={<Guarantee />} />
-    <Route path="/admin/coaches" element={<ProtectedRoute><AdminCoaches /></ProtectedRoute>} />
+    <Route path="/admin/coaches" element={<AdminCoaches />} />
+    <Route path="/admin/outreach" element={<AdminOutreach />} />
+    <Route path="/admin" element={<AdminDashboard />} />
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
     <Route path="*" element={<NotFound />} />
   </Routes>

@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Save, Check, ExternalLink, ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { coachProfile } from "@/data/coachDashboardData";
+import { useCoachProfile, useUpdateCoachProfile } from "@/hooks/useCoachProfile";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 
@@ -104,14 +104,77 @@ export default function CoachEditProfile() {
     const [form, setForm] = useState<ProfileForm>({ ...defaultForm });
     const [saved, setSaved] = useState(false);
 
+    const { data: profileData, isLoading } = useCoachProfile();
+    const { mutate: updateProfile, isPending } = useUpdateCoachProfile();
+
+    useEffect(() => {
+        if (profileData) {
+            setForm(f => ({
+                ...f,
+                name: profileData.user?.name || "",
+                photo: profileData.user?.avatar_url || "",
+                tagline: profileData.headline || "",
+                hourlyRate: profileData.hourly_rate ? (profileData.hourly_rate / 100).toString() : "50",
+                category: profileData.categories?.[0] || "Investment Banking",
+                bio: profileData.bio || "",
+                uniName: profileData.university || "",
+            }));
+
+            if (profileData.full_bio) {
+                try {
+                    const parsed = JSON.parse(profileData.full_bio);
+                    setForm(p => ({ ...p, ...parsed }));
+                } catch (e) {
+                    console.error("Failed to parse full_bio", e);
+                }
+            }
+        }
+    }, [profileData]);
+
     const update = useCallback(<K extends keyof ProfileForm>(key: K, value: ProfileForm[K]) => {
         setForm((f) => ({ ...f, [key]: value }));
     }, []);
 
     const handleSave = () => {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 3000);
-        // In production this would call coachStore.saveCoach()
+        const fullBioJson = JSON.stringify({
+            skills: form.skills,
+            experience: form.experience,
+            education: form.education,
+            services: form.services,
+            uniName: form.uniName,
+            uniDegree: form.uniDegree,
+            uniYears: form.uniYears,
+            uniLogo: form.uniLogo,
+            companyName: form.companyName,
+            companyRole: form.companyRole,
+            companyLogo: form.companyLogo,
+            slots: form.slots,
+            nextSlot: form.nextSlot,
+            timezone: form.timezone,
+            enablePackage: form.enablePackage,
+            packageName: form.packageName,
+            packageSessions: form.packageSessions,
+            packagePrice: form.packagePrice,
+            packageOriginalPrice: form.packageOriginalPrice,
+            packageIncludes: form.packageIncludes,
+            enableSlots: form.enableSlots,
+        });
+
+        updateProfile({
+            name: form.name,
+            avatar_url: form.photo,
+            headline: form.tagline,
+            categories: [form.category],
+            hourly_rate: parseInt(form.hourlyRate) * 100 || 5000,
+            bio: form.bio,
+            full_bio: fullBioJson,
+            university: form.uniName,
+        }, {
+            onSuccess: () => {
+                setSaved(true);
+                setTimeout(() => setSaved(false), 3000);
+            }
+        });
     };
 
     const addItem = <T,>(key: keyof ProfileForm, empty: T) => {
@@ -140,7 +203,7 @@ export default function CoachEditProfile() {
                 </div>
                 <div className="flex items-center gap-3">
                     <Link
-                        to={`/coach/${coachProfile.slug}`}
+                        to={`/coach/${profileData?.id || 'demo'}`}
                         target="_blank"
                         className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-border text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >

@@ -15,6 +15,9 @@ import BookingDetailsForm from "./BookingDetailsForm";
 import BookingSuccess from "./BookingSuccess";
 import type { Coach } from "@/types/coach";
 import type { BookingType, SelectedService, BookingFormData } from "@/types/booking";
+import { useCreateBooking } from "@/hooks/useBookings";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface BookingDialogProps {
   coach: Coach;
@@ -37,6 +40,9 @@ const BookingDialog = ({
 }: BookingDialogProps) => {
   const isMobile = useIsMobile();
   const firstName = coach.name.split(" ")[0];
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const createBooking = useCreateBooking();
 
   // Booking state
   const [step, setStep] = useState(1);
@@ -100,10 +106,44 @@ const BookingDialog = ({
   const handleFormSubmit = async (data: BookingFormData) => {
     setIsSubmitting(true);
     setFormData(data);
-    
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+
+    try {
+      // Parse the selected time into the selected date
+      if (selectedDate && selectedTime) {
+        const [timePart, period] = selectedTime.split(" ");
+        const [hours, minutes] = timePart.split(":").map(Number);
+        let hour24 = hours;
+        if (period === "PM" && hours !== 12) hour24 += 12;
+        if (period === "AM" && hours === 12) hour24 = 0;
+
+        const scheduledDate = new Date(selectedDate);
+        scheduledDate.setHours(hour24, minutes || 0, 0, 0);
+
+        const serviceDurationNum = parseInt(currentService?.duration || "15");
+
+        await createBooking.mutateAsync({
+          coach_id: coach.id,
+          type: isFreeIntro ? "intro" : "session",
+          scheduled_at: scheduledDate.toISOString(),
+          duration: serviceDurationNum,
+          price: (currentService?.price || 0) * 100, // convert to pence
+          notes: data.notes || data.focusTopic || undefined,
+        });
+
+        toast({
+          title: "Booking confirmed!",
+          description: `Your session with ${coach.name} has been booked.`,
+        });
+      }
+    } catch (err) {
+      console.error("Booking error:", err);
+      toast({
+        title: "Booking failed",
+        description: "Could not create the booking. Please try again.",
+        variant: "destructive",
+      });
+    }
+
     setIsSubmitting(false);
     setStep(step + 1);
   };

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { DollarSign, TrendingUp, Clock, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import {
-    coachStats, monthlyEarnings, payoutHistory, serviceBreakdown,
-} from "@/data/coachDashboardData";
+import { useCoachBookings } from "@/hooks/useBookings";
+import { useMemo } from "react";
+import { format, subMonths, isSameMonth, parseISO } from "date-fns";
 
 /* ─── Stat Card ─────────────────────────────────────────────── */
 
@@ -40,15 +40,16 @@ function StatusBadge({ status }: { status: string }) {
 
 /* ─── Revenue Chart ─────────────────────────────────────────── */
 
-function RevenueChart() {
+function RevenueChart({ monthlyStats }: { monthlyStats: { shortMonth: string, amount: number }[] }) {
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-    const allMonths = [
-        { shortMonth: "Mar", amount: 0 }, { shortMonth: "Apr", amount: 120 },
-        { shortMonth: "May", amount: 280 }, { shortMonth: "Jun", amount: 350 },
-        { shortMonth: "Jul", amount: 190 }, { shortMonth: "Aug", amount: 310 },
-        ...monthlyEarnings,
+
+    // If we don't have enough months, pad with empty months
+    const allMonths = monthlyStats.length > 0 ? monthlyStats : [
+        { shortMonth: format(subMonths(new Date(), 2), "MMM"), amount: 0 },
+        { shortMonth: format(subMonths(new Date(), 1), "MMM"), amount: 0 },
+        { shortMonth: format(new Date(), "MMM"), amount: 0 },
     ];
-    const maxAmount = Math.max(...allMonths.map((m) => m.amount));
+    const maxAmount = Math.max(...allMonths.map((m) => m.amount), 100); // at least 100 to avoid /0
 
     return (
         <div className="bg-background border border-border rounded-xl p-6">
@@ -92,12 +93,14 @@ function RevenueChart() {
 
 /* ─── Service Breakdown ─────────────────────────────────────── */
 
-function ServiceBreakdownChart() {
+function ServiceBreakdownChart({ breakdown }: { breakdown: { name: string, sessions: number, revenue: number, pct: number }[] }) {
     return (
         <div className="bg-background border border-border rounded-xl p-6">
             <h3 className="text-base font-semibold text-foreground mb-5">Revenue by Service</h3>
             <div className="space-y-4">
-                {serviceBreakdown.map((s) => (
+                {breakdown.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">No completed sessions yet.</p>
+                ) : breakdown.map((s) => (
                     <div key={s.name}>
                         <div className="flex items-center justify-between mb-1.5">
                             <span className="text-sm font-medium text-foreground">{s.name}</span>
@@ -122,6 +125,99 @@ function ServiceBreakdownChart() {
 /* ─── Main Page ─────────────────────────────────────────────── */
 
 export default function CoachEarnings() {
+    const { data: bookings = [] } = useCoachBookings("all");
+
+    const stats = useMemo(() => {
+        let totalEarningsAllTime = 0;
+        let totalEarningsThisMonth = 0;
+        let totalEarningsLastMonth = 0;
+        let pendingPayout = 0;
+
+        const now = new Date();
+        const lastMonth = subMonths(now, 1);
+
+        const monthlyMap = new Map<string, number>();
+        const serviceMap = new Map<string, { sessions: number, revenue: number }>();
+        const mockPayouts: any[] = [];
+
+        bookings.forEach(b => {
+            // Price is in pence, convert to pounds
+            const revenue = (b.price - (b.commission_amount || 0)) / 100;
+            const date = parseISO(b.scheduled_at);
+
+            if (b.status === "completed") {
+                totalEarningsAllTime += revenue;
+
+                if (isSameMonth(date, now)) totalEarningsThisMonth += revenue;
+                if (isSameMonth(date, lastMonth)) totalEarningsLastMonth += revenue;
+
+                // Monthly map
+                const monthKey = format(date, "MMM yyyy");
+                const shortMonth = format(date, "MMM");
+                monthlyMap.set(shortMonth, (monthlyMap.get(shortMonth) || 0) + revenue);
+
+                // Service map
+                const serviceName = b.type === "intro" ? "Intro Call" : b.type === "package_session" ? "Package Session" : "1:1 Session";
+                const currentSvc = serviceMap.get(serviceName) || { sessions: 0, revenue: 0 };
+                serviceMap.set(serviceName, { sessions: currentSvc.sessions + 1, revenue: currentSvc.revenue + revenue });
+
+                // Add to mock payouts history for UI
+                mockPayouts.push({
+                    id: b.id,
+                    date: format(date, "dd MMM yyyy"),
+                    sessions: 1,
+                    amount: revenue,
+                    status: "paid"
+                });
+
+            } else if (b.status === "confirmed") {
+                pendingPayout += revenue;
+            }
+        });
+
+        // Earnings change %
+        let earningsChange = 0;
+        if (totalEarningsLastMonth > 0) {
+            earningsChange = Math.round(((totalEarningsThisMonth - totalEarningsLastMonth) / totalEarningsLastMonth) * 100);
+        } else if (totalEarningsThisMonth > 0) {
+            earningsChange = 100; // infinite % up
+        }
+
+        // Format monthly Array (last 6 months ideally)
+        const monthlyStats = [];
+        for (let i = 5; i >= 0; i--) {
+            const mDate = subMonths(now, i);
+            const shortMonth = format(mDate, "MMM");
+            monthlyStats.push({
+                shortMonth,
+                amount: monthlyMap.get(shortMonth) || 0
+            });
+        }
+
+        // Format Service Breakdown
+        const breakdown = Array.from(serviceMap.entries()).map(([name, data]) => ({
+            name,
+            sessions: data.sessions,
+            revenue: data.revenue,
+            pct: totalEarningsAllTime > 0 ? Math.round((data.revenue / totalEarningsAllTime) * 100) : 0
+        })).sort((a, b) => b.revenue - a.revenue);
+
+        // Sort mock payouts
+        mockPayouts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        return {
+            totalEarningsAllTime,
+            totalEarningsThisMonth,
+            earningsChange,
+            pendingPayout,
+            nextPayoutDate: "End of month",
+            monthlyStats,
+            breakdown,
+            payoutHistory: mockPayouts.slice(0, 5) // Last 5
+        };
+
+    }, [bookings]);
+
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
             {/* Header */}
@@ -132,14 +228,14 @@ export default function CoachEarnings() {
 
             {/* Summary Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-                <BigStat label="Total Earnings" value={`£${coachStats.totalEarningsAllTime.toLocaleString()}`} sub="All time" icon={DollarSign} />
-                <BigStat label="This Month" value={`£${coachStats.totalEarningsThisMonth.toLocaleString()}`} sub={`+${coachStats.earningsChange}% vs last month`} icon={TrendingUp} />
-                <BigStat label="Pending Payout" value={`£${coachStats.pendingPayout}`} sub={`Expected ${coachStats.nextPayoutDate}`} icon={Clock} />
+                <BigStat label="Total Earnings" value={`£${stats.totalEarningsAllTime.toLocaleString()}`} sub="All time" icon={DollarSign} />
+                <BigStat label="This Month" value={`£${stats.totalEarningsThisMonth.toLocaleString()}`} sub={`${stats.earningsChange >= 0 ? '+' : ''}${stats.earningsChange}% vs last month`} icon={TrendingUp} />
+                <BigStat label="Pending Payout" value={`£${stats.pendingPayout.toLocaleString()}`} sub={`Expected ${stats.nextPayoutDate}`} icon={Clock} />
             </div>
 
             {/* Revenue Chart */}
             <div className="mb-8">
-                <RevenueChart />
+                <RevenueChart monthlyStats={stats.monthlyStats} />
             </div>
 
             {/* Two Column: Payouts + Breakdown */}
@@ -150,14 +246,16 @@ export default function CoachEarnings() {
                         <h3 className="text-base font-semibold text-foreground">Payout History</h3>
                     </div>
                     <div className="divide-y divide-border/50">
-                        {payoutHistory.map((p) => (
+                        {stats.payoutHistory.length === 0 ? (
+                            <div className="px-6 py-6 text-center text-sm text-muted-foreground">No recent payouts.</div>
+                        ) : stats.payoutHistory.map((p) => (
                             <div key={p.id} className="px-6 py-4 flex items-center justify-between hover:bg-muted/30 transition-colors">
                                 <div>
                                     <p className="text-sm font-medium text-foreground">{p.date}</p>
                                     <p className="text-xs text-muted-foreground mt-0.5">{p.sessions} sessions</p>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                    <span className="text-sm font-bold text-foreground">£{p.amount}</span>
+                                    <span className="text-sm font-bold text-foreground">£{p.amount.toLocaleString()}</span>
                                     <StatusBadge status={p.status} />
                                 </div>
                             </div>
@@ -166,7 +264,7 @@ export default function CoachEarnings() {
                 </div>
 
                 {/* Service Breakdown */}
-                <ServiceBreakdownChart />
+                <ServiceBreakdownChart breakdown={stats.breakdown} />
             </div>
         </div>
     );

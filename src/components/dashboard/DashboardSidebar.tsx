@@ -9,35 +9,34 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Settings, LogOut, ChevronDown, ArrowRightLeft } from "lucide-react";
-import { pastBookings, conversations } from "@/data/dashboardData";
-
-const unreviewedCount = pastBookings.filter((s) => !s.reviewed).length;
-const totalUnread = conversations.reduce((sum, c) => sum + c.unread, 0);
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { title: "Overview", url: "/dashboard", end: true, dot: false },
   { title: "Browse Coaches", url: "/dashboard/browse", end: false, dot: false },
   { title: "Free Events", url: "/dashboard/events", end: false, dot: false },
+  { title: "Resources", url: "/dashboard/resources", end: false, dot: false },
   {
     title: "My Bookings",
     url: "/dashboard/bookings",
     end: false,
-    dot: unreviewedCount > 0,
+    dot: false,
   },
   {
     title: "Messages",
     url: "/dashboard/messages",
     end: false,
-    dot: totalUnread > 0,
+    dot: false,
   },
 ];
 
-const userData = {
-  name: "Alex Chen",
-  email: "alex@example.com",
-};
 
 export function DashboardSidebar() {
+  const { user } = useAuth();
+  const userName = (user as any)?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
+  const userEmail = user?.email || '';
+  const initials = userName.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
+
   return (
     <aside className="hidden md:flex md:w-56 lg:w-64 flex-col border-r border-border bg-background">
       {/* Logo */}
@@ -69,15 +68,15 @@ export function DashboardSidebar() {
           <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-muted transition-colors outline-none">
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-foreground text-background text-xs font-semibold">
-                AC
+                {initials}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-[13px] font-semibold text-foreground truncate">
-                {userData.name}
+                {userName}
               </p>
               <p className="text-[11px] text-muted-foreground truncate">
-                {userData.email}
+                {userEmail}
               </p>
             </div>
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />

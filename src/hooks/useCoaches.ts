@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
-import { getAllCoaches, getProfileCoach } from "@/utils/coach";
+import { getAllCoaches } from "@/data/sampleCoach";
 import type { Coach } from "@/types/coach";
 
 interface CoachFilters {
@@ -69,11 +69,11 @@ export function useCoach(coachId: string | undefined) {
 
             // If Supabase isn't available, return sample data
             if (!supabaseAvailable || !supabase) {
-                return getProfileCoach(coachId) ?? null;
+                return getAllCoaches().find(c => c.id === coachId) ?? null;
             }
 
             // TODO: Supabase query with joins
-            return getProfileCoach(coachId) ?? null;
+            return getAllCoaches().find(c => c.id === coachId) ?? null;
         },
         enabled: !!coachId,
         staleTime: 5 * 60 * 1000,

@@ -219,3 +219,53 @@ export interface DbReferral {
     used_at: string | null;
     created_at: string;
 }
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* Coach Outreach Tracker                                         */
+/* ═══════════════════════════════════════════════════════════════ */
+
+export type OutreachSource = "linkedin" | "tiktok" | "instagram" | "referral" | "other";
+export type OutreachStatus = "found" | "researched" | "reached_out" | "replied" | "interested" | "call_scheduled" | "onboarded" | "not_interested" | "ghosted";
+export type OutreachPriority = "high" | "medium" | "low";
+export type OutreachMethod = "linkedin" | "tiktok" | "email" | "other";
+export type ScriptPlatform = "linkedin" | "tiktok" | "email" | "both";
+
+export interface DbCoachOutreach {
+    id: string;
+    name: string;
+    category: string;
+    university: string;
+    credential: string;
+    credential_year: number | null;
+    source: OutreachSource;
+    tiktok_handle: string;
+    linkedin_url: string;
+    follower_count: number;
+    status: OutreachStatus;
+    priority: OutreachPriority;
+    outreach_method: OutreachMethod;
+    linkedin_message_sent: string | null;
+    linkedin_replied: boolean;
+    linkedin_reply_date: string | null;
+    tiktok_dm_sent: string | null;
+    tiktok_replied: boolean;
+    tiktok_reply_date: string | null;
+    follow_up_date: string | null;
+    follow_up_note: string;
+    notes: string;
+    added_by: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DbOutreachScript {
+    id: string;
+    name: string;
+    platform: ScriptPlatform;
+    content: string;
+    category: string;
+    use_count: number;
+    added_by: string;
+    created_at: string;
+    updated_at: string;
+}

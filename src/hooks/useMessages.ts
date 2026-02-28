@@ -10,14 +10,30 @@ import type { DbConversation, DbMessage } from "@/integrations/supabase/types";
 export function useConversations() {
     const { user } = useAuth();
 
-    return useQuery<DbConversation[]>({
+    return useQuery({
         queryKey: ["conversations", user?.id],
         queryFn: async () => {
             if (!supabaseAvailable || !supabase || !user) return [];
 
             const { data, error } = await supabase
                 .from("conversations")
-                .select("*")
+                .select(`
+                    *,
+                    coach:coaches(
+                        id,
+                        user_id,
+                        headline,
+                        user:users(name, avatar_url)
+                    ),
+                    student:users(name, avatar_url),
+                    messages(
+                        id,
+                        content,
+                        created_at,
+                        is_read,
+                        sender_id
+                    )
+                `)
                 .or(`student_id.eq.${user.id},coach_id.in.(select id from coaches where user_id = '${user.id}')`)
                 .order("last_message_at", { ascending: false });
 
@@ -25,7 +41,7 @@ export function useConversations() {
                 console.error("Error fetching conversations:", error);
                 return [];
             }
-            return (data as DbConversation[]) ?? [];
+            return data ?? [];
         },
         enabled: !!user,
         staleTime: 60 * 1000,

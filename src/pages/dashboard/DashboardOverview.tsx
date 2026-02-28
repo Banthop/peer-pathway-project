@@ -13,13 +13,12 @@ import {
 import { RescheduleModal } from "@/components/RescheduleModal";
 import {
   allCoaches,
-  upcomingSessions,
-  pastBookings,
   deadlines,
   referralInfo,
 } from "@/data/dashboardData";
 import { CoachCard } from "@/components/dashboard/CoachCard";
 import { freeEvents, userProfile } from "@/data/eventsData";
+import { useStudentBookings } from "@/hooks/useBookings";
 
 /* ─── tiny reusable pieces ──────────────────────────────────── */
 
@@ -121,13 +120,7 @@ function SidebarReferral() {
   );
 }
 
-function SidebarActivity() {
-  const totalSessions = pastBookings.length + upcomingSessions.length;
-  const uniqueCoaches = new Set(
-    [...pastBookings, ...upcomingSessions].map((s) => s.coach)
-  ).size;
-  const reviewCount = pastBookings.filter((s) => s.reviewed).length;
-
+function SidebarActivity({ totalSessions, uniqueCoaches, reviewCount }: { totalSessions: number, uniqueCoaches: number, reviewCount: number }) {
   return (
     <div>
       <h3 className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground mb-4">
@@ -332,69 +325,104 @@ function RecommendedEvents() {
 /* ─── Active User View ──────────────────────────────────────── */
 
 function ActiveUserView() {
+  const { data: dbBookings = [] } = useStudentBookings("all");
+
   const [hoveredCoach, setHoveredCoach] = useState<number | null>(null);
-  const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+  const [hoveredPast, setHoveredPast] = useState<string | null>(null);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState("");
+
+  const mapDbBookingToUI = (b: any, isNext: boolean = false) => {
+    const d = new Date(b.scheduled_at);
+    return {
+      id: b.id,
+      coach: b.coach?.user?.name || "Unknown Coach",
+      credential: b.coach?.headline || "Coach",
+      type: b.type === "intro" ? "Intro Call" : "Session",
+      date: d.toLocaleDateString("en-GB", { month: "short", day: "numeric", year: "numeric" }),
+      time: d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+      duration: `${b.duration} min`,
+      avatar: b.coach?.user?.avatar_url || (b.coach?.user?.name ? b.coach.user.name.substring(0, 2).toUpperCase() : "CC"),
+      isNext,
+      hasMessage: false,
+      price: b.price / 100,
+      reviewed: false, // TODO: review integration
+      rating: 0
+    };
+  };
+
+  const upcomingDb = dbBookings.filter(b => b.status === "confirmed" || b.status === "pending").sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+  const pastDb = dbBookings.filter(b => b.status === "completed" || b.status === "no_show").sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
+
+  const upcomingSessions = upcomingDb.map((b, i) => mapDbBookingToUI(b, i === 0));
+  const pastBookings = pastDb.map(b => mapDbBookingToUI(b));
+
+  const nextSession = upcomingSessions.find((s) => s.isNext);
 
   const unreviewedCount = pastBookings.filter((s) => !s.reviewed).length;
   const bookedCoaches = allCoaches.filter((c) => c.hasBooked);
   const unbookedCoaches = allCoaches.filter((c) => !c.hasBooked).slice(0, 2);
+
+  const actTotalSessions = pastBookings.length + upcomingSessions.length;
+  const actUniqueCoaches = new Set([...pastBookings, ...upcomingSessions].map((s) => s.coach)).size;
+  const actReviewCount = pastBookings.filter((s) => s.reviewed).length;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
       {/* Main column */}
       <div className="space-y-6 min-w-0">
         {/* UP NEXT Hero */}
-        <div className="gradient-hero rounded-[14px] p-6 md:p-7 text-white">
-          <div className="flex items-center justify-between mb-5">
-            <span className="text-[10px] uppercase tracking-widest font-semibold text-white/40">
-              Up next
-            </span>
-            <span className="bg-white/10 rounded-md px-3 py-1 text-[11px] font-semibold text-white">
-              Tomorrow · 2:00 PM
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-[48px] h-[48px] rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-base font-semibold text-white/60 flex-shrink-0">
-                SK
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold tracking-tight mb-0.5">
-                  CV Review
-                </h2>
-                <p className="text-[13px] text-white/50">
-                  with{" "}
-                  <span className="text-white/80 font-medium">Sarah K.</span> ·
-                  Goldman Sachs Spring Week '24
-                </p>
-                <div className="flex items-center gap-3 mt-1.5 text-xs text-white/30">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3" /> Tomorrow
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> 2:00 PM
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> 45 min
-                  </span>
+        {nextSession && (
+          <div className="gradient-hero rounded-[14px] p-6 md:p-7 text-white">
+            <div className="flex items-center justify-between mb-5">
+              <span className="text-[10px] uppercase tracking-widest font-semibold text-white/40">
+                Up next
+              </span>
+              <span className="bg-white/10 rounded-md px-3 py-1 text-[11px] font-semibold text-white">
+                Tomorrow · 2:00 PM
+              </span>
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-[48px] h-[48px] rounded-full bg-white/10 border-2 border-white/20 flex items-center justify-center text-base font-semibold text-white/60 flex-shrink-0">
+                  {nextSession.avatar}
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold tracking-tight mb-0.5">
+                    {nextSession.type}
+                  </h2>
+                  <p className="text-[13px] text-white/50">
+                    with{" "}
+                    <span className="text-white/80 font-medium">{nextSession.coach}</span> ·
+                    {nextSession.credential}
+                  </p>
+                  <div className="flex items-center gap-3 mt-1.5 text-xs text-white/30">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" /> {nextSession.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {nextSession.time}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {nextSession.duration}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => { setRescheduleTarget("Sarah K."); setRescheduleOpen(true); }}
-                className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2 cursor-pointer"
-              >
-                Reschedule
-              </button>
-              <button className="bg-white text-[#111] px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-white/90 transition-colors flex items-center gap-1.5">
-                Join call <ArrowRight className="w-3 h-3" />
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => { setRescheduleTarget(nextSession.coach); setRescheduleOpen(true); }}
+                  className="text-xs text-white/40 hover:text-white/60 transition-colors border border-white/15 rounded-lg px-4 py-2 cursor-pointer"
+                >
+                  Reschedule
+                </button>
+                <button className="bg-white text-[#111] px-5 py-2 rounded-lg text-[13px] font-semibold hover:bg-white/90 transition-colors flex items-center gap-1.5">
+                  Join call <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Upcoming */}
         <div>
@@ -604,7 +632,7 @@ function ActiveUserView() {
       <div className="space-y-6 lg:sticky lg:top-8 lg:self-start">
         <SidebarDeadlines />
         <SidebarReferral />
-        <SidebarActivity />
+        <SidebarActivity totalSessions={actTotalSessions} uniqueCoaches={actUniqueCoaches} reviewCount={actReviewCount} />
       </div>
 
       <RescheduleModal

@@ -7,12 +7,9 @@ import {
   ArrowRight,
   MessageSquare,
 } from "lucide-react";
-import {
-  upcomingSessions,
-  pastBookings,
-} from "@/data/dashboardData";
 import { BookingsCalendar } from "@/components/dashboard/BookingsCalendar";
 import { RescheduleModal } from "@/components/RescheduleModal";
+import { useStudentBookings } from "@/hooks/useBookings";
 
 function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
@@ -36,9 +33,36 @@ export default function DashboardBookings() {
   const [searchParams] = useSearchParams();
   const defaultTab = searchParams.get("tab") || "upcoming";
   const [bookingsTab, setBookingsTab] = useState(defaultTab);
-  const [hoveredPast, setHoveredPast] = useState<number | null>(null);
+  const [hoveredPast, setHoveredPast] = useState<string | null>(null);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState("");
+
+  const { data: dbBookings = [] } = useStudentBookings("all");
+
+  const mapDbBookingToUI = (b: any, isNext: boolean = false) => {
+    const d = new Date(b.scheduled_at);
+    return {
+      id: b.id,
+      coach: b.coach?.user?.name || "Unknown Coach",
+      credential: b.coach?.headline || "Coach",
+      type: b.type === "intro" ? "Intro Call" : "Session",
+      date: d.toLocaleDateString("en-GB", { month: "short", day: "numeric", year: "numeric" }),
+      time: d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+      duration: `${b.duration} min`,
+      avatar: b.coach?.user?.avatar_url || (b.coach?.user?.name ? b.coach.user.name.substring(0, 2).toUpperCase() : "CC"),
+      isNext,
+      hasMessage: false,
+      price: b.price / 100,
+      reviewed: false,
+      rating: 0
+    };
+  };
+
+  const upcomingDb = dbBookings.filter(b => b.status === "confirmed" || b.status === "pending").sort((a, b) => new Date(a.scheduled_at).getTime() - new Date(b.scheduled_at).getTime());
+  const pastDb = dbBookings.filter(b => b.status === "completed" || b.status === "no_show").sort((a, b) => new Date(b.scheduled_at).getTime() - new Date(a.scheduled_at).getTime());
+
+  const upcomingSessions = upcomingDb.map((b, i) => mapDbBookingToUI(b, i === 0));
+  const pastBookings = pastDb.map(b => mapDbBookingToUI(b));
 
   const nextSession = upcomingSessions.find((s) => s.isNext);
   const otherUpcoming = upcomingSessions.filter((s) => !s.isNext);
@@ -91,8 +115,8 @@ export default function DashboardBookings() {
                   key={tab}
                   onClick={() => setBookingsTab(tab)}
                   className={`px-5 py-2 text-[13px] capitalize font-sans rounded-md transition-all duration-200 ${bookingsTab === tab
-                      ? "bg-background text-foreground font-semibold shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
+                    ? "bg-background text-foreground font-semibold shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                     }`}
                 >
                   {tab}{" "}
@@ -232,8 +256,8 @@ export default function DashboardBookings() {
                       onMouseEnter={() => setHoveredPast(session.id)}
                       onMouseLeave={() => setHoveredPast(null)}
                       className={`bg-background border rounded-xl px-6 py-5 transition-all duration-150 ${hoveredPast === session.id
-                          ? "border-foreground/20 -translate-y-0.5 shadow-sm"
-                          : "border-border"
+                        ? "border-foreground/20 -translate-y-0.5 shadow-sm"
+                        : "border-border"
                         }`}
                     >
                       <div className="flex items-start justify-between">
@@ -267,8 +291,8 @@ export default function DashboardBookings() {
                           )}
                           <span
                             className={`text-xs font-medium text-foreground cursor-pointer transition-opacity duration-200 ${hoveredPast === session.id
-                                ? "opacity-100"
-                                : "opacity-0"
+                              ? "opacity-100"
+                              : "opacity-0"
                               }`}
                           >
                             Book again →

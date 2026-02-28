@@ -12,14 +12,25 @@ type BookingStatusFilter = "upcoming" | "past" | "all";
 export function useStudentBookings(status: BookingStatusFilter = "all") {
     const { user } = useAuth();
 
-    return useQuery<DbBooking[]>({
+    return useQuery({
         queryKey: ["student-bookings", user?.id, status],
         queryFn: async () => {
             if (!supabaseAvailable || !supabase || !user) return [];
 
             let query = supabase
                 .from("bookings")
-                .select("*")
+                .select(`
+                    *,
+                    coach:coaches (
+                        id,
+                        headline,
+                        hourly_rate,
+                        user:users (
+                            name,
+                            avatar_url
+                        )
+                    )
+                `)
                 .eq("student_id", user.id)
                 .order("scheduled_at", { ascending: status === "upcoming" });
 
@@ -34,7 +45,7 @@ export function useStudentBookings(status: BookingStatusFilter = "all") {
                 console.error("Error fetching bookings:", error);
                 return [];
             }
-            return (data as DbBooking[]) ?? [];
+            return data ?? [];
         },
         enabled: !!user,
         staleTime: 2 * 60 * 1000,
@@ -63,7 +74,7 @@ export function useCoachBookings(status: BookingStatusFilter = "all") {
 
             let query = supabase
                 .from("bookings")
-                .select("*")
+                .select("*, student:users(name, avatar_url)")
                 .eq("coach_id", coach.id)
                 .order("scheduled_at", { ascending: status === "upcoming" });
 

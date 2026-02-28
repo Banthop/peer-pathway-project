@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { Star, TrendingUp, MessageSquare, ChevronDown } from "lucide-react";
-import {
-    coachReviews, ratingDistribution, ratingBreakdown, coachStats,
-} from "@/data/coachDashboardData";
-import type { StudentReview } from "@/data/coachDashboardData";
+import { useCoachReviews, StudentReview } from "@/hooks/useReviews";
 
 /* ─── Star Rating ───────────────────────────────────────────── */
 
@@ -20,16 +17,36 @@ function StarRating({ rating, size = 13 }: { rating: number; size?: number }) {
 
 /* ─── Rating Overview Sidebar ───────────────────────────────── */
 
-function RatingOverview() {
-    const totalReviews = ratingDistribution.reduce((sum, r) => sum + r.count, 0);
-    const maxCount = Math.max(...ratingDistribution.map((r) => r.count));
+function RatingOverview({ reviews }: { reviews: StudentReview[] }) {
+    const totalReviews = reviews.length;
+
+    // Calculate average
+    const averageRating = totalReviews > 0
+        ? (reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews).toFixed(1)
+        : "0.0";
+
+    // Calculate distribution
+    const ratingDistribution = [5, 4, 3, 2, 1].map(stars => ({
+        stars,
+        count: reviews.filter(r => r.rating === stars).length
+    }));
+
+    const maxCount = Math.max(...ratingDistribution.map((r) => r.count), 1);
+
+    // Mock breakdown since we don't have this in DB yet
+    const ratingBreakdown = {
+        knowledge: 4.9,
+        value: 4.8,
+        responsiveness: 5.0,
+        supportiveness: 4.9
+    };
 
     return (
         <div className="space-y-6">
             {/* Overall */}
             <div className="bg-background border border-border rounded-xl p-6 text-center">
-                <div className="text-4xl font-bold text-foreground mb-2">{coachStats.averageRating}</div>
-                <StarRating rating={coachStats.averageRating} size={18} />
+                <div className="text-4xl font-bold text-foreground mb-2">{averageRating}</div>
+                <StarRating rating={parseFloat(averageRating)} size={18} />
                 <p className="text-xs text-muted-foreground mt-2">{totalReviews} reviews</p>
             </div>
 
@@ -82,8 +99,8 @@ function ReviewCard({ review }: { review: StudentReview }) {
             {/* Header */}
             <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground border border-border">
-                        {review.avatar}
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground border border-border overflow-hidden">
+                        {typeof review.avatar === 'string' && review.avatar.includes('http') ? <img src={review.avatar} alt="avatar" className="w-full h-full object-cover" /> : review.avatar}
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-foreground">{review.student}</p>
@@ -149,18 +166,19 @@ function ReviewCard({ review }: { review: StudentReview }) {
 /* ─── Main Page ─────────────────────────────────────────────── */
 
 export default function CoachReviews() {
+    const { data: dbReviews = [], isLoading } = useCoachReviews();
     const [filter, setFilter] = useState<"all" | "5" | "4" | "3">("all");
 
     const filteredReviews = filter === "all"
-        ? coachReviews
-        : coachReviews.filter((r) => r.rating === parseInt(filter));
+        ? (dbReviews as unknown as StudentReview[])
+        : (dbReviews as unknown as StudentReview[]).filter((r) => r.rating === parseInt(filter));
 
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-2xl font-semibold tracking-tight text-foreground mb-1">Reviews</h1>
-                <p className="text-sm text-muted-foreground">{coachReviews.length} reviews from students</p>
+                <p className="text-sm text-muted-foreground">{dbReviews.length} reviews from students</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
@@ -179,7 +197,9 @@ export default function CoachReviews() {
                     </div>
 
                     {/* Reviews List */}
-                    {filteredReviews.length === 0 ? (
+                    {isLoading ? (
+                        <div className="text-center py-12 text-muted-foreground text-sm">Loading reviews...</div>
+                    ) : filteredReviews.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground text-sm">No reviews match this filter</div>
                     ) : (
                         filteredReviews.map((review) => (
@@ -190,7 +210,7 @@ export default function CoachReviews() {
 
                 {/* Sidebar */}
                 <div className="lg:sticky lg:top-8 lg:self-start">
-                    <RatingOverview />
+                    <RatingOverview reviews={dbReviews as unknown as StudentReview[]} />
                 </div>
             </div>
         </div>
