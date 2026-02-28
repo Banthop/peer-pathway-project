@@ -38,25 +38,29 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8">
           {/* Logo & Socials */}
           <div className="col-span-2 md:col-span-1">
-            <Logo className="text-2xl mb-6 block" />
-            <div className="flex gap-4">
+            <Logo className="text-2xl mb-3 block !text-dark-foreground" />
+            <p className="text-[13px] text-dark-foreground/40 font-light mb-5 leading-relaxed">Peer coaching for students<br />who want the edge.</p>
+            <div className="flex gap-3">
               <a
                 href="#"
-                className="text-dark-foreground/60 hover:text-dark-foreground transition-colors"
+                aria-label="Twitter"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
               >
-                <Twitter className="w-5 h-5" />
+                <Twitter className="w-[18px] h-[18px]" />
               </a>
               <a
                 href="#"
-                className="text-dark-foreground/60 hover:text-dark-foreground transition-colors"
+                aria-label="LinkedIn"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
               >
-                <Linkedin className="w-5 h-5" />
+                <Linkedin className="w-[18px] h-[18px]" />
               </a>
               <a
                 href="#"
-                className="text-dark-foreground/60 hover:text-dark-foreground transition-colors"
+                aria-label="Instagram"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="w-[18px] h-[18px]" />
               </a>
             </div>
           </div>
@@ -86,7 +90,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-dark-foreground/10">
           <p className="text-sm text-dark-foreground/40 font-sans font-light">
-            © 2025 EarlyEdge. All rights reserved.
+            © 2026 EarlyEdge. All rights reserved.
           </p>
         </div>
       </div>

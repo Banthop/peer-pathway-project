@@ -14,13 +14,13 @@ const FinalCTA = () => {
             size="lg"
             className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"
           >
-            Find Your Coach
+            Book a Free Intro
           </Button>
         </Link>
 
         {/* Trust Indicators */}
         <p className="mt-6 text-sm text-muted-foreground font-sans font-light">
-          Free intro call · No commitment · Cancel anytime
+          No commitment required &nbsp;·&nbsp; Cancel anytime
         </p>
       </div>
     </section>
@@ -28,3 +28,4 @@ const FinalCTA = () => {
 };
 
 export default FinalCTA;
+

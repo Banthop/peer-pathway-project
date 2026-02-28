@@ -1,10 +1,9 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import SocialProof from "@/components/SocialProof";
 import HowItWorks from "@/components/HowItWorks";
 import FeaturedCoaches from "@/components/FeaturedCoaches";
-import WhyEarlyEdge from "@/components/WhyEarlyEdge";
-import Reviews from "@/components/Reviews";
+import ResourceBank from "@/components/ResourceBank";
+import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -15,9 +14,6 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
-        <ScrollReveal>
-          <SocialProof />
-        </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <HowItWorks />
         </ScrollReveal>
@@ -25,10 +21,10 @@ const Index = () => {
           <FeaturedCoaches />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <WhyEarlyEdge />
+          <ResourceBank />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
-          <Reviews />
+          <FAQ />
         </ScrollReveal>
         <ScrollReveal delay={0.1}>
           <FinalCTA />

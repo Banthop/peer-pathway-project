@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import CoachProfile from "./pages/CoachProfile";
 import NotFound from "./pages/NotFound";
@@ -30,43 +31,75 @@ import Guarantee from "./pages/Guarantee";
 
 const queryClient = new QueryClient();
 
+/**
+ * Wraps a route that requires authentication.
+ * Redirects to /login when user is not signed in.
+ * While auth state is loading, shows nothing (avoids flash).
+ */
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) return null; // auth still initialising
+  if (!user) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
+/**
+ * Redirects authenticated users away from auth pages (login/signup).
+ * Students → /dashboard, Coaches → /coach-dashboard.
+ */
+function GuestRoute({ children }: { children: React.ReactNode }) {
+  const { user, userType, loading } = useAuth();
+  if (loading) return null;
+  if (user) {
+    const dest = userType === "coach" ? "/coach-dashboard" : "/dashboard";
+    return <Navigate to={dest} replace />;
+  }
+  return <>{children}</>;
+}
+
+const AppRoutes = () => (
+  <Routes>
+    <Route path="/" element={<Index />} />
+    <Route path="/coach/:coachId" element={<CoachProfile />} />
+    <Route path="/become-a-coach" element={<BecomeACoach />} />
+    <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+    <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
+    <Route path="/forgot-password" element={<ForgotPassword />} />
+    <Route path="/coach/signup" element={<GuestRoute><CoachSignup /></GuestRoute>} />
+    <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+      <Route index element={<DashboardOverview />} />
+      <Route path="bookings" element={<DashboardBookings />} />
+      <Route path="browse" element={<DashboardBrowse />} />
+      <Route path="messages" element={<DashboardMessages />} />
+      <Route path="events" element={<DashboardEvents />} />
+    </Route>
+    <Route path="/coach-dashboard" element={<ProtectedRoute><CoachDashboardLayout /></ProtectedRoute>}>
+      <Route index element={<CoachOverview />} />
+      <Route path="sessions" element={<CoachSessions />} />
+      <Route path="messages" element={<CoachMessages />} />
+      <Route path="earnings" element={<CoachEarnings />} />
+      <Route path="reviews" element={<CoachReviews />} />
+      <Route path="edit-profile" element={<CoachEditProfile />} />
+      <Route path="analytics" element={<CoachAnalytics />} />
+    </Route>
+    <Route path="/guarantee" element={<Guarantee />} />
+    <Route path="/admin/coaches" element={<ProtectedRoute><AdminCoaches /></ProtectedRoute>} />
+    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/coach/:coachId" element={<CoachProfile />} />
-          <Route path="/become-a-coach" element={<BecomeACoach />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/coach/signup" element={<CoachSignup />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<DashboardOverview />} />
-            <Route path="bookings" element={<DashboardBookings />} />
-            <Route path="browse" element={<DashboardBrowse />} />
-            <Route path="messages" element={<DashboardMessages />} />
-            <Route path="events" element={<DashboardEvents />} />
-          </Route>
-          <Route path="/coach-dashboard" element={<CoachDashboardLayout />}>
-            <Route index element={<CoachOverview />} />
-            <Route path="sessions" element={<CoachSessions />} />
-            <Route path="messages" element={<CoachMessages />} />
-            <Route path="earnings" element={<CoachEarnings />} />
-            <Route path="reviews" element={<CoachReviews />} />
-            <Route path="edit-profile" element={<CoachEditProfile />} />
-            <Route path="analytics" element={<CoachAnalytics />} />
-          </Route>
-          <Route path="/guarantee" element={<Guarantee />} />
-          <Route path="/admin/coaches" element={<AdminCoaches />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

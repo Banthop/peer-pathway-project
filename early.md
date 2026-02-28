@@ -12,7 +12,33 @@ EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 session
 
 **Target market:** UK students. Demand side = sixth formers applying to uni, university students applying for internships/graduate roles. Supply side = students and recent grads who achieved competitive outcomes.
 
-**Revenue model:** Platform takes commission on paid sessions. Free intro calls (15 min) have no charge.
+**Revenue model:** Platform takes commission on paid sessions, group events, and paid resources. Free intro calls (15 min) have no charge.
+
+### Revenue Streams
+
+**1-on-1 Sessions & Packages (Core)**
+- Coaches set their own per-session prices (typically £25-60/hour)
+- Packages (3-5 sessions) are the default, not an upsell — 3.75x higher AOV
+
+**Group Sessions / Workshops:**
+- Coaches create ticketed group events (workshops, bootcamps, AMAs, panels)
+- Pricing: typically £15-25 per attendee for workshops, £50-100 for multi-session bootcamps
+- Platform takes the same commission as 1-on-1 sessions
+- Example: "Spring Week Conversion Workshop" — 1 coach, 15 students, £20 each = £300 total
+
+**Paid Resources / Digital Products:**
+- Coaches upload and sell guides, templates, checklists, toolkits
+- Pricing: £5-15 per resource (impulse purchase territory for students)
+- Free resources exist as lead magnets — require account creation to access
+- Platform takes 20% of paid resource sales
+- Example: "My exact Goldman Sachs application — annotated" — £10, sells repeatedly with zero marginal cost
+
+**Events (Larger Scale):**
+- Ticketed webinars, panels, live Q&As
+- Pricing: £10-20 per ticket, 20-50+ attendees
+- Example: "AMA with a Goldman Sachs Analyst — £10, 50 spots"
+
+> The revenue stack is designed so a single student can spend money in multiple ways: free intro → paid session/package → group workshop → paid resource → more sessions. Average revenue per student should increase over time as more products become available.
 
 ### Commission Structure
 - **New coaches (first 5 sessions):** 30% platform commission
@@ -39,6 +65,14 @@ EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 session
 8. Cold emailing is its own coaching category
 9. Internship conversion is a significant market (even without converting, the process knowledge is valuable)
 10. Spring Weeks > Summers for coaching (you can only do one summer)
+
+### Categories (22 total)
+
+**Original 12:**
+Investment Banking, Consulting, Law (Vac Schemes), Law (Training Contracts), UCAT, STEP, Oxbridge Applications, University Applications, Software Engineering, Quant Finance, Cold Emailing, Internship Conversion
+
+**New 10:**
+Assessment Centre Prep, IELTS / TOEFL, SQE Prep, Scholarship Applications, Graduate Schemes, Dissertation Coaching, CV & Application Review, LinkedIn & Professional Branding, Medical School (MMI), First-Class Degree Coaching
 
 ---
 
@@ -68,20 +102,22 @@ EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 session
 ## 3. Design System
 
 ### Typography
-- **Primary font:** DM Sans (weights: 400, 500, 600, 700) — used for all body text, labels, buttons, navigation
-- **Display/Serif font:** Instrument Serif (weight: 400) — used for page titles ("Welcome back, Alex"), the logo, and large headings only
-- **Google Fonts import:** `https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&display=swap`
+- **Primary font:** Inter (weights: 300 Light, 400 Regular, 500 Medium, 600 Semi Bold, 700 Bold, 800 Extra Bold)
+- **No serif font.** No Instrument Serif anywhere. Not for headings, not for the logo, not for display text.
+- **Google Fonts import:** `https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap`
 
 ### Font Sizes (Reference Scale)
 | Element | Size | Weight | Font |
 |---------|------|--------|------|
-| Page title | 24-28px | 400 | Instrument Serif |
-| Section heading | 16px | 600 | DM Sans |
-| Sub-heading / label | 13px | 600 | DM Sans |
-| Body text | 13-14px | 400-500 | DM Sans |
-| Small text / metadata | 11-12px | 400-500 | DM Sans |
-| Tiny labels (uppercase) | 10-11px | 600, uppercase, letter-spacing: 0.08-0.1em | DM Sans |
-| Button text | 13px | 600 | DM Sans |
+| Hero headline | 48-64px | 700-800 | Inter |
+| Page title | 24-28px | 700 | Inter |
+| Section heading | 16-18px | 600 | Inter |
+| Sub-heading / label | 13px | 600 | Inter |
+| Body text | 13-14px | 400 | Inter |
+| Light body / secondary | 13-14px | 300 | Inter |
+| Small text / metadata | 11-12px | 400-500 | Inter |
+| Tiny labels (uppercase) | 10-11px | 600, uppercase, tracking wide | Inter |
+| Button text | 13px | 600 | Inter |
 
 ### Colours
 **EarlyEdge is strictly black and white. No accent colours.**
@@ -367,6 +403,83 @@ CREATE TABLE season_banners (
 );
 ```
 
+### `trending_topics`
+```sql
+CREATE TABLE trending_topics (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  label TEXT NOT NULL,
+  category TEXT NOT NULL,
+  emoji TEXT,
+  sort_order INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+### `events`
+```sql
+CREATE TABLE events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  coach_id UUID REFERENCES coaches(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  event_type TEXT NOT NULL CHECK (event_type IN ('workshop', 'bootcamp', 'ama', 'panel')),
+  category TEXT,
+  scheduled_at TIMESTAMPTZ NOT NULL,
+  duration INTEGER NOT NULL,
+  max_attendees INTEGER NOT NULL DEFAULT 20,
+  current_attendees INTEGER DEFAULT 0,
+  price INTEGER NOT NULL DEFAULT 0, -- pence
+  meeting_link TEXT,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+### `event_registrations`
+```sql
+CREATE TABLE event_registrations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id UUID REFERENCES events(id) ON DELETE CASCADE NOT NULL,
+  student_id UUID REFERENCES users(id) NOT NULL,
+  stripe_payment_intent_id TEXT,
+  status TEXT DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'cancelled')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(event_id, student_id)
+);
+```
+
+### `resources`
+```sql
+CREATE TABLE resources (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  coach_id UUID REFERENCES coaches(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  category TEXT,
+  resource_type TEXT NOT NULL CHECK (resource_type IN ('guide', 'template', 'checklist', 'toolkit', 'article')),
+  price INTEGER NOT NULL DEFAULT 0, -- pence (0 = free)
+  file_url TEXT,
+  preview_text TEXT,
+  download_count INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  is_featured BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+### `resource_purchases`
+```sql
+CREATE TABLE resource_purchases (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  resource_id UUID REFERENCES resources(id) NOT NULL,
+  student_id UUID REFERENCES users(id) NOT NULL,
+  stripe_payment_intent_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(resource_id, student_id)
+);
+```
+
 ---
 
 ## 5. Row Level Security (RLS) Policies
@@ -410,6 +523,37 @@ CREATE POLICY "Coach can manage packages" ON coach_packages FOR ALL USING (auth.
 ALTER TABLE coach_services ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can view services" ON coach_services FOR SELECT USING (is_active = true);
 CREATE POLICY "Coach can manage services" ON coach_services FOR ALL USING (auth.uid() IN (SELECT user_id FROM coaches WHERE id = coach_id));
+
+-- Trending topics: anyone can read active
+ALTER TABLE trending_topics ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view active topics" ON trending_topics FOR SELECT USING (is_active = true);
+
+-- Events: public read for active, coaches manage own
+ALTER TABLE events ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view active events" ON events FOR SELECT USING (is_active = true);
+CREATE POLICY "Coaches manage their events" ON events FOR ALL USING (
+  coach_id IN (SELECT id FROM coaches WHERE user_id = auth.uid())
+);
+
+-- Event registrations: students see own, coaches see their event's
+ALTER TABLE event_registrations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Students see own registrations" ON event_registrations FOR SELECT USING (student_id = auth.uid());
+CREATE POLICY "Coaches see their event registrations" ON event_registrations FOR SELECT USING (
+  event_id IN (SELECT id FROM events WHERE coach_id IN (SELECT id FROM coaches WHERE user_id = auth.uid()))
+);
+CREATE POLICY "Students can register" ON event_registrations FOR INSERT WITH CHECK (student_id = auth.uid());
+
+-- Resources: public read for active, coaches manage own
+ALTER TABLE resources ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can view active resources" ON resources FOR SELECT USING (is_active = true);
+CREATE POLICY "Coaches manage their resources" ON resources FOR ALL USING (
+  coach_id IN (SELECT id FROM coaches WHERE user_id = auth.uid())
+);
+
+-- Resource purchases: students see own
+ALTER TABLE resource_purchases ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Students see own purchases" ON resource_purchases FOR SELECT USING (student_id = auth.uid());
+CREATE POLICY "Students can purchase" ON resource_purchases FOR INSERT WITH CHECK (student_id = auth.uid());
 ```
 
 ---
@@ -504,6 +648,30 @@ GET    /admin/revenue                   -- Revenue breakdown by period
 POST   /admin/season-banners            -- Create/update seasonal banners
 ```
 
+### Events
+```
+GET  /events              -- list active events with filters (category, date range, coach)
+GET  /events/:id          -- single event with attendee count
+POST /events              -- create event (coach only)
+PUT  /events/:id          -- update event (owning coach only)
+POST /events/:id/register -- register for event (creates event_registration, triggers Stripe if paid)
+```
+
+### Resources
+```
+GET  /resources            -- list active resources with filters (category, type, free/paid)
+GET  /resources/:id        -- single resource (preview for paid, full for purchased/free)
+POST /resources            -- create resource (coach only, file upload to Supabase Storage)
+PUT  /resources/:id        -- update resource (owning coach only)
+POST /resources/:id/purchase -- purchase resource (creates resource_purchase, triggers Stripe)
+GET  /resources/:id/download -- download file (only if purchased or free)
+```
+
+### Trending Topics
+```
+GET /trending-topics -- list active trending topics sorted by sort_order
+```
+
 ---
 
 ## 7. Stripe Connect Payment Flow
@@ -567,6 +735,26 @@ $$ LANGUAGE plpgsql;
 3. 24 hours after: send review prompt email to student
 4. If refund requested within 24 hours of first session: full refund via Stripe
 ```
+
+### Event Payment Flow
+1. Student clicks "Register" on an event
+2. If event price > 0: Edge Function creates PaymentIntent with `application_fee_amount` (commission)
+3. Frontend confirms payment via Stripe Elements
+4. On success: create `event_registration`, increment `current_attendees`
+5. If event price = 0: create `event_registration` directly, no Stripe
+
+### Resource Payment Flow
+1. Student clicks "Get access" on a paid resource
+2. Edge Function creates PaymentIntent with `application_fee_amount` (commission)
+3. Frontend confirms payment via Stripe Elements
+4. On success: create `resource_purchase`, reveal download link
+5. Free resources skip Stripe — require account creation only
+
+### Payment Splitting for Packages
+For packages over £100, offer "Pay per session" option:
+- Default display: "Pay per session: £30 × 5"
+- Alternative: "Pay upfront and save 5%: £142"
+- Stripe charges per session before each scheduled session
 
 ---
 
@@ -748,6 +936,11 @@ Using Cal.com integration or custom via Resend/SendGrid:
 | Booking confirmation | Not started | Success page with details + calendar add |
 | Leave review | Not started | Star rating, text, optional outcome badge |
 | Settings | Not started | Name, email, password change |
+| `/dashboard/resources` | Not started | `DashboardResources`: Browse free and paid resources from coaches |
+
+**Updated navigation:**
+- Student sidebar: Overview, Browse Coaches, Events, Resources, My Bookings, Messages
+- Coach sidebar: Overview, Sessions, Events, Resources, Messages, Earnings, Reviews, Edit Profile, Analytics
 
 ### Coach Pages (Auth Required)
 | Page | Status | Notes |
@@ -875,3 +1068,91 @@ CREATE TRIGGER on_booking_completed
 11. **Meeting links:** Auto-generate Google Meet links using Google Calendar API, or let coaches paste their own Zoom/Meet links. Start with manual (coach pastes link), automate later.
 
 12. **File uploads:** Students should be able to attach CVs/documents in messages. Use Supabase Storage with a 10MB file size limit. Allowed types: PDF, DOCX, PNG, JPG.
+
+---
+
+## 17. Pricing Display Rules
+
+### Per-Session Framing
+- Always show per-session price as the primary/largest number
+- Total package price is secondary, smaller text
+- Crossed-out "individual session price × sessions" shows savings
+- Example: "**£30/session** · 5 sessions · £150 total · ~~£200 individually~~"
+
+### Three-Tier Display
+Every coach profile shows three options side by side:
+1. **Single session** (highest per-session price — serves as anchor/decoy)
+2. **Main package** (highlighted as "Most popular" — the option you want them to buy)
+3. **Shorter package** (mid-tier option for price-sensitive students)
+
+The primary CTA below all tiers is always "Book free intro — 15 min, no charge." The tiers are informational — purchase happens after the free intro.
+
+### Anchoring
+Show a subtle comparison on coach profiles:
+- Default: "Typical career coach: £150+/hr → EarlyEdge coaches: from £X/session"
+- UCAT: "UCAT prep courses: £500-2,000 → 1-on-1 coaching: from £35/session"
+- SQE: "SQE prep courses: £3,000+ → 1-on-1 coaching: from £30/session"
+
+### Package Naming
+All packages must be outcome-focused. Never "5 Session Bundle."
+Examples: "Spring Week Conversion Programme", "Vac Scheme Secured", "UCAT Score Boost: 2800→3100+", "Cold Email Masterclass"
+
+### No Empty Social Proof
+- Do NOT show star ratings until a coach has 3+ reviews
+- Do NOT show session counts until a coach has 3+ sessions
+- Do NOT show "New coach" badges at launch (when everyone is new, it's meaningless)
+- Simply omit these elements. Show them only when real data exists.
+- Credentials (firm/university logos + headline) serve as the trust signal until reviews accumulate.
+
+### Founding Coach Pricing
+For founding coaches: show "Founding price: £25/session ~~(normally £35)~~" with "Founding prices end [date]"
+
+---
+
+## 18. Landing Page Structure
+
+1. **Seasonal banner** — thin, dismissible, pulls from `season_banners` table. Shows current urgent deadlines.
+2. **Header** — EarlyEdge | Browse | Become a Coach | How it works | Log in | Get Started
+3. **Hero** — headline "Your edge, unlocked." in Inter Bold. Subheadline. Guided category selector (NOT a free-text search bar). Floating uni/firm logos. NO floating coach cards. Anchor text: "Book a free intro call · Sessions from £25 · Packages from £99"
+4. **How it works** — 3 steps. "Browse coaches" button (not "Get Started"). 15-minute free intro (not 10).
+5. **Featured coaches** — redesigned cards showing: avatar, name, credential, tagline (outcome-focused), service tags, signature package name + session count, per-session price. NO ratings/review counts at launch.
+6. **Resource bank** — white background (no dark container). Trending topics row. Category filters. Coach booking links on each resource. Sign-up gate for access.
+7. **FAQ** — For Students / For Coaches toggle. No changes.
+8. **Final CTA** — "Your future self will thank you." + "Book a Free Intro" button.
+9. **Footer** — no changes.
+
+**Removed sections:**
+- "Coaches From 50+ Universities and Firms" + headshot strip — DELETED (redundant with hero logos and featured coaches)
+- "Why students choose EarlyEdge" — DELETED (redundant with hero subheadline)
+
+---
+
+## 19. Coach Card Spec
+
+### Featured Coach Card (Landing Page)
+```text
+[Avatar] Name · University '24
+         Credential headline
+
+"Outcome-focused tagline — what students get from working with this coach"
+
+Service Tag · Service Tag · Service Tag
+
+[Package Name] · X sessions
+
+from £X/session
+
+[View profile →]  [Book free intro]
+```
+
+### Browse Coach Card (Dashboard)
+Same as above but may include:
+- Rating (only if 3+ reviews exist)
+- "X spots available this week" (if availability data supports it)
+
+### What NOT to show:
+- No ratings until 3+ reviews
+- No session counts until 3+ sessions
+- No "New coach" badge
+- No hourly rate as primary price (always per-session within package context)
+

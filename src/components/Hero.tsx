@@ -9,268 +9,266 @@ import logoImperial from "@/assets/logo-imperial-new.png";
 import logoMckinsey from "@/assets/logo-mckinsey-new.png";
 import logoCliffordChance from "@/assets/logo-clifford-chance.png";
 import logoOxford from "@/assets/logo-oxford.png";
-import logoCitadel from "@/assets/logo-citadel.png";
-import logoMeta from "@/assets/logo-meta.png";
 import logoGoldmanSachs from "@/assets/logo-goldman-sachs.png";
+import logoJaneStreet from "@/assets/logo-jane-street.png";
+import logoGoogle from "@/assets/logo-google.png";
 import logoCambridge from "@/assets/logo-cambridge.png";
-import coachSarahCard from "@/assets/coach-sarah-card.png";
-import coachDavidCard from "@/assets/coach-david-card.png";
 
+// Reordered for current seasonal relevance (Feb–Apr 2026)
 const popularCategories = [
-  "Investment Banking",
-  "Consulting",
-  "Spring Weeks",
-  "Oxbridge",
   "Law",
-  "University Applications",
-  "Personal Statements",
-  "Software Engineering",
+  "Assessment Centre Prep",
+  "Cold Emailing",
+  "Consulting",
+  "Investment Banking",
   "UCAT",
-  "Quantitative Finance",
+  "Graduate Schemes",
+  "Oxbridge",
+  "Software Engineering",
+  "Personal Statements",
 ];
 
-// Floating Coach Card Image Component
-const FloatingCoachCard = ({
-  imageSrc,
-  className,
-  style
+// 3D Logo Box Component — thick floating tile with visible edges
+const LogoBox = ({
+  src,
+  alt,
+  size = 72,
+  tiltX = 0,
+  tiltY = 0,
+  className = "",
+  animationClass = "animate-float",
+  delay = "0s",
+  style,
 }: {
-  imageSrc: string;
+  src: string;
+  alt: string;
+  size?: number;
+  tiltX?: number;
+  tiltY?: number;
   className?: string;
+  animationClass?: string;
+  delay?: string;
   style?: React.CSSProperties;
-}) => (
-  <div
-    className={`absolute ${className}`}
-    style={{
-      filter: 'drop-shadow(0 10px 25px rgba(0,0,0,0.15))',
-      ...style
-    }}
-  >
-    <img
-      src={imageSrc}
-      alt="Coach card"
-      className="w-full h-auto"
-    />
-  </div>
-);
-
-
-// Floating Logo Component
-const FloatingLogo = ({
-  children,
-  className,
-  style
-}: {
-  children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-}) => (
-  <div
-    className={`absolute ${className}`}
-    style={{
-      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15)) drop-shadow(0 4px 6px rgba(0,0,0,0.1))',
-      ...style
-    }}
-  >
-    {children}
-  </div>
-);
+}) => {
+  return (
+    <div
+      className={`absolute hidden lg:block ${animationClass}`}
+      style={{
+        animationDelay: delay,
+        perspective: '600px',
+        ...style,
+      }}
+    >
+      <div
+        className="relative"
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          transform: `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
+          transformStyle: 'preserve-3d',
+        }}
+      >
+        {/* Front face with glassy effect */}
+        <div
+          className={`absolute inset-0 bg-white/95 backdrop-blur-sm rounded-xl overflow-hidden flex items-center justify-center ${className}`}
+          style={{
+            border: '2.5px solid rgba(0,0,0,0.18)',
+            boxShadow: `
+              inset 0 2px 4px rgba(255,255,255,0.9),
+              inset 0 -2px 6px rgba(0,0,0,0.05),
+              0 2px 4px rgba(0,0,0,0.06),
+              0 8px 16px rgba(0,0,0,0.08),
+              0 20px 40px -8px rgba(0,0,0,0.12),
+              0 32px 64px -12px rgba(0,0,0,0.1)
+            `,
+          }}
+        >
+          {/* Angled Glass Reflection */}
+          <div
+            className="absolute inset-0 pointer-events-none z-[2]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 100%)',
+              borderRadius: '10px',
+            }}
+          />
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-full object-contain relative z-[1]"
+            style={{ borderRadius: '10px' }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Hero = () => {
   const navigate = useNavigate();
   return (
     <section
       className="relative flex items-center justify-center pt-20 pb-12 overflow-hidden bg-white"
-      style={{ minHeight: '78vh', maxHeight: '820px' }}
+      style={{ minHeight: "78vh", maxHeight: "820px" }}
     >
-
-      {/* Background Layer - Floating Elements */}
+      {/* Background Layer - Floating 3D Logo Boxes */}
       <div className="absolute inset-0 pointer-events-none z-[1]">
 
-        {/* LEFT CLUSTER - Universities */}
+        {/* ───── LEFT CLUSTER — Universities ───── */}
 
-        {/* Oxford Logo - under Sarah, slightly right */}
-        <div
-          className="absolute hidden xl:block animate-float"
-          style={{ top: '65%', left: '16%', width: '75px', animationDelay: '0s' }}
-        >
-          <img
-            src={logoOxford}
-            alt="University of Oxford"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* Cambridge Logo - bottom left corner */}
-        <div
-          className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', left: '6%', width: '75px', animationDelay: '0.5s' }}
-        >
-          <img
-            src={logoCambridge}
-            alt="University of Cambridge"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* Sarah Coach Card - moved more left */}
-        <FloatingCoachCard
-          className="hidden xl:block animate-float"
-          imageSrc={coachSarahCard}
-          style={{
-            top: '38%',
-            left: '14%',
-            width: '220px',
-            transform: 'rotate(-12deg)',
-            animationDelay: '0.3s'
-          }}
+        {/* Oxford — mid-left */}
+        <LogoBox
+          src={logoOxford}
+          alt="University of Oxford"
+          size={92}
+          tiltX={-6}
+          tiltY={14}
+          animationClass="animate-float-gentle"
+          delay="0s"
+          className="hidden xl:flex"
+          style={{ top: "62%", left: "14%" }}
         />
 
-        {/* UCL Logo - upper left */}
-        <div
-          className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '34%', left: '2%', width: '80px', animationDelay: '1s' }}
-        >
-          <img
-            src={logoUcl}
-            alt="UCL"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* Imperial Logo - far bottom left */}
-        <div
-          className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '88%', left: '4%', width: '65px', animationDelay: '1.5s' }}
-        >
-          <img
-            src={logoImperial}
-            alt="Imperial College London"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* LSE Logo - moved more inward bottom */}
-        <div
-          className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '85%', left: '22%', width: '65px', animationDelay: '2s' }}
-        >
-          <img
-            src={logoLse}
-            alt="LSE"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* RIGHT CLUSTER - Companies */}
-
-        {/* Goldman Sachs Logo - under David, slightly left */}
-        <div
-          className="absolute hidden xl:block animate-float"
-          style={{ top: '65%', right: '16%', width: '75px', animationDelay: '0.3s' }}
-        >
-          <img
-            src={logoGoldmanSachs}
-            alt="Goldman Sachs"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* Citadel Logo - bottom right corner */}
-        <div
-          className="absolute hidden lg:block animate-float-gentle"
-          style={{ top: '62%', right: '6%', width: '75px', animationDelay: '0.8s' }}
-        >
-          <img
-            src={logoCitadel}
-            alt="Citadel Securities"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
-
-        {/* David Coach Card - moved more right */}
-        <FloatingCoachCard
-          className="hidden xl:block animate-float-reverse"
-          imageSrc={coachDavidCard}
-          style={{
-            top: '42%',
-            right: '12%',
-            width: '280px',
-            transform: 'rotate(12deg)',
-            animationDelay: '0.6s'
-          }}
+        {/* Cambridge — lower-left */}
+        <LogoBox
+          src={logoCambridge}
+          alt="University of Cambridge"
+          size={92}
+          tiltX={-10}
+          tiltY={12}
+          animationClass="animate-float-slow"
+          delay="1.2s"
+          style={{ top: "58%", left: "4%" }}
         />
 
-        {/* Clifford Chance Logo - upper right */}
-        <div
-          className="absolute hidden lg:block animate-float-slow"
-          style={{ top: '34%', right: '2%', width: '80px', animationDelay: '1.3s' }}
-        >
-          <img
-            src={logoCliffordChance}
-            alt="Clifford Chance"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
+        {/* UCL — upper left */}
+        <LogoBox
+          src={logoUcl}
+          alt="UCL"
+          size={100}
+          tiltX={10}
+          tiltY={16}
+          animationClass="animate-float"
+          delay="0.6s"
+          style={{ top: "28%", left: "1%" }}
+        />
 
-        {/* McKinsey Logo - moved more inward bottom */}
-        <div
-          className="absolute hidden xl:block animate-float-gentle"
-          style={{ top: '85%', right: '22%', width: '65px', animationDelay: '1.8s' }}
-        >
-          <img
-            src={logoMckinsey}
-            alt="McKinsey & Company"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
+        {/* Imperial — far bottom left */}
+        <LogoBox
+          src={logoImperial}
+          alt="Imperial College London"
+          size={88}
+          tiltX={-12}
+          tiltY={8}
+          animationClass="animate-float-slow"
+          delay="2s"
+          className="hidden xl:flex"
+          style={{ top: "84%", left: "3%" }}
+        />
 
-        {/* Meta Logo - far bottom right */}
-        <div
-          className="absolute hidden xl:block animate-float-slow"
-          style={{ top: '88%', right: '4%', width: '75px', animationDelay: '2.3s' }}
-        >
-          <img
-            src={logoMeta}
-            alt="Meta"
-            className="w-full h-auto"
-            style={{ boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5), 0 12px 24px -8px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)' }}
-          />
-        </div>
+        {/* LSE — inward bottom left */}
+        <LogoBox
+          src={logoLse}
+          alt="LSE"
+          size={88}
+          tiltX={-8}
+          tiltY={14}
+          animationClass="animate-float-gentle"
+          delay="1.5s"
+          className="hidden xl:flex"
+          style={{ top: "82%", left: "20%" }}
+        />
 
+        {/* ───── RIGHT CLUSTER — Companies ───── */}
+
+        {/* Goldman Sachs — mid-right */}
+        <LogoBox
+          src={logoGoldmanSachs}
+          alt="Goldman Sachs"
+          size={92}
+          tiltX={-6}
+          tiltY={-14}
+          animationClass="animate-float-slow"
+          delay="0.4s"
+          className="hidden xl:flex"
+          style={{ top: "62%", right: "14%" }}
+        />
+
+        {/* Jane Street — lower right */}
+        <LogoBox
+          src={logoJaneStreet}
+          alt="Jane Street"
+          size={92}
+          tiltX={-10}
+          tiltY={-12}
+          animationClass="animate-float"
+          delay="1s"
+          style={{ top: "58%", right: "4%" }}
+        />
+
+        {/* Clifford Chance — upper right */}
+        <LogoBox
+          src={logoCliffordChance}
+          alt="Clifford Chance"
+          size={100}
+          tiltX={10}
+          tiltY={-16}
+          animationClass="animate-float-gentle"
+          delay="1.4s"
+          style={{ top: "28%", right: "1%" }}
+        />
+
+        {/* McKinsey — inward bottom right */}
+        <LogoBox
+          src={logoMckinsey}
+          alt="McKinsey & Company"
+          size={88}
+          tiltX={-8}
+          tiltY={-14}
+          animationClass="animate-float"
+          delay="1.8s"
+          className="hidden xl:flex"
+          style={{ top: "82%", right: "20%" }}
+        />
+
+        {/* Google — far bottom right */}
+        <LogoBox
+          src={logoGoogle}
+          alt="Google"
+          size={88}
+          tiltX={-12}
+          tiltY={-8}
+          animationClass="animate-float-slow"
+          delay="2.2s"
+          className="hidden xl:flex"
+          style={{ top: "84%", right: "3%" }}
+        />
 
       </div>
 
       {/* Foreground Content */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
         <h1
-          className="text-foreground mb-6 animate-fade-up whitespace-nowrap"
+          className="text-foreground mb-6 animate-fade-up whitespace-nowrap font-sans"
           style={{
-            fontFamily: '"Source Serif 4", Georgia, serif',
-            fontWeight: 600,
-            fontSize: 'clamp(40px, 8vw, 84px)',
-            lineHeight: '0.98',
-            textAlign: 'center'
+            fontWeight: 700,
+            fontSize: "clamp(40px, 8vw, 84px)",
+            lineHeight: "0.98",
+            letterSpacing: "-0.02em",
+            textAlign: "center",
           }}
         >
           Your edge, unlocked.
         </h1>
 
-        <div className="mb-10 max-w-xl mx-auto animate-fade-up" style={{ animationDelay: "0.1s" }}>
+        <div
+          className="mb-10 max-w-xl mx-auto animate-fade-up"
+          style={{ animationDelay: "0.1s" }}
+        >
           <p className="text-foreground text-lg font-sans font-light">
-            Get prepped for uni applications, tests, and internships.
+            1-on-1 coaching from students who just landed the offers you want
           </p>
           <p className="text-muted-foreground mt-1 text-sm font-sans font-light">
-            From students and recent grads who just did it.
+            Get prepped for uni applications, tests, and internships.
           </p>
         </div>
 
@@ -289,14 +287,18 @@ const Hero = () => {
           />
         </div>
 
-        {/* Pricing Hint */}
+        {/* Pricing Hint — updated with packages anchor */}
         <p
           className="text-muted-foreground mb-6 animate-fade-up text-sm font-sans font-light"
           style={{ animationDelay: "0.25s" }}
         >
-          <span className="text-green-600 font-medium">Book a free intro call</span>
+          <span className="text-green-600 font-medium">
+            Book a free intro call
+          </span>
           <span className="mx-2">•</span>
           Sessions from £25
+          <span className="mx-2">•</span>
+          Packages from £99
         </p>
 
         {/* Popular Categories - 3 rows: 5, 4, 1 */}

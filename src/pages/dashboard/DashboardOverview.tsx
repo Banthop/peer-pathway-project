@@ -166,20 +166,20 @@ function NewUserView() {
           <h2 className="text-lg font-semibold tracking-tight text-foreground italic mb-1">
             Get started
           </h2>
-          <p className="text-sm text-muted-foreground mb-5">
-            Three steps to your first coaching session
+          <p className="text-sm text-muted-foreground font-light mb-5">
+            Find your coach, book a free intro, and start getting ahead.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Step 1 */}
-            <div className="bg-background border border-border rounded-xl p-5 flex flex-col">
-              <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4">
+            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
+              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
                 1
               </div>
               <h3 className="text-sm font-semibold text-foreground mb-1">
                 Browse coaches
               </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed mb-4 flex-1">
+              <p className="text-[12px] text-muted-foreground leading-relaxed mb-4 flex-1 font-light">
                 Find someone who's been where you want to go
               </p>
               <Link
@@ -191,27 +191,27 @@ function NewUserView() {
             </div>
 
             {/* Step 2 */}
-            <div className="bg-background border border-border rounded-xl p-5 flex flex-col">
-              <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4">
+            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
+              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
                 2
               </div>
               <h3 className="text-sm font-semibold text-foreground mb-1">
                 Book a free intro
               </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1">
+              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1 font-light">
                 15-minute call to see if they're the right fit. No charge
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-background border border-border rounded-xl p-5 flex flex-col">
-              <div className="w-8 h-8 rounded-lg bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4">
+            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
+              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
                 3
               </div>
               <h3 className="text-sm font-semibold text-foreground mb-1">
                 Start coaching
               </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1">
+              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1 font-light">
                 Book sessions or packages and get personalised help
               </p>
             </div>
@@ -626,12 +626,12 @@ export default function DashboardOverview() {
       {/* Header + Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl md:text-[26px] font-semibold tracking-tight text-foreground mb-1">
+          <h1 className="text-2xl md:text-[28px] font-bold tracking-tight text-foreground mb-1">
             {view === "new" ? "Welcome to EarlyEdge" : "Welcome back, Alex"}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground font-light">
             {view === "new"
-              ? "Let's get you started with your first coaching session"
+              ? "Three steps to your first coaching session"
               : "Here's what's coming up"}
           </p>
         </div>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Search, User, MessageCircle, Calendar, Video, Star, LucideIcon } from "lucide-react";
+import { Search, MessageCircle, Video, LucideIcon } from "lucide-react";
 
 interface Step {
   icon: LucideIcon;
@@ -11,13 +11,8 @@ interface Step {
 const steps: Step[] = [
   {
     icon: Search,
-    headline: "Browse coaches",
-    body: "Filter by goal, uni, firm, or background. Find someone who's done exactly what you're aiming for.",
-  },
-  {
-    icon: User,
-    headline: "Check their profile",
-    body: "See their experience, LinkedIn, and reviews from other students.",
+    headline: "Find your coach",
+    body: "Browse by goal, uni, or firm. Find someone who's done exactly what you're aiming for.",
   },
   {
     icon: MessageCircle,
@@ -25,19 +20,9 @@ const steps: Step[] = [
     body: "A 15-minute call to see if they're the right fit. No payment, no commitment.",
   },
   {
-    icon: Calendar,
-    headline: "Book a session",
-    body: "Pick a time that works. Pay securely. you're only charged after the session is confirmed.",
-  },
-  {
     icon: Video,
-    headline: "Meet 1-on-1",
-    body: "A private call to go through your questions. CVs, prep, what to expect. whatever you need.",
-  },
-  {
-    icon: Star,
-    headline: "Leave a review",
-    body: "Help other students find great coaches. Book again anytime. same coach or someone new.",
+    headline: "Start coaching",
+    body: "Book sessions, get prepped, and get the edge you need. CVs, interviews, applications — whatever you need.",
   },
 ];
 
@@ -96,7 +81,7 @@ const HowItWorks = () => {
               size="lg"
               className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"
             >
-              Get Started
+              Browse coaches
             </Button>
           </Link>
         </div>

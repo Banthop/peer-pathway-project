@@ -25,7 +25,7 @@ const reasons: Reason[] = [
   },
   {
     icon: PoundSterling,
-    title: "Quality without the price tag",
+    title: "Expert coaching that doesn't cost expert prices",
     body: [
       { text: "What consultants charge £150+/hour for, starting at £25/hour." },
     ],
@@ -35,7 +35,7 @@ const reasons: Reason[] = [
     icon: Users,
     title: "Insider knowledge",
     body: [
-      { text: "What the process is really like. The stuff you won't find online." },
+      { text: "The stuff you won't find on Google. Real process, real questions, real strategies." },
     ],
     delay: 0.2,
   },
@@ -44,7 +44,7 @@ const reasons: Reason[] = [
 const RenderBody = ({ segments }: { segments: ReasonBody[] }): ReactNode => {
   return (
     <>
-      {segments.map((segment, index) => 
+      {segments.map((segment, index) =>
         segment.bold ? (
           <span key={index} className="font-semibold text-foreground">
             {segment.text}
