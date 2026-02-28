@@ -47,6 +47,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return (data as DbUser) ?? null;
     }, []);
 
+    // Create a profile row in `users` table if one doesn't exist yet.
+    // This runs after email confirmation when the SIGNED_IN event fires.
+    const ensureProfile = useCallback(async (user: User) => {
+        if (!supabase) return null;
+
+        // Check if profile already exists
+        const existing = await fetchProfile(user.id);
+        if (existing) return existing;
+
+        // Pull name & type from auth metadata (set during signUp)
+        const meta = user.user_metadata ?? {};
+        const name = meta.name || meta.full_name || user.email?.split("@")[0] || "User";
+        const type: UserType = meta.type || "student";
+
+        // Insert profile
+        const { error: profileError } = await supabase.from("users").insert({
+            id: user.id,
+            email: user.email!,
+            name,
+            type,
+        });
+
+        if (profileError) {
+            console.error("Failed to create user profile:", profileError);
+            return null;
+        }
+
+        // If coach, also create a coaches row
+        if (type === "coach") {
+            await supabase.from("coaches").insert({
+                user_id: user.id,
+                headline: "",
+                categories: [],
+                hourly_rate: 5000, // £50 default
+            });
+        }
+
+        // Fetch and return the newly created profile
+        return await fetchProfile(user.id);
+    }, [fetchProfile]);
+
     // ---- Auth state listener ----
     useEffect(() => {
         if (!supabaseAvailable || !supabase) {
@@ -58,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Get the initial session
         supabase.auth.getSession().then(async ({ data: { session } }) => {
             if (session?.user) {
-                const profile = await fetchProfile(session.user.id);
+                const profile = await ensureProfile(session.user);
                 setState({
                     user: session.user,
                     session,
@@ -71,12 +112,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
         });
 
-        // Listen for future auth changes
+        // Listen for future auth changes (fires after email confirmation, OAuth, etc.)
         const {
             data: { subscription },
-        } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (session?.user) {
-                const profile = await fetchProfile(session.user.id);
+                // Ensure profile exists — creates it on first SIGNED_IN after email confirmation
+                const profile = await ensureProfile(session.user);
                 setState({
                     user: session.user,
                     session,
@@ -96,7 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         return () => subscription.unsubscribe();
-    }, [fetchProfile]);
+    }, [ensureProfile]);
 
     // ---- Actions ----
 
@@ -104,38 +146,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         async (email: string, password: string, name: string, type: UserType) => {
             if (!supabase) return { error: new Error("Supabase not configured") };
 
-            const { data, error } = await supabase.auth.signUp({
+            // Store name & type in auth metadata — the profile row will be
+            // created automatically by ensureProfile() when the user confirms
+            // their email and the SIGNED_IN event fires.
+            const { error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: { data: { name, type } },
             });
 
             if (error) return { error };
-
-            // Insert into public.users table (mirrors auth.users)
-            if (data.user) {
-                const { error: profileError } = await supabase.from("users").insert({
-                    id: data.user.id,
-                    email,
-                    name,
-                    type,
-                });
-                if (profileError) {
-                    console.error("Failed to create user profile:", profileError);
-                    return { error: profileError as unknown as Error };
-                }
-
-                // If type is coach, also create a coaches row
-                if (type === "coach") {
-                    await supabase.from("coaches").insert({
-                        user_id: data.user.id,
-                        headline: "",
-                        categories: [],
-                        hourly_rate: 5000, // £50 default
-                    });
-                }
-            }
-
             return { error: null };
         },
         []
