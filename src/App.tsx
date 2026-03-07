@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import CoachSignup from "./pages/CoachSignup";
+import AdminLayout from "./components/admin/AdminLayout";
 import DashboardLayout from "./components/dashboard/DashboardLayout";
 import DashboardOverview from "./pages/dashboard/DashboardOverview";
 import DashboardBookings from "./pages/dashboard/DashboardBookings";
@@ -37,15 +38,45 @@ import Guarantee from "./pages/Guarantee";
 
 const queryClient = new QueryClient();
 
+/** Simple centered spinner shown while auth state loads */
+function AuthLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-8 h-8 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin" />
+    </div>
+  );
+}
+
 /**
  * Wraps a route that requires authentication.
  * Redirects to /login when user is not signed in.
- * While auth state is loading, shows nothing (avoids flash).
  */
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
-  if (loading) return null; // auth still initialising
+  if (loading) return <AuthLoading />;
   if (!user) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+}
+
+/**
+ * Only allows students. Coaches get redirected to /coach-dashboard.
+ */
+function StudentRoute({ children }: { children: React.ReactNode }) {
+  const { user, userType, loading } = useAuth();
+  if (loading) return <AuthLoading />;
+  if (!user) return <Navigate to="/login" replace />;
+  if (userType === "coach") return <Navigate to="/coach-dashboard" replace />;
+  return <>{children}</>;
+}
+
+/**
+ * Only allows coaches. Students get redirected to /dashboard.
+ */
+function CoachRoute({ children }: { children: React.ReactNode }) {
+  const { user, userType, loading } = useAuth();
+  if (loading) return <AuthLoading />;
+  if (!user) return <Navigate to="/login" replace />;
+  if (userType !== "coach") return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
 
@@ -55,7 +86,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
  */
 function GuestRoute({ children }: { children: React.ReactNode }) {
   const { user, userType, loading } = useAuth();
-  if (loading) return null;
+  if (loading) return <AuthLoading />;
   if (user) {
     const dest = userType === "coach" ? "/coach-dashboard" : "/dashboard";
     return <Navigate to={dest} replace />;
@@ -68,11 +99,12 @@ const AppRoutes = () => (
     <Route path="/" element={<Index />} />
     <Route path="/coach/:coachId" element={<CoachProfile />} />
     <Route path="/become-a-coach" element={<BecomeACoach />} />
+    <Route path="/browse" element={<DashboardBrowse />} />
     <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
     <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/coach/signup" element={<GuestRoute><CoachSignup /></GuestRoute>} />
-    <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+    <Route path="/dashboard" element={<StudentRoute><DashboardLayout /></StudentRoute>}>
       <Route index element={<DashboardOverview />} />
       <Route path="bookings" element={<DashboardBookings />} />
       <Route path="browse" element={<DashboardBrowse />} />
@@ -80,7 +112,7 @@ const AppRoutes = () => (
       <Route path="events" element={<DashboardEvents />} />
       <Route path="resources" element={<DashboardResources />} />
     </Route>
-    <Route path="/coach-dashboard" element={<ProtectedRoute><CoachDashboardLayout /></ProtectedRoute>}>
+    <Route path="/coach-dashboard" element={<CoachRoute><CoachDashboardLayout /></CoachRoute>}>
       <Route index element={<CoachOverview />} />
       <Route path="sessions" element={<CoachSessions />} />
       <Route path="messages" element={<CoachMessages />} />
@@ -93,9 +125,11 @@ const AppRoutes = () => (
       <Route path="resources" element={<CoachResources />} />
     </Route>
     <Route path="/guarantee" element={<Guarantee />} />
-    <Route path="/admin/coaches" element={<AdminCoaches />} />
-    <Route path="/admin/outreach" element={<AdminOutreach />} />
-    <Route path="/admin" element={<AdminDashboard />} />
+    <Route path="/admin" element={<AdminLayout />}>
+      <Route index element={<AdminDashboard />} />
+      <Route path="coaches" element={<AdminCoaches />} />
+      <Route path="outreach" element={<AdminOutreach />} />
+    </Route>
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
     <Route path="*" element={<NotFound />} />
   </Routes>

@@ -1417,9 +1417,8 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                 <div className="px-6 pt-4 flex gap-1 border-b border-border">
                     {sectionTabs.map(t => (
                         <button key={t.key} type="button" onClick={() => setSection(t.key)}
-                            className={`px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${
-                                section === t.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
-                            }`}>
+                            className={`px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${section === t.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                                }`}>
                             {t.label}
                         </button>
                     ))}
@@ -1535,11 +1534,10 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                                     {EDUCATION_SERVICES.map(svc => (
                                         <button key={svc} type="button"
                                             onClick={() => setForm({ ...form, educationServices: toggleArray(form.educationServices, svc) })}
-                                            className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${
-                                                form.educationServices.includes(svc)
-                                                    ? "bg-foreground text-background border-foreground"
-                                                    : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-                                            }`}>
+                                            className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${form.educationServices.includes(svc)
+                                                ? "bg-foreground text-background border-foreground"
+                                                : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                                                }`}>
                                             {svc}
                                         </button>
                                     ))}
@@ -1555,11 +1553,10 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                                     {CAREER_SERVICES.map(svc => (
                                         <button key={svc} type="button"
                                             onClick={() => setForm({ ...form, careerServices: toggleArray(form.careerServices, svc) })}
-                                            className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${
-                                                form.careerServices.includes(svc)
-                                                    ? "bg-foreground text-background border-foreground"
-                                                    : "bg-background text-muted-foreground border-border hover:border-foreground/30"
-                                            }`}>
+                                            className={`text-[11px] px-2.5 py-1 rounded-full border transition-colors ${form.careerServices.includes(svc)
+                                                ? "bg-foreground text-background border-foreground"
+                                                : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                                                }`}>
                                             {svc}
                                         </button>
                                     ))}
@@ -1974,8 +1971,7 @@ export default function AdminOutreach() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA]">
-            <Header />
+        <div>
             <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -2004,17 +2000,15 @@ export default function AdminOutreach() {
                         <button
                             key={t.key}
                             onClick={() => setTab(t.key)}
-                            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap flex items-center gap-1.5 ${
-                                tab === t.key
-                                    ? "border-foreground text-foreground"
-                                    : "border-transparent text-muted-foreground hover:text-foreground"
-                            }`}
+                            className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap flex items-center gap-1.5 ${tab === t.key
+                                ? "border-foreground text-foreground"
+                                : "border-transparent text-muted-foreground hover:text-foreground"
+                                }`}
                         >
                             {t.label}
                             {t.count !== undefined && (
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
-                                    tab === t.key ? "bg-foreground text-background" : "bg-muted text-muted-foreground"
-                                }`}>
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${tab === t.key ? "bg-foreground text-background" : "bg-muted text-muted-foreground"
+                                    }`}>
                                     {t.count}
                                 </span>
                             )}
@@ -2054,7 +2048,6 @@ export default function AdminOutreach() {
                     <SettingsTab coaches={coaches} scripts={scripts} onClear={handleClear} toast={showToast} />
                 )}
             </main>
-            <Footer />
 
             {/* Dialogs */}
             <CoachDialog

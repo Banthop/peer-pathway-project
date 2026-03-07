@@ -96,8 +96,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // Get the initial session
+        // Get the initial session — with timeout so the app never stays stuck
+        const sessionTimeout = setTimeout(() => {
+            setState((s) => {
+                if (s.loading) {
+                    console.warn("[EarlyEdge] Auth session check timed out — continuing without session.");
+                    return { ...s, loading: false };
+                }
+                return s;
+            });
+        }, 2000);
+
         supabase.auth.getSession().then(async ({ data: { session } }) => {
+            clearTimeout(sessionTimeout);
             if (session?.user) {
                 const profile = await ensureProfile(session.user);
                 setState({
@@ -110,6 +121,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
                 setState((s) => ({ ...s, loading: false }));
             }
+        }).catch((err) => {
+            clearTimeout(sessionTimeout);
+            console.error("[EarlyEdge] Failed to get auth session:", err);
+            setState((s) => ({ ...s, loading: false }));
         });
 
         // Listen for future auth changes (fires after email confirmation, OAuth, etc.)

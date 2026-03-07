@@ -149,8 +149,8 @@ function CoachVerificationTable({ coaches, onVerify }: {
                                     </span>
                                 )}
                                 <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium ${coach.is_verified
-                                        ? "bg-emerald-50 text-emerald-600"
-                                        : "bg-amber-50 text-amber-600"
+                                    ? "bg-emerald-50 text-emerald-600"
+                                    : "bg-amber-50 text-amber-600"
                                     }`}>
                                     {coach.is_verified ? "Verified" : "Pending"}
                                 </span>
@@ -261,8 +261,8 @@ type AdminTab = "overview" | "coaches" | "banners";
 
 export default function AdminDashboard() {
     const [tab, setTab] = useState<AdminTab>("overview");
-    const { data: coaches = [], isLoading: loadingCoaches } = useAllCoaches();
-    const { data: bookings = [], isLoading: loadingBookings } = useAllBookings();
+    const { data: coaches = [], isLoading: loadingCoaches, error: coachesError, status: coachesStatus } = useAllCoaches();
+    const { data: bookings = [], isLoading: loadingBookings, error: bookingsError, status: bookingsStatus } = useAllBookings();
     const verifyCoach = useVerifyCoach();
 
     const stats = useMemo(() => {
@@ -298,8 +298,7 @@ export default function AdminDashboard() {
     const isLoading = loadingCoaches || loadingBookings;
 
     return (
-        <div className="min-h-screen bg-background">
-            <Header />
+        <div>
             <main className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
                 {/* Page Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -310,20 +309,6 @@ export default function AdminDashboard() {
                         <p className="text-sm text-muted-foreground mt-1">
                             Manage coaches, monitor revenue, and configure platform settings
                         </p>
-                    </div>
-                    <div className="flex gap-2">
-                        <Link
-                            to="/admin/outreach"
-                            className="px-4 py-2 rounded-lg bg-foreground text-background text-sm font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-2"
-                        >
-                            <Target className="w-4 h-4" /> Coach Outreach
-                        </Link>
-                        <Link
-                            to="/admin/coaches"
-                            className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-2"
-                        >
-                            <Settings className="w-4 h-4" /> Manage Coach Profiles
-                        </Link>
                     </div>
                 </div>
 
@@ -338,8 +323,8 @@ export default function AdminDashboard() {
                             key={t.key}
                             onClick={() => setTab(t.key)}
                             className={`px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${tab === t.key
-                                    ? "border-foreground text-foreground"
-                                    : "border-transparent text-muted-foreground hover:text-foreground"
+                                ? "border-foreground text-foreground"
+                                : "border-transparent text-muted-foreground hover:text-foreground"
                                 }`}
                         >
                             {t.label}
@@ -348,8 +333,12 @@ export default function AdminDashboard() {
                 </div>
 
                 {isLoading ? (
-                    <div className="flex items-center justify-center py-20">
+                    <div className="flex flex-col items-center justify-center py-20 gap-4">
                         <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+                        <div className="text-sm text-center">
+                            <p>Loading Coaches: {coachesStatus} {coachesError && <span className="text-red-500">{String(coachesError)}</span>}</p>
+                            <p>Loading Bookings: {bookingsStatus} {bookingsError && <span className="text-red-500">{String(bookingsError)}</span>}</p>
+                        </div>
                     </div>
                 ) : (
                     <>
@@ -403,7 +392,6 @@ export default function AdminDashboard() {
                     </>
                 )}
             </main>
-            <Footer />
         </div>
     );
 }

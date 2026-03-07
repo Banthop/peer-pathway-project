@@ -393,8 +393,7 @@ export default function AdminCoaches() {
     const previewCoach = buildCoach();
 
     return (
-        <div className="min-h-screen bg-background">
-            <Header />
+        <div>
             <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
                 {/* Page Header */}
                 <div className="flex items-center justify-between mb-8">
@@ -761,7 +760,6 @@ export default function AdminCoaches() {
                     </div>
                 )}
             </main>
-            <Footer />
         </div>
     );
 }

@@ -39,7 +39,7 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
               <Link
-                to="/dashboard/browse"
+                to="/browse"
                 className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
               >
                 Browse
@@ -134,7 +134,7 @@ const Header = () => {
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-4">
               <Link
-                to="/dashboard/browse"
+                to="/browse"
                 className="text-sm text-foreground font-sans font-light"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
