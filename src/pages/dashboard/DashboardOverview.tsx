@@ -19,6 +19,7 @@ import {
 import { CoachCard } from "@/components/dashboard/CoachCard";
 import { freeEvents, userProfile } from "@/data/eventsData";
 import { useStudentBookings } from "@/hooks/useBookings";
+import { useAuth } from "@/contexts/AuthContext";
 
 /* ─── tiny reusable pieces ──────────────────────────────────── */
 
@@ -647,41 +648,27 @@ function ActiveUserView() {
 /* ─── Main Page ─────────────────────────────────────────────── */
 
 export default function DashboardOverview() {
-  const [view, setView] = useState<"new" | "active">("new");
+  const { user } = useAuth();
+  const { data: allBookings = [] } = useStudentBookings("all");
+  const userName = (user as any)?.user_metadata?.name || user?.email?.split('@')[0] || 'there';
+  const firstName = userName.split(' ')[0];
+
+  // Auto-detect: if user has any bookings, show active view
+  const isActive = allBookings.length > 0;
 
   return (
     <div className="w-full px-6 py-8 md:px-10 lg:px-12">
-      {/* Header + Toggle */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-[28px] font-bold tracking-tight text-foreground mb-1">
-            {view === "new" ? "Welcome to EarlyEdge" : "Welcome back, Alex"}
+            {isActive ? `Welcome back, ${firstName}` : "Welcome to EarlyEdge"}
           </h1>
           <p className="text-sm text-muted-foreground font-light">
-            {view === "new"
-              ? "Three steps to your first coaching session"
-              : "Here's what's coming up"}
+            {isActive
+              ? "Here's what's coming up"
+              : "Three steps to your first coaching session"}
           </p>
-        </div>
-        <div className="flex bg-muted rounded-lg p-0.5 self-start">
-          <button
-            onClick={() => setView("new")}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${view === "new"
-              ? "bg-foreground text-background shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-              }`}
-          >
-            New User
-          </button>
-          <button
-            onClick={() => setView("active")}
-            className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${view === "active"
-              ? "bg-foreground text-background shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-              }`}
-          >
-            Active User
-          </button>
         </div>
       </div>
 
@@ -708,7 +695,7 @@ export default function DashboardOverview() {
       </div>
 
       {/* View Content */}
-      {view === "new" ? <NewUserView /> : <ActiveUserView />}
+      {isActive ? <ActiveUserView /> : <NewUserView />}
     </div>
   );
 }

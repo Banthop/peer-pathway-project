@@ -8,14 +8,27 @@ import type { DbConversation, DbMessage } from "@/integrations/supabase/types";
  * Fetch conversations for the current user.
  */
 export function useConversations() {
-    const { user } = useAuth();
+    const { user, userType } = useAuth();
 
     return useQuery({
         queryKey: ["conversations", user?.id],
         queryFn: async () => {
             if (!supabaseAvailable || !supabase || !user) return [];
 
-            const { data, error } = await supabase
+            // For coaches, first get their coach row ID
+            let coachId: string | null = null;
+            if (userType === "coach") {
+                const { data: coach } = await supabase
+                    .from("coaches")
+                    .select("id")
+                    .eq("user_id", user.id)
+                    .single();
+                coachId = coach?.id ?? null;
+                if (!coachId) return [];
+            }
+
+            // Simple filter based on user type — no subqueries
+            let query = supabase
                 .from("conversations")
                 .select(`
                     *,
@@ -25,17 +38,17 @@ export function useConversations() {
                         headline,
                         user:users(name, avatar_url)
                     ),
-                    student:users(name, avatar_url),
-                    messages(
-                        id,
-                        content,
-                        created_at,
-                        is_read,
-                        sender_id
-                    )
+                    student:users!conversations_student_id_fkey(name, avatar_url)
                 `)
-                .or(`student_id.eq.${user.id},coach_id.in.(select id from coaches where user_id = '${user.id}')`)
                 .order("last_message_at", { ascending: false });
+
+            if (userType === "coach" && coachId) {
+                query = query.eq("coach_id", coachId);
+            } else {
+                query = query.eq("student_id", user.id);
+            }
+
+            const { data, error } = await query;
 
             if (error) {
                 console.error("Error fetching conversations:", error);
@@ -180,5 +193,48 @@ export function useUnreadCount() {
         enabled: !!user,
         staleTime: 30 * 1000,
         refetchInterval: 30 * 1000, // Poll every 30s as backup to Realtime
+    });
+}
+
+/**
+ * Create or find an existing conversation between the current user and a coach.
+ */
+export function useStartConversation() {
+    const { user } = useAuth();
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ coachId }: { coachId: string }) => {
+            if (!supabaseAvailable || !supabase || !user) {
+                throw new Error("Not authenticated");
+            }
+
+            // Check if conversation already exists
+            const { data: existing } = await supabase
+                .from("conversations")
+                .select("id")
+                .eq("student_id", user.id)
+                .eq("coach_id", coachId)
+                .maybeSingle();
+
+            if (existing) return existing.id as string;
+
+            // Create new conversation
+            const { data: newConvo, error } = await supabase
+                .from("conversations")
+                .insert({
+                    student_id: user.id,
+                    coach_id: coachId,
+                    last_message_at: new Date().toISOString(),
+                })
+                .select("id")
+                .single();
+
+            if (error) throw error;
+            return newConvo.id as string;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["conversations"] });
+        },
     });
 }

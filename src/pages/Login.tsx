@@ -23,7 +23,7 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    const { error } = await signIn(email, password);
+    const { error, userType } = await signIn(email, password);
     setLoading(false);
     if (error) {
       toast({
@@ -32,7 +32,8 @@ const Login = () => {
         variant: "destructive",
       });
     } else {
-      navigate(role === "coach" ? "/coach-dashboard" : "/dashboard");
+      // Redirect based on actual account type, not the manual toggle
+      navigate(userType === "coach" ? "/coach-dashboard" : "/dashboard");
     }
   };
 

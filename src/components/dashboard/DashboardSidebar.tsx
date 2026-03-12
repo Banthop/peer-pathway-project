@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings, LogOut, ChevronDown, ArrowRightLeft } from "lucide-react";
+import { Settings, LogOut, ChevronDown } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
@@ -32,7 +32,7 @@ const navItems = [
 
 
 export function DashboardSidebar() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const userName = (user as any)?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
   const userEmail = user?.email || '';
   const initials = userName.split(' ').map((n: string) => n[0]).join('').toUpperCase().substring(0, 2);
@@ -91,24 +91,14 @@ export function DashboardSidebar() {
                 Settings
               </NavLink>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <NavLink
-                to="/coach-dashboard"
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <ArrowRightLeft className="h-4 w-4" />
-                Switch to Coach
-              </NavLink>
-            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <NavLink
-                to="/login"
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <LogOut className="h-4 w-4" />
-                Log out
-              </NavLink>
+            <DropdownMenuItem
+              onClick={async () => { await signOut(); window.location.href = "/login"; }}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <LogOut className="h-4 w-4" />
+              Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

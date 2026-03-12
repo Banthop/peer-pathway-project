@@ -7,7 +7,7 @@ import {
   upcomingSessions,
 } from "@/data/dashboardData";
 import { useAuth } from "@/contexts/AuthContext";
-import { useConversations, useMessages, useSendMessage } from "@/hooks/useMessages";
+import { useConversations, useMessages, useSendMessage, useStartConversation } from "@/hooks/useMessages";
 
 export default function DashboardMessages() {
   const { user } = useAuth();
@@ -15,7 +15,7 @@ export default function DashboardMessages() {
 
   // Format dbConvos into UI-friendly Convos array
   const mappedConvos = useMemo(() => {
-    if (!dbConvos || dbConvos.length === 0) return initialConversations;
+    if (!dbConvos || dbConvos.length === 0) return [];
 
     return dbConvos.map((c: any) => {
       const isStudent = (user as any)?.type === "student" || (user as any)?.user_metadata?.type === "student";

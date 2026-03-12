@@ -8,7 +8,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings, ChevronDown, ExternalLink, ArrowRightLeft } from "lucide-react";
+import { Settings, ChevronDown, ExternalLink, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCoachProfile } from "@/hooks/useCoachProfile";
 
@@ -28,7 +28,7 @@ const navItems = [
 ];
 
 export function CoachDashboardSidebar() {
-    const { user } = useAuth();
+    const { user, signOut } = useAuth();
     const { data: profile } = useCoachProfile();
     const coachName = profile?.user?.name || user?.email?.split('@')[0] || 'Coach';
     const coachEmail = user?.email || '';
@@ -107,14 +107,12 @@ export function CoachDashboardSidebar() {
                             </NavLink>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                            <NavLink
-                                to="/dashboard"
-                                className="flex items-center gap-2 cursor-pointer"
-                            >
-                                <ArrowRightLeft className="h-4 w-4" />
-                                Switch to Student
-                            </NavLink>
+                        <DropdownMenuItem
+                            onClick={async () => { await signOut(); window.location.href = "/login"; }}
+                            className="flex items-center gap-2 cursor-pointer"
+                        >
+                            <LogOut className="h-4 w-4" />
+                            Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

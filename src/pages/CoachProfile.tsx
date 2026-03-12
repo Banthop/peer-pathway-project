@@ -5,8 +5,7 @@ import { MessageModal } from "@/components/MessageModal";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BookingDialog from "@/components/coach/booking/BookingDialog";
-import { getProfileCoach } from "@/data/coachStore";
-import { getAllCoaches } from "@/data/sampleCoach";
+import { useCoach, useCoaches } from "@/hooks/useCoaches";
 import type { Coach, CoachService } from "@/types/coach";
 import type { BookingType, SelectedService } from "@/types/booking";
 
@@ -239,7 +238,7 @@ function parseDayToDate(day: string): Date | undefined {
 
 const CoachProfile = () => {
   const { coachId } = useParams<{ coachId: string }>();
-  const coach = getProfileCoach(coachId || "");
+  const { data: coach, isLoading } = useCoach(coachId);
 
   // Booking dialog state
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -261,6 +260,19 @@ const CoachProfile = () => {
     setInitialTime(time);
     setBookingOpen(true);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="max-w-[1100px] mx-auto px-6 py-16">
+          <p className="text-center text-muted-foreground font-sans">Loading...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
 
   if (!coach) {
     return (
@@ -905,7 +917,7 @@ function ReviewsSection({ coach }: { coach: Coach }) {
 /* ─── Similar Coaches ──────────────────────────────────────── */
 
 function SimilarCoachesSection({ currentCoachId }: { currentCoachId: string }) {
-  const allCoaches = getAllCoaches();
+  const { data: allCoaches = [] } = useCoaches();
   const similar = allCoaches.filter((c) => c.id !== currentCoachId).slice(0, 3);
 
   if (similar.length === 0) return null;

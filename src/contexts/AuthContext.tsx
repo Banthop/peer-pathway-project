@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { Session, User, AuthError } from "@supabase/supabase-js";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import type { DbUser, UserType } from "@/integrations/supabase/types";
@@ -13,7 +13,7 @@ interface AuthState {
 
 interface AuthContextValue extends AuthState {
     signUp: (email: string, password: string, name: string, type: UserType) => Promise<{ error: AuthError | Error | null }>;
-    signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null }>;
+    signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null; userType: string | null }>;
     signInWithGoogle: () => Promise<{ error: AuthError | Error | null }>;
     signOut: () => Promise<void>;
     resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>;
@@ -35,6 +35,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userType: null,
         loading: true,
     });
+
+    // Track whether signIn() already handled the session to avoid double-processing
+    const signInHandledRef = useRef(false);
+
+    // Track whether signIn() already handled the session to avoid double-processing
 
     // Fetch the user's profile row from the `users` table
     const fetchProfile = useCallback(async (userId: string) => {
@@ -96,52 +101,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // Get the initial session — with timeout so the app never stays stuck
-        const sessionTimeout = setTimeout(() => {
-            setState((s) => {
-                if (s.loading) {
-                    console.warn("[EarlyEdge] Auth session check timed out — continuing without session.");
-                    return { ...s, loading: false };
-                }
-                return s;
-            });
-        }, 2000);
-
-        supabase.auth.getSession().then(async ({ data: { session } }) => {
-            clearTimeout(sessionTimeout);
+        // Get the initial session — set state immediately from metadata
+        supabase.auth.getSession().then(({ data: { session } }) => {
             if (session?.user) {
-                const profile = await ensureProfile(session.user);
+                const metaType = session.user.user_metadata?.type as string | null ?? null;
                 setState({
                     user: session.user,
                     session,
-                    profile,
-                    userType: profile?.type ?? null,
+                    profile: null,    // Profile loaded lazily, not needed for routing
+                    userType: metaType,
                     loading: false,
                 });
             } else {
-                setState((s) => ({ ...s, loading: false }));
+                setState(s => ({ ...s, loading: false }));
             }
         }).catch((err) => {
-            clearTimeout(sessionTimeout);
             console.error("[EarlyEdge] Failed to get auth session:", err);
-            setState((s) => ({ ...s, loading: false }));
+            setState(s => ({ ...s, loading: false }));
         });
 
         // Listen for future auth changes (fires after email confirmation, OAuth, etc.)
         const {
             data: { subscription },
         } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (session?.user) {
-                // Ensure profile exists — creates it on first SIGNED_IN after email confirmation
-                const profile = await ensureProfile(session.user);
-                setState({
-                    user: session.user,
-                    session,
-                    profile,
-                    userType: profile?.type ?? null,
-                    loading: false,
-                });
-            } else {
+            if (event === 'SIGNED_OUT' || !session?.user) {
                 setState({
                     user: null,
                     session: null,
@@ -149,11 +132,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     userType: null,
                     loading: false,
                 });
+                return;
             }
+
+            // For TOKEN_REFRESHED, just update the session/user
+            if (event === 'TOKEN_REFRESHED') {
+                setState(prev => ({ ...prev, session, user: session.user }));
+                return;
+            }
+
+            // For SIGNED_IN: skip if signIn() already handled this
+            if (signInHandledRef.current) {
+                signInHandledRef.current = false;
+                return;
+            }
+
+            // Use user_metadata as fallback for userType
+            const metaType = session.user.user_metadata?.type as string | null ?? null;
+            setState(prev => ({
+                ...prev,
+                user: session.user,
+                session,
+                userType: prev.userType || metaType,
+                loading: false,
+            }));
         });
 
         return () => subscription.unsubscribe();
-    }, [ensureProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     // ---- Actions ----
 
@@ -177,9 +184,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     const signIn = useCallback(async (email: string, password: string) => {
-        if (!supabase) return { error: new Error("Supabase not configured") };
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        return { error };
+        if (!supabase) return { error: new Error("Supabase not configured"), userType: null as string | null };
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) return { error, userType: null as string | null };
+
+        // Get user type from auth metadata (fast, no DB call needed for redirect)
+        const userType = data.user?.user_metadata?.type as string | null ?? null;
+
+        // Immediately set user+session so ProtectedRoute doesn't redirect.
+        // Profile will be fully loaded by onAuthStateChange listener.
+        if (data.user && data.session) {
+            setState(prev => ({
+                ...prev,
+                user: data.user,
+                session: data.session,
+                loading: false,
+                userType,
+            }));
+        }
+
+        signInHandledRef.current = true;
+        return { error: null, userType };
     }, []);
 
     const signInWithGoogle = useCallback(async () => {
