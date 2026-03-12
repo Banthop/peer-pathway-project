@@ -4,6 +4,7 @@ import { ArrowRight, ArrowLeft, Check, Plus, Trash2, Sparkles, Copy, ExternalLin
 import { useUpdateCoachProfile } from "@/hooks/useCoachProfile";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { syncOnboardingToOutreach } from "@/utils/outreachSync";
 
 /* ─── Types (matching CoachEditProfile) ──────────────────────── */
 
@@ -160,6 +161,18 @@ export default function CoachOnboarding() {
 
             setProfileUrl(`${window.location.origin}/coach/${user?.id || "me"}`);
             toast({ title: "Profile saved!", description: "Your coach profile is now live." });
+
+            // Sync onboarding data to the outreach tracker
+            try {
+                syncOnboardingToOutreach({
+                    email: user?.email || "",
+                    name: user?.user_metadata?.name || user?.email?.split("@")[0] || "Unknown",
+                    userId: user?.id || "",
+                    onboardingForm: form,
+                });
+            } catch (syncErr) {
+                console.warn("Outreach sync failed (non-critical):", syncErr);
+            }
         } catch (err: any) {
             toast({ title: "Failed to save", description: err.message, variant: "destructive" });
         } finally {

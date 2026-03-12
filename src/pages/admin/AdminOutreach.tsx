@@ -68,6 +68,27 @@ interface OutreachCoach {
     addedBy: string;
     createdAt: string;
     updatedAt: string;
+    // Onboarding data (populated when coach completes onboarding wizard)
+    onboardingData?: {
+        tagline: string;
+        bio: string;
+        category: string;
+        hourlyRate: string;
+        uniName: string;
+        uniDegree: string;
+        companyName: string;
+        companyRole: string;
+        skills: string;
+        services: { name: string; duration: string; price: string; description: string }[];
+        enablePackage: boolean;
+        packageName: string;
+        packageSessions: string;
+        packagePrice: string;
+        packageOriginalPrice: string;
+        packageIncludes: string;
+        completedAt: string;
+    };
+    userId?: string; // link to Supabase user ID
 }
 
 interface OutreachScript {
@@ -881,6 +902,11 @@ function PipelineTab({ coaches, onUpdateStatus, onEdit }: {
                                     <div className="flex gap-1.5 mt-2 flex-wrap">
                                         <SourceBadge source={c.source} />
                                         <PriorityBadge priority={c.priority} />
+                                        {c.onboardingData && (
+                                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-600">
+                                                <CheckCircle className="w-2.5 h-2.5" /> Profile
+                                            </span>
+                                        )}
                                     </div>
                                     {c.followUpDate && (isOverdue(c.followUpDate) || isDueToday(c.followUpDate)) && (
                                         <div className="mt-2 text-[10px] font-medium text-amber-500 flex items-center gap-1">
@@ -1324,7 +1350,7 @@ function CoachDialog({ open, onClose, coach, onSave }: {
     };
 
     const [form, setForm] = useState(emptyForm);
-    const [section, setSection] = useState<"identity" | "application" | "outreach">("identity");
+    const [section, setSection] = useState<"identity" | "application" | "outreach" | "onboarding">("identity");
 
     useEffect(() => {
         if (coach) {
@@ -1396,10 +1422,11 @@ function CoachDialog({ open, onClose, coach, onSave }: {
 
     const inputCls = "w-full px-3 py-2 text-sm bg-background border border-border rounded-lg text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-foreground/20";
 
-    const sectionTabs: { key: typeof section; label: string }[] = [
+    const sectionTabs: { key: typeof section; label: string; badge?: boolean }[] = [
         { key: "identity", label: "Identity & Discovery" },
         { key: "application", label: "Application Details" },
         { key: "outreach", label: "Outreach Tracking" },
+        ...(coach?.onboardingData ? [{ key: "onboarding" as const, label: "Onboarding", badge: true }] : []),
     ];
 
     return (
@@ -1417,9 +1444,10 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                 <div className="px-6 pt-4 flex gap-1 border-b border-border">
                     {sectionTabs.map(t => (
                         <button key={t.key} type="button" onClick={() => setSection(t.key)}
-                            className={`px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-colors ${section === t.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+                            className={`px-3 py-2 text-xs font-medium border-b-2 -mb-px transition-colors inline-flex items-center gap-1.5 ${section === t.key ? "border-foreground text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
                                 }`}>
                             {t.label}
+                            {t.badge && <span className="w-2 h-2 rounded-full bg-emerald-500" />}
                         </button>
                     ))}
                 </div>
@@ -1661,10 +1689,104 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                         </div>
                     )}
 
+                    {/* ── Section 4: Onboarding Responses (read-only) ── */}
+                    {section === "onboarding" && coach?.onboardingData && (
+                        <div className="space-y-5">
+                            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex items-start gap-3">
+                                <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="text-sm font-semibold text-emerald-900">Onboarding Completed</p>
+                                    <p className="text-xs text-emerald-700 mt-0.5">
+                                        Completed on {new Date(coach.onboardingData.completedAt).toLocaleDateString("en-GB", {
+                                            day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit"
+                                        })}
+                                        {coach.userId && (
+                                            <> · <a href={`/coach/${coach.userId}`} target="_blank" rel="noopener noreferrer" className="underline font-medium">View Profile →</a></>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tagline</span>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.tagline || "—"}</p>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Category</span>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.category || "—"}</p>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">University</span>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.uniName || "—"} {coach.onboardingData.uniDegree ? `(${coach.onboardingData.uniDegree})` : ""}</p>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Company / Role</span>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.companyName || "—"} {coach.onboardingData.companyRole ? `· ${coach.onboardingData.companyRole}` : ""}</p>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Hourly Rate</span>
+                                    <p className="text-sm text-foreground font-semibold">£{coach.onboardingData.hourlyRate || "—"}/hr</p>
+                                </div>
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Skills</span>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.skills || "—"}</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Bio</span>
+                                <p className="text-sm text-foreground whitespace-pre-wrap bg-muted/30 rounded-lg p-3">{coach.onboardingData.bio || "—"}</p>
+                            </div>
+
+                            {/* Services */}
+                            {coach.onboardingData.services && coach.onboardingData.services.length > 0 && coach.onboardingData.services.some(s => s.name) && (
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Services</span>
+                                    <div className="space-y-2">
+                                        {coach.onboardingData.services.filter(s => s.name).map((s, i) => (
+                                            <div key={i} className="border border-border rounded-lg p-3 bg-muted/20">
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-sm font-semibold text-foreground">{s.name}</span>
+                                                    <span className="text-sm font-medium text-foreground">£{s.price} · {s.duration}</span>
+                                                </div>
+                                                {s.description && <p className="text-xs text-muted-foreground mt-1">{s.description}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Package */}
+                            {coach.onboardingData.enablePackage && coach.onboardingData.packageName && (
+                                <div>
+                                    <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Package</span>
+                                    <div className="border border-border rounded-lg p-4 bg-muted/20">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-sm font-bold text-foreground">{coach.onboardingData.packageName}</span>
+                                            <div className="text-right">
+                                                <span className="text-sm font-bold text-foreground">£{coach.onboardingData.packagePrice}</span>
+                                                {coach.onboardingData.packageOriginalPrice && (
+                                                    <span className="text-xs text-muted-foreground line-through ml-2">£{coach.onboardingData.packageOriginalPrice}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-muted-foreground">{coach.onboardingData.packageSessions} sessions</p>
+                                        {coach.onboardingData.packageIncludes && (
+                                            <p className="text-xs text-muted-foreground mt-1">Includes: {coach.onboardingData.packageIncludes}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                     <div className="flex justify-between mt-6 pt-4 border-t border-border">
                         <div className="flex gap-2">
                             {section !== "identity" && (
-                                <button type="button" onClick={() => setSection(section === "outreach" ? "application" : "identity")}
+                                <button type="button" onClick={() => setSection(
+                                    section === "onboarding" ? "outreach" : section === "outreach" ? "application" : "identity"
+                                )}
                                     className="px-4 py-2.5 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                                     Back
                                 </button>
@@ -1675,7 +1797,12 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                                 className="px-5 py-2.5 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
                                 Cancel
                             </button>
-                            {section !== "outreach" ? (
+                            {section === "onboarding" ? (
+                                <button type="submit"
+                                    className="px-5 py-2.5 bg-foreground text-background rounded-lg text-sm font-semibold hover:bg-foreground/90 transition-colors">
+                                    {coach ? "Save Changes" : "Add Coach"}
+                                </button>
+                            ) : section !== "outreach" ? (
                                 <button type="button" onClick={() => setSection(section === "identity" ? "application" : "outreach")}
                                     className="px-5 py-2.5 bg-foreground text-background rounded-lg text-sm font-semibold hover:bg-foreground/90 transition-colors inline-flex items-center gap-1">
                                     Next <ArrowRight className="w-3.5 h-3.5" />
