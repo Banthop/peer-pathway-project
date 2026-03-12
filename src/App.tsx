@@ -108,7 +108,7 @@ const AppRoutes = () => (
     <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
     <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
-    <Route path="/coach/signup" element={<GuestRoute><CoachSignup /></GuestRoute>} />
+    <Route path="/coach/signup" element={<CoachSignup />} />
     <Route path="/dashboard" element={<StudentRoute><DashboardLayout /></StudentRoute>}>
       <Route index element={<DashboardOverview />} />
       <Route path="bookings" element={<DashboardBookings />} />

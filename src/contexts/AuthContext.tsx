@@ -104,7 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Get the initial session — set state immediately from metadata
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session?.user) {
-                const metaType = session.user.user_metadata?.type as string | null ?? null;
+                const metaType = (session.user.user_metadata?.type as UserType) ?? null;
                 setState({
                     user: session.user,
                     session,
@@ -148,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             // Use user_metadata as fallback for userType
-            const metaType = session.user.user_metadata?.type as string | null ?? null;
+            const metaType = (session.user.user_metadata?.type as UserType) ?? null;
             setState(prev => ({
                 ...prev,
                 user: session.user,
@@ -168,16 +168,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         async (email: string, password: string, name: string, type: UserType) => {
             if (!supabase) return { error: new Error("Supabase not configured") };
 
-            // Store name & type in auth metadata — the profile row will be
-            // created automatically by ensureProfile() when the user confirms
-            // their email and the SIGNED_IN event fires.
-            const { error } = await supabase.auth.signUp({
+            const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: { data: { name, type } },
             });
 
             if (error) return { error };
+
+            // Immediately set auth state so route guards don't redirect
+            // before the navigate() in the signup page can fire.
+            if (data.user && data.session) {
+                signInHandledRef.current = true;
+                setState(prev => ({
+                    ...prev,
+                    user: data.user,
+                    session: data.session,
+                    userType: type,
+                    loading: false,
+                }));
+            } else if (data.user) {
+                // Email confirmation enabled — user exists but no session yet.
+                // Set user+type so CoachRoute allows access to onboarding.
+                signInHandledRef.current = true;
+                setState(prev => ({
+                    ...prev,
+                    user: data.user,
+                    userType: type,
+                    loading: false,
+                }));
+            }
+
             return { error: null };
         },
         []
@@ -189,7 +210,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (error) return { error, userType: null as string | null };
 
         // Get user type from auth metadata (fast, no DB call needed for redirect)
-        const userType = data.user?.user_metadata?.type as string | null ?? null;
+        const userType = (data.user?.user_metadata?.type as UserType) ?? null;
 
         // Immediately set user+session so ProtectedRoute doesn't redirect.
         // Profile will be fully loaded by onAuthStateChange listener.
