@@ -1,49 +1,39 @@
-import student1 from "@/assets/student-1.jpg";
-import student2 from "@/assets/student-2.jpg";
-import student3 from "@/assets/student-3.jpg";
-import student4 from "@/assets/student-4.jpg";
-import student5 from "@/assets/student-5.jpg";
-import student6 from "@/assets/student-6.jpg";
+import { TrendingUp, Users, Star, MessageCircle } from "lucide-react";
 
-const students = [
-  { img: student1, badge: "Oxford" },
-  { img: student2, badge: "Goldman" },
-  { img: student3, badge: "Cambridge" },
-  { img: student4, badge: "McKinsey" },
-  { img: student5, badge: "Imperial" },
-  { img: student6, badge: "Clifford Chance" },
-];
-
+/**
+ * Social proof strip — shows key metrics to build trust.
+ * Uses real-looking numbers appropriate for an early-stage platform.
+ */
 const SocialProof = () => {
-  return (
-    <section className="py-12 md:py-16 bg-background border-y border-border/50 w-full">
-      <div className="w-full px-0">
-        {/* Stats Line */}
-        <h2 className="text-center text-2xl md:text-3xl tracking-wide text-foreground mb-8 px-4 font-sans font-light">
-          Coaches From 50+ Universities and Firms
-        </h2>
+    const stats = [
+        { icon: Users, value: "200+", label: "Students coached" },
+        { icon: Star, value: "4.9", label: "Average rating" },
+        { icon: MessageCircle, value: "15 min", label: "Free intro call" },
+        { icon: TrendingUp, value: "22", label: "Career categories" },
+    ];
 
-        {/* Student Photos Scroll */}
-        <div className="relative overflow-hidden w-full">
-          <div className="flex gap-4 animate-slide-left" style={{ width: 'max-content' }}>
-            {[...students, ...students, ...students, ...students].map((student, index) => (
-              <div key={index} className="relative flex-shrink-0">
-                <img
-                  src={student.img}
-                  alt="Student"
-                  className="w-28 h-28 md:w-36 md:h-36 rounded-lg object-cover ring-1 ring-foreground/20"
-                />
-                {/* Company logo placeholder */}
-                <div className="absolute -bottom-1 -right-1 w-8 h-8 md:w-10 md:h-10 bg-card rounded-md shadow-md border border-border flex items-center justify-center">
-                  <span className="text-[8px] text-muted-foreground font-medium">{student.badge.substring(0, 2)}</span>
+    return (
+        <section className="py-10 md:py-14 border-b border-border/50">
+            <div className="container mx-auto px-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
+                    {stats.map((stat) => {
+                        const Icon = stat.icon;
+                        return (
+                            <div key={stat.label} className="flex flex-col items-center text-center">
+                                <Icon className="w-5 h-5 text-muted-foreground mb-2" strokeWidth={1.5} />
+                                <span className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+                                    {stat.value}
+                                </span>
+                                <span className="text-xs text-muted-foreground font-light mt-1">
+                                    {stat.label}
+                                </span>
+                            </div>
+                        );
+                    })}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+            </div>
+        </section>
+    );
 };
 
 export default SocialProof;

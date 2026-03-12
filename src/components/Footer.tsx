@@ -1,32 +1,33 @@
 import { Twitter, Linkedin, Instagram } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Logo } from "@/components/Logo";
 
 const footerLinks = {
   welcome: {
     title: "Welcome",
     links: [
-      { name: "Get started", href: "#" },
-      { name: "Log in", href: "#" },
-      { name: "Become a coach", href: "#" },
+      { name: "Get started", href: "/signup" },
+      { name: "Log in", href: "/login" },
+      { name: "Become a coach", href: "/become-a-coach" },
+    ],
+  },
+  explore: {
+    title: "Explore",
+    links: [
+      { name: "Browse coaches", href: "/browse" },
+      { name: "Free events", href: "/events" },
+      { name: "Resources", href: "/resources" },
+      { name: "Guarantee", href: "/guarantee" },
     ],
   },
   categories: {
     title: "Categories",
     links: [
-      { name: "Banking", href: "#" },
-      { name: "Consulting", href: "#" },
-      { name: "Law", href: "#" },
-      { name: "Oxbridge", href: "#" },
-      { name: "UCAT", href: "#" },
-    ],
-  },
-  company: {
-    title: "Company",
-    links: [
-      { name: "Careers", href: "#" },
-      { name: "Terms", href: "#" },
-      { name: "Privacy", href: "#" },
-      { name: "Support", href: "#" },
+      { name: "Investment Banking", href: "/browse" },
+      { name: "Consulting", href: "/browse" },
+      { name: "Law", href: "/browse" },
+      { name: "Oxbridge", href: "/browse" },
+      { name: "UCAT", href: "/browse" },
     ],
   },
 };
@@ -42,25 +43,31 @@ const Footer = () => {
             <p className="text-[13px] text-dark-foreground/40 font-light mb-5 leading-relaxed">Peer coaching for students<br />who want the edge.</p>
             <div className="flex gap-3">
               <a
-                href="#"
-                aria-label="Twitter"
-                className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
-              >
-                <Twitter className="w-[18px] h-[18px]" />
-              </a>
-              <a
-                href="#"
+                href="https://linkedin.com/company/earlyedge"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
               >
                 <Linkedin className="w-[18px] h-[18px]" />
               </a>
               <a
-                href="#"
+                href="https://instagram.com/earlyedge"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
               >
                 <Instagram className="w-[18px] h-[18px]" />
+              </a>
+              <a
+                href="https://twitter.com/earlyedge"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-dark-foreground/50 hover:text-dark-foreground hover:bg-dark-foreground/10 transition-all duration-200"
+              >
+                <Twitter className="w-[18px] h-[18px]" />
               </a>
             </div>
           </div>
@@ -74,12 +81,12 @@ const Footer = () => {
               <ul className="space-y-3">
                 {column.links.map((link) => (
                   <li key={link.name}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.href}
                       className="text-sm text-dark-foreground/60 hover:text-dark-foreground transition-colors font-sans font-light"
                     >
                       {link.name}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

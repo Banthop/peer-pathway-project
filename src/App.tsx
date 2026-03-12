@@ -34,7 +34,10 @@ import CoachMessages from "./pages/coach-dashboard/CoachMessages";
 import StripeConnect from "./pages/coach-dashboard/StripeConnect";
 import CoachEvents from "./pages/coach-dashboard/CoachEvents";
 import CoachResources from "./pages/coach-dashboard/CoachResources";
+import CoachOnboarding from "./pages/coach-dashboard/CoachOnboarding";
 import Guarantee from "./pages/Guarantee";
+import PublicEvents from "./pages/PublicEvents";
+import PublicResources from "./pages/PublicResources";
 
 const queryClient = new QueryClient();
 
@@ -100,6 +103,8 @@ const AppRoutes = () => (
     <Route path="/coach/:coachId" element={<CoachProfile />} />
     <Route path="/become-a-coach" element={<BecomeACoach />} />
     <Route path="/browse" element={<DashboardBrowse />} />
+    <Route path="/events" element={<PublicEvents />} />
+    <Route path="/resources" element={<PublicResources />} />
     <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
     <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
     <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -112,6 +117,7 @@ const AppRoutes = () => (
       <Route path="events" element={<DashboardEvents />} />
       <Route path="resources" element={<DashboardResources />} />
     </Route>
+    <Route path="/coach-onboarding" element={<CoachRoute><CoachOnboarding /></CoachRoute>} />
     <Route path="/coach-dashboard" element={<CoachRoute><CoachDashboardLayout /></CoachRoute>}>
       <Route index element={<CoachOverview />} />
       <Route path="sessions" element={<CoachSessions />} />

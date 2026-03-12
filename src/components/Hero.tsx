@@ -248,7 +248,7 @@ const Hero = () => {
       {/* Foreground Content */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center">
         <h1
-          className="text-foreground mb-6 animate-fade-up whitespace-nowrap font-sans"
+          className="text-foreground mb-6 animate-fade-up font-sans"
           style={{
             fontWeight: 700,
             fontSize: "clamp(40px, 8vw, 84px)",
@@ -283,7 +283,7 @@ const Hero = () => {
             placeholder="Search for coaches..."
             className="w-full pl-12 pr-4 py-6 text-base rounded-full border-2 border-primary bg-card shadow-sm focus:ring-2 focus:ring-primary/20 placeholder:text-primary/70 cursor-pointer"
             readOnly
-            onClick={() => navigate("/dashboard/browse")}
+            onClick={() => navigate("/browse")}
           />
         </div>
 
@@ -313,7 +313,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
-                onClick={() => navigate("/dashboard/browse")}
+                onClick={() => navigate("/browse")}
               >
                 {category}
               </Badge>
@@ -326,7 +326,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
-                onClick={() => navigate("/dashboard/browse")}
+                onClick={() => navigate("/browse")}
               >
                 {category}
               </Badge>
@@ -339,7 +339,7 @@ const Hero = () => {
                 key={category}
                 variant="outline"
                 className="px-4 py-2 text-sm cursor-pointer bg-background text-foreground border-foreground hover:bg-foreground hover:text-background transition-colors font-sans font-light"
-                onClick={() => navigate("/dashboard/browse")}
+                onClick={() => navigate("/browse")}
               >
                 {category}
               </Badge>

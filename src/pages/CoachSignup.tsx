@@ -40,7 +40,7 @@ const CoachSignup = () => {
       toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Coach account created!", description: "Check your email to verify." });
-      navigate("/coach-dashboard");
+      navigate("/coach-onboarding");
     }
   };
 

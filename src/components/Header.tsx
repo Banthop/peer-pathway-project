@@ -45,6 +45,18 @@ const Header = () => {
                 Browse
               </Link>
               <Link
+                to="/events"
+                className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
+              >
+                Events
+              </Link>
+              <Link
+                to="/resources"
+                className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
+              >
+                Resources
+              </Link>
+              <Link
                 to="/become-a-coach"
                 className="text-sm text-foreground hover:text-primary transition-colors font-sans font-light"
               >
@@ -139,6 +151,20 @@ const Header = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Browse
+              </Link>
+              <Link
+                to="/events"
+                className="text-sm text-foreground font-sans font-light"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Events
+              </Link>
+              <Link
+                to="/resources"
+                className="text-sm text-foreground font-sans font-light"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Resources
               </Link>
               <Link
                 to="/become-a-coach"

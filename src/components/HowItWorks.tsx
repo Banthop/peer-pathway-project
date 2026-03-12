@@ -76,7 +76,7 @@ const HowItWorks = () => {
 
         {/* CTA Button */}
         <div className="text-center mt-12 md:mt-16">
-          <Link to="/dashboard/browse">
+          <Link to="/browse">
             <Button
               size="lg"
               className="bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base font-sans font-extralight"

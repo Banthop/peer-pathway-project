@@ -1,11 +1,13 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SocialProof from "@/components/SocialProof";
 import HowItWorks from "@/components/HowItWorks";
 import FeaturedCoaches from "@/components/FeaturedCoaches";
 import ResourceBank from "@/components/ResourceBank";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
+import SeasonalBanner from "@/components/SeasonalBanner";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const Index = () => {
@@ -13,7 +15,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
+        <SeasonalBanner />
         <Hero />
+        <SocialProof />
         <ScrollReveal delay={0.1}>
           <HowItWorks />
         </ScrollReveal>
@@ -26,9 +30,7 @@ const Index = () => {
         <ScrollReveal delay={0.1}>
           <FAQ />
         </ScrollReveal>
-        <ScrollReveal delay={0.1}>
-          <FinalCTA />
-        </ScrollReveal>
+        <FinalCTA />
       </main>
       <Footer />
     </div>
