@@ -5,8 +5,7 @@ import {
     TrendingUp, BarChart3, AlertTriangle, Loader2, ChevronDown,
     Eye, Ban, Star, Calendar, Settings, Megaphone, Plus, Trash2, Save, Target
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 

@@ -6,8 +6,7 @@ import {
     Download, Upload, AlertTriangle, CheckCircle, XCircle,
     GripVertical, FileText, Linkedin, Hash, Star, Eye
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 import type {
     OutreachSource, OutreachStatus, OutreachPriority,
     OutreachMethod, ScriptPlatform

@@ -38,6 +38,7 @@ import CoachOnboarding from "./pages/coach-dashboard/CoachOnboarding";
 import Guarantee from "./pages/Guarantee";
 import PublicEvents from "./pages/PublicEvents";
 import PublicResources from "./pages/PublicResources";
+import Webinar from "./pages/Webinar";
 
 const queryClient = new QueryClient();
 
@@ -131,6 +132,7 @@ const AppRoutes = () => (
       <Route path="resources" element={<CoachResources />} />
     </Route>
     <Route path="/guarantee" element={<Guarantee />} />
+    <Route path="/webinar" element={<Webinar />} />
     <Route path="/admin" element={<AdminLayout />}>
       <Route index element={<AdminDashboard />} />
       <Route path="coaches" element={<AdminCoaches />} />

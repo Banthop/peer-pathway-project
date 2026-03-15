@@ -11,8 +11,7 @@ import {
 import type { StoredCoach } from "@/data/coachStore";
 import type { Coach } from "@/types/coach";
 import type { Coach as BrowseCoach } from "@/data/dashboardData";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 
 /* ─── Types ────────────────────────────────────────────────── */
 

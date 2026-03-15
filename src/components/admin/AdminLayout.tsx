@@ -65,7 +65,7 @@ export default function AdminLayout() {
                 </div>
 
                 {/* Main content */}
-                <main className="flex-1 md:ml-[220px] mt-0 md:mt-0">
+                <main className="flex-1 md:ml-[220px] pt-[104px] md:pt-[72px]">
                     <Outlet />
                 </main>
             </div>
