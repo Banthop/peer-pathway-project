@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarlyEdge — Email Collage Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* ── Controls Panel ── */
+  .controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: #141414;
+    border-right: 1px solid #222;
+    padding: 24px 20px;
+    z-index: 100;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .controls h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .controls p {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .controls label {
+    font-size: 11px;
+    font-weight: 500;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .controls select,
+  .controls input[type="text"],
+  .controls input[type="number"] {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .controls select:focus,
+  .controls input:focus {
+    outline: none;
+    border-color: #555;
+  }
+
+  .upload-zone {
+    border: 2px dashed #333;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .upload-zone:hover { border-color: #555; }
+  .upload-zone p { font-size: 12px; color: #666; }
+  .upload-zone input { display: none; }
+
+  .btn {
+    background: #fff;
+    color: #111;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: #e0e0e0; }
+  .btn-sm {
+    padding: 6px 12px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+  .btn-outline {
+    background: transparent;
+    color: #888;
+    border: 1px solid #333;
+  }
+  .btn-outline:hover { border-color: #555; color: #fff; }
+  .btn-danger {
+    background: transparent;
+    color: #f43f5e;
+    border: 1px solid #333;
+  }
+  .btn-danger:hover { background: #f43f5e22; }
+
+  .image-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .image-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #1a1a1a;
+    border-radius: 6px;
+    font-size: 11px;
+    color: #aaa;
+  }
+  .image-item img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  .image-item .name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .image-item button {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .image-item button:hover { color: #f43f5e; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 4px 0;
+  }
+
+  /* ── Canvas Area ── */
+  .canvas-wrapper {
+    margin-left: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+
+  #collage {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    background: #111111;
+    border-radius: 4px;
+    overflow: hidden;
+    transform-origin: top left;
+  }
+
+  /* ── Logo ── */
+  .logo-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+  }
+  .logo-text {
+    font-size: 72px;
+    letter-spacing: -1.5px;
+    color: #fff;
+    line-height: 1;
+  }
+  .logo-text .light { font-weight: 300; }
+  .logo-text .bold { font-weight: 700; }
+
+  .logo-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: #555;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Email Cards ── */
+  .email-card {
+    position: absolute;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+    cursor: move;
+    user-select: none;
+    transition: box-shadow 0.2s;
+  }
+  .email-card:hover {
+    box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .email-card.selected {
+    outline: 2px solid #8B5CF6;
+    outline-offset: 2px;
+  }
+  .email-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Blur Overlays (pixelation) ── */
+  .blur-overlay {
+    position: absolute;
+    border-radius: 4px;
+    cursor: move;
+    z-index: 5;
+    min-width: 20px;
+    min-height: 12px;
+    overflow: hidden;
+  }
+  .blur-overlay canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    border-radius: 4px;
+  }
+  .blur-overlay.selected {
+    outline: 1px solid #8B5CF6;
+  }
+
+  /* Resize handle on blur overlays */
+  .blur-resize {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+    background: #8b5cf6;
+    border-radius: 2px;
+    opacity: 0;
+  }
+  .blur-overlay:hover .blur-resize,
+  .blur-overlay.selected .blur-resize {
+    opacity: 1;
+  }
+
+  /* Card resize handle */
+  .card-resize {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    cursor: nwse-resize;
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+    opacity: 0;
+    z-index: 6;
+  }
+  .email-card:hover .card-resize,
+  .email-card.selected .card-resize {
+    opacity: 1;
+  }
+
+  /* ── Toolbar on selected card ── */
+  .card-toolbar {
+    position: absolute;
+    top: -36px;
+    left: 0;
+    display: flex;
+    gap: 4px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .email-card.selected .card-toolbar {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .card-toolbar button {
+    background: #222;
+    border: 1px solid #444;
+    color: #ccc;
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+  .card-toolbar button:hover { background: #333; color: #fff; }
+
+  /* ── Subtle glow spots ── */
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  /* ── Scale indicator ── */
+  .scale-indicator {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: #666;
+    z-index: 50;
+  }
+
+  .shortcut-list {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.8;
+  }
+  .shortcut-list kbd {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+
+<!-- Controls Panel -->
+<div class="controls">
+  <div>
+    <h2>📧 Email Collage Builder</h2>
+    <p>Upload email screenshots, arrange them, and blur personal info.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div>
+    <label>Upload Screenshots</label>
+    <div class="upload-zone" id="uploadZone">
+      <p>Click, drop, or <strong style="color:#aaa">Ctrl+V paste</strong></p>
+      <input type="file" id="fileInput" multiple accept="image/*">
+    </div>
+  </div>
+
+  <div class="image-list" id="imageList"></div>
+
+  <hr class="divider">
+
+  <div>
+    <label>Headline Text</label>
+    <input type="text" id="headlineInput" value="What happens when you learn to cold email properly" placeholder="Headline text...">
+  </div>
+
+  <div>
+    <label>Background</label>
+    <select id="bgSelect">
+      <option value="#111111">Dark (Default)</option>
+      <option value="#0a0a0a">Darker</option>
+      <option value="#1a1a2e">Navy</option>
+      <option value="#ffffff">White</option>
+    </select>
+  </div>
+
+  <div>
+    <label>Layout Preset</label>
+    <select id="layoutSelect">
+      <option value="scattered">Scattered (Slight tilt)</option>
+      <option value="grid">Clean Grid</option>
+      <option value="orbit">Around Logo</option>
+    </select>
+    <button class="btn btn-outline btn-sm" style="margin-top:6px; width:100%" onclick="applyLayout()">Apply Layout</button>
+  </div>
+
+  <hr class="divider">
+
+  <div>
+    <label>Shortcuts</label>
+    <div class="shortcut-list">
+      <kbd>⌘V</kbd> Paste image from clipboard<br>
+      <kbd>B</kbd> Add blur to selected card<br>
+      <kbd>Del</kbd> Delete selected element<br>
+      <kbd>↑↓←→</kbd> Nudge selected<br>
+      <kbd>[</kbd> <kbd>]</kbd> Rotate selected<br>
+      Click card, then drag blur boxes
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <button class="btn" style="width:100%" onclick="exportCollage()">📸 Export as PNG</button>
+  <p style="font-size:10px; color:#444; text-align:center">Right-click the canvas → Save Image, or use the export button</p>
+</div>
+
+<!-- Canvas -->
+<div class="canvas-wrapper">
+  <div id="collage">
+    <!-- Subtle glows -->
+    <div class="glow" style="width:300px;height:300px;background:#8B5CF6;top:10%;left:5%"></div>
+    <div class="glow" style="width:250px;height:250px;background:#3B82F6;bottom:15%;right:8%"></div>
+
+    <!-- Logo -->
+    <div class="logo-center" id="logoCenter">
+      <div class="logo-text">
+        <span class="light">Early</span><span class="bold">Edge</span>
+      </div>
+      <div class="logo-subtitle" id="headline">What happens when you learn to cold email properly</div>
+    </div>
+  </div>
+</div>
+
+<div class="scale-indicator" id="scaleIndicator">100%</div>
+
+<script>
+  const collage = document.getElementById('collage');
+  const fileInput = document.getElementById('fileInput');
+  const uploadZone = document.getElementById('uploadZone');
+  const imageListEl = document.getElementById('imageList');
+  const headlineInput = document.getElementById('headlineInput');
+  const bgSelect = document.getElementById('bgSelect');
+  const headline = document.getElementById('headline');
+
+  let cards = [];
+  let selectedEl = null;
+  let dragState = null;
+
+  // Scale collage to fit
+  function scaleCollage() {
+    const wrapper = document.querySelector('.canvas-wrapper');
+    const maxW = wrapper.clientWidth - 80;
+    const maxH = wrapper.clientHeight - 80;
+    const scale = Math.min(maxW / 1080, maxH / 1080, 1);
+    collage.style.transform = `scale(${scale})`;
+    document.getElementById('scaleIndicator').textContent = `${Math.round(scale * 100)}%`;
+  }
+  window.addEventListener('resize', scaleCollage);
+  scaleCollage();
+
+  // Upload
+  uploadZone.addEventListener('click', () => fileInput.click());
+  uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.style.borderColor = '#8B5CF6'; });
+  uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor = '#333'; });
+  uploadZone.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadZone.style.borderColor = '#333';
+    handleFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+  // ── Clipboard paste (Ctrl+V / Cmd+V) ──
+  document.addEventListener('paste', e => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const blob = item.getAsFile();
+        const reader = new FileReader();
+        reader.onload = ev => addCard(ev.target.result, `pasted-${Date.now()}.png`);
+        reader.readAsDataURL(blob);
+        return;
+      }
+    }
+  });
+
+  function handleFiles(files) {
+    Array.from(files).forEach((file, i) => {
+      const reader = new FileReader();
+      reader.onload = e => addCard(e.target.result, file.name);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function addCard(src, name) {
+    const idx = cards.length;
+
+    // Default positions in a rough circle
+    const positions = [
+      { x: 40, y: 40 }, { x: 400, y: 30 }, { x: 720, y: 50 },
+      { x: 40, y: 400 }, { x: 720, y: 420 },
+      { x: 40, y: 720 }, { x: 380, y: 740 }, { x: 700, y: 700 },
+      { x: 200, y: 200 }, { x: 600, y: 250 }
+    ];
+    const pos = positions[idx % positions.length];
+    const rotation = (Math.random() - 0.5) * 6;
+
+    const card = document.createElement('div');
+    card.className = 'email-card';
+    card.style.left = pos.x + 'px';
+    card.style.top = pos.y + 'px';
+    card.style.width = '320px';
+    card.style.transform = `rotate(${rotation}deg)`;
+    card.dataset.rotation = rotation;
+    card.dataset.idx = idx;
+
+    const img = document.createElement('img');
+    img.src = src;
+    img.draggable = false;
+    card.appendChild(img);
+
+    // Resize handle
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'card-resize';
+    card.appendChild(resizeHandle);
+
+    // Toolbar
+    const toolbar = document.createElement('div');
+    toolbar.className = 'card-toolbar';
+    toolbar.innerHTML = `
+      <button onclick="addBlurToCard(${idx})">+ Blur</button>
+      <button onclick="removeCard(${idx})">✕ Remove</button>
+    `;
+    card.appendChild(toolbar);
+
+    // Make draggable
+    card.addEventListener('mousedown', e => {
+      if (e.target === resizeHandle) return;
+      if (e.target.tagName === 'BUTTON') return;
+      selectEl(card);
+      const rect = card.getBoundingClientRect();
+      const collageRect = collage.getBoundingClientRect();
+      const scale = collageRect.width / 1080;
+      dragState = {
+        el: card,
+        type: 'card',
+        offsetX: (e.clientX - rect.left) / scale,
+        offsetY: (e.clientY - rect.top) / scale,
+      };
+      e.preventDefault();
+    });
+
+    // Resize
+    resizeHandle.addEventListener('mousedown', e => {
+      e.stopPropagation();
+      selectEl(card);
+      const startW = card.offsetWidth;
+      const startX = e.clientX;
+      const collageRect = collage.getBoundingClientRect();
+      const scale = collageRect.width / 1080;
+
+      function onMove(e2) {
+        const dw = (e2.clientX - startX) / scale;
+        card.style.width = Math.max(120, startW + dw) + 'px';
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    collage.appendChild(card);
+
+    cards.push({ el: card, name, src });
+    updateImageList();
+    selectEl(card);
+  }
+
+  function removeCard(idx) {
+    const card = cards[idx];
+    if (card && card.el) {
+      card.el.remove();
+      cards[idx] = null;
+      if (selectedEl === card.el) selectedEl = null;
+      updateImageList();
+    }
+  }
+
+  function addBlurToCard(idx) {
+    const card = cards[idx];
+    if (!card || !card.el) return;
+
+    const blur = document.createElement('div');
+    blur.className = 'blur-overlay';
+    blur.style.left = '10px';
+    blur.style.top = '10px';
+    blur.style.width = '140px';
+    blur.style.height = '24px';
+
+    // Create pixelation canvas
+    const canvas = document.createElement('canvas');
+    blur.appendChild(canvas);
+
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'blur-resize';
+    blur.appendChild(resizeHandle);
+
+    // Render pixelated content from the source image
+    function renderPixelation() {
+      const img = card.el.querySelector('img');
+      if (!img || !img.naturalWidth) return;
+
+      const cardW = card.el.offsetWidth;
+      const cardH = card.el.offsetHeight || img.naturalHeight * (cardW / img.naturalWidth);
+      const blurLeft = parseFloat(blur.style.left) || 0;
+      const blurTop = parseFloat(blur.style.top) || 0;
+      const blurW = blur.offsetWidth;
+      const blurH = blur.offsetHeight;
+
+      // Map blur position to source image coordinates
+      const scaleX = img.naturalWidth / cardW;
+      const scaleY = img.naturalHeight / cardH;
+      const srcX = blurLeft * scaleX;
+      const srcY = blurTop * scaleY;
+      const srcW = blurW * scaleX;
+      const srcH = blurH * scaleY;
+
+      // Pixelation: draw at tiny size then scale up
+      const pixelSize = 6; // smaller = more pixelated
+      const tinyW = Math.max(2, Math.round(blurW / pixelSize));
+      const tinyH = Math.max(2, Math.round(blurH / pixelSize));
+
+      canvas.width = tinyW;
+      canvas.height = tinyH;
+      canvas.style.width = blurW + 'px';
+      canvas.style.height = blurH + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+
+      try {
+        ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, tinyW, tinyH);
+      } catch(e) {
+        // fallback: solid color
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(0, 0, tinyW, tinyH);
+      }
+    }
+
+    // Render on load and periodically on move/resize
+    blur._renderPixelation = renderPixelation;
+    const img = card.el.querySelector('img');
+    if (img.complete) {
+      setTimeout(renderPixelation, 50);
+    } else {
+      img.addEventListener('load', renderPixelation);
+    }
+
+    // Drag blur
+    blur.addEventListener('mousedown', e => {
+      if (e.target === resizeHandle) return;
+      e.stopPropagation();
+      selectEl(blur);
+      const rect = blur.getBoundingClientRect();
+      const cardRect = card.el.getBoundingClientRect();
+      const scale = cardRect.width / card.el.offsetWidth;
+      dragState = {
+        el: blur,
+        type: 'blur',
+        parent: card.el,
+        offsetX: (e.clientX - rect.left) / scale,
+        offsetY: (e.clientY - rect.top) / scale,
+        onMove: renderPixelation,
+      };
+      e.preventDefault();
+    });
+
+    // Resize blur
+    resizeHandle.addEventListener('mousedown', e => {
+      e.stopPropagation();
+      selectEl(blur);
+      const startW = blur.offsetWidth;
+      const startH = blur.offsetHeight;
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const cardRect = card.el.getBoundingClientRect();
+      const scale = cardRect.width / card.el.offsetWidth;
+
+      function onMove(e2) {
+        blur.style.width = Math.max(20, startW + (e2.clientX - startX) / scale) + 'px';
+        blur.style.height = Math.max(12, startH + (e2.clientY - startY) / scale) + 'px';
+        renderPixelation();
+      }
+      function onUp() {
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
+    card.el.appendChild(blur);
+    selectEl(blur);
+  }
+
+  function selectEl(el) {
+    document.querySelectorAll('.selected').forEach(e => e.classList.remove('selected'));
+    selectedEl = el;
+    if (el) el.classList.add('selected');
+  }
+
+  // Global mouse events for dragging
+  document.addEventListener('mousemove', e => {
+    if (!dragState) return;
+    const collageRect = collage.getBoundingClientRect();
+    const scale = collageRect.width / 1080;
+
+    if (dragState.type === 'card') {
+      const x = (e.clientX - collageRect.left) / scale - dragState.offsetX;
+      const y = (e.clientY - collageRect.top) / scale - dragState.offsetY;
+      dragState.el.style.left = x + 'px';
+      dragState.el.style.top = y + 'px';
+    } else if (dragState.type === 'blur') {
+      const parentRect = dragState.parent.getBoundingClientRect();
+      const scale2 = parentRect.width / dragState.parent.offsetWidth;
+      const x = (e.clientX - parentRect.left) / scale2 - dragState.offsetX;
+      const y = (e.clientY - parentRect.top) / scale2 - dragState.offsetY;
+      dragState.el.style.left = Math.max(0, x) + 'px';
+      dragState.el.style.top = Math.max(0, y) + 'px';
+      // Re-render pixelation as blur moves
+      if (dragState.onMove) dragState.onMove();
+    }
+  });
+
+  document.addEventListener('mouseup', () => { dragState = null; });
+
+  // Click on canvas background to deselect
+  collage.addEventListener('mousedown', e => {
+    if (e.target === collage) selectEl(null);
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+    if (!selectedEl) return;
+
+    const step = e.shiftKey ? 10 : 2;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+        selectedEl.style.left = (parseInt(selectedEl.style.left) - step) + 'px';
+        e.preventDefault(); break;
+      case 'ArrowRight':
+        selectedEl.style.left = (parseInt(selectedEl.style.left) + step) + 'px';
+        e.preventDefault(); break;
+      case 'ArrowUp':
+        selectedEl.style.top = (parseInt(selectedEl.style.top) - step) + 'px';
+        e.preventDefault(); break;
+      case 'ArrowDown':
+        selectedEl.style.top = (parseInt(selectedEl.style.top) + step) + 'px';
+        e.preventDefault(); break;
+      case 'Delete':
+      case 'Backspace':
+        if (selectedEl.classList.contains('blur-overlay')) {
+          selectedEl.remove();
+          selectedEl = null;
+        } else if (selectedEl.classList.contains('email-card')) {
+          const idx = parseInt(selectedEl.dataset.idx);
+          removeCard(idx);
+        }
+        e.preventDefault(); break;
+      case 'b':
+      case 'B':
+        if (selectedEl.classList.contains('email-card')) {
+          addBlurToCard(parseInt(selectedEl.dataset.idx));
+        }
+        e.preventDefault(); break;
+      case '[':
+        if (selectedEl.classList.contains('email-card')) {
+          const r = parseFloat(selectedEl.dataset.rotation || 0) - 1;
+          selectedEl.dataset.rotation = r;
+          selectedEl.style.transform = `rotate(${r}deg)`;
+        }
+        e.preventDefault(); break;
+      case ']':
+        if (selectedEl.classList.contains('email-card')) {
+          const r = parseFloat(selectedEl.dataset.rotation || 0) + 1;
+          selectedEl.dataset.rotation = r;
+          selectedEl.style.transform = `rotate(${r}deg)`;
+        }
+        e.preventDefault(); break;
+    }
+  });
+
+  // Update image list in sidebar
+  function updateImageList() {
+    imageListEl.innerHTML = '';
+    cards.forEach((c, i) => {
+      if (!c) return;
+      const div = document.createElement('div');
+      div.className = 'image-item';
+      div.innerHTML = `
+        <img src="${c.src}" alt="">
+        <span class="name">${c.name}</span>
+        <button onclick="removeCard(${i})">✕</button>
+      `;
+      div.addEventListener('click', () => selectEl(c.el));
+      imageListEl.appendChild(div);
+    });
+  }
+
+  // Headline
+  headlineInput.addEventListener('input', () => {
+    headline.textContent = headlineInput.value;
+  });
+
+  // Background
+  bgSelect.addEventListener('change', () => {
+    collage.style.background = bgSelect.value;
+    // Adjust logo color for white bg
+    const logo = document.querySelector('.logo-text');
+    const sub = document.querySelector('.logo-subtitle');
+    if (bgSelect.value === '#ffffff') {
+      logo.style.color = '#111';
+      sub.style.color = '#888';
+    } else {
+      logo.style.color = '#fff';
+      sub.style.color = '#555';
+    }
+  });
+
+  // Layout presets
+  function applyLayout() {
+    const layout = document.getElementById('layoutSelect').value;
+    const active = cards.filter(c => c !== null);
+    const n = active.length;
+    if (n === 0) return;
+
+    if (layout === 'grid') {
+      const cols = n <= 4 ? 2 : 3;
+      const cardW = 300;
+      const gap = 30;
+      const totalW = cols * cardW + (cols - 1) * gap;
+      const startX = (1080 - totalW) / 2;
+      let row = 0, col = 0;
+      active.forEach((c, i) => {
+        const x = startX + col * (cardW + gap);
+        const y = 60 + row * 340;
+        c.el.style.left = x + 'px';
+        c.el.style.top = y + 'px';
+        c.el.style.width = cardW + 'px';
+        c.el.dataset.rotation = 0;
+        c.el.style.transform = 'rotate(0deg)';
+        col++;
+        if (col >= cols) { col = 0; row++; }
+      });
+    } else if (layout === 'orbit') {
+      const cx = 540, cy = 540, radius = 380;
+      active.forEach((c, i) => {
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        const x = cx + Math.cos(angle) * radius - 150;
+        const y = cy + Math.sin(angle) * radius - 100;
+        const rot = (Math.random() - 0.5) * 8;
+        c.el.style.left = x + 'px';
+        c.el.style.top = y + 'px';
+        c.el.style.width = '280px';
+        c.el.dataset.rotation = rot;
+        c.el.style.transform = `rotate(${rot}deg)`;
+      });
+    } else { // scattered
+      const positions = [
+        { x: 30, y: 30 }, { x: 380, y: 20 }, { x: 710, y: 40 },
+        { x: 20, y: 380 }, { x: 730, y: 400 },
+        { x: 40, y: 700 }, { x: 370, y: 730 }, { x: 690, y: 690 },
+        { x: 200, y: 180 }, { x: 580, y: 220 }
+      ];
+      active.forEach((c, i) => {
+        const pos = positions[i % positions.length];
+        const rot = (Math.random() - 0.5) * 6;
+        c.el.style.left = pos.x + 'px';
+        c.el.style.top = pos.y + 'px';
+        c.el.style.width = '310px';
+        c.el.dataset.rotation = rot;
+        c.el.style.transform = `rotate(${rot}deg)`;
+      });
+    }
+  }
+
+  // Export
+  async function exportCollage() {
+    // Remove selection outlines
+    selectEl(null);
+
+    // Use html2canvas if available, otherwise prompt screenshot
+    if (typeof html2canvas !== 'undefined') {
+      const canvas = await html2canvas(collage, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+      });
+      const link = document.createElement('a');
+      link.download = 'earlyedge-email-collage.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } else {
+      // Dynamically load html2canvas
+      const script = document.createElement('script');
+      script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+      script.onload = async () => {
+        const canvas = await html2canvas(collage, {
+          scale: 2,
+          backgroundColor: null,
+          useCORS: true,
+        });
+        const link = document.createElement('a');
+        link.download = 'earlyedge-email-collage.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+      document.head.appendChild(script);
+    }
+  }
+</script>
+</body>
+</html>

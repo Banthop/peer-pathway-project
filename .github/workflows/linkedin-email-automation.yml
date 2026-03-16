@@ -1,0 +1,33 @@
+name: LinkedIn Comment → Email Automation
+
+on:
+  schedule:
+    # Every 10 minutes
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Manual trigger button in GitHub
+
+jobs:
+  scrape-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Restore sent-emails log from cache so we don't double-send
+      - name: Restore sent emails cache
+        uses: actions/cache@v4
+        with:
+          path: linkedin-sent-emails.json
+          key: linkedin-sent-emails-${{ github.run_id }}
+          restore-keys: linkedin-sent-emails-
+
+      - name: Run automation
+        env:
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          LINKEDIN_POST_URL: ${{ secrets.LINKEDIN_POST_URL }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+        run: node scripts/linkedin-email-automation.mjs
