@@ -1,16 +1,11 @@
 {
-    "rewrites": [
+    "routes": [
         {
-            "source": "/webinar",
-            "destination": "/webinar"
+            "handle": "filesystem"
         },
         {
-            "source": "/webinar/:path*",
-            "destination": "/webinar"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/webinar"
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
