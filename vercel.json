@@ -1,7 +1,15 @@
 {
     "rewrites": [
         {
-            "source": "/",
+            "source": "/webinar",
+            "destination": "/webinar"
+        },
+        {
+            "source": "/webinar/:path*",
+            "destination": "/webinar"
+        },
+        {
+            "source": "/(.*)",
             "destination": "/webinar"
         }
     ]
