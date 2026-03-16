@@ -11,9 +11,9 @@ export const WEBINAR_DURATION = "90 min";
 
 // -- Stripe Payment Links --
 export const STRIPE_WEBINAR_ONLY_LINK =
-  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
+  "https://buy.stripe.com/bJe00ifLm6lH6uK88Q2400b";
 export const STRIPE_BUNDLE_LINK =
-  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
+  "https://buy.stripe.com/bJe00ifLm6lH6uK88Q2400b";
 
 // -- Form option lists --
 export const INDUSTRY_OPTIONS = [

@@ -90,7 +90,7 @@ export default function Webinar() {
         setTimeout(() => {
           setShowTransition(false);
         }, 400);
-      }, 1800);
+      }, 1000);
     }
 
     return null;
