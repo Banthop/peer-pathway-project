@@ -76,7 +76,7 @@ function ImageLightbox({ src, onClose }: { src: string; onClose: () => void }) {
   );
 }
 
-/* ---- Mini FAQ ---- */
+/* ---- FAQ ---- */
 function MiniFAQ() {
   const [open, setOpen] = useState<number | null>(null);
   const faqs = [
@@ -91,7 +91,7 @@ function MiniFAQ() {
       <div className="flex items-center gap-1.5 mb-2">
         <HelpCircle className="h-4 w-4 text-muted-foreground" />
         <span className="text-xs font-sans font-semibold text-muted-foreground uppercase tracking-wider">
-          Common Questions
+          Frequently Asked Questions
         </span>
       </div>
       {faqs.map((faq, i) => (
@@ -327,7 +327,7 @@ export function TicketStep({
           ))}
           <li className="flex items-start gap-2.5 text-sm font-sans text-foreground">
             <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
-            <span><strong>The Cold Email Guide</strong> - instant access, use it to prepare before the webinar</span>
+            <span><strong>The Cold Email Guide</strong> - get access instantly, and use it to prepare ahead of the webinar</span>
           </li>
         </ul>
 
@@ -341,13 +341,17 @@ export function TicketStep({
           </div>
           <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
             <strong>This is the exact guide Uthman personally used</strong> to land 20+ internship offers.
-            Not generic advice from the internet. The real system, step by step, that you can copy and start
-            using <strong>the same day you get it</strong>.
-            {" "}Perfect for breaking into <strong>{industry}</strong>.
-            {" "}<strong>You get access today</strong> - start researching and preparing ahead of the webinar.
+            This is not generic advice from the internet, it's a real system, step by step, that you can
+            copy and <strong>start using today</strong>.
+          </p>
+          <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
+            It's perfect for breaking into <strong>{industry}</strong>.
+          </p>
+          <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
+            Use it to start researching and preparing before the webinar.
           </p>
 
-          {/* Clickable email proof with expand hint */}
+          {/* Clickable email proof - taller preview */}
           <div
             className="relative rounded-lg overflow-hidden mb-4 border border-slate-200 cursor-pointer group"
             onClick={(e) => {
@@ -358,7 +362,7 @@ export function TicketStep({
             <img
               src="/email-proof.png"
               alt="Real internship offer"
-              className="w-full h-32 object-cover object-top transition-transform duration-200 group-hover:scale-[1.02]"
+              className="w-full h-48 object-cover object-top transition-transform duration-200 group-hover:scale-[1.02]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-transparent to-transparent" />
             {/* Expand overlay */}
@@ -393,7 +397,7 @@ export function TicketStep({
             ))}
           </div>
           <p className="mt-4 text-xs text-muted-foreground font-sans italic">
-            "This guide alone is worth more than the entire bundle price." - Previous attendee
+            "This guide alone helped me land my summer in PE." - Karan M., LSE
           </p>
         </div>
 
