@@ -42,6 +42,9 @@ import Webinar from "./pages/Webinar";
 
 const queryClient = new QueryClient();
 
+// When true, ONLY the /webinar route is accessible (for production subdomain deploy)
+const WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
+
 /** Simple centered spinner shown while auth state loads */
 function AuthLoading() {
   return (
@@ -98,50 +101,61 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Index />} />
-    <Route path="/coach/:coachId" element={<CoachProfile />} />
-    <Route path="/become-a-coach" element={<BecomeACoach />} />
-    <Route path="/browse" element={<DashboardBrowse />} />
-    <Route path="/events" element={<PublicEvents />} />
-    <Route path="/resources" element={<PublicResources />} />
-    <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-    <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
-    <Route path="/forgot-password" element={<ForgotPassword />} />
-    <Route path="/coach/signup" element={<CoachSignup />} />
-    <Route path="/dashboard" element={<StudentRoute><DashboardLayout /></StudentRoute>}>
-      <Route index element={<DashboardOverview />} />
-      <Route path="bookings" element={<DashboardBookings />} />
-      <Route path="browse" element={<DashboardBrowse />} />
-      <Route path="messages" element={<DashboardMessages />} />
-      <Route path="events" element={<DashboardEvents />} />
-      <Route path="resources" element={<DashboardResources />} />
-    </Route>
-    <Route path="/coach-onboarding" element={<CoachRoute><CoachOnboarding /></CoachRoute>} />
-    <Route path="/coach-dashboard" element={<CoachRoute><CoachDashboardLayout /></CoachRoute>}>
-      <Route index element={<CoachOverview />} />
-      <Route path="sessions" element={<CoachSessions />} />
-      <Route path="messages" element={<CoachMessages />} />
-      <Route path="earnings" element={<CoachEarnings />} />
-      <Route path="reviews" element={<CoachReviews />} />
-      <Route path="edit-profile" element={<CoachEditProfile />} />
-      <Route path="analytics" element={<CoachAnalytics />} />
-      <Route path="payouts" element={<StripeConnect />} />
-      <Route path="events" element={<CoachEvents />} />
-      <Route path="resources" element={<CoachResources />} />
-    </Route>
-    <Route path="/guarantee" element={<Guarantee />} />
-    <Route path="/webinar" element={<Webinar />} />
-    <Route path="/admin" element={<AdminLayout />}>
-      <Route index element={<AdminDashboard />} />
-      <Route path="coaches" element={<AdminCoaches />} />
-      <Route path="outreach" element={<AdminOutreach />} />
-    </Route>
-    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-    <Route path="*" element={<NotFound />} />
-  </Routes>
-);
+const AppRoutes = () => {
+  if (WEBINAR_ONLY) {
+    return (
+      <Routes>
+        <Route path="/webinar" element={<Webinar />} />
+        <Route path="*" element={<Navigate to="/webinar" replace />} />
+      </Routes>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/coach/:coachId" element={<CoachProfile />} />
+      <Route path="/become-a-coach" element={<BecomeACoach />} />
+      <Route path="/browse" element={<DashboardBrowse />} />
+      <Route path="/events" element={<PublicEvents />} />
+      <Route path="/resources" element={<PublicResources />} />
+      <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+      <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/coach/signup" element={<CoachSignup />} />
+      <Route path="/dashboard" element={<StudentRoute><DashboardLayout /></StudentRoute>}>
+        <Route index element={<DashboardOverview />} />
+        <Route path="bookings" element={<DashboardBookings />} />
+        <Route path="browse" element={<DashboardBrowse />} />
+        <Route path="messages" element={<DashboardMessages />} />
+        <Route path="events" element={<DashboardEvents />} />
+        <Route path="resources" element={<DashboardResources />} />
+      </Route>
+      <Route path="/coach-onboarding" element={<CoachRoute><CoachOnboarding /></CoachRoute>} />
+      <Route path="/coach-dashboard" element={<CoachRoute><CoachDashboardLayout /></CoachRoute>}>
+        <Route index element={<CoachOverview />} />
+        <Route path="sessions" element={<CoachSessions />} />
+        <Route path="messages" element={<CoachMessages />} />
+        <Route path="earnings" element={<CoachEarnings />} />
+        <Route path="reviews" element={<CoachReviews />} />
+        <Route path="edit-profile" element={<CoachEditProfile />} />
+        <Route path="analytics" element={<CoachAnalytics />} />
+        <Route path="payouts" element={<StripeConnect />} />
+        <Route path="events" element={<CoachEvents />} />
+        <Route path="resources" element={<CoachResources />} />
+      </Route>
+      <Route path="/guarantee" element={<Guarantee />} />
+      <Route path="/webinar" element={<Webinar />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="coaches" element={<AdminCoaches />} />
+        <Route path="outreach" element={<AdminOutreach />} />
+      </Route>
+      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
