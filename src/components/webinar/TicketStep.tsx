@@ -345,10 +345,7 @@ export function TicketStep({
             copy and <strong>start using today</strong>.
           </p>
           <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
-            It's perfect for breaking into <strong>{industry}</strong>.
-          </p>
-          <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
-            Use it to start researching and preparing before the webinar.
+            It's perfect for breaking into <strong>{industry}</strong>. Use it to start researching and preparing before the webinar.
           </p>
 
           {/* Clickable email proof - taller preview */}

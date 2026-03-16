@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
@@ -11,7 +12,7 @@ import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { IndustryStep } from "@/components/webinar/IndustryStep";
 import { TicketStep } from "@/components/webinar/TicketStep";
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
-import { ChevronLeft, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Loader2 } from "lucide-react";
 
 function SuccessScreen({ name }: { name: string }) {
   return (
@@ -36,12 +37,32 @@ function SuccessScreen({ name }: { name: string }) {
   );
 }
 
+/* ---- Transition screen between industry and checkout ---- */
+function PreparingCheckout({ firstName }: { firstName: string }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="text-center space-y-5 animate-in fade-in duration-500">
+        <Loader2 className="h-8 w-8 mx-auto text-emerald-600 animate-spin" />
+        <div className="space-y-2">
+          <h2 className="text-xl font-sans font-light text-foreground">
+            Preparing your options{firstName ? `, ${firstName}` : ""}...
+          </h2>
+          <p className="text-sm text-muted-foreground font-sans font-light">
+            Finding the best deal for you
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Webinar() {
   const [searchParams] = useSearchParams();
   const isSuccess = searchParams.get("success") === "true";
 
   const form = useWebinarForm();
   const { toast } = useToast();
+  const [showTransition, setShowTransition] = useState(false);
 
   if (isSuccess) {
     const saved = localStorage.getItem("webinar_signup");
@@ -54,11 +75,25 @@ export default function Webinar() {
     const error = form.nextStep();
     if (error) {
       toast({ title: error, variant: "destructive" });
-    } else if (currentStep === 3) {
-      // User just passed the industry+referral step - save lead
-      saveWebinarLead(form.formData);
+      return error;
     }
-    return error;
+
+    // If transitioning from industry (step 3) to checkout (step 4),
+    // show a brief loading screen to make it feel more considered
+    if (currentStep === 3) {
+      saveWebinarLead(form.formData);
+      // Go back one step to hold position, show transition, then advance
+      form.prevStep();
+      setShowTransition(true);
+      setTimeout(() => {
+        form.nextStep();
+        setTimeout(() => {
+          setShowTransition(false);
+        }, 400);
+      }, 1800);
+    }
+
+    return null;
   };
 
   const handleCheckout = () => {
@@ -83,6 +118,23 @@ export default function Webinar() {
 
     window.location.href = url.toString();
   };
+
+  if (showTransition) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+        <div className="fixed top-0 left-0 right-0 z-40">
+          <Progress
+            value={form.progress}
+            className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+          />
+        </div>
+        <div className="absolute top-5 left-6 z-50">
+          <Logo to="#" className="text-xl pointer-events-none" />
+        </div>
+        <PreparingCheckout firstName={form.formData.firstName} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
