@@ -18,7 +18,7 @@ export function useUniversitySearch(query: string) {
     useEffect(() => {
         let cancelled = false;
 
-        fetch("http://universities.hipolabs.com/search?country=United+Kingdom")
+        fetch("https://universities.hipolabs.com/search?country=United+Kingdom")
             .then((res) => res.json())
             .then((data: UniversityEntry[]) => {
                 if (cancelled) return;

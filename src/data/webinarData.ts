@@ -1,6 +1,6 @@
 // -- Webinar metadata --
 export const WEBINAR_TITLE =
-  "How I got 20 internship offers in 3 weeks through cold emailing";
+  "How Uthman got 20 internship offers in 3 weeks through cold emailing";
 export const WEBINAR_SUBTITLE =
   "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 20 offers in just 3 weeks, all through cold emails.";
 export const WEBINAR_DATE = "24 March 2026";
