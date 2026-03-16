@@ -1,7 +1,11 @@
 {
   "redirects": [
-    { "source": "/", "destination": "/webinar", "permanent": false },
-    { "source": "/(?!webinar|assets|email-proof|favicon|_next).*", "destination": "/webinar", "permanent": false }
+    { "source": "/", "destination": "/webinar", "permanent": false }
   ],
-  "rewrites": [{ "source": "/webinar", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/webinar", "destination": "/index.html" },
+    { "source": "/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/email-proof.png", "destination": "/email-proof.png" },
+    { "source": "/:path*", "destination": "/index.html" }
+  ]
 }

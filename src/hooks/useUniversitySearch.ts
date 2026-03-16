@@ -1,52 +1,141 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
-interface UniversityEntry {
-    name: string;
-    country: string;
-    domains: string[];
-    web_pages: string[];
-}
+const UK_UNIVERSITIES = [
+  "Aberystwyth University",
+  "Anglia Ruskin University",
+  "Arts University Bournemouth",
+  "Aston University",
+  "Bangor University",
+  "Bath Spa University",
+  "Birkbeck, University of London",
+  "Birmingham City University",
+  "Bishop Grosseteste University",
+  "Bournemouth University",
+  "Brunel University London",
+  "Buckinghamshire New University",
+  "Canterbury Christ Church University",
+  "Cardiff Metropolitan University",
+  "Cardiff University",
+  "City, University of London",
+  "Coventry University",
+  "Cranfield University",
+  "De Montfort University",
+  "Durham University",
+  "Edge Hill University",
+  "Edinburgh Napier University",
+  "Falmouth University",
+  "Glasgow Caledonian University",
+  "Goldsmiths, University of London",
+  "Heriot-Watt University",
+  "Imperial College London",
+  "Keele University",
+  "King's College London",
+  "Kingston University",
+  "Lancaster University",
+  "Leeds Beckett University",
+  "Leeds Trinity University",
+  "Liverpool Hope University",
+  "Liverpool John Moores University",
+  "London Metropolitan University",
+  "London School of Economics and Political Science",
+  "London South Bank University",
+  "Loughborough University",
+  "Manchester Metropolitan University",
+  "Middlesex University",
+  "Newcastle University",
+  "Northumbria University",
+  "Norwich University of the Arts",
+  "Nottingham Trent University",
+  "Oxford Brookes University",
+  "Plymouth University",
+  "Queen Margaret University",
+  "Queen Mary University of London",
+  "Queen's University Belfast",
+  "Robert Gordon University",
+  "Roehampton University",
+  "Royal Holloway, University of London",
+  "Sheffield Hallam University",
+  "SOAS University of London",
+  "Solent University",
+  "St George's, University of London",
+  "Staffordshire University",
+  "Swansea University",
+  "Teesside University",
+  "The Open University",
+  "The University of Edinburgh",
+  "The University of Manchester",
+  "The University of Sheffield",
+  "The University of Warwick",
+  "UCL (University College London)",
+  "University of Aberdeen",
+  "University of Bath",
+  "University of Bedfordshire",
+  "University of Birmingham",
+  "University of Bolton",
+  "University of Bradford",
+  "University of Brighton",
+  "University of Bristol",
+  "University of Buckingham",
+  "University of Cambridge",
+  "University of Central Lancashire",
+  "University of Chester",
+  "University of Chichester",
+  "University of Derby",
+  "University of Dundee",
+  "University of East Anglia",
+  "University of East London",
+  "University of Essex",
+  "University of Exeter",
+  "University of Glasgow",
+  "University of Gloucestershire",
+  "University of Greenwich",
+  "University of Hertfordshire",
+  "University of Huddersfield",
+  "University of Hull",
+  "University of Kent",
+  "University of Leeds",
+  "University of Leicester",
+  "University of Lincoln",
+  "University of Liverpool",
+  "University of Northampton",
+  "University of Nottingham",
+  "University of Oxford",
+  "University of Plymouth",
+  "University of Portsmouth",
+  "University of Reading",
+  "University of Salford",
+  "University of South Wales",
+  "University of Southampton",
+  "University of St Andrews",
+  "University of Stirling",
+  "University of Strathclyde",
+  "University of Suffolk",
+  "University of Sunderland",
+  "University of Surrey",
+  "University of Sussex",
+  "University of the Arts London",
+  "University of the West of England",
+  "University of the West of Scotland",
+  "University of Westminster",
+  "University of Winchester",
+  "University of Wolverhampton",
+  "University of Worcester",
+  "University of York",
+  "York St John University",
+];
 
 /**
- * Fetches UK universities from the Hipo universities API on mount,
- * then provides instant local filtering as the user types.
+ * Provides instant local filtering of UK universities as the user types.
+ * Uses a built-in list so it works offline and on HTTPS without CORS issues.
  */
 export function useUniversitySearch(query: string) {
-    const [allUniversities, setAllUniversities] = useState<string[]>([]);
-    const [loading, setLoading] = useState(true);
+  const universities = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q || q.length < 2) return [];
+    return UK_UNIVERSITIES.filter((name) =>
+      name.toLowerCase().includes(q),
+    ).slice(0, 8);
+  }, [query]);
 
-    useEffect(() => {
-        let cancelled = false;
-
-        fetch("https://universities.hipolabs.com/search?country=United+Kingdom")
-            .then((res) => res.json())
-            .then((data: UniversityEntry[]) => {
-                if (cancelled) return;
-                // Deduplicate and sort alphabetically
-                const names = Array.from(
-                    new Set(data.map((u) => u.name)),
-                ).sort((a, b) => a.localeCompare(b));
-                setAllUniversities(names);
-            })
-            .catch(() => {
-                // Silently fail; user can still type manually
-            })
-            .finally(() => {
-                if (!cancelled) setLoading(false);
-            });
-
-        return () => {
-            cancelled = true;
-        };
-    }, []);
-
-    const filtered = useMemo(() => {
-        const q = query.trim().toLowerCase();
-        if (!q || q.length < 2) return [];
-        return allUniversities.filter((name) =>
-            name.toLowerCase().includes(q),
-        ).slice(0, 8); // limit to 8 suggestions
-    }, [query, allUniversities]);
-
-    return { universities: filtered, loading };
+  return { universities, loading: false };
 }
