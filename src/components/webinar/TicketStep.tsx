@@ -394,7 +394,7 @@ export function TicketStep({
             ))}
           </div>
           <p className="mt-4 text-xs text-muted-foreground font-sans italic">
-            "This guide alone helped me land my summer in PE." - Karan M., LSE
+            "This guide alone helped me land my summer in PE." - Birkaran P, LSE
           </p>
         </div>
 
