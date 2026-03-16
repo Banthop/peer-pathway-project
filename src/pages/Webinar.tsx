@@ -11,6 +11,7 @@ import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { IndustryStep } from "@/components/webinar/IndustryStep";
 import { ReferralStep } from "@/components/webinar/ReferralStep";
 import { TicketStep } from "@/components/webinar/TicketStep";
+import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
 import { ChevronLeft, CheckCircle2 } from "lucide-react";
 
 function SuccessScreen({ name }: { name: string }) {
@@ -51,9 +52,13 @@ export default function Webinar() {
   }
 
   const handleContinue = (): string | null => {
+    const currentStep = form.step;
     const error = form.nextStep();
     if (error) {
       toast({ title: error, variant: "destructive" });
+    } else if (currentStep === 4) {
+      // User just passed the referral step - save lead to Supabase
+      saveWebinarLead(form.formData);
     }
     return error;
   };
@@ -72,6 +77,9 @@ export default function Webinar() {
         timestamp: new Date().toISOString(),
       }),
     );
+
+    // Mark lead as proceeding to checkout
+    markLeadCheckout(form.formData.email);
 
     // Build Stripe Payment Link URL with prefilled email
     const url = new URL(ticket.stripeLink);
