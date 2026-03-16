@@ -1,33 +1,28 @@
-// ── Webinar metadata ──────────────────────────────────────────────
+// -- Webinar metadata --
 export const WEBINAR_TITLE =
-  "How I got 18 internship offers through cold emailing";
+  "How I got 20 internship offers in 3 weeks through cold emailing";
 export const WEBINAR_SUBTITLE =
-  "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 18 offers in 2 weeks — all through cold emails.";
+  "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 20 offers in just 3 weeks, all through cold emails.";
 export const WEBINAR_DATE = "TBC"; // replace with real date
 export const WEBINAR_TIME = "7:00 PM GMT";
-export const WEBINAR_DURATION = "60 min";
+export const WEBINAR_DURATION = "90 min";
 
-// ── Social proof / scarcity (edit these numbers as sign-ups grow) ──
-export const SPOTS_TOTAL = 100;
-export const SPOTS_TAKEN = 73;
 
-// ── Stripe Payment Links ─────────────────────────────────────────
-// Create two Payment Links in your Stripe Dashboard, then paste the
-// URLs here. Set each link's "After payment" redirect to:
-//   https://your-domain.com/webinar?success=true
+
+// -- Stripe Payment Links --
 export const STRIPE_WEBINAR_ONLY_LINK =
-  "https://buy.stripe.com/REPLACE_WITH_WEBINAR_ONLY_LINK";
+  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
 export const STRIPE_BUNDLE_LINK =
-  "https://buy.stripe.com/REPLACE_WITH_BUNDLE_LINK";
+  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
 
-// ── Form option lists ────────────────────────────────────────────
+// -- Form option lists --
 export const INDUSTRY_OPTIONS = [
-  "Investment Banking",
-  "Consulting",
+  "Finance",
   "Law",
-  "Software Engineering",
-  "Quant Finance",
+  "Consulting",
+  "Tech",
   "Marketing / Media",
+  "Healthcare",
   "Not sure yet",
 ] as const;
 
@@ -41,7 +36,35 @@ export const YEAR_OPTIONS = [
   "Recent Graduate",
 ] as const;
 
-// ── Ticket definitions ───────────────────────────────────────────
+export const REFERRAL_OPTIONS = [
+  "Instagram",
+  "TikTok",
+  "LinkedIn",
+  "Friend / Referral",
+  "University Society",
+  "Google",
+  "Other",
+] as const;
+
+export const COACHING_OPTIONS = [
+  {
+    value: "yes",
+    label: "Yes, I'd love that",
+    description: "I want tailored guidance to land my dream role",
+  },
+  {
+    value: "maybe",
+    label: "Maybe later",
+    description: "I'm interested but want to learn more first",
+  },
+  {
+    value: "no",
+    label: "No thanks",
+    description: "I'm just here for the webinar",
+  },
+] as const;
+
+// -- Ticket definitions --
 export interface Ticket {
   id: "webinar-only" | "bundle";
   name: string;
@@ -58,7 +81,8 @@ export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
     id: "webinar-only",
     name: "Webinar Only",
     price: 10,
-    description: "Live 60-min session + Q&A",
+    originalPrice: 19,
+    description: "Live 90-min session + Q&A",
     features: [
       "Live webinar access",
       "Q&A with the speaker",
@@ -70,17 +94,18 @@ export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
     id: "bundle",
     name: "Webinar + Cold Email Guide",
     price: 29,
-    originalPrice: 39,
-    description: "Everything above + the complete cold email playbook",
+    description: "Everything in Webinar Only, plus the complete cold email playbook",
     features: [
       "Live webinar access",
       "Q&A with the speaker",
       "Recording sent after",
       "Cold Email Guide (PDF)",
-      "12 proven email templates",
-      "Company research framework",
+      "Find emails of CEOs and key decision-makers",
+      "Write messages that actually get replies",
+      "Stand out in a flooded inbox",
+      "Turn cold emails into real offers",
     ],
-    badge: "MOST POPULAR",
+    badge: "BEST VALUE",
     stripeLink: STRIPE_BUNDLE_LINK,
   },
 };

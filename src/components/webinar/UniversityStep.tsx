@@ -1,9 +1,10 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { YEAR_OPTIONS } from "@/data/webinarData";
+import { useUniversitySearch } from "@/hooks/useUniversitySearch";
 import { cn } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search, Sparkles } from "lucide-react";
 
 interface UniversityStepProps {
   university: string;
@@ -19,15 +20,39 @@ export function UniversityStep({
   onContinue,
 }: UniversityStepProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { universities, loading } = useUniversitySearch(university);
 
   useEffect(() => {
     const t = setTimeout(() => inputRef.current?.focus(), 500);
     return () => clearTimeout(t);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node) &&
+        inputRef.current &&
+        !inputRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onContinue();
+  };
+
+  const handleSelect = (name: string) => {
+    onUpdate("university", name);
+    setShowDropdown(false);
   };
 
   return (
@@ -37,15 +62,61 @@ export function UniversityStep({
         <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
           Where do you study?
         </h2>
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="e.g. University of Manchester"
-          value={university}
-          onChange={(e) => onUpdate("university", e.target.value)}
-          className="font-sans text-base h-12 border-border"
-          autoComplete="organization"
-        />
+        <div className="relative">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Input
+              ref={inputRef}
+              type="text"
+              placeholder="Search for your university..."
+              value={university}
+              onChange={(e) => {
+                onUpdate("university", e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              className="font-sans text-base h-12 border-border pl-10 rounded-xl"
+              autoComplete="off"
+            />
+          </div>
+
+          {/* Dropdown suggestions */}
+          {showDropdown && universities.length > 0 && (
+            <div
+              ref={dropdownRef}
+              className="absolute z-50 w-full mt-1 bg-background border border-border rounded-xl shadow-lg overflow-hidden"
+            >
+              {universities.map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => handleSelect(name)}
+                  className={cn(
+                    "w-full text-left px-4 py-3 text-sm font-sans font-light transition-colors",
+                    "hover:bg-secondary focus:bg-secondary focus:outline-none",
+                    name === university
+                      ? "bg-secondary text-foreground"
+                      : "text-foreground",
+                  )}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Loading indicator */}
+          {loading && university.length >= 2 && showDropdown && (
+            <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-xl shadow-lg px-4 py-3">
+              <p className="text-sm text-muted-foreground font-sans font-light">
+                Loading universities...
+              </p>
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground font-sans font-light">
+          Can't find yours? Just type it in manually
+        </p>
       </div>
 
       {/* Year of study */}
@@ -60,9 +131,9 @@ export function UniversityStep({
               type="button"
               onClick={() => onUpdate("yearOfStudy", year)}
               className={cn(
-                "px-4 py-2 text-sm rounded-full border font-sans font-light transition-colors duration-200",
+                "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 yearOfStudy === year
-                  ? "bg-foreground text-background border-foreground"
+                  ? "bg-foreground text-background border-foreground shadow-sm"
                   : "bg-background text-foreground border-border hover:border-foreground/40",
               )}
             >
@@ -72,10 +143,18 @@ export function UniversityStep({
         </div>
       </div>
 
+      {/* Micro-reinforcement */}
+      {university && yearOfStudy && (
+        <div className="flex items-center gap-2 text-xs text-emerald-600 font-sans font-medium animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <Sparkles className="h-3.5 w-3.5" />
+          We've helped students at universities like yours land offers
+        </div>
+      )}
+
       {/* Continue */}
       <Button
         type="submit"
-        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-light px-8 py-3 text-sm rounded-lg w-full sm:w-auto"
+        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
       >
         Continue
         <ArrowRight className="ml-2 h-4 w-4" />

@@ -1,18 +1,25 @@
 import { useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { PhoneInput } from "@/components/webinar/PhoneInput";
+import { ArrowRight, Shield } from "lucide-react";
 
 interface NameEmailStepProps {
   firstName: string;
+  lastName: string;
   email: string;
-  onUpdate: (field: "firstName" | "email", value: string) => void;
+  phoneCode: string;
+  phone: string;
+  onUpdate: (field: "firstName" | "lastName" | "email" | "phoneCode" | "phone", value: string) => void;
   onContinue: () => string | null;
 }
 
 export function NameEmailStep({
   firstName,
+  lastName,
   email,
+  phoneCode,
+  phone,
   onUpdate,
   onContinue,
 }: NameEmailStepProps) {
@@ -29,34 +36,44 @@ export function NameEmailStep({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {/* First name */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Names row */}
       <div className="space-y-3">
         <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
-          What's your first name?
+          Let's start with your details
         </h2>
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="First name"
-          value={firstName}
-          onChange={(e) => onUpdate("firstName", e.target.value)}
-          className="font-sans text-base h-12 border-border"
-          autoComplete="given-name"
-        />
+        <p className="text-sm text-muted-foreground font-sans font-light">
+          This takes about 30 seconds
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder="First name"
+            value={firstName}
+            onChange={(e) => onUpdate("firstName", e.target.value)}
+            className="font-sans text-base h-12 border-border rounded-xl"
+            autoComplete="given-name"
+          />
+          <Input
+            type="text"
+            placeholder="Last name"
+            value={lastName}
+            onChange={(e) => onUpdate("lastName", e.target.value)}
+            className="font-sans text-base h-12 border-border rounded-xl"
+            autoComplete="family-name"
+          />
+        </div>
       </div>
 
       {/* Email */}
-      <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
-          And your email?
-        </h2>
+      <div className="space-y-2">
         <Input
           type="email"
-          placeholder="you@university.ac.uk"
+          placeholder="Email address"
           value={email}
           onChange={(e) => onUpdate("email", e.target.value)}
-          className="font-sans text-base h-12 border-border"
+          className="font-sans text-base h-12 border-border rounded-xl"
           autoComplete="email"
         />
         <p className="text-xs text-muted-foreground font-sans font-light">
@@ -64,14 +81,35 @@ export function NameEmailStep({
         </p>
       </div>
 
+      {/* Phone with country code */}
+      <div className="space-y-2">
+        <PhoneInput
+          phoneCode={phoneCode}
+          phone={phone}
+          onCodeChange={(code) => onUpdate("phoneCode", code)}
+          onPhoneChange={(val) => onUpdate("phone", val)}
+        />
+        <p className="text-xs text-muted-foreground font-sans font-light">
+          For reminders and last-minute updates only
+        </p>
+      </div>
+
       {/* Continue */}
-      <Button
-        type="submit"
-        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-light px-8 py-3 text-sm rounded-lg w-full sm:w-auto"
-      >
-        Continue
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
+      <div className="space-y-3">
+        <Button
+          type="submit"
+          className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
+        >
+          Continue
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+
+        {/* Trust signal */}
+        <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-sans font-light">
+          <Shield className="h-3 w-3" />
+          Your data is private and never shared
+        </p>
+      </div>
     </form>
   );
 }

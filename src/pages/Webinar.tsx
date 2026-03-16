@@ -9,6 +9,7 @@ import { WelcomeStep } from "@/components/webinar/WelcomeStep";
 import { NameEmailStep } from "@/components/webinar/NameEmailStep";
 import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { IndustryStep } from "@/components/webinar/IndustryStep";
+import { ReferralStep } from "@/components/webinar/ReferralStep";
 import { TicketStep } from "@/components/webinar/TicketStep";
 import { ChevronLeft, CheckCircle2 } from "lucide-react";
 
@@ -49,11 +50,12 @@ export default function Webinar() {
     return <SuccessScreen name={name} />;
   }
 
-  const handleContinue = () => {
+  const handleContinue = (): string | null => {
     const error = form.nextStep();
     if (error) {
       toast({ title: error, variant: "destructive" });
     }
+    return error;
   };
 
   const handleCheckout = () => {
@@ -91,7 +93,7 @@ export default function Webinar() {
 
       {/* Logo */}
       <div className="absolute top-5 left-6 z-50">
-        <Logo className="text-xl" />
+        <Logo to="#" className="text-xl pointer-events-none" />
       </div>
 
       {/* Step counter */}
@@ -125,7 +127,10 @@ export default function Webinar() {
           <WebinarFormStep isActive={form.step === 1} direction={form.direction}>
             <NameEmailStep
               firstName={form.formData.firstName}
+              lastName={form.formData.lastName}
               email={form.formData.email}
+              phoneCode={form.formData.phoneCode}
+              phone={form.formData.phone}
               onUpdate={form.updateField}
               onContinue={handleContinue}
             />
@@ -143,12 +148,21 @@ export default function Webinar() {
           <WebinarFormStep isActive={form.step === 3} direction={form.direction}>
             <IndustryStep
               industry={form.formData.industry}
+              industryDetail={form.formData.industryDetail}
               onUpdate={form.updateField}
               onContinue={handleContinue}
             />
           </WebinarFormStep>
 
           <WebinarFormStep isActive={form.step === 4} direction={form.direction}>
+            <ReferralStep
+              referralSource={form.formData.referralSource}
+              onUpdate={form.updateField}
+              onContinue={handleContinue}
+            />
+          </WebinarFormStep>
+
+          <WebinarFormStep isActive={form.step === 5} direction={form.direction}>
             <TicketStep
               selectedTicket={form.formData.selectedTicket}
               onSelect={(id) => form.updateField("selectedTicket", id)}

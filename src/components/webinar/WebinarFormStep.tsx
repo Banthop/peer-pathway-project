@@ -16,10 +16,10 @@ export function WebinarFormStep({
   return (
     <div
       className={cn(
-        "w-full animate-in fade-in duration-500",
+        "w-full animate-in fade-in duration-700",
         direction === "forward"
-          ? "slide-in-from-bottom-4"
-          : "slide-in-from-top-4",
+          ? "slide-in-from-bottom-6"
+          : "slide-in-from-top-6",
       )}
       style={{
         animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
