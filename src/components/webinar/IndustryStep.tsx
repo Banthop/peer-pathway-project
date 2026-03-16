@@ -50,7 +50,6 @@ export function IndustryStep({
         <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
         <p className="text-sm font-sans font-light text-amber-800 leading-snug">
           Only <strong className="font-semibold">2% of cold emails</strong> get replies.
-          The average student sends 100 and gets 2.
           This framework gets you <strong className="font-semibold text-emerald-700">21%</strong>.
         </p>
       </div>

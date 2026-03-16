@@ -6,7 +6,7 @@ import {
   WEBINAR_TIME,
   WEBINAR_TARGET_DATE,
 } from "@/data/webinarData";
-import { ArrowRight, Mail, Users, TrendingUp, CheckCircle2, Clock } from "lucide-react";
+import { ArrowRight, Mail, Send, TrendingUp, CheckCircle2, Clock } from "lucide-react";
 
 interface WelcomeStepProps {
   onContinue: () => void;
@@ -115,7 +115,7 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
         {[
           { icon: Mail, value: 20, suffix: "+", label: "Offers landed" },
           { icon: TrendingUp, value: 21, suffix: "%", label: "Response rate" },
-          { icon: Users, value: 50, suffix: "+", label: "Emails / day" },
+          { icon: Send, value: 1000, suffix: "+", label: "Emails sent" },
         ].map(({ icon: Icon, value, suffix, label }) => (
           <div key={label} className="flex flex-col items-center">
             <Icon className="h-4 w-4 text-emerald-600/60 mb-1" />
@@ -131,25 +131,24 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
 
       {/* What you'll learn */}
       <div
-        className="w-full max-w-md text-left space-y-2 animate-fade-up"
+        className="w-full max-w-md text-left space-y-2.5 animate-fade-up"
         style={{ animationDelay: "0.25s" }}
       >
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-sans font-semibold mb-2">
           What you'll walk away with
         </p>
         {[
-          { text: "How to find decision-maker emails at any firm using Apollo", bonus: false },
-          { text: "The exact email template that gets replies (not LinkedIn fluff)", bonus: false },
-          { text: "A live demo of the full mail-merge send process", bonus: false },
-          { text: "How to handle rejections and turn them into opportunities", bonus: false },
-          { text: "A follow-up system that keeps your pipeline alive", bonus: false },
-          { text: "Resource pack: spreadsheet template, email template, and firm list", bonus: true },
+          { text: "How Uthman found the emails of CEOs, MDs, and decision-makers at any firm - from boutiques to companies with 7000+ employees", bonus: false },
+          { text: "The exact email template behind his 21% response rate and 20+ offers - word for word", bonus: false },
+          { text: "A live demo of the mail-merge system he used to send 50+ personalised emails a day without a single one looking automated", bonus: false },
+          { text: "How he turned rejection emails into networking conversations, mentorship, and even referrals", bonus: false },
+          { text: "The nightly follow-up routine that kept every conversation alive and ultimately landed him his placement", bonus: false },
+          { text: "Resource Pack: Everything you need to start cold emailing tomorrow", bonus: true },
         ].map(({ text, bonus }) => (
           <div key={text} className="flex items-start gap-2.5">
             <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-600" />
             <span className="text-sm text-foreground/80 font-sans font-light leading-snug">
-              <strong className="font-medium text-foreground">{text.split(" ").slice(0, 3).join(" ")}</strong>{" "}
-              {text.split(" ").slice(3).join(" ")}
+              {text}
               {bonus && (
                 <span className="ml-1.5 inline-flex items-center text-[9px] font-bold uppercase tracking-wider text-amber-700 bg-amber-100 rounded-full px-2 py-0.5">
                   Bonus
@@ -172,23 +171,23 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
         <CountdownTimer />
       </div>
 
-      {/* Metadata pills */}
+      {/* Metadata pills - BIGGER */}
       <div
-        className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground font-sans animate-fade-up"
+        className="flex flex-wrap items-center justify-center gap-3 animate-fade-up"
         style={{ animationDelay: "0.3s" }}
       >
-        <span className="border border-border rounded-full px-3 py-1 bg-white/80 backdrop-blur-sm">
+        <span className="border border-border rounded-xl px-5 py-2.5 bg-white/80 backdrop-blur-sm text-sm font-sans font-medium text-foreground shadow-sm">
           {WEBINAR_DATE}
         </span>
-        <span className="border border-border rounded-full px-3 py-1 bg-white/80 backdrop-blur-sm">
+        <span className="border border-border rounded-xl px-5 py-2.5 bg-white/80 backdrop-blur-sm text-sm font-sans font-medium text-foreground shadow-sm">
           {WEBINAR_TIME}
         </span>
-        <span className="border border-border rounded-full px-3 py-1 bg-white/80 backdrop-blur-sm">
+        <span className="border border-border rounded-xl px-5 py-2.5 bg-white/80 backdrop-blur-sm text-sm font-sans font-medium text-foreground shadow-sm">
           90 min
         </span>
-        <span className="border border-border rounded-full px-3 py-1 bg-white/80 backdrop-blur-sm font-medium text-foreground">
-          From <span className="line-through text-muted-foreground">£19</span>{" "}
-          <span className="text-emerald-600 font-semibold">£10</span>
+        <span className="border border-emerald-200 rounded-xl px-5 py-2.5 bg-emerald-50/60 backdrop-blur-sm text-sm font-sans font-semibold text-foreground shadow-sm">
+          From <span className="line-through text-muted-foreground font-normal">£19</span>{" "}
+          <span className="text-emerald-600">£10</span>
         </span>
       </div>
 
