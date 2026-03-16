@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { INDUSTRY_OPTIONS } from "@/data/webinarData";
+import { INDUSTRY_OPTIONS, REFERRAL_OPTIONS } from "@/data/webinarData";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Target } from "lucide-react";
+import { ArrowRight, Target, TrendingDown, AlertTriangle } from "lucide-react";
 
 interface IndustryStepProps {
   industry: string;
   industryDetail: string;
-  onUpdate: (field: "industry" | "industryDetail", value: string) => void;
+  referralSource: string;
+  onUpdate: (field: "industry" | "industryDetail" | "referralSource", value: string) => void;
   onContinue: () => string | null;
 }
 
@@ -26,6 +27,7 @@ const INDUSTRY_REINFORCEMENT: Record<string, string> = {
 export function IndustryStep({
   industry,
   industryDetail,
+  referralSource,
   onUpdate,
   onContinue,
 }: IndustryStepProps) {
@@ -43,6 +45,16 @@ export function IndustryStep({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
+      {/* Constant pain-point stat */}
+      <div className="flex items-start gap-3 bg-amber-50/80 border border-amber-200/60 rounded-xl px-4 py-3">
+        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
+        <p className="text-sm font-sans font-light text-amber-800 leading-snug">
+          Only <strong className="font-semibold">2% of cold emails</strong> get replies.
+          The average student sends 100 and gets 2.
+          This framework gets you <strong className="font-semibold text-emerald-700">21%</strong>.
+        </p>
+      </div>
+
       <div className="space-y-3">
         <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
           What industry are you targeting?
@@ -83,7 +95,7 @@ export function IndustryStep({
         </div>
       )}
 
-      {/* Detail field - slides in when industry is selected */}
+      {/* Detail field */}
       {showDetail && industry && (
         <div
           className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -112,9 +124,33 @@ export function IndustryStep({
         </div>
       )}
 
+      {/* REFERRAL SOURCE - merged here */}
+      <div className="space-y-3 pt-2 border-t border-border/60">
+        <h2 className="text-lg font-sans font-light text-foreground">
+          How did you hear about us?
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {REFERRAL_OPTIONS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => onUpdate("referralSource", option)}
+              className={cn(
+                "px-4 py-2 text-sm rounded-full border font-sans font-light transition-all duration-200",
+                referralSource === option
+                  ? "bg-foreground text-background border-foreground shadow-sm"
+                  : "bg-background text-foreground border-border hover:border-foreground/40",
+              )}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <Button
         type="submit"
-        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
+        className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
       >
         Continue
         <ArrowRight className="ml-2 h-4 w-4" />

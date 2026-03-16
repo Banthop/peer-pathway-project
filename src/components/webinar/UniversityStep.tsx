@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { YEAR_OPTIONS } from "@/data/webinarData";
 import { useUniversitySearch } from "@/hooks/useUniversitySearch";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 
 interface UniversityStepProps {
   university: string;
@@ -29,7 +29,6 @@ export function UniversityStep({
     return () => clearTimeout(t);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -80,7 +79,6 @@ export function UniversityStep({
             />
           </div>
 
-          {/* Dropdown suggestions */}
           {showDropdown && universities.length > 0 && (
             <div
               ref={dropdownRef}
@@ -105,7 +103,6 @@ export function UniversityStep({
             </div>
           )}
 
-          {/* Loading indicator */}
           {loading && university.length >= 2 && showDropdown && (
             <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-xl shadow-lg px-4 py-3">
               <p className="text-sm text-muted-foreground font-sans font-light">
@@ -143,18 +140,10 @@ export function UniversityStep({
         </div>
       </div>
 
-      {/* Micro-reinforcement */}
-      {university && yearOfStudy && (
-        <div className="flex items-center gap-2 text-xs text-emerald-600 font-sans font-medium animate-in fade-in slide-in-from-bottom-2 duration-300">
-          <Sparkles className="h-3.5 w-3.5" />
-          We've helped students at universities like yours land offers
-        </div>
-      )}
-
       {/* Continue */}
       <Button
         type="submit"
-        className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
+        className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
       >
         Continue
         <ArrowRight className="ml-2 h-4 w-4" />
