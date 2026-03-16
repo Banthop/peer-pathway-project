@@ -1,9 +1,9 @@
 // -- Webinar metadata --
 export const WEBINAR_TITLE =
-  "How I got 20 internship offers in 3 weeks through cold emailing";
+  "How Uthman got 20 internship offers in 3 weeks through cold emailing";
 export const WEBINAR_SUBTITLE =
   "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 20 offers in just 3 weeks, all through cold emails.";
-export const WEBINAR_DATE = "TBC"; // replace with real date
+export const WEBINAR_DATE = "25 March 2026";
 export const WEBINAR_TIME = "7:00 PM GMT";
 export const WEBINAR_DURATION = "90 min";
 
@@ -11,9 +11,9 @@ export const WEBINAR_DURATION = "90 min";
 
 // -- Stripe Payment Links --
 export const STRIPE_WEBINAR_ONLY_LINK =
-  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
+  "https://buy.stripe.com/bJe00ifLm6lH6uK88Q2400b";
 export const STRIPE_BUNDLE_LINK =
-  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
+  "https://buy.stripe.com/bJe00ifLm6lH6uK88Q2400b";
 
 // -- Form option lists --
 export const INDUSTRY_OPTIONS = [
@@ -109,3 +109,4 @@ export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
     stripeLink: STRIPE_BUNDLE_LINK,
   },
 };
+export const WEBINAR_TARGET_DATE = "2026-03-25T19:00:00Z";

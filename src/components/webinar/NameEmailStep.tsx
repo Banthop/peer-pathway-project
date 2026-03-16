@@ -81,7 +81,7 @@ export function NameEmailStep({
         </p>
       </div>
 
-      {/* Phone with country code */}
+      {/* Phone with country code - OPTIONAL */}
       <div className="space-y-2">
         <PhoneInput
           phoneCode={phoneCode}
@@ -90,7 +90,7 @@ export function NameEmailStep({
           onPhoneChange={(val) => onUpdate("phone", val)}
         />
         <p className="text-xs text-muted-foreground font-sans font-light">
-          For reminders and last-minute updates only
+          Phone <span className="text-amber-600 font-medium">(optional)</span> - for reminders and last-minute updates only
         </p>
       </div>
 
@@ -98,15 +98,15 @@ export function NameEmailStep({
       <div className="space-y-3">
         <Button
           type="submit"
-          className="bg-foreground text-background hover:bg-foreground/90 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
+          className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
         >
-          Continue
+          Save My Details
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
 
         {/* Trust signal */}
-        <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-sans font-light">
-          <Shield className="h-3 w-3" />
+        <p className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-sans font-light">
+          <Shield className="h-3.5 w-3.5" />
           Your data is private and never shared
         </p>
       </div>

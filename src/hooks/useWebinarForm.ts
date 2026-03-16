@@ -15,22 +15,19 @@ export interface WebinarFormData {
   selectedTicket: "webinar-only" | "bundle";
 }
 
-// Steps: 0=Welcome, 1=Details, 2=University, 3=Industry, 4=Referral, 5=Ticket
-const TOTAL_STEPS = 6;
+// Steps: 0=Welcome, 1=Details, 2=University, 3=Industry+Referral, 4=Ticket
+const TOTAL_STEPS = 5;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_RE = /^[\d\s\-()]{6,}$/;
 
 function validateStep(step: number, data: WebinarFormData): string | null {
   switch (step) {
     case 0:
-      return null; // welcome
+      return null;
     case 1:
       if (!data.firstName.trim()) return "Please enter your first name.";
       if (!data.lastName.trim()) return "Please enter your last name.";
       if (!EMAIL_RE.test(data.email)) return "Please enter a valid email.";
-      if (!PHONE_RE.test(data.phone))
-        return "Please enter a valid phone number.";
       return null;
     case 2:
       if (!data.university.trim()) return "Please enter your university.";
@@ -38,12 +35,10 @@ function validateStep(step: number, data: WebinarFormData): string | null {
       return null;
     case 3:
       if (!data.industry) return "Please pick an industry.";
-      return null;
-    case 4:
       if (!data.referralSource) return "Please select how you heard about us.";
       return null;
-    case 5:
-      return null; // ticket always has a default
+    case 4:
+      return null;
     default:
       return null;
   }

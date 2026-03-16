@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
@@ -9,14 +10,13 @@ import { WelcomeStep } from "@/components/webinar/WelcomeStep";
 import { NameEmailStep } from "@/components/webinar/NameEmailStep";
 import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { IndustryStep } from "@/components/webinar/IndustryStep";
-import { ReferralStep } from "@/components/webinar/ReferralStep";
 import { TicketStep } from "@/components/webinar/TicketStep";
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
-import { ChevronLeft, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Loader2 } from "lucide-react";
 
 function SuccessScreen({ name }: { name: string }) {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 flex items-center justify-center px-4">
       <div className="text-center space-y-6 max-w-md">
         <CheckCircle2 className="h-12 w-12 mx-auto text-emerald-600" />
         <h1 className="text-3xl font-sans font-light text-foreground">
@@ -37,14 +37,33 @@ function SuccessScreen({ name }: { name: string }) {
   );
 }
 
+/* ---- Transition screen between industry and checkout ---- */
+function PreparingCheckout({ firstName }: { firstName: string }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="text-center space-y-5 animate-in fade-in duration-500">
+        <Loader2 className="h-8 w-8 mx-auto text-emerald-600 animate-spin" />
+        <div className="space-y-2">
+          <h2 className="text-xl font-sans font-light text-foreground">
+            Preparing your options{firstName ? `, ${firstName}` : ""}...
+          </h2>
+          <p className="text-sm text-muted-foreground font-sans font-light">
+            Finding the best deal for you
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Webinar() {
   const [searchParams] = useSearchParams();
   const isSuccess = searchParams.get("success") === "true";
 
   const form = useWebinarForm();
   const { toast } = useToast();
+  const [showTransition, setShowTransition] = useState(false);
 
-  // If returning from Stripe checkout
   if (isSuccess) {
     const saved = localStorage.getItem("webinar_signup");
     const name = saved ? JSON.parse(saved)?.firstName ?? "" : "";
@@ -56,11 +75,25 @@ export default function Webinar() {
     const error = form.nextStep();
     if (error) {
       toast({ title: error, variant: "destructive" });
-    } else if (currentStep === 4) {
-      // User just passed the referral step - save lead to Supabase
-      saveWebinarLead(form.formData);
+      return error;
     }
-    return error;
+
+    // If transitioning from industry (step 3) to checkout (step 4),
+    // show a brief loading screen to make it feel more considered
+    if (currentStep === 3) {
+      saveWebinarLead(form.formData);
+      // Go back one step to hold position, show transition, then advance
+      form.prevStep();
+      setShowTransition(true);
+      setTimeout(() => {
+        form.nextStep();
+        setTimeout(() => {
+          setShowTransition(false);
+        }, 400);
+      }, 1000);
+    }
+
+    return null;
   };
 
   const handleCheckout = () => {
@@ -69,7 +102,6 @@ export default function Webinar() {
         ? TICKETS.bundle
         : TICKETS.webinarOnly;
 
-    // Persist form data
     localStorage.setItem(
       "webinar_signup",
       JSON.stringify({
@@ -78,10 +110,8 @@ export default function Webinar() {
       }),
     );
 
-    // Mark lead as proceeding to checkout
     markLeadCheckout(form.formData.email);
 
-    // Build Stripe Payment Link URL with prefilled email
     const url = new URL(ticket.stripeLink);
     url.searchParams.set("prefilled_email", form.formData.email);
     url.searchParams.set("client_reference_id", form.formData.email);
@@ -89,13 +119,30 @@ export default function Webinar() {
     window.location.href = url.toString();
   };
 
+  if (showTransition) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+        <div className="fixed top-0 left-0 right-0 z-40">
+          <Progress
+            value={form.progress}
+            className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+          />
+        </div>
+        <div className="absolute top-5 left-6 z-50">
+          <Logo to="#" className="text-xl pointer-events-none" />
+        </div>
+        <PreparingCheckout firstName={form.formData.firstName} />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 z-40">
         <Progress
           value={form.progress}
-          className="h-1 rounded-none bg-secondary"
+          className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
         />
       </div>
 
@@ -157,20 +204,13 @@ export default function Webinar() {
             <IndustryStep
               industry={form.formData.industry}
               industryDetail={form.formData.industryDetail}
-              onUpdate={form.updateField}
-              onContinue={handleContinue}
-            />
-          </WebinarFormStep>
-
-          <WebinarFormStep isActive={form.step === 4} direction={form.direction}>
-            <ReferralStep
               referralSource={form.formData.referralSource}
               onUpdate={form.updateField}
               onContinue={handleContinue}
             />
           </WebinarFormStep>
 
-          <WebinarFormStep isActive={form.step === 5} direction={form.direction}>
+          <WebinarFormStep isActive={form.step === 4} direction={form.direction}>
             <TicketStep
               selectedTicket={form.formData.selectedTicket}
               onSelect={(id) => form.updateField("selectedTicket", id)}
