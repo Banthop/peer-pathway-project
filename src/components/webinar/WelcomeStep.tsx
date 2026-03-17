@@ -214,7 +214,7 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
               Can't make the live session?
             </p>
             <p className="text-xs font-sans font-light text-muted-foreground leading-snug mt-0.5">
-              No worries — every ticket holder gets the <strong className="font-medium text-foreground">full recording</strong> sent
+              No worries - every ticket holder gets the <strong className="font-medium text-foreground">full recording</strong> sent
               within 24 hours. You won't miss a thing.
             </p>
           </div>
