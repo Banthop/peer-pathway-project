@@ -6,7 +6,7 @@ import {
   WEBINAR_TIME,
   WEBINAR_TARGET_DATE,
 } from "@/data/webinarData";
-import { ArrowRight, Mail, Send, TrendingUp, CheckCircle2, Clock } from "lucide-react";
+import { ArrowRight, Mail, Send, TrendingUp, CheckCircle2, Clock, Video } from "lucide-react";
 
 interface WelcomeStepProps {
   onContinue: () => void;
@@ -198,6 +198,28 @@ export function WelcomeStep({ onContinue }: WelcomeStepProps) {
       >
         Spots are limited
       </p>
+
+
+      {/* Can't make it reassurance */}
+      <div
+        className="w-full max-w-md animate-fade-up"
+        style={{ animationDelay: "0.36s" }}
+      >
+        <div className="flex items-center gap-3 bg-white/70 backdrop-blur-sm border border-border rounded-xl px-5 py-3.5 shadow-sm">
+          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-emerald-50 shrink-0">
+            <Video className="h-4 w-4 text-emerald-600" />
+          </div>
+          <div>
+            <p className="text-sm font-sans font-medium text-foreground leading-snug">
+              Can't make the live session?
+            </p>
+            <p className="text-xs font-sans font-light text-muted-foreground leading-snug mt-0.5">
+              No worries — every ticket holder gets the <strong className="font-medium text-foreground">full recording</strong> sent
+              within 24 hours. You won't miss a thing.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* CTA */}
       <div
