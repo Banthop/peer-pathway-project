@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
@@ -58,6 +58,12 @@ function PreparingCheckout({ firstName }: { firstName: string }) {
 
 export default function Webinar() {
   const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const prev = document.title;
+    document.title = "EarlyEdge - Cold-Emailing Webinar";
+    return () => { document.title = prev; };
+  }, []);
   const isSuccess = searchParams.get("success") === "true";
 
   const form = useWebinarForm();
