@@ -3,7 +3,7 @@ export const WEBINAR_TITLE =
   "How Uthman got 20 internship offers in 3 weeks through cold emailing";
 export const WEBINAR_SUBTITLE =
   "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 20 offers in just 3 weeks, all through cold emails.";
-export const WEBINAR_DATE = "25 March 2026";
+export const WEBINAR_DATE = "28 March 2026";
 export const WEBINAR_TIME = "7:00 PM GMT";
 export const WEBINAR_DURATION = "90 min";
 
@@ -109,4 +109,4 @@ export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
     stripeLink: STRIPE_BUNDLE_LINK,
   },
 };
-export const WEBINAR_TARGET_DATE = "2026-03-25T19:00:00Z";
+export const WEBINAR_TARGET_DATE = "2026-03-28T19:00:00Z";
