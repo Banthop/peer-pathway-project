@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import {
-  WEBINAR_TITLE,
   WEBINAR_DATE,
   WEBINAR_TIME,
 } from "@/data/webinarData";
@@ -12,7 +11,6 @@ import {
   ArrowLeft,
   Send,
   CheckCircle2,
-  MessageSquare,
   HelpCircle,
   Loader2,
 } from "lucide-react";
@@ -40,12 +38,6 @@ function SuccessScreen({ name }: { name: string }) {
           >
             Ask another question
           </Button>
-          <a
-            href="/webinar"
-            className="inline-block text-sm text-foreground underline underline-offset-4 font-sans font-light hover:text-foreground/70 transition-colors"
-          >
-            ← Back to webinar
-          </a>
         </div>
       </div>
     </div>
@@ -64,7 +56,7 @@ export default function WebinarQuestions() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "EarlyEdge — Ask a Question";
+    document.title = "EarlyEdge - Ask a Question";
     return () => {
       document.title = prev;
     };
@@ -102,7 +94,7 @@ export default function WebinarQuestions() {
     try {
       if (!supabaseAvailable || !supabase) {
         console.log(
-          "[WebinarQuestions] Supabase not configured — skipping save"
+          "[WebinarQuestions] Supabase not configured - skipping save"
         );
         // Still show success in demo mode
         setSubmitted(true);
@@ -184,18 +176,12 @@ export default function WebinarQuestions() {
                 <strong className="text-foreground font-medium">
                   {WEBINAR_TIME}
                 </strong>
-                ? No worries — submit your question here and the EarlyEdge team
+                ? No worries - submit your question here and the EarlyEdge team
                 will reply via email.
               </p>
             </div>
 
-            {/* Webinar info pill */}
-            <div className="flex items-center gap-2 border border-border rounded-xl px-4 py-2.5 bg-white/80 backdrop-blur-sm shadow-sm">
-              <MessageSquare className="h-4 w-4 text-emerald-600" />
-              <span className="text-xs text-muted-foreground font-sans font-light">
-                Re: <span className="font-medium text-foreground">{WEBINAR_TITLE}</span>
-              </span>
-            </div>
+
 
             {/* Form */}
             <form
@@ -273,7 +259,7 @@ export default function WebinarQuestions() {
                   className="w-full rounded-xl border border-border bg-white/80 backdrop-blur-sm px-4 py-3 text-sm font-sans font-light text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-400 transition-all shadow-sm resize-none"
                 />
                 <p className="text-[11px] text-muted-foreground/60 font-sans font-light">
-                  Be as specific as you can — we'll reply to your email directly.
+                  Be as specific as you can - we'll reply to your email directly.
                 </p>
               </div>
 
@@ -287,7 +273,7 @@ export default function WebinarQuestions() {
                 {submitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting…
+                    Submitting...
                   </>
                 ) : (
                   <>
