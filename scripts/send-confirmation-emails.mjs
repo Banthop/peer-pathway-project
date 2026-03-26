@@ -161,23 +161,24 @@ function webinarOnlyEmail(firstName) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MAIN
+// MAIN - Uses Broadcast API (Marketing Pro - unlimited sends)
 // ═══════════════════════════════════════════════════════════════
 
-async function sendEmail(toEmail, template) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_EMAIL, to: [toEmail], subject: template.subject, html: template.html }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(`Resend error: ${JSON.stringify(result)}`);
-  return result;
+import { sendBroadcast } from './resend-broadcast.mjs';
+
+async function tagContacts(contactList, extraTag) {
+  for (const c of contactList) {
+    const newTags = [...new Set([...(c.tags || []), 'confirmation_sent', extraTag])];
+    await supabase.from('crm_contacts').update({
+      tags: newTags,
+      last_activity_at: new Date().toISOString(),
+    }).eq('id', c.id);
+  }
 }
 
 async function main() {
-  console.log('\n📧 Customer Confirmation Email Sender\n');
-  console.log(LIVE_SEND ? '🔴 LIVE MODE - emails WILL be sent\n' : '🟡 DRY RUN - no emails will be sent (use --send to go live)\n');
+  console.log('\n📧 Customer Confirmation Email Sender (Broadcast Mode)\n');
+  console.log(LIVE_SEND ? '🔴 LIVE MODE - broadcasts WILL be sent\n' : '🟡 DRY RUN - no emails will be sent (use --send to go live)\n');
 
   // Load all converted contacts
   const { data: contacts, error } = await supabase
@@ -196,46 +197,31 @@ async function main() {
 
   for (const c of contacts) {
     const tags = c.tags || [];
-    const alreadySent = tags.includes('confirmation_sent');
+    if (tags.includes('confirmation_sent')) continue;
 
-    if (alreadySent) continue;
-
-    // Check product type from tags or metadata
     if (tags.includes('bundle') || c.metadata?.product_type === 'bundle') {
       bundleBuyers.push(c);
     } else if (tags.includes('webinar_only') || c.metadata?.product_type === 'webinar_only') {
       webinarOnlyBuyers.push(c);
     } else {
-      // Fallback: check spend amount
       const spend = c.metadata?.stripe_spend || 0;
-      if (spend >= 25) {
-        bundleBuyers.push(c);
-      } else {
-        webinarOnlyBuyers.push(c);
-      }
+      if (spend >= 25) bundleBuyers.push(c);
+      else webinarOnlyBuyers.push(c);
     }
   }
 
   console.log(`📦 Bundle buyers to email: ${bundleBuyers.length}`);
   console.log(`🎥 Webinar-only buyers to email: ${webinarOnlyBuyers.length}\n`);
 
-  // Show bundle buyers
   if (bundleBuyers.length > 0) {
     console.log('── Bundle Buyers ──');
-    for (const c of bundleBuyers) {
-      const name = (c.first_name + ' ' + c.last_name).trim() || 'Unknown';
-      console.log(`   ${name} <${c.email}>`);
-    }
+    for (const c of bundleBuyers) console.log(`   ${(c.first_name + ' ' + c.last_name).trim() || 'Unknown'} <${c.email}>`);
     console.log('');
   }
 
-  // Show webinar-only buyers
   if (webinarOnlyBuyers.length > 0) {
     console.log('── Webinar-Only Buyers ──');
-    for (const c of webinarOnlyBuyers) {
-      const name = (c.first_name + ' ' + c.last_name).trim() || 'Unknown';
-      console.log(`   ${name} <${c.email}>`);
-    }
+    for (const c of webinarOnlyBuyers) console.log(`   ${(c.first_name + ' ' + c.last_name).trim() || 'Unknown'} <${c.email}>`);
     console.log('');
   }
 
@@ -245,56 +231,49 @@ async function main() {
     return;
   }
 
-  // Check Zoom link is set
   if (ZOOM_LINK.includes('XXXXXXXXXX')) {
     console.error('❌ You need to update the ZOOM_LINK at the top of this file before sending!');
     process.exit(1);
   }
 
-  // Send bundle emails
-  let sent = 0;
-  for (const c of bundleBuyers) {
-    try {
-      const template = bundleEmail(c.first_name);
-      await sendEmail(c.email, template);
+  // Build generic templates using Resend broadcast personalization
+  const bundleHtml = bundleEmail('{{{FIRST_NAME|there}}}').html;
+  const webinarHtml = webinarOnlyEmail('{{{FIRST_NAME|there}}}').html;
 
-      // Tag as sent
-      const newTags = [...(c.tags || [])];
-      if (!newTags.includes('confirmation_sent')) newTags.push('confirmation_sent');
-      if (!newTags.includes('bundle')) newTags.push('bundle');
-      await supabase.from('crm_contacts').update({ tags: newTags }).eq('id', c.id);
-
-      const name = (c.first_name + ' ' + c.last_name).trim() || c.email;
-      console.log(`   ✅ [BUNDLE] ${name} <${c.email}>`);
-      sent++;
-      await new Promise(r => setTimeout(r, 200));
-    } catch (err) {
-      console.log(`   ❌ ${c.email} - ${err.message}`);
-    }
+  // Send bundle confirmations via broadcast
+  if (bundleBuyers.length > 0) {
+    console.log('\n📦 Sending BUNDLE confirmations via Broadcast...');
+    const result = await sendBroadcast({
+      name: 'Bundle Confirmation',
+      from: FROM_EMAIL,
+      subject: "you're in - here's everything you need",
+      html: bundleHtml,
+      contacts: bundleBuyers.map(c => ({ email: c.email, first_name: c.first_name || '', last_name: c.last_name || '' })),
+      send: true,
+    });
+    console.log(`   Broadcast sent to ${result.sent} bundle buyers`);
+    await tagContacts(bundleBuyers, 'bundle');
+    console.log(`   Tagged ${bundleBuyers.length} contacts as confirmation_sent`);
   }
 
-  // Send webinar-only emails
-  for (const c of webinarOnlyBuyers) {
-    try {
-      const template = webinarOnlyEmail(c.first_name);
-      await sendEmail(c.email, template);
-
-      // Tag as sent
-      const newTags = [...(c.tags || [])];
-      if (!newTags.includes('confirmation_sent')) newTags.push('confirmation_sent');
-      if (!newTags.includes('webinar_only')) newTags.push('webinar_only');
-      await supabase.from('crm_contacts').update({ tags: newTags }).eq('id', c.id);
-
-      const name = (c.first_name + ' ' + c.last_name).trim() || c.email;
-      console.log(`   ✅ [WEBINAR] ${name} <${c.email}>`);
-      sent++;
-      await new Promise(r => setTimeout(r, 200));
-    } catch (err) {
-      console.log(`   ❌ ${c.email} - ${err.message}`);
-    }
+  // Send webinar-only confirmations via broadcast
+  if (webinarOnlyBuyers.length > 0) {
+    console.log('\n🎥 Sending WEBINAR-ONLY confirmations via Broadcast...');
+    const result = await sendBroadcast({
+      name: 'Webinar Confirmation',
+      from: FROM_EMAIL,
+      subject: "you're in - here's your zoom link",
+      html: webinarHtml,
+      contacts: webinarOnlyBuyers.map(c => ({ email: c.email, first_name: c.first_name || '', last_name: c.last_name || '' })),
+      send: true,
+    });
+    console.log(`   Broadcast sent to ${result.sent} webinar-only buyers`);
+    await tagContacts(webinarOnlyBuyers, 'webinar_only');
+    console.log(`   Tagged ${webinarOnlyBuyers.length} contacts as confirmation_sent`);
   }
 
-  console.log(`\n✅ Done! Sent ${sent} confirmation emails.\n`);
+  console.log(`\n✅ Done! Sent confirmations to ${bundleBuyers.length + webinarOnlyBuyers.length} customers via Broadcast API.\n`);
 }
 
 main();
+
