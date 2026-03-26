@@ -1,5 +1,6 @@
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import type { WebinarFormData } from "@/hooks/useWebinarForm";
+import { saveCrmContact } from "./crmTracking";
 
 /**
  * Save a webinar lead to Supabase.
@@ -32,6 +33,24 @@ export async function saveWebinarLead(formData: WebinarFormData): Promise<void> 
             console.error("[WebinarLead] Failed to save:", error.message);
         } else {
             console.log("[WebinarLead] Lead saved successfully");
+            
+            // Push to CRM as well
+            await saveCrmContact({
+                email: formData.email,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phoneCode ? `+${formData.phoneCode}${formData.phone}` : formData.phone,
+                university: formData.university,
+                source: "webinar",
+                tags: ["form_lead"],
+                metadata: {
+                    year_of_study: formData.yearOfStudy,
+                    industry: formData.industry,
+                    industry_detail: formData.industryDetail,
+                    referral_source: formData.referralSource,
+                    ticket: formData.selectedTicket
+                }
+            });
         }
     } catch (err) {
         // Never let tracking break the form

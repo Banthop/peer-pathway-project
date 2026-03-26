@@ -41,76 +41,82 @@ loadEnv();
 const APIFY_TOKEN = process.env.APIFY_API_TOKEN;
 const RESEND_KEY = process.env.RESEND_API_KEY;
 const POST_URL = process.env.LINKEDIN_POST_URL;
-const FROM_EMAIL = process.env.FROM_EMAIL || 'hello@earlyedge.co.uk';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'dylan@yourearlyedge.co.uk';
 
 // ── Email Templates ──
 
 // 1. LinkedIn comment reply — sent to anyone who drops their email on the post
-const EMAIL_SUBJECT = "You asked, here it is 👇";
+const EMAIL_SUBJECT = "wait is this you??";
+const EMAIL_PREVIEW = "I'm not sure if this is you";
 
 const EMAIL_HTML = `
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 0;">
-    <tr><td align="center">
-      <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
-        
-        <!-- Header -->
-        <tr>
-          <td style="background:#111111;padding:28px 36px;">
-            <span style="font-size:22px;letter-spacing:-0.5px;color:#ffffff;text-decoration:none;">
-              <span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span>
-            </span>
-          </td>
-        </tr>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--[if mso]>
+  <style>body,table,td{font-family:Arial,sans-serif !important;}</style>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+  <!--[if !mso]><!--><div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">I'm not sure if this is you but someone mentioned you were looking for help with cold email and internships</div><!--<![endif]-->
 
-        <!-- Body -->
-        <tr>
-          <td style="padding:36px;color:#111;">
-            <p style="font-size:16px;line-height:1.5;margin:0 0 16px;">Hey 👋</p>
-            <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 16px;">
-              Saw you commented on our post — thanks for showing interest. As promised, here's the webinar link:
-            </p>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;width:100%;">
 
-            <!-- CTA Button -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0;">
-              <tr>
-                <td align="center">
-                  <a href="https://earlyedge.co.uk/webinar"
-                     style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:600;letter-spacing:0.2px;">
-                    Grab your free spot →
-                  </a>
-                </td>
-              </tr>
-            </table>
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Hey,</td></tr>
 
-            <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 16px;">
-              It's a <strong>free live session</strong> on spring week conversion — what actually gets you the summer offer after your spring week ends. Real tactics, real examples.
-            </p>
-            <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 24px;">
-              Spots are limited so register now before they're gone.
-            </p>
-            <p style="font-size:14px;color:#888;margin:0;">— The EarlyEdge Team</p>
-          </td>
-        </tr>
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Did that subject line make you open this? Good.</td></tr>
 
-        <!-- Footer -->
-        <tr>
-          <td style="background:#fafafa;border-top:1px solid #eee;padding:20px 36px;">
-            <p style="font-size:11px;color:#aaa;margin:0;text-align:center;">
-              EarlyEdge · Learn from people who just did it · <a href="https://earlyedge.co.uk" style="color:#aaa;">earlyedge.co.uk</a>
-            </p>
-          </td>
-        </tr>
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">That's exactly what cold emailing is - getting a complete stranger to stop what they're doing and pay attention to you.</td></tr>
 
-      </table>
-    </td></tr>
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Our coach Uthman mastered it. No connections. No crazy CV. Just 1,000 cold emails, a 21% response rate, and 20+ internship offers in 3 weeks.</td></tr>
+
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 12px 0;">On <strong>25th March at 7pm GMT</strong>, he's going live for 90 minutes to show you everything:</td></tr>
+
+          <tr>
+            <td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">
+              &#8226; How he found the right people to email using Apollo.io<br>
+              &#8226; The exact template behind his 21% response rate<br>
+              &#8226; How he sent 50+ emails a day without them looking automated<br>
+              &#8226; How he turned replies into ACTUAL offers
+            </td>
+          </tr>
+
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">If you're looking for internships in finance, tech, consulting, or law and you've got nothing lined up - this is for you.</td></tr>
+
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 8px 0;">Spots are limited.</td></tr>
+
+          <tr>
+            <td style="padding:0 0 24px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="background-color:#111111;border-radius:8px;">
+                    <a href="https://webinar.yourearlyedge.co.uk/webinar" style="display:inline-block;background-color:#111111;color:#ffffff;text-decoration:none;padding:13px 28px;border-radius:8px;font-size:14px;font-weight:600;">Save your spot</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr><td style="font-size:14px;line-height:25px;color:#888888;font-style:italic;padding:0 0 28px 0;">Can't make it on the night? A recording is included.</td></tr>
+
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 6px 0;">See you there</td></tr>
+          <tr><td style="font-size:15px;color:#222222;padding:0 0 2px 0;">Dylan</td></tr>
+          <tr><td style="font-size:13px;color:#999999;padding:0;letter-spacing:-0.3px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span></td></tr>
+
+        </table>
+      </td>
+    </tr>
   </table>
 </body>
 </html>
 `;
+
+
 
 // 2. Booking confirmation — call this from your Supabase Edge Function / webhook
 // Usage: sendBookingConfirmation({ studentName, coachName, coachCredential, sessionType, date, time, meetingLink, price })
@@ -201,7 +207,7 @@ export function bookingConfirmationHtml({ studentName, coachName, coachCredentia
             <p style="font-size:14px;line-height:1.6;color:#666;margin:0 0 8px;">
               You'll get a reminder 24 hours before your session. If you need to reschedule, log in to your dashboard.
             </p>
-            <p style="font-size:14px;color:#888;margin:24px 0 0;">— The EarlyEdge Team</p>
+            <p style="font-size:14px;color:#888;margin:24px 0 0;">- The EarlyEdge Team</p>
           </td>
         </tr>
 
@@ -256,18 +262,27 @@ function extractEmails(text) {
 async function scrapeComments(postUrl) {
   console.log('📡 Scraping LinkedIn comments via Apify...');
 
-  // Use the "curious_coder/linkedin-post-comments-scraper" actor
-  // or "apify/linkedin-comment-scraper" — adjust the actor ID as needed
-  const actorId = 'curious_coder~linkedin-post-search-scraper';
+  // apimaestro actor: free, 350k+ runs, 4.9 stars — no rental required
+  const actorId = 'apimaestro~linkedin-post-comments-replies-engagements-scraper-no-cookies';
 
-  const runUrl = `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}`;
+  // Extract the numeric post ID from the LinkedIn URL
+  // e.g. activity-7439383011457953792-by3I → 7439383011457953792
+  const postIdMatch = postUrl.match(/activity-(\d+)/);
+  if (!postIdMatch) {
+    throw new Error(`Could not extract post ID from URL: ${postUrl}`);
+  }
+  const postId = postIdMatch[1];
+  console.log(`  Post ID: ${postId}`);
+
+  const runUrl = `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=600`;
 
   const response = await fetch(runUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      urls: [postUrl],
-      maxComments: 500,
+      postIds: [postId],
+      maxComments: 5000,
+      includeReplies: true,
     }),
   });
 
@@ -277,7 +292,7 @@ async function scrapeComments(postUrl) {
   }
 
   const data = await response.json();
-  console.log(`  ✅ Found ${data.length} comment(s)`);
+  console.log(`  ✅ Found ${data.length} item(s) from Apify`);
   return data;
 }
 

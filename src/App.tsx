@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -24,6 +23,8 @@ import DashboardResources from "./pages/dashboard/DashboardResources";
 import AdminCoaches from "./pages/admin/AdminCoaches";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOutreach from "./pages/admin/AdminOutreach";
+import AdminLinkedIn from "./pages/admin/AdminLinkedIn";
+import AdminCRM from "./pages/admin/AdminCRM";
 import CoachDashboardLayout from "./components/coach-dashboard/CoachDashboardLayout";
 import CoachOverview from "./pages/coach-dashboard/CoachOverview";
 import CoachSessions from "./pages/coach-dashboard/CoachSessions";
@@ -40,7 +41,8 @@ import Guarantee from "./pages/Guarantee";
 import PublicEvents from "./pages/PublicEvents";
 import PublicResources from "./pages/PublicResources";
 import Webinar from "./pages/Webinar";
-import WebinarQuestions from "./pages/WebinarQuestions";
+import ColdEmailGuide from "./pages/ColdEmailGuide";
+import ColdEmailChecklist from "./pages/ColdEmailChecklist";
 
 const queryClient = new QueryClient();
 
@@ -108,7 +110,6 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
-        <Route path="/questions" element={<WebinarQuestions />} />
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
     );
@@ -122,6 +123,8 @@ const AppRoutes = () => {
       <Route path="/browse" element={<DashboardBrowse />} />
       <Route path="/events" element={<PublicEvents />} />
       <Route path="/resources" element={<PublicResources />} />
+      <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
+      <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
       <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
       <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -149,11 +152,12 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
-      <Route path="/questions" element={<WebinarQuestions />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="coaches" element={<AdminCoaches />} />
         <Route path="outreach" element={<AdminOutreach />} />
+        <Route path="linkedin" element={<AdminLinkedIn />} />
+        <Route path="crm" element={<AdminCRM />} />
       </Route>
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
@@ -170,7 +174,6 @@ const App = () => (
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>
-        <Analytics />
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

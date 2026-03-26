@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { Shield, Users, Target, BarChart3 } from "lucide-react";
+import { Shield, Users, Target, BarChart3, Linkedin, Contact2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -7,6 +7,8 @@ const adminNavItems = [
     { to: "/admin", label: "Dashboard", icon: BarChart3, end: true },
     { to: "/admin/coaches", label: "Coach Profiles", icon: Users, end: false },
     { to: "/admin/outreach", label: "Outreach", icon: Target, end: false },
+    { to: "/admin/linkedin", label: "LinkedIn Auto", icon: Linkedin, end: false },
+    { to: "/admin/crm", label: "CRM", icon: Contact2, end: false },
 ];
 
 export default function AdminLayout() {

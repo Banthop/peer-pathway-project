@@ -269,3 +269,27 @@ export interface DbOutreachScript {
     created_at: string;
     updated_at: string;
 }
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* CRM Contacts                                                    */
+/* ═══════════════════════════════════════════════════════════════ */
+
+export type CrmSource = "webinar" | "coach_signup" | "student_signup" | "linkedin" | "manual" | "other";
+export type CrmStatus = "new" | "contacted" | "engaged" | "converted" | "unsubscribed";
+
+export interface DbCrmContact {
+    id: string;
+    created_at: string;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone: string | null;
+    university: string | null;
+    source: CrmSource;
+    source_detail: string | null;
+    tags: string[];
+    status: CrmStatus;
+    notes: string;
+    last_activity_at: string;
+    metadata: Record<string, unknown>;
+}

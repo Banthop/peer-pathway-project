@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1128" height="191" viewBox="0 0 1128 191">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&amp;display=swap');
+    </style>
+  </defs>
+  <rect width="1128" height="191" fill="#ffffff"/>
+  <text
+    x="1100"
+    y="42"
+    font-family="Inter, Arial, sans-serif"
+    font-weight="200"
+    font-size="24"
+    fill="#111111"
+    text-anchor="end">Learn from the people who did it already.</text>
+</svg>
