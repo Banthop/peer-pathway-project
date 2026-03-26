@@ -386,20 +386,33 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
         onUpdate(contact.id, { tags: (contact.tags || []).filter((t: string) => t !== tag) });
     };
 
-    // Journey timeline
+    // Journey timeline with timestamps
     const tags: string[] = contact.tags || [];
     const meta = contact.metadata || {};
-    const journey: { label: string; done: boolean; icon: React.ElementType; detail?: string }[] = [
-        { label: "Email scraped", done: e.scraped, icon: Eye, detail: "From LinkedIn comments" },
-        { label: "Email sent", done: e.emailed, icon: Send, detail: e.lastEmailSubject ? `"${e.lastEmailSubject}"` : undefined },
-        { label: "Email delivered", done: e.delivered, icon: Check },
-        { label: "Email clicked", done: e.clicked, icon: MousePointerClick },
-        { label: "Filled form", done: e.formLead, icon: Target },
+    const fmt = (d: string | null | undefined) => d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : null;
+    const createdAt = fmt(contact.created_at);
+    const lastActivity = fmt(contact.last_activity_at);
+
+    const journey: { label: string; done: boolean; icon: React.ElementType; detail?: string; time?: string | null }[] = [
+        { label: "Email scraped", done: e.scraped, icon: Eye, detail: "From LinkedIn comments", time: e.scraped ? createdAt : null },
+        { label: "First email sent", done: e.emailed, icon: Send, detail: e.lastEmailSubject ? `"${e.lastEmailSubject}"` : undefined, time: meta.first_email_date ? fmt(meta.first_email_date) : (e.emailed ? createdAt : null) },
+        { label: "Email delivered", done: e.delivered, icon: Check, time: meta.email_delivered_at ? fmt(meta.email_delivered_at) : null },
+        { label: "Email clicked", done: e.clicked, icon: MousePointerClick, time: meta.email_clicked_at ? fmt(meta.email_clicked_at) : null },
+        { label: "Filled form", done: e.formLead, icon: Target, time: meta.form_submitted_at ? fmt(meta.form_submitted_at) : (e.formLead ? createdAt : null) },
         { label: "Abandoned checkout", done: tags.includes("form_started") && !e.customer, icon: ShoppingCart, detail: "Started form but didn't pay" },
-        { label: "Purchased", done: e.customer, icon: ShoppingCart, detail: e.stripeSpend ? `£${e.stripeSpend}` : (meta.webinar_ticket || undefined) },
-        { label: "Guide upsell sent", done: tags.includes("guide_upsell_sent"), icon: Send, detail: "Cold Email Guide 2.0" },
-        { label: "Discount sent", done: tags.includes("discount_sent"), icon: Gift, detail: "50% off bundle" },
+        { label: "Purchased", done: e.customer, icon: ShoppingCart, detail: e.stripeSpend ? `£${e.stripeSpend} — ${meta.payment_count || 1} payment(s)` : (meta.webinar_ticket || undefined), time: meta.purchased_at ? fmt(meta.purchased_at) : (e.customer ? createdAt : null) },
+        { label: "Confirmation sent", done: tags.includes("confirmation_sent"), icon: Mail, detail: tags.includes("bundle") ? "Bundle confirmation" : "Webinar confirmation", time: meta.confirmation_sent_at ? fmt(meta.confirmation_sent_at) : (tags.includes("confirmation_sent") ? lastActivity : null) },
+        { label: "Guide upsell sent", done: tags.includes("guide_upsell_sent"), icon: Send, detail: "Cold Email Guide 2.0", time: meta.guide_upsell_sent_at ? fmt(meta.guide_upsell_sent_at) : (tags.includes("guide_upsell_sent") ? lastActivity : null) },
+        { label: "Discount sent", done: tags.includes("discount_sent"), icon: Gift, detail: "50% off — WEBINAR50", time: meta.discount_sent_at ? fmt(meta.discount_sent_at) : (tags.includes("discount_sent") ? lastActivity : null) },
     ];
+
+    // Email summary for header
+    const emailsSent: string[] = [];
+    if (tags.includes("confirmation_sent")) emailsSent.push("✅ Confirmation");
+    if (tags.includes("guide_upsell_sent")) emailsSent.push("📘 Guide Upsell");
+    if (tags.includes("discount_sent")) emailsSent.push("🎁 Discount");
+    if (e.emailed) emailsSent.push("📧 Outreach");
+    const funnelStage = meta.funnel_stage ? `Funnel stage ${meta.funnel_stage}` : null;
 
     return (
         <>
@@ -407,7 +420,7 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
             <div className="fixed right-0 top-0 bottom-0 w-full max-w-lg bg-background border-l border-border z-50 overflow-y-auto shadow-2xl">
                 <div className="p-6">
                     {/* Header */}
-                    <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start justify-between mb-4">
                         <div className="flex-1 mr-4">
                             {editingName ? (
                                 <div className="space-y-2 mb-2">
@@ -440,20 +453,35 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
                         </button>
                     </div>
 
+                    {/* Quick email summary badges */}
+                    {emailsSent.length > 0 && (
+                        <div className="mb-4 flex flex-wrap gap-1.5">
+                            {emailsSent.map(e => (
+                                <span key={e} className="text-[10px] px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 font-medium">{e}</span>
+                            ))}
+                            {funnelStage && <span className="text-[10px] px-2 py-1 rounded-md bg-blue-50 text-blue-600 border border-blue-200 font-medium">{funnelStage}</span>}
+                        </div>
+                    )}
+
                     {/* Journey Timeline */}
                     <div className="mb-6">
                         <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Journey</h3>
                         <div className="space-y-0">
-                            {journey.map((step, i) => (
+                            {journey.filter(step => step.done || step.label === "Purchased" || step.label === "Filled form").map((step, i, arr) => (
                                 <div key={i} className="flex items-start gap-3 relative">
-                                    {i < journey.length - 1 && (
+                                    {i < arr.length - 1 && (
                                         <div className={`absolute left-[11px] top-6 w-0.5 h-full ${step.done ? "bg-emerald-300" : "bg-border"}`} />
                                     )}
                                     <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${step.done ? "bg-emerald-100 text-emerald-600" : "bg-muted text-muted-foreground/40"}`}>
                                         <step.icon className="w-3 h-3" />
                                     </div>
-                                    <div className="pb-4">
-                                        <p className={`text-xs font-medium ${step.done ? "text-foreground" : "text-muted-foreground/50"}`}>{step.label}</p>
+                                    <div className="pb-4 flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <p className={`text-xs font-medium ${step.done ? "text-foreground" : "text-muted-foreground/50"}`}>{step.label}</p>
+                                            {step.time && step.done && (
+                                                <span className="text-[10px] text-muted-foreground font-mono">{step.time}</span>
+                                            )}
+                                        </div>
                                         {step.detail && step.done && (
                                             <p className="text-[10px] text-muted-foreground">{step.detail}</p>
                                         )}
