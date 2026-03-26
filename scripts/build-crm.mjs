@@ -286,28 +286,94 @@ if (linkedinSent) {
     console.log(`   ✅ ${linkedinSent.length} LinkedIn sent emails`);
 }
 
-// ── 3. Stripe customers (most_aware) ──
-console.log("📋 Reading Stripe customers (unified_customers.csv)...");
-const stripeCsv = readCSVFile("data/unified_customers.csv");
-for (const row of stripeCsv) {
-    const email = row.Email || row.email;
-    if (!email) continue;
-    const c = ensureContact(email);
-    if (!c) continue;
-    const { first, last } = splitName(row.Name || row.name || "");
-    if (!c.first_name && first) c.first_name = first;
-    if (!c.last_name && last) c.last_name = last;
-    c.tags.add("stripe_customer");
-    c.tags.add("most_aware");
-    c.source = "other"; // will be set to highest priority below
-    c.status = "converted";
-    // Parse spend
-    const spend = parseFloat(row["Total Spend"] || "0");
-    c.metadata.stripe_spend = spend;
-    c.metadata.stripe_id = row.id || "";
-    c.source_detail = `Stripe — £${spend.toFixed(0)}`;
+// ── 3. Stripe customers (most_aware) — LIVE from Stripe API ──
+const STRIPE_KEY = env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY;
+if (!STRIPE_KEY) {
+    console.log("⚠️  No STRIPE_SECRET_KEY found, skipping live Stripe sync. Falling back to CSV.");
+    const stripeCsv = readCSVFile("data/unified_customers.csv");
+    for (const row of stripeCsv) {
+        const email = row.Email || row.email;
+        if (!email) continue;
+        const c = ensureContact(email);
+        if (!c) continue;
+        const { first, last } = splitName(row.Name || row.name || "");
+        if (!c.first_name && first) c.first_name = first;
+        if (!c.last_name && last) c.last_name = last;
+        c.tags.add("stripe_customer");
+        c.tags.add("most_aware");
+        c.source = "other";
+        c.status = "converted";
+        const spend = parseFloat(row["Total Spend"] || "0");
+        c.metadata.stripe_spend = spend;
+        c.metadata.stripe_id = row.id || "";
+        c.source_detail = `Stripe -- £${spend.toFixed(0)}`;
+    }
+    console.log(`   ✅ ${stripeCsv.length} Stripe customers (from CSV fallback)`);
+} else {
+    console.log("📋 Fetching Stripe customers LIVE from API (since 16 Mar 2026)...");
+    let allCharges = [];
+    let hasMore = true;
+    let startingAfter = null;
+    const WEBINAR_LAUNCH = Math.floor(new Date("2026-03-16T00:00:00Z").getTime() / 1000);
+    while (hasMore) {
+        const params = new URLSearchParams({ limit: "100", "created[gte]": String(WEBINAR_LAUNCH) });
+        if (startingAfter) params.set("starting_after", startingAfter);
+        const res = await fetch(`https://api.stripe.com/v1/charges?${params}`, {
+            headers: { Authorization: `Bearer ${STRIPE_KEY}` },
+        });
+        if (!res.ok) {
+            console.error("   ⚠️ Stripe API error:", await res.text());
+            break;
+        }
+        const data = await res.json();
+        allCharges.push(...data.data.filter(ch => ch.status === "succeeded" && ch.amount > 0));
+        hasMore = data.has_more;
+        if (data.data.length > 0) startingAfter = data.data[data.data.length - 1].id;
+    }
+    console.log(`   📦 ${allCharges.length} successful charges found`);
+
+    // Group by email
+    const byEmail = {};
+    for (const charge of allCharges) {
+        const email = (charge.billing_details?.email || charge.receipt_email || "").toLowerCase().trim();
+        if (!email) continue;
+        if (!byEmail[email]) byEmail[email] = { charges: [], total: 0, name: "" };
+        byEmail[email].charges.push(charge);
+        byEmail[email].total += charge.amount / 100;
+        if (!byEmail[email].name && charge.billing_details?.name) byEmail[email].name = charge.billing_details.name;
+    }
+
+    let stripeCount = 0;
+    for (const [email, info] of Object.entries(byEmail)) {
+        const c = ensureContact(email);
+        if (!c) continue;
+        stripeCount++;
+        const { first, last } = splitName(info.name);
+        if (!c.first_name && first) c.first_name = first;
+        if (!c.last_name && last) c.last_name = last;
+        c.tags.add("stripe_customer");
+        c.tags.add("most_aware");
+        c.source = "other";
+        c.status = "converted";
+        c.metadata.stripe_spend = info.total;
+        c.metadata.payment_count = info.charges.length;
+        c.source_detail = `Stripe -- £${info.total.toFixed(0)} (${info.charges.length} payment${info.charges.length > 1 ? "s" : ""})`;
+
+        // Determine ticket type from charge amounts
+        const amounts = info.charges.map(ch => ch.amount);
+        if (amounts.some(a => a >= 2200)) {
+            c.tags.add("bundle");
+        } else if (amounts.some(a => a >= 900 && a <= 1100)) {
+            c.tags.add("webinar_only");
+            c.tags.add("webinar_only_buyer");
+            c.metadata.webinar_ticket = "webinar-only";
+        }
+        if (amounts.some(a => a >= 1100 && a <= 1300)) {
+            c.tags.add("guide_purchased");
+        }
+    }
+    console.log(`   ✅ ${stripeCount} unique Stripe customers (LIVE)`);
 }
-console.log(`   ✅ ${stripeCsv.length} Stripe customers`);
 
 // ── 4. Form leads who didn't buy (product_aware) ──
 console.log("📋 Reading discount message leads...");
