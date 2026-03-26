@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>EarlyEdge - Breakthrough Ad Funnel Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; padding: 40px; }
+  
+  .header { text-align: center; margin-bottom: 48px; padding-bottom: 32px; border-bottom: 2px solid #e2e8f0; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+  .header p { color: #64748b; font-size: 14px; }
+  
+  .funnel-overview { display: flex; gap: 12px; margin-bottom: 48px; justify-content: center; flex-wrap: wrap; }
+  .funnel-stage { background: white; border-radius: 12px; padding: 20px 24px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 140px; }
+  .funnel-stage .count { font-size: 32px; font-weight: 700; }
+  .funnel-stage .label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .stage-1 .count { color: #94a3b8; }
+  .stage-2 .count { color: #f59e0b; }
+  .stage-3 .count { color: #3b82f6; }
+  .stage-4 .count { color: #8b5cf6; }
+  .stage-5 .count { color: #10b981; }
+  
+  .email-section { background: white; border-radius: 16px; padding: 32px; margin-bottom: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); page-break-inside: avoid; }
+  .email-section h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+  .email-section .meta { color: #64748b; font-size: 13px; margin-bottom: 20px; }
+  .email-section .badge { display: inline-block; padding: 2px 10px; border-radius: 100px; font-size: 11px; font-weight: 600; margin-right: 8px; }
+  .badge-amber { background: #fef3c7; color: #92400e; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+  
+  .email-preview { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .email-preview .subject { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .email-preview .from { color: #64748b; font-size: 13px; margin-bottom: 16px; }
+  .email-preview .body { font-size: 14px; line-height: 1.8; color: #334155; }
+  .email-preview .body p { margin-bottom: 12px; }
+  .email-preview .body ul { margin: 8px 0 16px 20px; }
+  .email-preview .body li { margin-bottom: 4px; }
+  .email-preview .cta { display: inline-block; background: #10b981; color: white; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px; margin: 12px 0; }
+  
+  .recipients { margin-top: 20px; }
+  .recipients h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #475569; }
+  .recipient-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px; }
+  .recipient { font-size: 12px; color: #64748b; padding: 6px 10px; background: #f8fafc; border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recipient .name { color: #334155; font-weight: 500; }
+  
+  .total-bar { text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 24px; border-radius: 12px; margin-bottom: 48px; }
+  .total-bar .big { font-size: 48px; font-weight: 700; }
+  .total-bar .sub { color: #94a3b8; font-size: 14px; }
+  
+  @media print {
+    body { padding: 20px; }
+    .email-section { box-shadow: none; border: 1px solid #e2e8f0; }
+    .funnel-stage { box-shadow: none; border: 1px solid #e2e8f0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>EarlyEdge Breakthrough Ad Funnel Report</h1>
+  <p>Generated: March 26, 2026 | All email copy & recipient lists</p>
+</div>
+
+<div class="total-bar">
+  <div class="big">404</div>
+  <div class="sub">Total Contacts in CRM</div>
+</div>
+
+<div class="funnel-overview">
+  <div class="funnel-stage stage-1">
+    <div class="count">158</div>
+    <div class="label">Unaware</div>
+  </div>
+  <div class="funnel-stage stage-2">
+    <div class="count">172</div>
+    <div class="label">Problem Aware</div>
+  </div>
+  <div class="funnel-stage stage-3">
+    <div class="count">0</div>
+    <div class="label">Solution Aware</div>
+  </div>
+  <div class="funnel-stage stage-4">
+    <div class="count">57</div>
+    <div class="label">Product Aware</div>
+  </div>
+  <div class="funnel-stage stage-5">
+    <div class="count">17</div>
+    <div class="label">Converted</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EMAIL 1: UNAWARE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section">
+  <span class="badge badge-gray">STAGE 1 - UNAWARE</span>
+  <h2>Email 1: Initial Cold Outreach</h2>
+  <div class="meta">Already sent to all 216 scraped LinkedIn contacts via send-scraped-emails.mjs</div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: wait is this you??</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey,</p>
+      <p>Did that subject line make you open this? Good.</p>
+      <p>That's exactly what cold emailing is - getting a complete stranger to stop what they're doing and pay attention to you.</p>
+      <p>Our coach Uthman mastered it. No connections. No crazy CV. Just 1,000 cold emails, a 21% response rate, and 20+ internship offers in 3 weeks.</p>
+      <p>On <strong>28th March at 7pm GMT</strong>, he's going live for 90 minutes to show you everything:</p>
+      <ul>
+        <li>How he found the right people to email using Apollo.io</li>
+        <li>The exact template behind his 21% response rate</li>
+        <li>How he sent 50+ emails a day without them looking automated</li>
+        <li>How he turned replies into ACTUAL offers</li>
+      </ul>
+      <p>If you're looking for internships in finance, tech, consulting, or law and you've got nothing lined up - this is for you.</p>
+      <p>Spots are limited.</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/webinar">Save your spot</a></p>
+      <p style="color: #888; font-style: italic; font-size: 14px;">Can't make it on the night? A recording is included.</p>
+      <p>See you there<br>Dylan<br><span style="color: #999; font-size: 13px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span></span></p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>STATUS: ✅ All 216 sent | 158 haven't engaged yet (remain at Unaware)</h3>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EMAIL 2: PROBLEM AWARE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section">
+  <span class="badge badge-amber">STAGE 2 - PROBLEM AWARE</span>
+  <h2>Email 2: "The Numbers Don't Lie"</h2>
+  <div class="meta">Sent to contacts who received Email 1 but haven't clicked | 172 recipients</div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: the numbers don't lie</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey,</p>
+      <p>I sent you something a few days ago about a cold email webinar. You might have missed it so I wanted to follow up.</p>
+      <p>Here are the actual numbers from our coach Uthman:</p>
+      <ul>
+        <li>1,000 cold emails sent</li>
+        <li>21% response rate (industry average is 1-3%)</li>
+        <li>20+ internship offers</li>
+        <li>3 weeks. From zero connections.</li>
+      </ul>
+      <p>He's not some LinkedIn influencer. He's a student who figured out a system that actually works.</p>
+      <p>This <strong>Saturday 28th March at 7pm GMT</strong>, he's going live for 90 minutes to break down exactly how he did it - the templates, the tools, the follow-up sequences. Everything.</p>
+      <p>Spots are filling up fast and we're capping attendance to keep it interactive.</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/webinar">Save your spot &rarr;</a></p>
+      <p style="color: #888; font-style: italic; font-size: 14px;">Can't make it live? A recording is included with every ticket.</p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>Recipients (172 people)</h3>
+    <div class="recipient-grid" id="email2-recipients"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EMAIL 3: SOLUTION AWARE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section">
+  <span class="badge badge-blue">STAGE 3 - SOLUTION AWARE</span>
+  <h2>Email 3: "Your Competition Already Signed Up"</h2>
+  <div class="meta">Sent to contacts who opened an email but haven't clicked through | 0 recipients (waiting for webhook data)</div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: your competition already signed up</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey,</p>
+      <p>I can see you opened my last email but didn't click through.</p>
+      <p>I get it - you're busy. But here's the thing:</p>
+      <p>Students from LSE, Warwick, NYU, Columbia, and IU have already secured their spots for Saturday's webinar.</p>
+      <p>While you're still thinking about it, someone at your uni is already preparing to send their first batch of cold emails using Uthman's exact system.</p>
+      <p>The webinar is <strong>this Saturday, 28th March at 7pm GMT</strong>. After that, the only way to access this is by buying the recording.</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/webinar">Grab your spot before it fills up &rarr;</a></p>
+      <p>No fluff. No theory. Just the exact playbook that got a student with zero connections 20+ offers in 3 weeks.</p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>Recipients: 0 (this stage will populate automatically as people open Email 2)</h3>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- EMAIL 4: PRODUCT AWARE -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section">
+  <span class="badge badge-purple">STAGE 4 - PRODUCT AWARE</span>
+  <h2>Email 4: "Quick Question + A Discount For You"</h2>
+  <div class="meta">Sent to contacts who clicked/signed up but didn't purchase | 57 recipients | <strong>DISCOUNT STAGE</strong></div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: quick question + a discount for you</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey,</p>
+      <p>I noticed you checked out the webinar page but didn't grab a ticket yet. Totally fair - so I wanted to make it a no-brainer for you.</p>
+      <p>For the next 48 hours, you can get the <strong>full bundle</strong> for just <strong>£29</strong> (normally £38+):</p>
+      <ul>
+        <li>Live 90-min webinar (Sat 28th March, 7pm GMT)</li>
+        <li>Full recording sent after</li>
+        <li>Uthman's exact cold email templates</li>
+        <li>Apollo.io setup guide</li>
+        <li>Follow-up sequences that got him a 21% response rate</li>
+      </ul>
+      <p>If you're applying for internships this summer in finance, consulting, tech, or law - this is the cheapest shortcut you'll find.</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/webinar">Get the bundle for £29 &rarr;</a></p>
+      <p>This price won't last. We're raising it after the webinar.</p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>Recipients (57 people)</h3>
+    <div class="recipient-grid" id="email4-recipients"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- CONFIRMATION: BUNDLE BUYERS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section" style="border-left: 4px solid #10b981;">
+  <span class="badge badge-green">STAGE 5A - CONVERTED (BUNDLE)</span>
+  <h2>Confirmation: Bundle Buyers</h2>
+  <div class="meta">Sent to customers who purchased the full bundle (£29) | 14 recipients</div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: you're in - here's everything you need</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey {Name},</p>
+      <p>You're in. Good decision - you went for the full bundle so you're getting everything.</p>
+      <p>On <strong>Saturday 28th March @7pm GMT</strong>, Uthman is breaking down exactly how he landed 20 internship offers using nothing but cold email. The full strategy, the exact templates, the follow-up sequences, the mistakes etc.</p>
+      <p>He's spilling all the beans.</p>
+      <p>Here's what you need to know:</p>
+      <ul>
+        <li><strong>Zoom link:</strong> <a href="https://us05web.zoom.us/j/81619515454?pwd=Es8e29zvOEAsJ45BoSICugps7ataVp.1" style="color:#0066cc;">Join Zoom Meeting</a></li>
+        <li><strong>Date:</strong> Saturday 28th March</li>
+        <li><strong>Time:</strong> 7pm GMT</li>
+        <li><strong>Duration:</strong> ~90 mins + live Q&amp;A</li>
+      </ul>
+      <p style="font-size: 13px; color: #888;">If the link doesn't work, open Zoom and join with Meeting ID: 816 1951 5454 / Passcode: 1FzZLi</p>
+      <p>We'll also send you a reminder before we start so you don't miss it.</p>
+      <p>Now - your guide. This is the exact cold email system Uthman used to land his offers, remastered and expanded with everything we've learned since. Templates, targeting strategy, follow-up sequences, the lot. Here it is:</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/resources/cold-email-guide">Download your Cold Email Guide</a></p>
+      <p>Seriously, read through it before Saturday. You'll get 10x more out of the webinar if you come having already seen the framework.</p>
+      <p>Also here's the cold email checklist as a quick reference: <a href="https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist" style="color:#0066cc;">Download Checklist</a></p>
+      <p>Can't make it live?</p>
+      <p>Don't stress, you'll get the full recording sent to this email within 24 hours.</p>
+      <p>See you there<br>Don &amp; Dylan<br><span style="color: #999; font-size: 13px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span></span></p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>Bundle Buyers (14 people)</h3>
+    <div class="recipient-grid" id="bundle-recipients"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- CONFIRMATION: WEBINAR-ONLY BUYERS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section" style="border-left: 4px solid #3b82f6;">
+  <span class="badge badge-blue">STAGE 5B - CONVERTED (WEBINAR ONLY)</span>
+  <h2>Confirmation: Webinar-Only Buyers</h2>
+  <div class="meta">Sent to customers who purchased webinar only (£10) | 3 recipients | <strong>INCLUDES UPSELL TO BUNDLE</strong></div>
+  
+  <div class="email-preview">
+    <div class="subject">Subject: you're in - here's your zoom link</div>
+    <div class="from">From: dylan@yourearlyedge.co.uk</div>
+    <div class="body">
+      <p>Hey {Name},</p>
+      <p>You're in. Good decision.</p>
+      <p>On <strong>Saturday 28th March @7pm GMT</strong>, Uthman is breaking down exactly how he landed 20 internship offers using nothing but cold email. The full strategy, the exact templates, the follow-up sequences, the mistakes etc.</p>
+      <p>He's spilling all the beans.</p>
+      <p>Here's what you need to know:</p>
+      <ul>
+        <li><strong>Zoom link:</strong> <a href="https://us05web.zoom.us/j/81619515454?pwd=Es8e29zvOEAsJ45BoSICugps7ataVp.1" style="color:#0066cc;">Join Zoom Meeting</a></li>
+        <li><strong>Date:</strong> Saturday 28th March</li>
+        <li><strong>Time:</strong> 7pm GMT</li>
+        <li><strong>Duration:</strong> ~90 mins + live Q&amp;A</li>
+      </ul>
+      <p style="font-size: 13px; color: #888;">If the link doesn't work, open Zoom and join with Meeting ID: 816 1951 5454 / Passcode: 1FzZLi</p>
+      <p>We'll also send you a reminder before we start so you don't miss it.</p>
+      <p>Oh and here's the cold email checklist to get you started before the webinar: <a href="https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist" style="color:#0066cc;">Download the Checklist</a>. Have a look through it so you can come with questions on Saturday.</p>
+      <p>Can't make it live?</p>
+      <p>Don't stress, you'll get the full recording sent to this email within 24 hours.</p>
+      <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+      <p><strong>Want the full cold email system?</strong></p>
+      <p>The webinar covers the strategy, but the Cold Email Guide gives you the complete playbook - every template, every follow-up sequence, every tool Uthman used. It's what separates people who watch from people who actually land offers.</p>
+      <p><a class="cta" href="https://webinar.yourearlyedge.co.uk/webinar">Upgrade to the Full Bundle</a></p>
+    </div>
+  </div>
+  
+  <div class="recipients">
+    <h3>Webinar-Only Buyers (3 people)</h3>
+    <div class="recipient-grid" id="webinar-only-recipients"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ -->
+<!-- INSTRUCTIONS -->
+<!-- ══════════════════════════════════════════════════ -->
+<div class="email-section" style="background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 1px solid #bbf7d0;">
+  <h2>How to Send</h2>
+  <div class="body" style="font-size: 14px; line-height: 1.8; margin-top: 16px;">
+    
+    <p><strong style="font-size: 16px;">1. Funnel Emails (Stages 2-4)</strong></p>
+    <p>Edit the copy in <code>scripts/send-funnel-emails.mjs</code> (emails are on lines 103-160).</p>
+    <p style="margin-top: 8px;"><strong>Dry run (preview only):</strong></p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; margin: 8px 0;">node scripts/send-funnel-emails.mjs</pre>
+    <p style="margin-top: 8px;"><strong>Send all stages at once:</strong></p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; margin: 8px 0;">node scripts/send-funnel-emails.mjs --send</pre>
+    <p style="margin-top: 8px;"><strong>Send one stage at a time:</strong></p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; margin: 8px 0;">node scripts/send-funnel-emails.mjs --send --stage=2   # Email 2 only
+node scripts/send-funnel-emails.mjs --send --stage=3   # Email 3 only
+node scripts/send-funnel-emails.mjs --send --stage=4   # Email 4 only</pre>
+
+    <hr style="border: none; border-top: 1px solid #bbf7d0; margin: 24px 0;">
+    
+    <p><strong style="font-size: 16px;">2. Customer Confirmation Emails (Stage 5)</strong></p>
+    <p>Edit the copy in <code>scripts/send-confirmation-emails.mjs</code>.</p>
+    <p style="margin-top: 8px;"><strong>Before sending:</strong> Make sure the Zoom link, Guide link, and Checklist link are correct at the top of the file (lines 51-56).</p>
+    <p style="margin-top: 8px;"><strong>Dry run:</strong></p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; margin: 8px 0;">node scripts/send-confirmation-emails.mjs</pre>
+    <p style="margin-top: 8px;"><strong>Send confirmations:</strong></p>
+    <pre style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 8px; margin: 8px 0;">node scripts/send-confirmation-emails.mjs --send</pre>
+    <p style="margin-top: 8px; color: #475569;">This automatically segments bundle buyers (14) vs webinar-only buyers (3) and sends the right email to each. Everyone gets tagged <code>confirmation_sent</code> so they won't be double-emailed.</p>
+
+    <hr style="border: none; border-top: 1px solid #bbf7d0; margin: 24px 0;">
+
+    <p><strong style="font-size: 16px;">3. Pre-Send Checklist</strong></p>
+    <div style="margin-top: 8px;">
+      <p>&#10003; Zoom link is set in confirmation script</p>
+      <p>&#9888; Upgrade Zoom to Pro before Saturday (free plan = 40 min limit)</p>
+      <p>&#9888; Update Guide link and Checklist link in send-confirmation-emails.mjs if needed</p>
+      <p>&#10003; Resend webhook deployed and registered</p>
+      <p>&#10003; Stripe webhook deployed with bundle/webinar-only tagging</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const email2 = [{"name":"Unknown","email":"bren.danteh2121@gmail.com"},{"name":"Unknown","email":"darkcybersabers@hotmail.com"},{"name":"Unknown","email":"moesha.dackam@gmail.com"},{"name":"Unknown","email":"kengreibesland@gmail.com"},{"name":"Unknown","email":"ibrahimsalam839@gmail.com"},{"name":"Unknown","email":"kushagra101106@gmail.com"},{"name":"Unknown","email":"itziking815@gmail.com"},{"name":"Unknown","email":"benjamin.sulpice@edhec.com"},{"name":"Unknown","email":"sifat.miah403@gmail.com"},{"name":"Unknown","email":"aidanmal1@outlook.com"},{"name":"Unknown","email":"kanaiya2006@gmail.com"},{"name":"Unknown","email":"kered05.no@gmail.com"},{"name":"Unknown","email":"yashvi.modi@princeton.edu"},{"name":"Unknown","email":"zjavaidhamid@gmail.com"},{"name":"Unknown","email":"issssaa22@gmail.com"},{"name":"Unknown","email":"hudasheikh36@gmail.com"},{"name":"Unknown","email":"aeromos@outlook.com"},{"name":"Unknown","email":"raplelas0@gmail.com"},{"name":"Unknown","email":"shanchier0813@gmail.com"},{"name":"Unknown","email":"megstc@icloud.com"},{"name":"Unknown","email":"rohitlakhanpal04@gmail.com"},{"name":"Unknown","email":"archiegordo08@gmail.com"},{"name":"Unknown","email":"sachinpages01@gmail.com"},{"name":"Unknown","email":"yyongxin.work@gmail.com"},{"name":"Unknown","email":"ahmedreyan92@gmail.com"},{"name":"Unknown","email":"infobank172@gmail.com"},{"name":"Unknown","email":"vishal_veeramachaneni@brown.edu"},{"name":"Unknown","email":"n1019594@ntu.ac.uk"},{"name":"Unknown","email":"khalifzaman@gmail.com"},{"name":"Unknown","email":"nafizrozaini@gmail.com"},{"name":"Unknown","email":"bisaglia.fra@gmail.com"},{"name":"Unknown","email":"kanjorin@outlook.com"},{"name":"Unknown","email":"syed.yaseer.rahman@gmail.com"},{"name":"Unknown","email":"rishi257kesh@gmail.com"},{"name":"Unknown","email":"oabieuan@gmail.com"},{"name":"Unknown","email":"yashvpawar30@gmail.com"},{"name":"Unknown","email":"yongy8963@gmail.com"},{"name":"Yuvaan Jhunjhunwala","email":"y.m.jhunjhunwala@lse.ac.uk"},{"name":"Nikhit Rachapudi","email":"nikhitr18@gmail.com"},{"name":"Charlotte Cruz","email":"cruzcharlotte62@gmail.com"},{"name":"Jinay Shah","email":"tmc8bg@virginia.edu"},{"name":"Justin Kong","email":"jhk174@scarletmail.rutgers.edu"},{"name":"Mihika Saraf","email":"ms7321@columbia.edu"},{"name":"Arkadeep D.","email":"arkadeep.das@rutgers.edu"},{"name":"Dhruv Parekh","email":"dhruv.b.parekh@warwick.ac.uk"},{"name":"Anuj Mistry","email":"anujmistry.uk@gmail.com"},{"name":"Rishi P","email":"rishi.m.parbhoo@gmail.com"},{"name":"David Hartnett","email":"Davidhartnett78@gmail.com"},{"name":"Amaan Ghani","email":"amaan.ghani@outlook.com"},{"name":"Lakshita Jain","email":"ljain35@gatech.edu"},{"name":"Gianluca Riquier","email":"gl.riquier@gmail.com"},{"name":"Harit Vora","email":"hvora1@pride.hofstra.edu"},{"name":"Lokeshwar M","email":"mlokeshwar1203@gmail.com"},{"name":"Vidhi Parekh","email":"vidhiparekh20@utexas.edu"},{"name":"Sara Samad","email":"sarasamad461@gmail.com"},{"name":"Mohd Zaid Irfan","email":"zaidmohd1300@gmail.com"},{"name":"Jonathan Esho","email":"jonathan.esho@bayes.city.ac.uk"},{"name":"Saanvi Budigam","email":"sbudigam@iu.edu"},{"name":"Stuti Trivedi","email":"snt4615@nyu.edu"},{"name":"Archi Jain","email":"ajainaq@connect.ust.hk"},{"name":"Jacob Piatrovich","email":"piatrovichjacob123@gmail.com"},{"name":"Dhakshinesh Sivasankara Desikan","email":"dharshansiva28@gmail.com"},{"name":"Anish Abhyankar","email":"anish.abhyankar25@gmail.com"},{"name":"Suriya Dev Saravanakumar","email":"ssuriyadev1212@gmail.com"},{"name":"AARUSH RAJOURA","email":"aarushrajoura@gmail.com"},{"name":"Santos Ledesma","email":"santos88442@gmail.com"},{"name":"Elizabeth Ndu Muh","email":"elizabethndumuh@gmail.com"},{"name":"Miranda Murarka","email":"mm4146@scarletmail.rutgers.edu"},{"name":"Ryan Heidler","email":"guz4fw@virginia.edu"},{"name":"Tanay Gandhi","email":"gandhitn23.mech@coeptech.ac.in"},{"name":"Florian W.","email":"florian.wong@efrei.net"},{"name":"Harsh Gautam Jha","email":"jhaharshgautam@gmail.com"},{"name":"Mikolaj Reczkin","email":"mikolajreczkin@outlook.com"},{"name":"Sophia Hadland","email":"sophia.hadland@gmail.com"},{"name":"Adam Semroud","email":"adamsemroud1909@gmail.com"},{"name":"N. Duggine","email":"nduggine@stevens.edu"},{"name":"Goutham Krishna Kunku","email":"goutham.k.2025@economics.smu.edu.sg"},{"name":"Charlie Garrett","email":"charliegarrett2017@icloud.com"},{"name":"Dario Pinataro","email":"dario.pinataro@gmail.com"},{"name":"Amirul Islam","email":"amirul.amir.islam@gmail.com"},{"name":"Siddharth Nagalingam","email":"fxn514@york.ac.uk"},{"name":"Jigna Chowdary Yaganti","email":"jigna.yaganti@studbocconi.it"},{"name":"Sneha H.","email":"sneha.hirani05@gmail.com"},{"name":"Zachariah John Varghese","email":"zachariah.fall24@gmail.com"},{"name":"Maxime Froment-Curtil","email":"maximefromentcurtil@gmail.com"},{"name":"Kelvin Amissah","email":"amissahkelvin633@gmail.com"},{"name":"Chinaza Aniakor","email":"chinazagloreyya@gmail.com"},{"name":"Luke Devadoss","email":"lukerdevadoss@gmail.com"},{"name":"Rittika Mandal","email":"mandalrittika07@gmail.com"},{"name":"Shulin Pandey","email":"shulinpandey7@gmail.com"},{"name":"Akanksha Kappoor","email":"akapoor@connect.ust.hk"},{"name":"Aryan Kotwal","email":"kotwal.aryan01@gmail.com"},{"name":"Jinu Varshini Suresh Kumar","email":"jinu.sureshkumar@essec.edu"},{"name":"Ahmed Ismael Sheikh","email":"ahmed.i.sheikh@gmail.com"},{"name":"Karel Steeve Tchami","email":"karelsteeve21@gmail.com"},{"name":"Varun Nayak","email":"varun.nayak2025@gmail.com"},{"name":"Stefan Rai","email":"stefanrai222@gmail.com"},{"name":"Anton Andreas Fröhlich","email":"antonfroehlich2007@web.de"},{"name":"Thun Nadi Oo","email":"t.n.oo@lse.ac.uk"},{"name":"Tomás Almada","email":"totualmada@gmail.com"},{"name":"Lewis Redmond","email":"lewisredmond2007@gmail.com"},{"name":"Marwa M.","email":"marwa.machmoum23@gmail.com"},{"name":"Inés Martínez","email":"i.martinezhernandez@cunef.edu"},{"name":"Samuel Bral","email":"samuelbralpcs@gmail.com"},{"name":"Sophia Governale","email":"sophiagovernale@icloud.com"},{"name":"R Karthik","email":"karthikverma75@gmail.com"},{"name":"Jules Dubroca","email":"julesdubroca1606@gmail.com"},{"name":"Davies Ibrahim","email":"workwithdavies@gmail.com"},{"name":"Rajitpal Singh","email":"singh.rajitpal@gmail.com"},{"name":"Adam Hejjal","email":"adamhope305@gmail.com"},{"name":"SLK Kishore","email":"slk9587@stern.nyu.edu"},{"name":"GV Geethika Maya Venkatampalli","email":"gv2281@nyu.edu"},{"name":"Max Vidal","email":"maxvidal.box@gmail.com"},{"name":"Pritika","email":"pritika02@outlook.com"}];
+
+const email4 = [{"name":"Kristal M.","email":"auq6fp@virginia.edu"},{"name":"Karthik Iyer","email":"iyerk@iu.edu"},{"name":"Adishree Jain","email":"ajaini@iu.edu"},{"name":"Mansi Shah","email":"ms178@iu.edu"},{"name":"K Jane Lee","email":"k.jane.lee@emory.edu"},{"name":"Hanishk Cherlamcherla","email":"hanishkc@unc.edu"},{"name":"Vaibhav Surisetty","email":"vsuriset@iu.edu"},{"name":"Hawi Asfaw","email":"zg25059@bristol.ac.uk"},{"name":"Ryan G.","email":"ryan.grullon@emory.edu"},{"name":"Rishit Shekhar","email":"rshekhar@iu.edu"},{"name":"Shubham Verma","email":"sh07verma@gmail.com"},{"name":"Stanley Duckworth","email":"femur-swizzle-ooze@duck.com"},{"name":"Ismaeel Fazal","email":"ismaeelfazal@outlook.com"},{"name":"Joel Jose","email":"raphaelaeder10@gmail.com"},{"name":"Sheni Agbede","email":"shenishawn@gmail.com"},{"name":"Liks Robert","email":"robertliks@gmail.com"},{"name":"Anna Heward","email":"annaheward@yahoo.com"},{"name":"Vishnu Bharadwaaj","email":"vishnubharadwaaj06@gmail.com"},{"name":"Jo Wakandain","email":"wakandain4567@gmail.com"},{"name":"Alina Hussain","email":"alinafhussain05@gmail.com"},{"name":"Harshita Gupta","email":"harshitankg@gmail.com"},{"name":"Mai Nguyen","email":"lem0897@gmail.com"},{"name":"Kiran Shahbaz","email":"kiranshahbaz197@gmail.com"},{"name":"Chris Paul","email":"chrispaulreal123@gmail.com"},{"name":"Uthmanis Sja","email":"hashimayaz@hotmail.com"},{"name":"Mattia Scarabello","email":"mattiascarabello05@gmail.com"},{"name":"James Waller","email":"james.f.waller@outlook.com"},{"name":"Yurell Young","email":"yurellyoung@gmail.com"},{"name":"Dhruv Y","email":"dhruv.y.5465@gmail.com"},{"name":"Trivikram Vunnam","email":"vunnamtrivikram@gmail.com"},{"name":"Aman Ashraf","email":"amanashr@iu.edu"},{"name":"Bob John","email":"john@gmail.com"},{"name":"Humaira Irfan","email":"hirfa2607@hotmail.com"},{"name":"Eira Park","email":"eirapark4@gmail.com"},{"name":"Jammal Akinwunmi-Othman","email":"jammalotandb@gmail.com"},{"name":"Saisha Puri","email":"saisha5868@gmail.com"},{"name":"Nael Bassiere","email":"naelicham@gmail.com"},{"name":"Harish Thayaparan","email":"harish.thayaparan@gmail.com"},{"name":"Haider Hussain","email":"haider.a.hussain1@gmail.com"},{"name":"Chris Kersov","email":"chriskersov@gmail.com"},{"name":"Nikita Biju","email":"nikitabiju2006@gmail.com"},{"name":"Ethan Muriuki","email":"ethanmuriuki16@gmail.com"},{"name":"Ambeer Hernandez","email":"amberrrinooo78@gmail.com"},{"name":"Idris Popoola","email":"idrispopoola1@gmail.com"},{"name":"Muhammad Panju","email":"muhammadpanju@gmail.com"},{"name":"Isha Ranwa","email":"isharanwa@gmail.com"},{"name":"Wiktor Brzozka","email":"wiktorbrzozka2017@gmail.com"},{"name":"Raihan Miah","email":"miahraihan123@gmail.com"},{"name":"Shivam Kumar","email":"shivam07.kumar20@gmail.com"},{"name":"Josh Chhatralia","email":"chhatraliajosh@gmail.com"},{"name":"Kieth James","email":"kj123@gmail.com"},{"name":"A K","email":"anjolakoyejo@icloud.com"},{"name":"Ignacio Domingo Garcia","email":"domingogarcia.i@northeastern.edu"},{"name":"Aashi Sachdeva","email":"aashisachdeva05@gmail.com"},{"name":"Roopal Chakraborty","email":"lcv530@york.ac.uk"},{"name":"Dev Patel","email":"devpatel96605@gmail.com"},{"name":"Damir Khalikov","email":"domikyay@gmail.com"}];
+
+const bundleBuyers = [{"name":"Kaetochukwu Ozioko","email":"kaetochukwuozioko5@gmail.com"},{"name":"Madhav Sumesh Menon","email":"madhavsumeshmenon@gmail.com"},{"name":"Musab Azeem","email":"azeemmusab@gmail.com"},{"name":"Nathaniel Adekunle","email":"nathaniel.adekunle@outlook.com"},{"name":"Prakriti Kapoor","email":"prakritikapoor26@gmail.com"},{"name":"Raihan Noor","email":"raihannoor361@gmail.com"},{"name":"Saljuk Rashid","email":"saljukdibbo@gmail.com"},{"name":"Vaitheeshwar Prakash","email":"forwardtovaithy@gmail.com"},{"name":"Isabel","email":"isabel.sheridan@hotmail.co.uk"},{"name":"James Makowski-Hoyle","email":"jamesmakhoyle@icloud.com"},{"name":"Luke Stone","email":"raphaelrock06@gmail.com"},{"name":"Jagmohan Singh","email":"damanpreet.kaur590@gmail.com"},{"name":"Aarin Bhatt","email":"a.n.bhatt@lse.ac.uk"},{"name":"Jaskeerat Basra","email":"jaskeeratkbasra@gmail.com"}];
+
+const webinarOnly = [{"name":"MK","email":"7musakazim@gmail.com"},{"name":"Faruq Kadiri","email":"faruqbear@gmail.com"},{"name":"Bohdana Tkachuk","email":"tkachbog123@ukr.net"}];
+
+function render(id, data) {
+  const el = document.getElementById(id);
+  if (el) el.innerHTML = data.map(r => `<div class="recipient"><span class="name">${r.name}</span> &lt;${r.email}&gt;</div>`).join('');
+}
+render('email2-recipients', email2);
+render('email4-recipients', email4);
+render('bundle-recipients', bundleBuyers);
+render('webinar-only-recipients', webinarOnly);
+</script>
+
+</body>
+</html>

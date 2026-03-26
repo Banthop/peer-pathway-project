@@ -5,7 +5,7 @@ import {
     ExternalLink, Pencil, Check, Trash2, RefreshCw,
     MousePointerClick, Send, Eye, AlertTriangle, ShoppingCart,
     UserCheck, UserX, Zap, Target, Gift, Clock, ArrowRight,
-    FileText, Copy, Play
+    FileText, Copy, Play, Filter
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -346,9 +346,13 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
     const [notes, setNotes] = useState(contact.notes || "");
     const [editingNotes, setEditingNotes] = useState(false);
     const [newTag, setNewTag] = useState("");
+    const [editingName, setEditingName] = useState(false);
+    const [tempFirst, setTempFirst] = useState("");
+    const [tempLast, setTempLast] = useState("");
     const e = getEngagement(contact);
 
     const handleSaveNotes = () => { onUpdate(contact.id, { notes }); setEditingNotes(false); };
+    const handleSaveName = () => { onUpdate(contact.id, { first_name: tempFirst, last_name: tempLast }); setEditingName(false); };
     const handleAddTag = () => {
         const tag = newTag.trim().toLowerCase();
         if (!tag || (contact.tags || []).includes(tag)) return;
@@ -376,11 +380,29 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
                 <div className="p-6">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-6">
-                        <div>
-                            <h2 className="text-lg font-bold text-foreground">
-                                {contact.first_name || ""} {contact.last_name || ""}
-                                {!contact.first_name && !contact.last_name && <span className="text-muted-foreground">Unknown</span>}
-                            </h2>
+                        <div className="flex-1 mr-4">
+                            {editingName ? (
+                                <div className="space-y-2 mb-2">
+                                    <div className="flex gap-2">
+                                        <input value={tempFirst} onChange={e => setTempFirst(e.target.value)} placeholder="First name" className="w-full px-2 py-1 text-sm rounded border border-border bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20" />
+                                        <input value={tempLast} onChange={e => setTempLast(e.target.value)} placeholder="Last name" className="w-full px-2 py-1 text-sm rounded border border-border bg-background focus:outline-none focus:ring-1 focus:ring-foreground/20" />
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button onClick={handleSaveName} className="px-2 py-1 bg-foreground text-background rounded text-xs font-semibold hover:bg-foreground/90 transition-colors">Save</button>
+                                        <button onClick={() => setEditingName(false)} className="px-2 py-1 border border-border rounded text-xs text-muted-foreground hover:text-foreground">Cancel</button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="flex items-center gap-2 group">
+                                    <h2 className="text-lg font-bold text-foreground">
+                                        {contact.first_name || ""} {contact.last_name || ""}
+                                        {!contact.first_name && !contact.last_name && <span className="text-muted-foreground">Unknown</span>}
+                                    </h2>
+                                    <button onClick={() => { setTempFirst(contact.first_name || ""); setTempLast(contact.last_name || ""); setEditingName(true); }} className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all">
+                                        <Pencil className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
+                            )}
                             <p className="text-sm text-muted-foreground flex items-center gap-1.5 mt-1">
                                 <Mail className="w-3.5 h-3.5" /> {contact.email}
                             </p>
@@ -624,16 +646,41 @@ export default function AdminCRM() {
         return counts;
     }, [contacts]);
 
-    const stats = useMemo(() => {
-        const now = new Date();
-        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return {
-            total: contacts.length,
-            newThisWeek: contacts.filter((c: any) => new Date(c.created_at) > weekAgo).length,
-            converted: contacts.filter((c: any) => c.status === "converted").length,
-            emailsSent: contacts.filter((c: any) => (c.tags || []).includes("email_sent") || (c.tags || []).includes("linkedin_emailed")).length,
-            clicked: contacts.filter((c: any) => (c.tags || []).includes("email_clicked")).length,
-        };
+    const funnelData = useMemo(() => {
+        let unaware = 0;
+        let problem = 0;
+        let solution = 0;
+        let product = 0;
+        let most = 0;
+
+        for (const c of contacts) {
+            const e = getEngagement(c);
+            
+            // 5. Most Aware
+            if (c.status === "converted" || e.customer) {
+                most++;
+                continue;
+            }
+            // 4. Product Aware
+            if (e.formLead || e.clicked) {
+                product++;
+                continue;
+            }
+            // 3. Solution Aware
+            if (e.opened || c.status === "engaged") {
+                solution++;
+                continue;
+            }
+            // 2. Problem Aware
+            if (e.delivered || e.emailed || c.status === "contacted") {
+                problem++;
+                continue;
+            }
+            // 1. Unaware
+            unaware++;
+        }
+
+        return { unaware, problem, solution, product, most };
     }, [contacts]);
 
     const exportCSV = () => {
@@ -697,13 +744,43 @@ export default function AdminCRM() {
 
                 {activeTab === "contacts" && (<>
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
-                    <StatCard label="Total" value={stats.total} icon={Users} sub={`${stats.newThisWeek} this week`} />
-                    <StatCard label="Emailed" value={stats.emailsSent} icon={Send} sub={`${stats.total ? Math.round((stats.emailsSent / stats.total) * 100) : 0}% of all`} accent="bg-amber-100" />
-                    <StatCard label="Clicked" value={stats.clicked} icon={MousePointerClick} sub={`${stats.emailsSent ? Math.round((stats.clicked / stats.emailsSent) * 100) : 0}% CTR`} accent="bg-violet-100" />
-                    <StatCard label="Converted" value={stats.converted} icon={ShoppingCart} sub={`${stats.total ? Math.round((stats.converted / stats.total) * 100) : 0}% rate`} accent="bg-emerald-100" />
-                    <StatCard label="Not Emailed" value={segmentCounts.scraped_not_emailed || 0} icon={AlertTriangle} sub="Need outreach" accent="bg-orange-100" />
+                {/* Stats Funnel */}
+                <div className="mb-6">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                        <Filter className="w-3.5 h-3.5" /> Breakthrough Advertising Pipeline
+                    </p>
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                        <div className="p-4 rounded-xl border border-border bg-slate-50 flex flex-col items-center justify-center text-center">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Unaware</span>
+                            <span className="text-2xl font-black text-slate-900">{funnelData.unaware}</span>
+                            <span className="text-[10px] text-slate-500 mt-1">Cold leads</span>
+                        </div>
+                        <div className="p-4 rounded-xl border border-blue-200 bg-blue-50 flex flex-col items-center justify-center text-center relative pointer-events-none">
+                            <ArrowRight className="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-300 hidden lg:block" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 mb-1">Problem Aware</span>
+                            <span className="text-2xl font-black text-blue-900">{funnelData.problem}</span>
+                            <span className="text-[10px] text-blue-600/70 mt-1">Contacted</span>
+                        </div>
+                        <div className="p-4 rounded-xl border border-indigo-200 bg-indigo-50 flex flex-col items-center justify-center text-center relative pointer-events-none">
+                            <ArrowRight className="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-indigo-300 hidden lg:block" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600 mb-1">Solution Aware</span>
+                            <span className="text-2xl font-black text-indigo-900">{funnelData.solution}</span>
+                            <span className="text-[10px] text-indigo-600/70 mt-1">Engaged</span>
+                        </div>
+                        <div className="p-4 rounded-xl border border-violet-200 bg-violet-50 flex flex-col items-center justify-center text-center shadow-sm relative pointer-events-none">
+                            <ArrowRight className="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-violet-300 hidden lg:block" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-violet-600 mb-1">Product Aware</span>
+                            <span className="text-2xl font-black text-violet-900">{funnelData.product}</span>
+                            <span className="text-[10px] text-violet-600/70 mt-1">High Intent</span>
+                        </div>
+                        <div className="p-4 rounded-xl border border-emerald-300 bg-emerald-50 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden pointer-events-none">
+                            <ArrowRight className="absolute -left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-300 hidden lg:block z-10" />
+                            <div className="absolute top-0 inset-x-0 h-1 bg-emerald-500" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 mb-1">Most Aware</span>
+                            <span className="text-2xl font-black text-emerald-900">{funnelData.most}</span>
+                            <span className="text-[10px] text-emerald-700/70 mt-1">Converted</span>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Smart Segments */}

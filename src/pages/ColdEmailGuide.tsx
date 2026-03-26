@@ -48,41 +48,27 @@ export default function ColdEmailGuide() {
           </div>
         </div>
 
-        {/* Premium Iframe Wrapper */}
-        <div className="flex-1 rounded-2xl border bg-card overflow-hidden shadow-sm relative min-h-[700px] flex flex-col">
-          {/* Top Browser-like header */}
-          <div className="h-12 border-b bg-muted/30 flex items-center px-4 justify-between shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-400/80"></div>
-              <div className="w-3 h-3 rounded-full bg-amber-400/80"></div>
-              <div className="w-3 h-3 rounded-full bg-green-400/80"></div>
-            </div>
-            <div className="text-xs text-muted-foreground flex items-center gap-1 font-medium bg-background px-4 py-1.5 rounded-md border shadow-sm">
-              <Lock className="w-3 h-3" />
-              EarlyEdge Secure Viewer
-            </div>
-            <Button variant="ghost" size="sm" asChild className="h-8 text-xs">
-              <a href="https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62" target="_blank" rel="noreferrer">
-                Open Original <ExternalLink className="w-3 h-3 ml-2" />
-              </a>
-            </Button>
+        {/* Portal Access Wrapper - Updated because Subpage blocks iframes */}
+        <div className="flex-1 rounded-2xl border bg-card/60 backdrop-blur shadow-sm relative min-h-[500px] flex flex-col justify-center items-center text-center p-8 mt-4">
+          
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+            <Lock className="w-8 h-8 text-primary" />
           </div>
           
-          <div className="flex-1 relative bg-muted/10 w-full h-full">
-            {!iframeLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center flex-col gap-4 bg-background">
-                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                <p className="text-sm text-muted-foreground animate-pulse">Loading premium resource...</p>
-              </div>
-            )}
-            <iframe 
-              src="https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62" 
-              className="w-full h-full border-0 absolute inset-0"
-              onLoad={() => setIframeLoaded(true)}
-              title="Cold Email Guide"
-              allow="autoplay; fullscreen"
-            />
-          </div>
+          <h2 className="text-2xl font-semibold tracking-tight mb-2">Unlock The Cold Email System</h2>
+          <p className="text-muted-foreground max-w-md mb-8">
+            This premium resource is securely hosted. You will need the password <span className="font-mono text-sm bg-background border px-1.5 py-0.5 rounded">RedMango</span> to gain access on the next page.
+          </p>
+
+          <Button size="lg" className="h-12 px-8 text-base gap-2 rounded-xl" asChild>
+            <a href="https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62" target="_blank" rel="noreferrer">
+              Access the Guide <ExternalLink className="w-4 h-4 ml-1" />
+            </a>
+          </Button>
+          
+          <p className="text-xs text-muted-foreground mt-8">
+            Clicking the button will open the secure document viewer in a new tab.
+          </p>
         </div>
       </main>
 

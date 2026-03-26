@@ -75,7 +75,7 @@ const EMAIL_HTML = `
 
           <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Our coach Uthman mastered it. No connections. No crazy CV. Just 1,000 cold emails, a 21% response rate, and 20+ internship offers in 3 weeks.</td></tr>
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 12px 0;">On <strong>25th March at 7pm GMT</strong>, he's going live for 90 minutes to show you everything:</td></tr>
+          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 12px 0;">On <strong>28th March at 7pm GMT</strong>, he's going live for 90 minutes to show you everything:</td></tr>
 
           <tr>
             <td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">
@@ -266,8 +266,8 @@ async function scrapeComments(postUrl) {
   const actorId = 'apimaestro~linkedin-post-comments-replies-engagements-scraper-no-cookies';
 
   // Extract the numeric post ID from the LinkedIn URL
-  // e.g. activity-7439383011457953792-by3I → 7439383011457953792
-  const postIdMatch = postUrl.match(/activity-(\d+)/);
+  // e.g. activity-7439383011457953792-by3I → 7439383011457953792 or activity:744149...
+  const postIdMatch = postUrl.match(/activity[-:](\d+)/);
   if (!postIdMatch) {
     throw new Error(`Could not extract post ID from URL: ${postUrl}`);
   }

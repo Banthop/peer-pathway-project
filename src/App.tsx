@@ -131,6 +131,8 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
+        <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
+        <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
     );

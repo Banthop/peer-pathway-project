@@ -39,32 +39,56 @@ Deno.serve(async (req) => {
 
         if (event.type === "checkout.session.completed") {
             const session = event.data.object as any;
-            const email = session.customer_details?.email || session.customer_email;
+            const email = (session.customer_details?.email || session.customer_email || "").toLowerCase().trim();
+            const spend = session.amount_total ? session.amount_total / 100 : 0;
             
             if (email) {
-                console.log(`Processing checkout for ${email}...`);
+                console.log(`Processing checkout for ${email} with spend $${spend}...`);
                 
-                // Fetch existing contact to append tag safely
+                // Fetch existing contact
                 const { data: contact } = await supabase
                     .from("crm_contacts")
-                    .select("tags")
+                    .select("id, tags, metadata")
                     .eq("email", email)
-                    .single();
+                    .maybeSingle();
                 
-                let updatedTags = ["stripe_customer"];
-                if (contact?.tags) {
-                    updatedTags = [...new Set([...contact.tags, "stripe_customer"])];
-                }
+                const updatedTags = contact?.tags ? [...new Set([...contact.tags, "stripe_customer"])] : ["stripe_customer"];
+                
+                // Detect product type by amount: bundle = £29, webinar only = £10
+                const productType = spend >= 25 ? "bundle" : "webinar_only";
+                if (!updatedTags.includes(productType)) updatedTags.push(productType);
+                
+                const updatedMetadata = contact?.metadata || {};
+                updatedMetadata.stripe_spend = (updatedMetadata.stripe_spend || 0) + spend;
+                updatedMetadata.last_purchase_at = new Date().toISOString();
+                updatedMetadata.product_type = productType;
 
-                const { error } = await supabase.from("crm_contacts").upsert(
-                    {
-                        email: email,
-                        status: "converted",
-                        tags: updatedTags,
-                        last_activity_at: new Date().toISOString()
-                    },
-                    { onConflict: "email" }
-                );
+                let error;
+                if (contact) {
+                    // Update existing
+                    console.log(`Updating existing contact: ${contact.id}`);
+                    const { error: updError } = await supabase.from("crm_contacts")
+                        .update({
+                            status: "converted",
+                            tags: updatedTags,
+                            metadata: updatedMetadata,
+                            last_activity_at: new Date().toISOString()
+                        }).eq("id", contact.id);
+                    error = updError;
+                } else {
+                    // Insert new
+                    console.log(`Inserting new contact...`);
+                    const { error: insError } = await supabase.from("crm_contacts")
+                        .insert({
+                            email: email,
+                            status: "converted",
+                            tags: updatedTags,
+                            metadata: updatedMetadata,
+                            last_activity_at: new Date().toISOString(),
+                            source: "other"
+                        });
+                    error = insError;
+                }
 
                 if (error) {
                     console.error("Supabase Error:", error.message);

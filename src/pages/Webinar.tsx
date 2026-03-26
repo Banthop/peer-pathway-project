@@ -12,6 +12,7 @@ import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { IndustryStep } from "@/components/webinar/IndustryStep";
 import { TicketStep } from "@/components/webinar/TicketStep";
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
+import { saveCrmContact } from "@/utils/crmTracking";
 import { ChevronLeft, CheckCircle2, Loader2 } from "lucide-react";
 
 function SuccessScreen({ name }: { name: string }) {
@@ -82,6 +83,34 @@ export default function Webinar() {
     if (error) {
       toast({ title: error, variant: "destructive" });
       return error;
+    }
+
+    // If transitioning from details (step 1) to university (step 2),
+    // save email + name to CRM immediately so we capture abandoners
+    if (currentStep === 1) {
+      saveCrmContact({
+        email: form.formData.email,
+        firstName: form.formData.firstName,
+        lastName: form.formData.lastName,
+        phone: form.formData.phoneCode ? `+${form.formData.phoneCode}${form.formData.phone}` : form.formData.phone,
+        source: "webinar",
+        tags: ["form_started"],
+        metadata: { form_step: 1 },
+      });
+    }
+
+    // If transitioning from university (step 2) to industry (step 3),
+    // update CRM with university data
+    if (currentStep === 2) {
+      saveCrmContact({
+        email: form.formData.email,
+        firstName: form.formData.firstName,
+        lastName: form.formData.lastName,
+        university: form.formData.university,
+        source: "webinar",
+        tags: ["form_started"],
+        metadata: { form_step: 2, year_of_study: form.formData.yearOfStudy },
+      });
     }
 
     // If transitioning from industry (step 3) to checkout (step 4),
