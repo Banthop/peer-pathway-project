@@ -110,29 +110,22 @@ function buildDiscountEmail(firstName) {
   };
 }
 
-// -- Send --
-async function sendEmail(toEmail, template) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_EMAIL, to: [toEmail], subject: template.subject, html: template.html }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(`Resend error: ${JSON.stringify(result)}`);
-  return result;
-}
+// -- Send via Broadcast API --
+import { sendBroadcast } from './resend-broadcast.mjs';
 
-async function tagContact(contactId, existingTags) {
-  const newTags = [...new Set([...existingTags, 'discount_sent', 'email_sent'])];
-  await supabase.from('crm_contacts').update({
-    tags: newTags,
-    last_activity_at: new Date().toISOString(),
-  }).eq('id', contactId);
+async function tagContacts(contactList) {
+  for (const c of contactList) {
+    const newTags = [...new Set([...(c.tags || []), 'discount_sent', 'email_sent'])];
+    await supabase.from('crm_contacts').update({
+      tags: newTags,
+      last_activity_at: new Date().toISOString(),
+    }).eq('id', c.id);
+  }
 }
 
 // -- Main --
 async function main() {
-  console.log('\n🎁 50% Off Discount Blast\n');
+  console.log('\n🎁 50% Off Discount Blast (Broadcast Mode)\n');
   console.log(LIVE_SEND ? '🔴 LIVE MODE\n' : '🟡 DRY RUN (use --send to go live)\n');
 
   const { data: contacts, error } = await supabase
@@ -149,7 +142,7 @@ async function main() {
   } else {
     const segFn = SEGMENTS[SEGMENT] || SEGMENTS.hot_leads;
     recipients = contacts.filter(c => {
-      if ((c.tags || []).includes('discount_sent')) return false; // already sent
+      if ((c.tags || []).includes('discount_sent')) return false;
       return segFn(c);
     });
   }
@@ -173,25 +166,23 @@ async function main() {
     return;
   }
 
-  console.log('\nSending...\n');
-  let sent = 0, failed = 0;
+  // Use broadcast personalization
+  const html = buildDiscountEmail('{{{FIRST_NAME|there}}}').html;
 
-  for (const c of recipients) {
-    try {
-      const template = buildDiscountEmail(c.first_name);
-      await sendEmail(c.email, template);
-      await tagContact(c.id, c.tags || []);
-      sent++;
-      console.log(`  ✅ ${c.email}`);
-      await new Promise(r => setTimeout(r, 400));
-    } catch (err) {
-      failed++;
-      console.log(`  ❌ ${c.email}: ${err.message}`);
-    }
-  }
+  console.log('\nSending via Broadcast API...\n');
+  const result = await sendBroadcast({
+    name: '50% Discount Blast',
+    from: FROM_EMAIL,
+    subject: '50% off, just for you',
+    html,
+    contacts: recipients.map(c => ({ email: c.email, first_name: c.first_name || '', last_name: c.last_name || '' })),
+    send: true,
+  });
 
-  console.log(`\nSent: ${sent} | Failed: ${failed}`);
+  console.log(`\nBroadcast sent to ${result.sent} contacts`);
+  await tagContacts(recipients);
   console.log('CRM tags updated (discount_sent). No duplicates possible.');
 }
 
 main().catch(console.error);
+
