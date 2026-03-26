@@ -105,6 +105,27 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+/**
+ * Access to admin dashboard. Hardcoded emails for security.
+ */
+const ADMIN_EMAILS = [
+  "donawotwi@gmail.com",
+  "dylan@yourearlyedge.co.uk",
+  "uthman@yourearlyedge.co.uk"
+];
+
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) return <AuthLoading />;
+  if (!user) return <Navigate to="/login" replace />;
+  
+  if (!user.email || !ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  
+  return <>{children}</>;
+}
+
 const AppRoutes = () => {
   if (WEBINAR_ONLY) {
     return (
@@ -152,7 +173,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
         <Route path="coaches" element={<AdminCoaches />} />
         <Route path="outreach" element={<AdminOutreach />} />
