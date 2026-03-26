@@ -54,8 +54,17 @@ Deno.serve(async (req) => {
                 
                 const updatedTags = contact?.tags ? [...new Set([...contact.tags, "stripe_customer"])] : ["stripe_customer"];
                 
-                // Detect product type by amount: bundle = £29, webinar only = £10
-                const productType = spend >= 25 ? "bundle" : "webinar_only";
+                // Detect product type accurately. Bundle = £29 or £21.75. Add-on = £12. Webinar = £10.
+                let productType = "webinar_only";
+                if (spend >= 20 || spend === 12) {
+                    productType = "bundle";
+                }
+                
+                // Remove webinar_only if upgrading
+                if (productType === "bundle" && updatedTags.includes("webinar_only")) {
+                    updatedTags.splice(updatedTags.indexOf("webinar_only"), 1);
+                }
+                
                 if (!updatedTags.includes(productType)) updatedTags.push(productType);
                 
                 const updatedMetadata = contact?.metadata || {};

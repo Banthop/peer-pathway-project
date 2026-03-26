@@ -96,21 +96,47 @@ function webinarOnlyConfirmation(firstName: string) {
   };
 }
 
-// ── Send via Resend transactional API ──
+// ── Send via Resend Marketing (broadcast) to bypass transactional quota ──
 async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html }),
+  const headers = { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" };
+
+  // 1. Create a temporary audience
+  const audRes = await fetch("https://api.resend.com/audiences", {
+    method: "POST", headers,
+    body: JSON.stringify({ name: `auto_${Date.now()}_${to.split("@")[0]}` }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(JSON.stringify(data));
-  return data;
+  const aud = await audRes.json();
+  if (!aud.id) throw new Error(`Audience create failed: ${JSON.stringify(aud)}`);
+
+  // 2. Add the single contact
+  await fetch(`https://api.resend.com/audiences/${aud.id}/contacts`, {
+    method: "POST", headers,
+    body: JSON.stringify({ email: to, unsubscribed: false }),
+  });
+
+  // 3. Create broadcast
+  const brRes = await fetch("https://api.resend.com/broadcasts", {
+    method: "POST", headers,
+    body: JSON.stringify({ audience_id: aud.id, from: FROM, subject, html, name: `auto_${subject.slice(0, 30)}` }),
+  });
+  const br = await brRes.json();
+  if (!br.id) throw new Error(`Broadcast create failed: ${JSON.stringify(br)}`);
+
+  // 4. Send broadcast
+  const sendRes = await fetch(`https://api.resend.com/broadcasts/${br.id}/send`, {
+    method: "POST", headers, body: "{}",
+  });
+  if (!sendRes.ok) throw new Error(`Broadcast send failed: ${await sendRes.text()}`);
+
+  // 5. Clean up audience
+  await fetch(`https://api.resend.com/audiences/${aud.id}`, { method: "DELETE", headers });
+
+  return { success: true };
 }
 
 // ── Main handler ──
 Deno.serve(async (_req) => {
-  const results = { form_abandon: 0, buyer_confirm: 0, errors: [] as string[] };
+  const results = { form_abandon: 0, buyer_confirm: 0, clicker_discount: 0, errors: [] as string[] };
 
   try {
     // ═══ 1. FORM ABANDONMENT ═══
@@ -178,7 +204,61 @@ Deno.serve(async (_req) => {
       }
     }
 
-    console.log(`\n📊 Auto-emailer complete: ${results.form_abandon} abandon emails, ${results.buyer_confirm} confirmations, ${results.errors.length} errors`);
+    // ═══ 3. CLICKER DISCOUNT ═══
+    // Anyone who clicked an email link 1+ hour ago but hasn't bought or received discount
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+    const { data: clickers } = await supabase
+      .from("crm_contacts")
+      .select("id, email, first_name, tags, status, metadata")
+      .contains("tags", ["email_clicked"])
+      .not("tags", "cs", '["stripe_customer"]')
+      .not("tags", "cs", '["funnel_email_4"]')
+      .not("tags", "cs", '["clicker_discount_sent"]')
+      .neq("status", "converted");
+
+    // Filter to only those who clicked more than 1 hour ago
+    const clickerTargets = (clickers || []).filter(c => {
+      const clickedAt = c.metadata?.last_click_at || c.metadata?.last_email_event_at;
+      if (!clickedAt) return true; // no timestamp, safe to send
+      return new Date(clickedAt).getTime() < Date.now() - 60 * 60 * 1000;
+    });
+
+    console.log(`📋 Clickers needing discount: ${clickerTargets.length}`);
+
+    const CLICKER_DISCOUNT = {
+      subject: "you looked, here's 25% off",
+      html: wrap(
+        p("Hey,") +
+        p("I noticed you clicked through to check out the cold email webinar but didn't grab a ticket.") +
+        p("No worries. Here's a little nudge:") +
+        p('Use code <strong style="background:#f5f5f5;padding:3px 10px;border-radius:4px;font-size:16px;letter-spacing:1px;">WEBINAR25</strong> at checkout for <strong>25% off the full bundle</strong>. That\'s the webinar + the complete cold email guide for just <strong>£21.75</strong> instead of £29.') +
+        p("The webinar is <strong>this Saturday 28th March at 7pm GMT</strong>. Uthman is going live for 90 minutes to show you the exact system he used to land 20+ internship offers through cold email.") +
+        p("No connections. No crazy CV. Just a system that works.") +
+        btn("Grab your spot, 25% off", WEBINAR_LINK) +
+        p("Or just the webinar for £10. No code needed.") +
+        p("A recording is included if you can't make it live."),
+        "Don't sleep on this\n</td></tr><tr><td style=\"font-size:15px;color:#222222;padding:0 0 2px 0;\">Dylan"
+      ),
+    };
+
+    for (const clicker of clickerTargets) {
+      try {
+        await sendEmail(clicker.email, CLICKER_DISCOUNT.subject, CLICKER_DISCOUNT.html);
+        const newTags = [...new Set([...(clicker.tags || []), "clicker_discount_sent", "funnel_email_4"])];
+        await supabase.from("crm_contacts").update({
+          tags: newTags,
+          last_activity_at: new Date().toISOString(),
+        }).eq("id", clicker.id);
+        console.log(`  ✅ Clicker discount sent to ${clicker.email}`);
+        results.clicker_discount++;
+      } catch (e: any) {
+        console.error(`  ❌ Failed for ${clicker.email}: ${e.message}`);
+        results.errors.push(`clicker:${clicker.email}:${e.message}`);
+      }
+    }
+
+    console.log(`\n📊 Auto-emailer complete: ${results.form_abandon} abandon, ${results.buyer_confirm} confirmations, ${results.clicker_discount} clicker discounts, ${results.errors.length} errors`);
 
     return new Response(JSON.stringify(results), {
       headers: { "Content-Type": "application/json" },
@@ -189,3 +269,4 @@ Deno.serve(async (_req) => {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 });
+

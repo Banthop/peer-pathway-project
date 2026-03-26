@@ -34,7 +34,8 @@ const STATUSES: { value: CrmStatus; label: string; color: string }[] = [
 
 /* ─── Smart Segments ─────────────────────────────────── */
 type SegmentKey = "all" | "scraped_not_emailed" | "emailed_no_click" | "clicked_not_bought"
-    | "form_no_discount" | "form_not_bought" | "bought" | "resend_only" | "bounced" | "unsubscribed" | "hot_leads";
+    | "form_no_discount" | "form_not_bought" | "bought" | "resend_only" | "bounced" | "unsubscribed" | "hot_leads"
+    | "abandoned_checkout" | "webinar_only" | "guide_upsell_sent" | "discount_sent";
 
 interface Segment {
     key: SegmentKey;
@@ -86,9 +87,29 @@ const SEGMENTS: Segment[] = [
         filter: (c) => (hasTags(c, "email_clicked") || hasTags(c, "form_lead")) && noTag(c, "stripe_customer") && noTag(c, "bounced"),
     },
     {
+        key: "abandoned_checkout", label: "Abandoned Checkout", description: "Started form but never paid",
+        icon: ShoppingCart, color: "bg-red-50 text-red-600 border-red-200",
+        filter: (c) => hasTags(c, "form_started") && noTag(c, "stripe_customer") && noTag(c, "form_lead"),
+    },
+    {
+        key: "webinar_only", label: "Webinar Only", description: "Bought webinar but not the guide",
+        icon: Eye, color: "bg-purple-50 text-purple-600 border-purple-200",
+        filter: (c) => hasTags(c, "stripe_customer") && (c.metadata?.webinar_ticket === "webinar-only" || hasTags(c, "webinar_only_buyer")),
+    },
+    {
         key: "bought", label: "Customers", description: "Paid via Stripe",
         icon: UserCheck, color: "bg-emerald-50 text-emerald-600 border-emerald-200",
         filter: (c) => hasTags(c, "stripe_customer"),
+    },
+    {
+        key: "guide_upsell_sent", label: "Guide Upsell Sent", description: "Received guide upsell email",
+        icon: Send, color: "bg-indigo-50 text-indigo-600 border-indigo-200",
+        filter: (c) => hasTags(c, "guide_upsell_sent"),
+    },
+    {
+        key: "discount_sent", label: "Discount Sent", description: "Received 50% off discount email",
+        icon: Gift, color: "bg-pink-50 text-pink-700 border-pink-200",
+        filter: (c) => hasTags(c, "discount_sent"),
     },
     {
         key: "resend_only", label: "Resend Only", description: "In Resend audience but not in LinkedIn or forms",
@@ -96,7 +117,7 @@ const SEGMENTS: Segment[] = [
         filter: (c) => hasTags(c, "resend_audience") && noTag(c, "linkedin_scraped") && noTag(c, "form_lead") && noTag(c, "stripe_customer"),
     },
     {
-        key: "bounced", label: "Bounced", description: "Email bounced — bad address",
+        key: "bounced", label: "Bounced", description: "Email bounced -- bad address",
         icon: AlertTriangle, color: "bg-red-50 text-red-400 border-red-200",
         filter: (c) => hasTags(c, "bounced"),
     },
@@ -106,6 +127,8 @@ const SEGMENTS: Segment[] = [
         filter: (c) => c.status === "unsubscribed" || hasTags(c, "resend_unsubscribed"),
     },
 ];
+
+type SegmentKeyNew = typeof SEGMENTS[number]["key"];
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* Hooks                                                           */
@@ -364,13 +387,18 @@ function ContactDetail({ contact, onClose, onUpdate, onDelete }: {
     };
 
     // Journey timeline
+    const tags: string[] = contact.tags || [];
+    const meta = contact.metadata || {};
     const journey: { label: string; done: boolean; icon: React.ElementType; detail?: string }[] = [
         { label: "Email scraped", done: e.scraped, icon: Eye, detail: "From LinkedIn comments" },
         { label: "Email sent", done: e.emailed, icon: Send, detail: e.lastEmailSubject ? `"${e.lastEmailSubject}"` : undefined },
         { label: "Email delivered", done: e.delivered, icon: Check },
         { label: "Email clicked", done: e.clicked, icon: MousePointerClick },
         { label: "Filled form", done: e.formLead, icon: Target },
-        { label: "Purchased", done: e.customer, icon: ShoppingCart, detail: e.stripeSpend ? `£${e.stripeSpend}` : undefined },
+        { label: "Abandoned checkout", done: tags.includes("form_started") && !e.customer, icon: ShoppingCart, detail: "Started form but didn't pay" },
+        { label: "Purchased", done: e.customer, icon: ShoppingCart, detail: e.stripeSpend ? `£${e.stripeSpend}` : (meta.webinar_ticket || undefined) },
+        { label: "Guide upsell sent", done: tags.includes("guide_upsell_sent"), icon: Send, detail: "Cold Email Guide 2.0" },
+        { label: "Discount sent", done: tags.includes("discount_sent"), icon: Gift, detail: "50% off bundle" },
     ];
 
     return (
@@ -611,9 +639,11 @@ export default function AdminCRM() {
     const [activeSegment, setActiveSegment] = useState<SegmentKey>("all");
     const [selectedContact, setSelectedContact] = useState<any | null>(null);
     const [showAdd, setShowAdd] = useState(false);
-    const [activeTab, setActiveTab] = useState<"contacts" | "emails">("contacts");
+    const [activeTab, setActiveTab] = useState<"contacts" | "automations">("contacts");
     const [editingTemplate, setEditingTemplate] = useState<any | null>(null);
     const [previewTemplate, setPreviewTemplate] = useState<any | null>(null);
+    const [showDiscount, setShowDiscount] = useState(false);
+    const [discountSegment, setDiscountSegment] = useState("hot_leads");
 
     const handleUpdate = useCallback((id: string, updates: Record<string, unknown>) => {
         updateContact.mutate({ id, updates });
@@ -724,10 +754,15 @@ export default function AdminCRM() {
                                 </button>
                             </>
                         )}
-                        {activeTab === "emails" && (
-                            <button onClick={() => setEditingTemplate({ name: "", subject: "", body_html: "", segment: "all" })} className="px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-1.5">
-                                <Plus className="w-3.5 h-3.5" /> New Template
-                            </button>
+                        {activeTab === "automations" && (
+                            <>
+                                <button onClick={() => setShowDiscount(true)} className="px-4 py-2 bg-pink-600 text-white rounded-lg text-xs font-semibold hover:bg-pink-700 transition-colors flex items-center gap-1.5">
+                                    <Gift className="w-3.5 h-3.5" /> Send 50% Off
+                                </button>
+                                <button onClick={() => setEditingTemplate({ name: "", subject: "", body_html: "", segment: "all" })} className="px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-1.5">
+                                    <Plus className="w-3.5 h-3.5" /> New Template
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>
@@ -737,8 +772,8 @@ export default function AdminCRM() {
                     <button onClick={() => setActiveTab("contacts")} className={`px-4 py-2 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${activeTab === "contacts" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
                         <Users className="w-3.5 h-3.5" /> Contacts <span className="text-[10px] ml-1 px-1.5 py-0.5 rounded-full bg-muted">{contacts.length}</span>
                     </button>
-                    <button onClick={() => setActiveTab("emails")} className={`px-4 py-2 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${activeTab === "emails" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
-                        <Mail className="w-3.5 h-3.5" /> Emails <span className="text-[10px] ml-1 px-1.5 py-0.5 rounded-full bg-muted">{templates.length}</span>
+                    <button onClick={() => setActiveTab("automations")} className={`px-4 py-2 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 ${activeTab === "automations" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>
+                        <Zap className="w-3.5 h-3.5" /> Automations
                     </button>
                 </div>
 
@@ -914,74 +949,164 @@ export default function AdminCRM() {
                 )}
             </>)}
 
-                {activeTab === "emails" && (
-                    <div className="space-y-6">
-                        {/* Template list */}
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            {templates.length === 0 && (
-                                <div className="col-span-2 text-center py-16">
-                                    <Mail className="w-10 h-10 mx-auto text-muted-foreground/30 mb-3" />
-                                    <p className="text-sm text-muted-foreground">No email templates yet.</p>
-                                    <button onClick={() => setEditingTemplate({ name: "", subject: "", body_html: "", segment: "all" })} className="mt-3 px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors inline-flex items-center gap-1.5">
-                                        <Plus className="w-3.5 h-3.5" /> Create Template
-                                    </button>
-                                </div>
-                            )}
-                            {templates.map((t: any) => {
-                                const sendsForTemplate = emailSends.filter((s: any) => s.template_id === t.id);
-                                return (
-                                    <div key={t.id} className="bg-background border border-border rounded-xl p-5 hover:border-foreground/20 transition-colors">
-                                        <div className="flex items-start justify-between mb-3">
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="text-sm font-bold text-foreground truncate">{t.name}</h3>
-                                                <p className="text-xs text-muted-foreground mt-0.5 truncate">Subject: {t.subject}</p>
+                {activeTab === "automations" && (
+                    <div className="space-y-8">
+
+                        {/* ── Automation Scripts Status ── */}
+                        <div>
+                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                                <Zap className="w-3.5 h-3.5" /> Automation Scripts
+                            </h3>
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                                {[
+                                    { name: "LinkedIn Scraper", script: "scrape-only.mjs", desc: "Scrape LinkedIn comments for emails", icon: Eye, color: "border-sky-200 bg-sky-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("linkedin_scraped")).length} scraped`,
+                                      cmd: "node scripts/scrape-only.mjs" },
+                                    { name: "First-Touch Emails", script: "send-scraped-emails.mjs", desc: "Initial outreach to LinkedIn contacts", icon: Send, color: "border-amber-200 bg-amber-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("linkedin_emailed")).length} sent`,
+                                      cmd: "node scripts/send-scraped-emails.mjs --send" },
+                                    { name: "Funnel Nurture (4-stage)", script: "send-funnel-emails.mjs", desc: "Auto nurture based on engagement", icon: Target, color: "border-violet-200 bg-violet-50",
+                                      stat: `E2: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_2")).length} | E3: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_3")).length} | E4: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_4")).length}`,
+                                      cmd: "node scripts/send-funnel-emails.mjs --send" },
+                                    { name: "Confirmation Emails", script: "send-confirmation-emails.mjs", desc: "Post-purchase confirmation + Zoom link", icon: Check, color: "border-emerald-200 bg-emerald-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("stripe_customer")).length} customers`,
+                                      cmd: "node scripts/send-confirmation-emails.mjs --send" },
+                                    { name: "Guide Upsell", script: "send-guide-upsell.mjs", desc: "Upsell guide to webinar-only buyers", icon: ArrowRight, color: "border-indigo-200 bg-indigo-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("guide_upsell_sent")).length} sent | ${contacts.filter((c: any) => (c.metadata?.webinar_ticket === "webinar-only" || (c.tags || []).includes("webinar_only_buyer")) && (c.tags || []).includes("stripe_customer")).length} webinar-only`,
+                                      cmd: "node scripts/send-guide-upsell.mjs --send" },
+                                    { name: "CRM Sync", script: "build-crm.mjs", desc: "Sync all data sources into CRM", icon: RefreshCw, color: "border-gray-200 bg-gray-50",
+                                      stat: `${contacts.length} total contacts`,
+                                      cmd: "node scripts/build-crm.mjs" },
+                                ].map((auto) => (
+                                    <div key={auto.script} className={`border rounded-xl p-4 ${auto.color} space-y-3`}>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <auto.icon className="w-4 h-4 text-foreground/60" />
+                                                <h4 className="text-sm font-bold text-foreground">{auto.name}</h4>
                                             </div>
-                                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground ml-2 flex-shrink-0">{t.segment}</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-4">
-                                            <span className="flex items-center gap-1"><Send className="w-3 h-3" /> {sendsForTemplate.length} sent</span>
-                                            <span>Created {new Date(t.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => setPreviewTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
-                                                <Eye className="w-3 h-3" /> Preview
-                                            </button>
-                                            <button onClick={() => setEditingTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
-                                                <Pencil className="w-3 h-3" /> Edit
-                                            </button>
-                                            <button onClick={() => { const cmd = `node scripts/send-crm-email.mjs --template="${t.name}" --dry-run`; navigator.clipboard.writeText(cmd); alert(`Copied to clipboard!\n\n${cmd}\n\nRun this in terminal. Add --send to send for real.`); }} className="flex-1 px-3 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center gap-1">
-                                                <Play className="w-3 h-3" /> Send
-                                            </button>
-                                        </div>
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">{auto.desc}</p>
+                                        <p className="text-xs font-semibold text-foreground">{auto.stat}</p>
+                                        <button
+                                            onClick={() => { navigator.clipboard.writeText(auto.cmd); alert(`Copied!\n\n${auto.cmd}\n\nPaste in terminal to run.`); }}
+                                            className="w-full px-3 py-2 bg-foreground/10 hover:bg-foreground/20 text-foreground rounded-lg text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5"
+                                        >
+                                            <Copy className="w-3 h-3" /> Copy Command
+                                        </button>
                                     </div>
-                                );
-                            })}
+                                ))}
+                            </div>
                         </div>
 
-                        {/* Recent sends log */}
-                        {emailSends.length > 0 && (
-                            <div>
-                                <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Recent Sends</h3>
+                        {/* ── Quick Stats ── */}
+                        <div>
+                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                                <Target className="w-3.5 h-3.5" /> Live Pipeline
+                            </h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <div className="bg-background border border-border rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes("linkedin_scraped") && !(c.tags || []).includes("linkedin_emailed")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Scraped, Not Emailed</p>
+                                </div>
+                                <div className="bg-background border border-border rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes("form_started") && !(c.tags || []).includes("stripe_customer") && !(c.tags || []).includes("form_lead")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Abandoned Checkout</p>
+                                </div>
+                                <div className="bg-background border border-border rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-black text-emerald-600">{contacts.filter((c: any) => (c.tags || []).includes("stripe_customer")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Total Customers</p>
+                                </div>
+                                <div className="bg-background border border-border rounded-xl p-4 text-center">
+                                    <p className="text-2xl font-black text-pink-600">{contacts.filter((c: any) => (c.tags || []).includes("discount_sent")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Discounts Sent</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ── Email Templates ── */}
+                        <div>
+                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                                <Mail className="w-3.5 h-3.5" /> Email Templates
+                            </h3>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                {templates.length === 0 && (
+                                    <div className="col-span-2 text-center py-12 bg-muted/20 rounded-xl border border-dashed border-border">
+                                        <Mail className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+                                        <p className="text-sm text-muted-foreground">No templates yet.</p>
+                                        <button onClick={() => setEditingTemplate({ name: "", subject: "", body_html: "", segment: "all" })} className="mt-3 px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors inline-flex items-center gap-1.5">
+                                            <Plus className="w-3.5 h-3.5" /> Create Template
+                                        </button>
+                                    </div>
+                                )}
+                                {templates.map((t: any) => {
+                                    const sendsForTemplate = emailSends.filter((s: any) => s.template_id === t.id);
+                                    return (
+                                        <div key={t.id} className="bg-background border border-border rounded-xl p-5 hover:border-foreground/20 transition-colors">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-sm font-bold text-foreground truncate">{t.name}</h4>
+                                                    <p className="text-xs text-muted-foreground mt-0.5 truncate">Subject: {t.subject}</p>
+                                                </div>
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground ml-2 flex-shrink-0">{t.segment}</span>
+                                            </div>
+                                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-4">
+                                                <span className="flex items-center gap-1"><Send className="w-3 h-3" /> {sendsForTemplate.length} sent</span>
+                                                <span>Created {new Date(t.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setPreviewTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
+                                                    <Eye className="w-3 h-3" /> Preview
+                                                </button>
+                                                <button onClick={() => setEditingTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
+                                                    <Pencil className="w-3 h-3" /> Edit
+                                                </button>
+                                                <button onClick={() => { const cmd = `node scripts/send-crm-email.mjs --template="${t.name}" --dry-run`; navigator.clipboard.writeText(cmd); alert(`Copied!\n\n${cmd}\n\nRun in terminal. Add --send to send for real.`); }} className="flex-1 px-3 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center gap-1">
+                                                    <Play className="w-3 h-3" /> Send
+                                                </button>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* ── Recent Email Activity ── */}
+                        <div>
+                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                                <Clock className="w-3.5 h-3.5" /> Recent Email Activity
+                            </h3>
+                            {emailSends.length === 0 ? (
+                                <div className="text-center py-12 bg-muted/20 rounded-xl border border-dashed border-border">
+                                    <Send className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+                                    <p className="text-sm text-muted-foreground">No emails sent yet from templates.</p>
+                                </div>
+                            ) : (
                                 <div className="bg-background border border-border rounded-xl overflow-hidden">
                                     <table className="w-full text-sm">
                                         <thead><tr className="border-b border-border bg-muted/30">
-                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Email</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Recipient</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase hidden sm:table-cell">Template</th>
                                             <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Status</th>
-                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Sent</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">When</th>
                                         </tr></thead>
                                         <tbody className="divide-y divide-border">
-                                            {emailSends.slice(0, 20).map((s: any) => (
-                                                <tr key={s.id}>
-                                                    <td className="px-4 py-2 text-xs text-foreground">{s.email}</td>
-                                                    <td className="px-4 py-2"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${s.status === "sent" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>{s.status}</span></td>
-                                                    <td className="px-4 py-2 text-[10px] text-muted-foreground">{new Date(s.sent_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
-                                                </tr>
-                                            ))}
+                                            {emailSends.slice(0, 30).map((s: any) => {
+                                                const tmpl = templates.find((t: any) => t.id === s.template_id);
+                                                return (
+                                                    <tr key={s.id} className="hover:bg-muted/20">
+                                                        <td className="px-4 py-2.5 text-xs text-foreground">{s.email}</td>
+                                                        <td className="px-4 py-2.5 text-xs text-muted-foreground hidden sm:table-cell truncate max-w-[150px]">{tmpl?.name || "--"}</td>
+                                                        <td className="px-4 py-2.5"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${s.status === "sent" ? "bg-emerald-100 text-emerald-700" : s.status === "delivered" ? "bg-blue-100 text-blue-700" : s.status === "clicked" ? "bg-violet-100 text-violet-700" : "bg-amber-100 text-amber-700"}`}>{s.status}</span></td>
+                                                        <td className="px-4 py-2.5 text-[10px] text-muted-foreground">{new Date(s.sent_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
+                                                    </tr>
+                                                );
+                                            })}
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+
                     </div>
                 )}
             </main>
@@ -1049,6 +1174,75 @@ export default function AdminCRM() {
                             </div>
                             <div className="p-4">
                                 <iframe srcDoc={previewTemplate.body_html.replace(/\{name\}/gi, "Alex").replace(/\{first_name\}/gi, "Alex").replace(/\{last_name\}/gi, "Smith").replace(/\{email\}/gi, "alex@example.com")} className="w-full min-h-[400px] border border-border rounded-lg" title="Email Preview" />
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )}
+            {/* Send 50% Off Discount Modal */}
+            {showDiscount && (
+                <>
+                    <div className="fixed inset-0 bg-black/30 z-40 backdrop-blur-sm" onClick={() => setShowDiscount(false)} />
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="bg-background border border-border rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto p-6 space-y-5">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <Gift className="w-5 h-5 text-pink-600" />
+                                    <h2 className="text-sm font-bold text-foreground">Send 50% Off Bundle</h2>
+                                </div>
+                                <button onClick={() => setShowDiscount(false)} className="text-muted-foreground hover:text-foreground"><X className="w-4 h-4" /></button>
+                            </div>
+
+                            <div className="bg-pink-50 border border-pink-200 rounded-xl p-4 space-y-2">
+                                <p className="text-xs font-semibold text-pink-800">Coupon: WEBINAR50 (50% off)</p>
+                                <p className="text-xs text-pink-700">Bundle drops from &pound;22 to &pound;11. Last-ditch push for non-buyers.</p>
+                            </div>
+
+                            <div>
+                                <label className="text-xs font-semibold text-foreground uppercase tracking-wider block mb-2">Send to segment</label>
+                                <select
+                                    value={discountSegment}
+                                    onChange={e => setDiscountSegment(e.target.value)}
+                                    className="w-full px-3 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                                >
+                                    <option value="hot_leads">Hot Leads ({contacts.filter((c: any) => (hasTags(c, "email_clicked") || hasTags(c, "form_lead")) && noTag(c, "stripe_customer") && noTag(c, "bounced")).length})</option>
+                                    <option value="clicked_not_bought">Clicked but Didn't Buy ({contacts.filter((c: any) => hasTags(c, "email_clicked") && noTag(c, "stripe_customer")).length})</option>
+                                    <option value="form_not_bought">Form Lead, Didn't Buy ({contacts.filter((c: any) => hasTags(c, "form_lead") && noTag(c, "stripe_customer")).length})</option>
+                                    <option value="emailed_no_click">Emailed, No Click ({contacts.filter((c: any) => hasAnyTag(c, "linkedin_emailed", "email_sent", "email_delivered") && noTag(c, "email_clicked")).length})</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">Email Preview</p>
+                                <div className="bg-muted/30 rounded-xl border border-border p-4 space-y-2 text-sm text-foreground/80">
+                                    <p className="text-xs text-muted-foreground"><strong>Subject:</strong> 50% off, just for you</p>
+                                    <hr className="border-border" />
+                                    <p>Hey {'{'}<em>name</em>{'}'},</p>
+                                    <p>I saw you checked out our cold email webinar but haven't grabbed a ticket yet.</p>
+                                    <p>I want to make this a complete no-brainer for you.</p>
+                                    <p>Use code <strong className="bg-pink-100 px-1.5 py-0.5 rounded text-pink-800">WEBINAR50</strong> at checkout to get <strong>50% off the full bundle</strong>.</p>
+                                    <p>That's the live webinar + the Cold Email Guide 2.0 for just <strong>&pound;11</strong>.</p>
+                                    <div className="bg-foreground text-background rounded-lg px-4 py-2.5 text-center text-xs font-semibold inline-block">
+                                        Get the Bundle for &pound;11 &rarr;
+                                    </div>
+                                    <p className="text-xs text-muted-foreground italic">This offer expires 48 hours from now.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2 pt-2">
+                                <button
+                                    onClick={() => {
+                                        const cmd = `node scripts/send-discount-blast.mjs --segment=${discountSegment} --send`;
+                                        navigator.clipboard.writeText(cmd);
+                                        alert(`Copied!\\n\\n${cmd}\\n\\nPaste in terminal. Remove --send for dry run.`);
+                                    }}
+                                    className="flex-1 px-4 py-3 bg-pink-600 text-white rounded-lg text-sm font-semibold hover:bg-pink-700 transition-colors flex items-center justify-center gap-1.5"
+                                >
+                                    <Copy className="w-4 h-4" /> Copy Send Command
+                                </button>
+                                <button onClick={() => setShowDiscount(false)} className="px-4 py-3 border border-border rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,7 @@ const envPath = path.join(__dirname, '..', '.env.local');
 const content = fs.readFileSync(envPath, 'utf-8');
 for (const line of content.split('\n')) {
   const match = line.match(/^\s*([^#=]+?)\s*=\s*(.+?)\s*$/);
-  if (match) process.env[match[1]] = process.env[match[1]] || match[2];
+  if (match) process.env[match[1]] = process.env[match[1]] || match[2].replace(/^["']|["']$/g, '');
 }
 
 const APIFY_TOKEN = process.env.APIFY_API_TOKEN;

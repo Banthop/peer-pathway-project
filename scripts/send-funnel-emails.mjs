@@ -28,7 +28,7 @@ function loadEnv() {
     const content = fs.readFileSync(envPath, 'utf-8');
     for (const line of content.split('\n')) {
       const match = line.match(/^\s*([^#=]+?)\s*=\s*(.+?)\s*$/);
-      if (match) process.env[match[1]] = process.env[match[1]] || match[2];
+      if (match) process.env[match[1]] = process.env[match[1]] || match[2].replace(/^["']|["']$/g, '');
     }
   } catch {}
 }

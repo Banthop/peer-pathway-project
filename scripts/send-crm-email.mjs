@@ -24,7 +24,7 @@ function loadEnv() {
     const vars = {};
     readFileSync(p, "utf-8").split("\n").filter(l => l.includes("=") && !l.startsWith("#")).forEach(l => {
         const [key, ...rest] = l.split("=");
-        vars[key.trim()] = rest.join("=").trim();
+        vars[key.trim()] = rest.join("=").trim().replace(/^["']|["']$/g, '');
     });
     return vars;
 }
