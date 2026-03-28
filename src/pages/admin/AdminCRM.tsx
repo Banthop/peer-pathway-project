@@ -980,129 +980,159 @@ export default function AdminCRM() {
                 {activeTab === "automations" && (
                     <div className="space-y-8">
 
-                        {/* Email Campaigns Sent */}
+                        {/* ── Automation Scripts Status ── */}
                         <div>
                             <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                                <Mail className="w-3.5 h-3.5" /> Email Campaigns Sent
+                                <Zap className="w-3.5 h-3.5" /> Automation Scripts
                             </h3>
-                            <div className="grid gap-3">
-                                {(() => {
-                                    const campaigns = [
-                                        { name: 'Bundle Confirmation', subject: "you're in - here's everything you need", stage: 'Post-Purchase', trigger: 'Instant after Stripe payment (bundle)', tag: 'confirmation_sent', extraFilter: (c: any) => (c.tags || []).includes('bundle'), color: 'border-emerald-200 bg-emerald-50', iconColor: 'text-emerald-600', icon: Check },
-                                        { name: 'Webinar-Only Confirmation', subject: "you're in - here's your zoom link", stage: 'Post-Purchase', trigger: 'Instant after Stripe payment (webinar only)', tag: 'confirmation_sent', extraFilter: (c: any) => (c.tags || []).includes('webinar_only') && !(c.tags || []).includes('bundle'), color: 'border-purple-200 bg-purple-50', iconColor: 'text-purple-600', icon: Check },
-                                        { name: 'Guide 2.0 Upsell', subject: 'this might be what you are missing', stage: 'Upsell', trigger: 'Webinar-only buyers - upsell to full bundle', tag: 'guide_upsell_sent', extraFilter: null, color: 'border-indigo-200 bg-indigo-50', iconColor: 'text-indigo-600', icon: ArrowRight },
-                                        { name: '50% Discount (WEBINAR50)', subject: '50% off, just for you', stage: 'Conversion', trigger: 'Form leads who did not buy - 30 min delay', tag: 'discount_sent', extraFilter: null, color: 'border-pink-200 bg-pink-50', iconColor: 'text-pink-600', icon: Gift },
-                                        { name: 'First-Touch Outreach', subject: 'saw your comment on...', stage: 'Awareness', trigger: 'LinkedIn scraped contacts - first email', tag: 'linkedin_emailed', extraFilter: null, color: 'border-sky-200 bg-sky-50', iconColor: 'text-sky-600', icon: Send },
-                                        { name: 'Funnel Stage 2', subject: 'Nurture follow-up 2', stage: 'Nurture', trigger: 'Emailed contacts, no click', tag: 'funnel_email_2', extraFilter: null, color: 'border-blue-200 bg-blue-50', iconColor: 'text-blue-600', icon: Target },
-                                        { name: 'Funnel Stage 3', subject: 'Nurture follow-up 3', stage: 'Nurture', trigger: 'Clicked contacts - deepen engagement', tag: 'funnel_email_3', extraFilter: null, color: 'border-violet-200 bg-violet-50', iconColor: 'text-violet-600', icon: Target },
-                                        { name: 'Funnel Stage 4', subject: 'Nurture follow-up 4', stage: 'Nurture', trigger: 'High-engagement contacts - final push', tag: 'funnel_email_4', extraFilter: null, color: 'border-amber-200 bg-amber-50', iconColor: 'text-amber-600', icon: Target },
-                                    ];
-                                    return campaigns.map((camp) => {
-                                        const sent = contacts.filter((c: any) => { const tags = c.tags || []; if (!tags.includes(camp.tag)) return false; if (camp.extraFilter) return camp.extraFilter(c); return true; });
-                                        const lastSent = sent.length > 0 ? sent.reduce((latest: any, c: any) => { const d = c.last_activity_at || c.created_at; return (!latest || d > latest) ? d : latest; }, null) : null;
-                                        return (
-                                            <div key={camp.name} className={\}>
-                                                <div className={\}><camp.icon className={\} /></div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 flex-wrap">
-                                                        <h4 className="text-sm font-bold text-foreground">{camp.name}</h4>
-                                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-foreground/10 text-foreground/70 font-medium">{camp.stage}</span>
-                                                    </div>
-                                                    <p className="text-[11px] text-muted-foreground mt-0.5 truncate">Subject: <span className="italic">{camp.subject}</span></p>
-                                                    <p className="text-[10px] text-muted-foreground/70 mt-0.5">{camp.trigger}</p>
-                                                </div>
-                                                <div className="flex items-center gap-4 flex-shrink-0">
-                                                    <div className="text-right">
-                                                        <p className="text-xl font-black text-foreground">{sent.length}</p>
-                                                        <p className="text-[10px] text-muted-foreground">sent</p>
-                                                    </div>
-                                                    {lastSent && (<div className="text-right hidden sm:block"><p className="text-[10px] font-medium text-foreground">{new Date(lastSent).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</p><p className="text-[10px] text-muted-foreground">{new Date(lastSent).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</p></div>)}
-                                                </div>
-                                            </div>
-                                        );
-                                    });
-                                })()}
-                            </div>
-                        </div>
-
-                        {/* Automation Rules */}
-                        <div>
-                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                                <Zap className="w-3.5 h-3.5" /> Automation Rules
-                            </h3>
-                            <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                                 {[
-                                    { trigger: 'New Stripe payment (bundle)', action: 'Send bundle confirmation + Zoom + guide', delay: 'Instant', active: true },
-                                    { trigger: 'New Stripe payment (webinar)', action: 'Send webinar confirmation + Zoom + upsell', delay: 'Instant', active: true },
-                                    { trigger: 'Form lead created (no purchase)', action: 'Send 50% discount email', delay: '30 min', active: true },
-                                    { trigger: 'Webinar-only buyer', action: 'Send Guide 2.0 upsell', delay: 'Next cycle', active: true },
-                                    { trigger: 'New LinkedIn scrape', action: 'Queue for first-touch outreach', delay: 'Manual', active: false },
-                                    { trigger: 'Stripe data', action: 'Re-sync all charges since Mar 16', delay: 'Every 2 min', active: true },
-                                ].map((rule, i) => (
-                                    <div key={i} className={\}>
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className={\} />
-                                            <span className={\}>{rule.active ? 'Active' : 'Manual'}</span>
-                                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-foreground/10 text-foreground/60 font-medium ml-auto">{rule.delay}</span>
+                                    { name: "LinkedIn Scraper", script: "scrape-only.mjs", desc: "Scrape LinkedIn comments for emails", icon: Eye, color: "border-sky-200 bg-sky-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("linkedin_scraped")).length} scraped`,
+                                      cmd: "node scripts/scrape-only.mjs" },
+                                    { name: "First-Touch Emails", script: "send-scraped-emails.mjs", desc: "Initial outreach to LinkedIn contacts", icon: Send, color: "border-amber-200 bg-amber-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("linkedin_emailed")).length} sent`,
+                                      cmd: "node scripts/send-scraped-emails.mjs --send" },
+                                    { name: "Funnel Nurture (4-stage)", script: "send-funnel-emails.mjs", desc: "Auto nurture based on engagement", icon: Target, color: "border-violet-200 bg-violet-50",
+                                      stat: `E2: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_2")).length} | E3: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_3")).length} | E4: ${contacts.filter((c: any) => (c.tags || []).includes("funnel_email_4")).length}`,
+                                      cmd: "node scripts/send-funnel-emails.mjs --send" },
+                                    { name: "Confirmation Emails", script: "send-confirmation-emails.mjs", desc: "Post-purchase confirmation + Zoom link", icon: Check, color: "border-emerald-200 bg-emerald-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("stripe_customer")).length} customers`,
+                                      cmd: "node scripts/send-confirmation-emails.mjs --send" },
+                                    { name: "Guide Upsell", script: "send-guide-upsell.mjs", desc: "Upsell guide to webinar-only buyers", icon: ArrowRight, color: "border-indigo-200 bg-indigo-50",
+                                      stat: `${contacts.filter((c: any) => (c.tags || []).includes("guide_upsell_sent")).length} sent | ${contacts.filter((c: any) => (c.metadata?.webinar_ticket === "webinar-only" || (c.tags || []).includes("webinar_only_buyer")) && (c.tags || []).includes("stripe_customer")).length} webinar-only`,
+                                      cmd: "node scripts/send-guide-upsell.mjs --send" },
+                                    { name: "CRM Sync", script: "build-crm.mjs", desc: "Sync all data sources into CRM", icon: RefreshCw, color: "border-gray-200 bg-gray-50",
+                                      stat: `${contacts.length} total contacts`,
+                                      cmd: "node scripts/build-crm.mjs" },
+                                ].map((auto) => (
+                                    <div key={auto.script} className={`border rounded-xl p-4 ${auto.color} space-y-3`}>
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <auto.icon className="w-4 h-4 text-foreground/60" />
+                                                <h4 className="text-sm font-bold text-foreground">{auto.name}</h4>
+                                            </div>
                                         </div>
-                                        <p className="text-xs font-bold text-foreground mb-1">When: {rule.trigger}</p>
-                                        <p className="text-[11px] text-muted-foreground">{rule.action}</p>
+                                        <p className="text-[11px] text-muted-foreground leading-relaxed">{auto.desc}</p>
+                                        <p className="text-xs font-semibold text-foreground">{auto.stat}</p>
+                                        <button
+                                            onClick={() => { navigator.clipboard.writeText(auto.cmd); alert(`Copied!\n\n${auto.cmd}\n\nPaste in terminal to run.`); }}
+                                            className="w-full px-3 py-2 bg-foreground/10 hover:bg-foreground/20 text-foreground rounded-lg text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5"
+                                        >
+                                            <Copy className="w-3 h-3" /> Copy Command
+                                        </button>
                                     </div>
                                 ))}
                             </div>
-                            <p className="text-[10px] text-muted-foreground mt-3 flex items-center gap-1.5">
-                                <Clock className="w-3 h-3" /> Auto-emailer checks every 2 min. Run: <code className="px-1.5 py-0.5 bg-muted rounded text-[10px] font-mono">node scripts/auto-emailer.mjs</code>
-                            </p>
                         </div>
 
-                        {/* Pipeline Gaps */}
+                        {/* ── Quick Stats ── */}
                         <div>
                             <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                                <Target className="w-3.5 h-3.5" /> Pipeline Gaps
+                                <Target className="w-3.5 h-3.5" /> Live Pipeline
                             </h3>
                             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                 <div className="bg-background border border-border rounded-xl p-4 text-center">
-                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes('stripe_customer') && !(c.tags || []).includes('confirmation_sent')).length}</p>
-                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Buyers No Confirmation</p>
+                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes("linkedin_scraped") && !(c.tags || []).includes("linkedin_emailed")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Scraped, Not Emailed</p>
                                 </div>
                                 <div className="bg-background border border-border rounded-xl p-4 text-center">
-                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes('form_lead') && !(c.tags || []).includes('stripe_customer') && !(c.tags || []).includes('discount_sent')).length}</p>
-                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Form Leads No Discount</p>
+                                    <p className="text-2xl font-black text-foreground">{contacts.filter((c: any) => (c.tags || []).includes("form_started") && !(c.tags || []).includes("stripe_customer") && !(c.tags || []).includes("form_lead")).length}</p>
+                                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Abandoned Checkout</p>
                                 </div>
                                 <div className="bg-background border border-border rounded-xl p-4 text-center">
-                                    <p className="text-2xl font-black text-emerald-600">{contacts.filter((c: any) => (c.tags || []).includes('stripe_customer')).length}</p>
+                                    <p className="text-2xl font-black text-emerald-600">{contacts.filter((c: any) => (c.tags || []).includes("stripe_customer")).length}</p>
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Total Customers</p>
                                 </div>
                                 <div className="bg-background border border-border rounded-xl p-4 text-center">
-                                    <p className="text-2xl font-black text-pink-600">{contacts.filter((c: any) => (c.tags || []).includes('discount_sent')).length}</p>
+                                    <p className="text-2xl font-black text-pink-600">{contacts.filter((c: any) => (c.tags || []).includes("discount_sent")).length}</p>
                                     <p className="text-[10px] text-muted-foreground uppercase tracking-wider mt-1">Discounts Sent</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Manual Scripts */}
+                        {/* ── Email Templates ── */}
                         <div>
                             <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                                <FileText className="w-3.5 h-3.5" /> Manual Scripts
+                                <Mail className="w-3.5 h-3.5" /> Email Templates
                             </h3>
-                            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                                {[
-                                    { name: 'Auto-Emailer', cmd: 'node scripts/auto-emailer.mjs', desc: 'Runs all automations continuously' },
-                                    { name: 'CRM Sync', cmd: 'node scripts/build-crm.mjs', desc: 'Rebuild CRM from all sources' },
-                                    { name: 'Send Confirmations', cmd: 'node scripts/send-confirmation-emails.mjs --send', desc: 'Broadcast confirmations to buyers' },
-                                    { name: 'Send Discount Blast', cmd: 'node scripts/send-discount-blast.mjs --segment=form_not_bought --send', desc: '50% off to form leads' },
-                                    { name: 'Send Guide Upsell', cmd: 'node scripts/send-guide-upsell.mjs --send', desc: 'Upsell guide to webinar-only' },
-                                    { name: 'Funnel Nurture', cmd: 'node scripts/send-funnel-emails.mjs --send', desc: '4-stage nurture sequence' },
-                                ].map(s => (
-                                    <button key={s.name} onClick={() => { navigator.clipboard.writeText(s.cmd); alert(\); }} className="text-left border border-border rounded-lg p-3 hover:border-foreground/20 transition-colors group">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <Copy className="w-3 h-3 text-muted-foreground group-hover:text-foreground transition-colors" />
-                                            <span className="text-xs font-bold text-foreground">{s.name}</span>
+                            <div className="grid gap-4 sm:grid-cols-2">
+                                {templates.length === 0 && (
+                                    <div className="col-span-2 text-center py-12 bg-muted/20 rounded-xl border border-dashed border-border">
+                                        <Mail className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+                                        <p className="text-sm text-muted-foreground">No templates yet.</p>
+                                        <button onClick={() => setEditingTemplate({ name: "", subject: "", body_html: "", segment: "all" })} className="mt-3 px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors inline-flex items-center gap-1.5">
+                                            <Plus className="w-3.5 h-3.5" /> Create Template
+                                        </button>
+                                    </div>
+                                )}
+                                {templates.map((t: any) => {
+                                    const sendsForTemplate = emailSends.filter((s: any) => s.template_id === t.id);
+                                    return (
+                                        <div key={t.id} className="bg-background border border-border rounded-xl p-5 hover:border-foreground/20 transition-colors">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-sm font-bold text-foreground truncate">{t.name}</h4>
+                                                    <p className="text-xs text-muted-foreground mt-0.5 truncate">Subject: {t.subject}</p>
+                                                </div>
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-muted text-muted-foreground ml-2 flex-shrink-0">{t.segment}</span>
+                                            </div>
+                                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground mb-4">
+                                                <span className="flex items-center gap-1"><Send className="w-3 h-3" /> {sendsForTemplate.length} sent</span>
+                                                <span>Created {new Date(t.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => setPreviewTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
+                                                    <Eye className="w-3 h-3" /> Preview
+                                                </button>
+                                                <button onClick={() => setEditingTemplate(t)} className="flex-1 px-3 py-2 border border-border rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1">
+                                                    <Pencil className="w-3 h-3" /> Edit
+                                                </button>
+                                                <button onClick={() => { const cmd = `node scripts/send-crm-email.mjs --template="${t.name}" --dry-run`; navigator.clipboard.writeText(cmd); alert(`Copied!\n\n${cmd}\n\nRun in terminal. Add --send to send for real.`); }} className="flex-1 px-3 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center justify-center gap-1">
+                                                    <Play className="w-3 h-3" /> Send
+                                                </button>
+                                            </div>
                                         </div>
-                                        <p className="text-[10px] text-muted-foreground">{s.desc}</p>
-                                    </button>
-                                ))}
+                                    );
+                                })}
                             </div>
+                        </div>
+
+                        {/* ── Recent Email Activity ── */}
+                        <div>
+                            <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                                <Clock className="w-3.5 h-3.5" /> Recent Email Activity
+                            </h3>
+                            {emailSends.length === 0 ? (
+                                <div className="text-center py-12 bg-muted/20 rounded-xl border border-dashed border-border">
+                                    <Send className="w-8 h-8 mx-auto text-muted-foreground/30 mb-2" />
+                                    <p className="text-sm text-muted-foreground">No emails sent yet from templates.</p>
+                                </div>
+                            ) : (
+                                <div className="bg-background border border-border rounded-xl overflow-hidden">
+                                    <table className="w-full text-sm">
+                                        <thead><tr className="border-b border-border bg-muted/30">
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Recipient</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase hidden sm:table-cell">Template</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">Status</th>
+                                            <th className="text-left px-4 py-2.5 text-[10px] font-semibold text-muted-foreground uppercase">When</th>
+                                        </tr></thead>
+                                        <tbody className="divide-y divide-border">
+                                            {emailSends.slice(0, 30).map((s: any) => {
+                                                const tmpl = templates.find((t: any) => t.id === s.template_id);
+                                                return (
+                                                    <tr key={s.id} className="hover:bg-muted/20">
+                                                        <td className="px-4 py-2.5 text-xs text-foreground">{s.email}</td>
+                                                        <td className="px-4 py-2.5 text-xs text-muted-foreground hidden sm:table-cell truncate max-w-[150px]">{tmpl?.name || "--"}</td>
+                                                        <td className="px-4 py-2.5"><span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${s.status === "sent" ? "bg-emerald-100 text-emerald-700" : s.status === "delivered" ? "bg-blue-100 text-blue-700" : s.status === "clicked" ? "bg-violet-100 text-violet-700" : "bg-amber-100 text-amber-700"}`}>{s.status}</span></td>
+                                                        <td className="px-4 py-2.5 text-[10px] text-muted-foreground">{new Date(s.sent_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
 
                     </div>
