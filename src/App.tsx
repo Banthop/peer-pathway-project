@@ -37,6 +37,7 @@ import StripeConnect from "./pages/coach-dashboard/StripeConnect";
 import CoachEvents from "./pages/coach-dashboard/CoachEvents";
 import CoachResources from "./pages/coach-dashboard/CoachResources";
 import CoachOnboarding from "./pages/coach-dashboard/CoachOnboarding";
+import LearnApp from "./learn/LearnApp";
 import Guarantee from "./pages/Guarantee";
 import PublicEvents from "./pages/PublicEvents";
 import PublicResources from "./pages/PublicResources";
@@ -133,6 +134,7 @@ const AppRoutes = () => {
         <Route path="/webinar" element={<Webinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
+        <Route path="/learn/*" element={<LearnApp />} />
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
     );
@@ -182,6 +184,7 @@ const AppRoutes = () => {
         <Route path="linkedin" element={<AdminLinkedIn />} />
         <Route path="crm" element={<AdminCRM />} />
       </Route>
+      <Route path="/learn/*" element={<LearnApp />} />
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
