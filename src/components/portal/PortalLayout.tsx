@@ -147,10 +147,10 @@ export default function PortalLayout() {
     );
   }
 
-  // Not logged in — redirect to the standard login page with return URL
+  // Not logged in - redirect to the standard login page with return URL
   if (!user) return <Navigate to="/login?redirect=/portal" replace />;
 
-  // Logged in but not a buyer — show blocked screen
+  // Logged in but not a buyer - show blocked screen
   if (buyerStatus && !buyerStatus.isBuyer) return <NotABuyer />;
 
   return (

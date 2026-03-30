@@ -1,12 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw } from "lucide-react";
+import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check } from "lucide-react";
 
-/* ─── Chapter data ─────────────────────────────────────────────
-   Update these timestamps once you have the final recording.
-   startSeconds = where the chapter begins in the video.
-   ──────────────────────────────────────────────────────────── */
-
+/* ─── Chapter data ─── */
 interface Chapter {
   id: string;
   title: string;
@@ -16,100 +13,18 @@ interface Chapter {
 }
 
 const CHAPTERS: Chapter[] = [
-  {
-    id: "intro",
-    title: "Welcome & Introduction",
-    description: "Meet Uthman and what we'll cover today",
-    startSeconds: 0,
-    duration: "5 min",
-  },
-  {
-    id: "why-cold-email",
-    title: "Why Cold Email Works",
-    description: "The hidden job market and why smaller firms respond",
-    startSeconds: 300,
-    duration: "10 min",
-  },
-  {
-    id: "finding-firms",
-    title: "Finding the Right Firms",
-    description: "Using Apollo.io to find MDs and CEOs at lean firms",
-    startSeconds: 900,
-    duration: "12 min",
-  },
-  {
-    id: "export-leads",
-    title: "Exporting Leads",
-    description: "Getting verified emails into a clean spreadsheet",
-    startSeconds: 1620,
-    duration: "8 min",
-  },
-  {
-    id: "first-lines",
-    title: "Personalised First Lines",
-    description: "The 2-minute method for every single email",
-    startSeconds: 2100,
-    duration: "10 min",
-  },
-  {
-    id: "email-template",
-    title: "The Cold Email Template",
-    description: "The 5-part structure that gets replies",
-    startSeconds: 2700,
-    duration: "15 min",
-  },
-  {
-    id: "mail-merge",
-    title: "Sending via Mail Merge",
-    description: "Step-by-step setup and the 9:03 AM rule",
-    startSeconds: 3600,
-    duration: "12 min",
-  },
-  {
-    id: "responses",
-    title: "Handling Responses",
-    description: "What to do when someone actually replies",
-    startSeconds: 4320,
-    duration: "10 min",
-  },
-  {
-    id: "follow-ups",
-    title: "Follow-Ups & Scaling",
-    description: "The fortune is in the follow-up",
-    startSeconds: 4920,
-    duration: "10 min",
-  },
-  {
-    id: "qa",
-    title: "Live Q&A",
-    description: "Audience questions answered",
-    startSeconds: 5520,
-    duration: "20 min",
-  },
+  { id: "intro", title: "Welcome & Introduction", description: "Meet Uthman and what we'll cover today", startSeconds: 0, duration: "5 min" },
+  { id: "why-cold-email", title: "Why Cold Email Works", description: "The hidden job market and why smaller firms respond", startSeconds: 300, duration: "10 min" },
+  { id: "finding-firms", title: "Finding the Right Firms", description: "Using Apollo.io to find MDs and CEOs at lean firms", startSeconds: 900, duration: "12 min" },
+  { id: "export-leads", title: "Exporting Leads", description: "Getting verified emails into a clean spreadsheet", startSeconds: 1620, duration: "8 min" },
+  { id: "first-lines", title: "Personalised First Lines", description: "The 2-minute method for every single email", startSeconds: 2100, duration: "10 min" },
+  { id: "email-template", title: "The Cold Email Template", description: "The 5-part structure that gets replies", startSeconds: 2700, duration: "15 min" },
+  { id: "mail-merge", title: "Sending via Mail Merge", description: "Step-by-step setup and the 9:03 AM rule", startSeconds: 3600, duration: "12 min" },
+  { id: "responses", title: "Handling Responses", description: "What to do when someone actually replies", startSeconds: 4320, duration: "10 min" },
+  { id: "follow-ups", title: "Follow-Ups & Scaling", description: "The fortune is in the follow-up", startSeconds: 4920, duration: "10 min" },
+  { id: "qa", title: "Live Q&A", description: "Audience questions answered", startSeconds: 5520, duration: "20 min" },
 ];
 
-/*
- * ═══════════════════════════════════════════════════════════════
- *  VIDEO PLATFORM: Using Vimeo with iframe embed
- *
- *  WHY VIMEO:
- *  - Domain-restricted embeds (only your site can show the video)
- *  - Auto-captions available on paid plans (Starter $12/mo)
- *  - No YouTube branding/recommendations
- *  - Player API for seeking + progress tracking
- *  - Upload SRT/VTT subtitle files for manual captions
- *
- *  ALTERNATIVE: Bunny.net Stream ($1/mo per 1000 mins stored)
- *  - Cheaper, more control, auto-captions, no branding
- *  - Requires separate account setup
- *
- *  TO SET UP:
- *  1. Upload to Vimeo
- *  2. Go to video settings > Embed > restrict domain to yourearlyedge.co.uk
- *  3. Enable captions (Settings > Distribution > Subtitles)
- *  4. Replace VIMEO_VIDEO_ID below with the video ID
- * ═══════════════════════════════════════════════════════════════
- */
 const VIMEO_VIDEO_ID = "1178276210";
 
 function formatTime(seconds: number): string {
@@ -119,8 +34,6 @@ function formatTime(seconds: number): string {
   if (h > 0) return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
-
-/* ─── Watch progress helpers ─── */
 
 interface WatchProgress {
   lastTime: number;
@@ -151,28 +64,17 @@ export default function PortalRecording() {
   const [resumed, setResumed] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
 
-  // Load Vimeo Player SDK
+  // Load Vimeo SDK
   useEffect(() => {
-    if (document.getElementById("vimeo-player-sdk")) return;
+    if (document.getElementById("vimeo-player-sdk")) {
+      initPlayer();
+      return;
+    }
     const script = document.createElement("script");
     script.id = "vimeo-player-sdk";
     script.src = "https://player.vimeo.com/api/player.js";
     script.async = true;
-    script.onload = () => {
-      const iframe = iframeRef.current;
-      if (!iframe || !(window as any).Vimeo) return;
-      const player = new (window as any).Vimeo.Player(iframe);
-      playerRef.current = player;
-
-      player.on("timeupdate", (data: any) => {
-        setCurrentTime(data.seconds);
-        const ch = [...CHAPTERS].reverse().find((c) => data.seconds >= c.startSeconds);
-        if (ch) setActiveChapter(ch.id);
-      });
-      player.on("play", () => setIsPlaying(true));
-      player.on("pause", () => setIsPlaying(false));
-      player.ready().then(() => setPlayerReady(true));
-    };
+    script.onload = initPlayer;
     document.head.appendChild(script);
 
     return () => {
@@ -184,39 +86,37 @@ export default function PortalRecording() {
     };
   }, []);
 
-  // Also init player if SDK already loaded (e.g. hot reload)
-  useEffect(() => {
+  const initPlayer = () => {
     const iframe = iframeRef.current;
-    if (!iframe || playerRef.current) return;
-    if ((window as any).Vimeo) {
-      const player = new (window as any).Vimeo.Player(iframe);
-      playerRef.current = player;
-      player.on("timeupdate", (data: any) => {
-        setCurrentTime(data.seconds);
-        const ch = [...CHAPTERS].reverse().find((c) => data.seconds >= c.startSeconds);
-        if (ch) setActiveChapter(ch.id);
-      });
-      player.on("play", () => setIsPlaying(true));
-      player.on("pause", () => setIsPlaying(false));
-      player.ready().then(() => setPlayerReady(true));
-    }
-  }, []);
+    if (!iframe || !(window as any).Vimeo || playerRef.current) return;
+    const player = new (window as any).Vimeo.Player(iframe);
+    playerRef.current = player;
 
-  // Save progress periodically
+    player.on("timeupdate", (data: any) => {
+      setCurrentTime(data.seconds);
+      const ch = [...CHAPTERS].reverse().find((c) => data.seconds >= c.startSeconds);
+      if (ch) setActiveChapter(ch.id);
+    });
+    player.on("play", () => setIsPlaying(true));
+    player.on("pause", () => setIsPlaying(false));
+    player.ready().then(() => setPlayerReady(true));
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (currentTime > 0) {
         const ch = [...CHAPTERS].reverse().find((c) => currentTime >= c.startSeconds);
         const newWatched = [...new Set([...progress.chaptersWatched, ...(ch ? [ch.id] : [])])];
-        const updated = { lastTime: currentTime, chaptersWatched: newWatched, lastUpdated: new Date().toISOString() };
-        setProgress(updated);
-        saveProgress(updated);
+        if (newWatched.length !== progress.chaptersWatched.length || Math.abs(currentTime - progress.lastTime) > 5) {
+          const updated = { lastTime: currentTime, chaptersWatched: newWatched, lastUpdated: new Date().toISOString() };
+          setProgress(updated);
+          saveProgress(updated);
+        }
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [currentTime, progress.chaptersWatched]);
+  }, [currentTime, progress.chaptersWatched, progress.lastTime]);
 
-  // Seek using SDK (instant)
   const seekTo = useCallback((seconds: number) => {
     const player = playerRef.current;
     if (player) {
@@ -228,124 +128,172 @@ export default function PortalRecording() {
     setIsPlaying(true);
   }, []);
 
-  // Resume from last position
   const handleResume = useCallback(() => {
     seekTo(progress.lastTime);
     setResumed(true);
   }, [progress.lastTime, seekTo]);
 
-  const vimeoUrl = `https://player.vimeo.com/video/${VIMEO_VIDEO_ID}?api=1&player_id=vimeo-player&title=0&byline=0&portrait=0&texttrack=en`;
+  const vimeoUrl = `https://player.vimeo.com/video/${VIMEO_VIDEO_ID}?api=1&player_id=vimeo-player&title=0&byline=0&portrait=0&texttrack=en&color=10b981`;
   const completedCount = progress.chaptersWatched.length;
   const progressPercent = Math.round((completedCount / CHAPTERS.length) * 100);
 
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="px-6 pt-8 pb-2 md:px-10 lg:px-12">
-        <div className="flex items-start justify-between flex-wrap gap-4">
-          <div>
-            <p className="text-xs text-[#999] font-medium uppercase tracking-wider mb-1">
-              Webinar Recording
-            </p>
-            <h1 className="text-2xl md:text-[26px] font-semibold tracking-tight text-[#111]">
+    <div className="w-full bg-[#FAFAFA] min-h-screen">
+      {/* ════════ HEADER (Cold Email Masterclass) ════════ */}
+      <div className="bg-white border-b border-[#E8E8E8]">
+        <div className="px-6 py-6 md:px-10 lg:px-12 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+          <div className="w-full">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <p className="text-xs text-emerald-700 font-bold uppercase tracking-wider">
+                Status: In Training
+              </p>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111]">
               Cold Email Masterclass
             </h1>
-            <p className="text-sm text-[#888] mt-1 font-light">
-              How Uthman landed 20 internship offers using cold email
+            <p className="text-sm text-[#666] mt-1.5 font-light">
+              Master the Cold Email system. Watch the modules, then use the resources to execute.
             </p>
           </div>
 
-          {/* Progress badge */}
-          <div className="bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="relative w-10 h-10">
-              <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F0F0F0" strokeWidth="3" />
-                <circle
-                  cx="18" cy="18" r="15.5" fill="none" stroke="#111"
-                  strokeWidth="3" strokeDasharray={`${progressPercent} 100`}
-                  strokeLinecap="round"
-                  className="transition-all duration-500"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-[#111]">
-                {progressPercent}%
-              </span>
+          {/* Gamified Progress Bar */}
+          <div className="w-full xl:w-[380px] bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl p-4 flex-shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-[12px] font-semibold text-[#111] uppercase tracking-wide flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-emerald-600" />
+                Progress
+              </p>
+              <p className="text-[14px] font-bold text-emerald-600">{progressPercent}%</p>
             </div>
-            <div>
-              <p className="text-[12px] font-semibold text-[#111]">{completedCount}/{CHAPTERS.length} chapters</p>
-              <p className="text-[10px] text-[#999]">watched</p>
+            
+            {/* Segmented progress form */}
+            <div className="flex gap-1 h-3.5 mb-2">
+              {CHAPTERS.map((ch, idx) => {
+                const isWatched = progress.chaptersWatched.includes(ch.id);
+                return (
+                  <div 
+                    key={ch.id} 
+                    className={`flex-1 rounded-sm transition-all duration-300 ${isWatched ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-[#E0E0E0]"}`}
+                  />
+                )
+              })}
             </div>
+            <p className="text-[11px] text-[#888] font-medium text-right">
+              {completedCount} of {CHAPTERS.length} steps completed
+            </p>
           </div>
         </div>
       </div>
 
       {/* Resume banner */}
       {progress.lastTime > 30 && !resumed && (
-        <div className="mx-6 md:mx-10 lg:mx-12 mt-3">
+        <div className="px-6 md:px-10 lg:px-12 mt-6">
           <button
             onClick={handleResume}
-            className="w-full bg-[#111] text-white rounded-xl px-5 py-3.5 flex items-center justify-between hover:bg-[#222] transition-colors group"
+            className="w-full bg-gradient-to-r from-[#111] to-[#222] text-white rounded-xl px-5 py-4 flex items-center justify-between hover:shadow-lg transition-all group border border-[#333]"
           >
-            <div className="flex items-center gap-3">
-              <RotateCcw className="w-4 h-4 text-white/60 group-hover:text-white transition-colors" />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors shadow-inner">
+                <Play className="w-4 h-4 text-white ml-0.5" />
+              </div>
               <div className="text-left">
-                <p className="text-sm font-medium">Resume where you left off</p>
-                <p className="text-xs text-white/50">
-                  {formatTime(progress.lastTime)} into "{CHAPTERS.find(c => progress.lastTime >= c.startSeconds && [...CHAPTERS].reverse().find(r => progress.lastTime >= r.startSeconds)?.id === c.id)?.title || "the recording"}"
+                <p className="text-sm font-bold tracking-wide">Resume Training Sequence</p>
+                <p className="text-xs text-white/60 mt-0.5">
+                  Jump back into "{CHAPTERS.find(c => progress.lastTime >= c.startSeconds && [...CHAPTERS].reverse().find(r => progress.lastTime >= r.startSeconds)?.id === c.id)?.title}"
                 </p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-white/40" />
+            <div className="bg-white/10 px-3 py-1.5 rounded-lg flex items-center gap-2 group-hover:bg-white/20 transition-colors">
+              <span className="text-[11px] font-semibold tracking-wider">RESUME AT {formatTime(progress.lastTime)}</span>
+              <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" />
+            </div>
           </button>
         </div>
       )}
 
-      {/* Video + Chapters layout */}
-      <div className="px-6 md:px-10 lg:px-12 mt-4 pb-10">
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Video player */}
-          <div className="flex-1 min-w-0">
-            <div className="relative w-full bg-[#111] rounded-xl overflow-hidden shadow-lg" style={{ paddingBottom: "56.25%" }}>
-              <iframe
-                ref={iframeRef}
-                id="vimeo-player"
-                src={vimeoUrl}
-                className="absolute inset-0 w-full h-full"
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                allowFullScreen
-              />
-            </div>
-
-            {/* Now playing */}
-            {isPlaying && (
-              <div className="mt-3 flex items-center gap-2 text-xs text-[#888]">
-                <div className="flex gap-0.5">
-                  <span className="w-1 h-3 bg-[#111] rounded-full animate-pulse" />
-                  <span className="w-1 h-3 bg-[#111] rounded-full animate-pulse" style={{ animationDelay: "0.15s" }} />
-                  <span className="w-1 h-3 bg-[#111] rounded-full animate-pulse" style={{ animationDelay: "0.3s" }} />
-                </div>
-                Now playing: {CHAPTERS.find((c) => c.id === activeChapter)?.title}
+      {/* ════════ VIDEO + MASTERY STEPS ════════ */}
+      <div className="px-6 md:px-10 lg:px-12 mt-6 pb-12 overflow-x-hidden">
+        <div className="flex flex-col xl:flex-row gap-8">
+          
+          {/* Left: Video Player Center */}
+          <div className="flex-1 w-full min-w-0">
+            
+            {/* Cinematic Container */}
+            <div className="bg-[#0A0A0A] p-2 md:p-4 rounded-2xl shadow-2xl ring-1 ring-black/5">
+              <div className="relative w-full bg-black rounded-xl overflow-hidden shadow-inner" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  ref={iframeRef}
+                  id="vimeo-player"
+                  src={vimeoUrl}
+                  className="absolute inset-0 w-full h-full"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                  allowFullScreen
+                />
               </div>
-            )}
-
-            {/* Captions note */}
-            <div className="mt-4 bg-[#FAFAFA] border border-[#E8E8E8] rounded-lg px-4 py-3">
-              <p className="text-[11px] text-[#999] font-light">
-                <strong className="text-[#666] font-medium">Tip:</strong> Captions are available. Click the CC button on the video player to enable them.
-              </p>
+              
+              <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4 px-2 mb-2">
+                <div>
+                  <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                    {isPlaying && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+                    {CHAPTERS.find((c) => c.id === activeChapter)?.title || "Loading..."}
+                  </h3>
+                  <p className="text-[#888] text-sm mt-0.5">
+                    {CHAPTERS.find((c) => c.id === activeChapter)?.description}
+                  </p>
+                </div>
+                
+                <div className="hidden md:block bg-[#1A1A1A] text-[#999] text-[11px] px-3 py-1.5 rounded-md font-medium border border-[#333] flex-shrink-0 shadow-inner">
+                  Tip: Use CC for captions
+                </div>
+              </div>
             </div>
+
+            {/* ════════ THE "STUCK?" UPSELL LOOP ════════ */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 relative overflow-hidden group mt-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400 rounded-full blur-[80px] opacity-10 transition-opacity" />
+              
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-[16px] font-bold text-emerald-900 flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-emerald-600" />
+                    Need these templates applied to YOUR specific situation?
+                  </h3>
+                  <p className="text-[13px] text-emerald-800 mt-1.5 max-w-xl leading-relaxed font-light">
+                    Watching the system is step 1. Applying it flawlessly is step 2. Get Uthman to personally write your templates, audit your lead list, and build your pipeline on a 1-on-1 Deep Dive.
+                  </p>
+                </div>
+                <Link 
+                  to="/portal/book-uthman"
+                  className="w-full md:w-auto flex-shrink-0 bg-emerald-600 text-white px-6 py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                >
+                  Book 1-on-1 Coaching
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
           </div>
 
-          {/* Chapter list */}
-          <div className="lg:w-[320px] flex-shrink-0">
-            <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden sticky top-4">
-              <div className="px-4 py-3 border-b border-[#E8E8E8]">
-                <h2 className="text-[13px] font-semibold text-[#111]">Chapters</h2>
-                <p className="text-[11px] text-[#999] mt-0.5">Click to jump to any section</p>
+          {/* Right: Steps Panel */}
+          <div className="xl:w-[380px] flex-shrink-0 w-full mt-6 xl:mt-0">
+            <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden sticky top-6 shadow-sm">
+              <div className="bg-[#111] px-5 py-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-[14px] font-bold text-white tracking-wide uppercase">
+                    Steps
+                  </h2>
+                  <p className="text-[11px] text-[#AAA] mt-0.5 font-light">
+                    Finish modules to unlock your blueprint
+                  </p>
+                </div>
+                <div className="bg-white/10 text-emerald-400 text-[11px] font-bold px-2 py-1.5 rounded-md shadow-inner">
+                  {completedCount}/{CHAPTERS.length} Done
+                </div>
               </div>
 
-              <div className="max-h-[520px] overflow-y-auto divide-y divide-[#F5F5F5]">
+              <div className="max-h-[600px] overflow-y-auto overflow-x-hidden bg-white p-2">
                 {CHAPTERS.map((chapter, idx) => {
                   const isActive = activeChapter === chapter.id;
                   const isWatched = progress.chaptersWatched.includes(chapter.id);
@@ -354,45 +302,54 @@ export default function PortalRecording() {
                     <button
                       key={chapter.id}
                       onClick={() => seekTo(chapter.startSeconds)}
-                      className={`w-full text-left px-4 py-3 transition-all hover:bg-[#F8F8F8] group ${
-                        isActive ? "bg-[#F5F5F5]" : ""
+                      className={`w-full text-left p-3 mb-1 rounded-xl transition-all ${
+                        isActive 
+                          ? "bg-emerald-50 ring-1 ring-emerald-200 pointer-events-none" 
+                          : "hover:bg-[#F8F8F8] cursor-pointer"
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div
-                          className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-semibold transition-all ${
-                            isActive
-                              ? "bg-[#111] text-white"
-                              : isWatched
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-[#F5F5F5] text-[#999]"
-                          }`}
-                        >
-                          {isWatched && !isActive ? (
-                            <CheckCircle2 className="w-3.5 h-3.5" />
+                        {/* Status Icon Indicator */}
+                        <div className="mt-1 flex-shrink-0">
+                          {isWatched ? (
+                            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">
+                              <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                            </div>
+                          ) : isActive ? (
+                            <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-white shadow-inner">
+                              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
+                            </div>
                           ) : (
-                            idx + 1
+                            <div className="w-6 h-6 rounded-full border border-[#E0E0E0] flex items-center justify-center bg-[#F5F5F5]">
+                              <span className="text-[10px] font-bold text-[#999]">{idx + 1}</span>
+                            </div>
                           )}
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className={`text-[13px] font-medium truncate ${isActive ? "text-[#111]" : "text-[#444]"}`}>
-                              {chapter.title}
-                            </p>
-                            {isActive && <ChevronRight className="w-3.5 h-3.5 text-[#111] flex-shrink-0" />}
-                          </div>
-                          <p className="text-[11px] text-[#999] truncate mt-0.5">
+                          <p className={`text-[13px] font-bold truncate ${
+                            isActive ? "text-emerald-900" : isWatched ? "text-[#111]" : "text-[#555]"
+                          }`}>
+                            {chapter.title}
+                          </p>
+                          <p className={`text-[11px] mt-0.5 leading-snug ${
+                            isActive ? "text-emerald-700/80" : "text-[#888]"
+                          }`}>
                             {chapter.description}
                           </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-[10px] text-[#BBB] font-mono">
-                              {formatTime(chapter.startSeconds)}
-                            </span>
-                            <span className="text-[10px] text-[#DDD]">&middot;</span>
-                            <span className="text-[10px] text-[#BBB]">{chapter.duration}</span>
-                          </div>
+                          {isActive && (
+                            <div className="inline-flex items-center gap-1.5 mt-2 bg-emerald-100/50 text-emerald-700 border border-emerald-200/50 px-2 py-0.5 rounded-full">
+                              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                              <span className="text-[9px] font-bold uppercase tracking-wider">IN PROGRESS</span>
+                            </div>
+                          )}
                         </div>
+                        
+                        {!isActive && (
+                          <div className="text-[10px] text-[#BBB] font-mono font-medium pt-1 flex-shrink-0">
+                            {chapter.duration}
+                          </div>
+                        )}
                       </div>
                     </button>
                   );
@@ -400,6 +357,7 @@ export default function PortalRecording() {
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>

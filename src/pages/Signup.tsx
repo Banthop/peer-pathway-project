@@ -6,24 +6,40 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { Check, X } from "lucide-react";
+
+const PASSWORD_RULES = [
+  { label: "At least 8 characters", test: (pw: string) => pw.length >= 8 },
+  { label: "Contains an uppercase letter", test: (pw: string) => /[A-Z]/.test(pw) },
+  { label: "Contains a lowercase letter", test: (pw: string) => /[a-z]/.test(pw) },
+  { label: "Contains a number", test: (pw: string) => /\d/.test(pw) },
+];
 
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const { signUp, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const allRulesPassed = PASSWORD_RULES.every((r) => r.test(password));
+  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({ title: "Please fill in all fields", variant: "destructive" });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+    if (!allRulesPassed) {
+      toast({ title: "Password doesn't meet requirements", description: "Check the requirements below the password field.", variant: "destructive" });
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast({ title: "Passwords don't match", variant: "destructive" });
       return;
     }
     setLoading(true);
@@ -33,7 +49,7 @@ const Signup = () => {
       toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Account created!", description: "Check your email for a verification link." });
-      navigate("/dashboard");
+      navigate("/portal");
     }
   };
 
@@ -66,9 +82,49 @@ const Signup = () => {
         <div className="space-y-2">
           <Label htmlFor="password" className="font-sans font-light">Password</Label>
           <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="font-sans" disabled={loading} />
+          {/* Password requirements */}
+          {password.length > 0 && (
+            <div className="pt-1 space-y-1">
+              {PASSWORD_RULES.map((rule) => {
+                const passed = rule.test(password);
+                return (
+                  <div key={rule.label} className="flex items-center gap-1.5">
+                    {passed ? (
+                      <Check className="w-3 h-3 text-emerald-500" />
+                    ) : (
+                      <X className="w-3 h-3 text-red-400" />
+                    )}
+                    <span className={`text-xs font-sans ${passed ? "text-emerald-600" : "text-muted-foreground"}`}>
+                      {rule.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        <Button type="submit" className="w-full bg-foreground text-background hover:bg-foreground/90 font-sans font-light" disabled={loading}>
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword" className="font-sans font-light">Confirm Password</Label>
+          <Input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="font-sans" disabled={loading} />
+          {confirmPassword.length > 0 && (
+            <div className="flex items-center gap-1.5 pt-1">
+              {passwordsMatch ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-500" />
+                  <span className="text-xs font-sans text-emerald-600">Passwords match</span>
+                </>
+              ) : (
+                <>
+                  <X className="w-3 h-3 text-red-400" />
+                  <span className="text-xs font-sans text-red-500">Passwords don't match</span>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        <Button type="submit" className="w-full bg-foreground text-background hover:bg-foreground/90 font-sans font-light" disabled={loading || !allRulesPassed || !passwordsMatch}>
           {loading ? "Creating account…" : "Create account"}
         </Button>
       </form>
@@ -96,10 +152,6 @@ const Signup = () => {
         <p className="text-sm font-sans text-muted-foreground">
           Already have an account?{" "}
           <Link to="/login" className="text-foreground hover:underline">Log in</Link>
-        </p>
-        <p className="text-xs font-sans text-muted-foreground pt-4 border-t border-border">
-          Want to coach instead?{" "}
-          <Link to="/coach/signup" className="text-foreground hover:underline">Apply here</Link>
         </p>
       </div>
     </AuthLayout>

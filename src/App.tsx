@@ -49,6 +49,7 @@ import PortalRecording from "./pages/portal/PortalRecording";
 import PortalResources from "./pages/portal/PortalResources";
 import BookUthman from "./pages/portal/BookUthman";
 
+
 const queryClient = new QueryClient();
 
 // When true, ONLY the /webinar route is accessible (for production subdomain deploy)

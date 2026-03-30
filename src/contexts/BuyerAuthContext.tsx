@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { BUYER_LOOKUP } from "@/data/buyerLookup";
 
 interface BuyerStatus {
   isBuyer: boolean;
@@ -50,8 +51,28 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const checkBuyerStatus = useCallback(async () => {
-    if (!user?.email || !supabase) {
+    if (!user?.email) {
       setBuyerStatus(null);
+      setLoading(false);
+      return;
+    }
+
+    const emailKey = user.email.toLowerCase().trim();
+
+    // --- LOCAL CSV LOOKUP (takes priority) ---
+    const csvTier = BUYER_LOOKUP[emailKey];
+    if (csvTier) {
+      const isBuyer = true;
+      const isBundle = csvTier === "bundle";
+      setBuyerStatus({ isBuyer, isBundle, tags: isBundle ? ["stripe_customer", "bundle"] : ["stripe_customer"], accessCount: 0 });
+      logAccess(user.email);
+      setLoading(false);
+      return;
+    }
+
+    // --- FALLBACK: Supabase CRM lookup ---
+    if (!supabase) {
+      setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
       setLoading(false);
       return;
     }
@@ -60,7 +81,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       const { data } = await supabase
         .from("crm_contacts")
         .select("id, email, tags")
-        .eq("email", user.email.toLowerCase().trim())
+        .eq("email", emailKey)
         .limit(1);
 
       if (!data || data.length === 0) {

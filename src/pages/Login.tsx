@@ -171,25 +171,14 @@ const Login = () => {
       </div>
 
       <div className="mt-6 text-center space-y-3">
-        <Link
-          to="/forgot-password"
-          className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Forgot password?
-        </Link>
-
-        <p className="text-sm font-sans text-muted-foreground">
-          Don't have an account?{" "}
-          {role === "student" ? (
+        {role === "student" && (
+          <p className="text-sm font-sans text-muted-foreground">
+            Don't have an account?{" "}
             <Link to="/signup" className="text-foreground hover:underline">
               Sign up
             </Link>
-          ) : (
-            <Link to="/coach/signup" className="text-foreground hover:underline">
-              Apply to coach
-            </Link>
-          )}
-        </p>
+          </p>
+        )}
       </div>
     </AuthLayout>
   );
