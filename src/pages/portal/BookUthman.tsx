@@ -22,7 +22,7 @@ import {
  *  CAL.COM SETUP - see original for instructions
  * ═══════════════════════════════════════════════════════════════ */
 
-const CAL_USERNAME = "uthman-earlyedge";
+const CAL_USERNAME = "uthm4n";
 
 /* ─── Session types ─── */
 
@@ -56,7 +56,7 @@ const SESSION_TYPES: SessionType[] = [
       "Strategy feedback & template fixes",
       "Clear action plan for your next steps",
     ],
-    calSlug: "strategy-call",
+    calSlug: "30min",
     testimonial: {
       text: "Fixed my subject lines and got 3 replies in the first week",
       name: "Priya M.",
@@ -79,7 +79,7 @@ const SESSION_TYPES: SessionType[] = [
       "Personalised follow-up sequences",
       "7-day email support after the session",
     ],
-    calSlug: "deep-dive",
+    calSlug: "30min",
     popular: true,
     testimonial: {
       text: "Had my call on Monday, fixed my templates the same day, and immediately started seeing higher open rates.",
@@ -102,7 +102,7 @@ const SESSION_TYPES: SessionType[] = [
       "Group Q&A",
       "Recording of the session",
     ],
-    calSlug: "group-workshop",
+    calSlug: "30min",
     isGroup: true,
     maxParticipants: 8,
     testimonial: {
@@ -125,7 +125,7 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "3-deep-dive-bundle",
+  calSlug: "30min",
 };
 
 /* ─── Testimonials ─── */
