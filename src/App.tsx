@@ -48,6 +48,7 @@ import PortalLayout from "./components/portal/PortalLayout";
 import PortalRecording from "./pages/portal/PortalRecording";
 import PortalResources from "./pages/portal/PortalResources";
 import BookUthman from "./pages/portal/BookUthman";
+import PortalColdEmailGuide from "./pages/portal/ColdEmailGuide";
 
 
 const queryClient = new QueryClient();
@@ -146,6 +147,7 @@ const AppRoutes = () => {
           <Route index element={<PortalRecording />} />
           <Route path="resources" element={<PortalResources />} />
           <Route path="book-uthman" element={<BookUthman />} />
+          <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
         </Route>
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
@@ -193,6 +195,7 @@ const AppRoutes = () => {
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
         <Route path="book-uthman" element={<BookUthman />} />
+          <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
       </Route>
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
