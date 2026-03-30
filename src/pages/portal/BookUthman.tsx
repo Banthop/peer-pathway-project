@@ -11,7 +11,6 @@ import {
   ChevronDown,
   ArrowRight,
   Sparkles,
-  Shield,
   X as XIcon,
   Zap,
   Target,
@@ -56,7 +55,7 @@ const SESSION_TYPES: SessionType[] = [
       "Strategy feedback & template fixes",
       "Clear action plan for your next steps",
     ],
-    calSlug: "30min",
+    calSlug: "strategy-call",
     testimonial: {
       text: "Fixed my subject lines and got 3 replies in the first week",
       name: "Priya M.",
@@ -79,7 +78,7 @@ const SESSION_TYPES: SessionType[] = [
       "Personalised follow-up sequences",
       "7-day email support after the session",
     ],
-    calSlug: "30min",
+    calSlug: "deep-dive-session",
     popular: true,
     testimonial: {
       text: "Had my call on Monday, fixed my templates the same day, and immediately started seeing higher open rates.",
@@ -102,7 +101,7 @@ const SESSION_TYPES: SessionType[] = [
       "Group Q&A",
       "Recording of the session",
     ],
-    calSlug: "30min",
+    calSlug: "group-workshop",
     isGroup: true,
     maxParticipants: 8,
     testimonial: {
@@ -125,7 +124,7 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "30min",
+  calSlug: "3xdeepdivebundle",
 };
 
 /* ─── Testimonials ─── */
@@ -199,197 +198,44 @@ const FAQ = [
 
 /* ─── Custom Calendar Modal ─── */
 
-const TIME_SLOTS = ["09:00 AM", "10:30 AM", "11:30 AM", "01:00 PM", "02:30 PM", "04:00 PM", "06:00 PM"];
-
 function BookingModal({ isOpen, onClose, sessionName, calSlug, user }: any) {
-  const [selectedDate, setSelectedDate] = useState<number | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [details, setDetails] = useState("");
-  const [step, setStep] = useState<1 | 2>(1); // 1 = Date & Time, 2 = Details
-
-  useEffect(() => {
-    if (isOpen) {
-      setSelectedDate(null);
-      setSelectedTime(null);
-      setDetails("");
-      setStep(1);
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
-  // Generate 14 days
-  const dates = Array.from({length: 14}).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i + 1); // Skip today usually for buffer
-    // Skip Sundays
-    if (d.getDay() === 0) d.setDate(d.getDate() + 1);
-    return {
-      day: d.getDate(),
-      dayName: d.toLocaleDateString('en-GB', {weekday: 'short'}),
-      month: d.toLocaleDateString('en-GB', {month: 'short'}),
-      fullDate: d,
-      index: i
-    };
-  });
-
-  const handleFinalSubmit = () => {
-    const calUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}`;
-    const params = new URLSearchParams();
-    if (user?.email) params.set("email", user.email);
-    const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
-    if (name) params.set("name", name);
-    if (details) params.set("notes", details);
-    
-    window.open(`${calUrl}?${params.toString()}`, "_blank");
-    onClose();
-  };
+  // Build the cal.com URL with pre-filled user data
+  const params = new URLSearchParams();
+  if (user?.email) params.set("email", user.email);
+  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
+  if (name) params.set("name", name);
+  params.set("layout", "month_view");
+  
+  const calUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?${params.toString()}`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E8E8]">
           <div>
             <h2 className="text-lg font-bold text-[#111]">Book {sessionName}</h2>
-            <p className="text-xs text-[#666]">Select a date and time to secure your slot</p>
+            <p className="text-xs text-[#666]">Select a date and time from Uthman's live calendar</p>
           </div>
           <button onClick={onClose} className="p-2 bg-[#F5F5F5] rounded-full text-[#999] hover:text-[#111] hover:bg-[#EBEBEB] transition-colors">
             <XIcon className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 md:p-8">
-          {step === 1 ? (
-            <div className="flex flex-col md:flex-row gap-8">
-              {/* Left Calendar Grid */}
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold text-[#111] mb-4 flex items-center gap-2">
-                  <CalendarIcon className="w-4 h-4 text-emerald-600" />
-                  Available Dates
-                </h3>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-3">
-                  {dates.map((d) => (
-                    <button
-                      key={d.index}
-                      onClick={() => {
-                        setSelectedDate(d.index);
-                        setSelectedTime(null);
-                      }}
-                      className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all ${
-                        selectedDate === d.index 
-                          ? "border-emerald-500 bg-emerald-50 shadow-sm ring-1 ring-emerald-200" 
-                          : "border-[#E8E8E8] hover:border-emerald-300 hover:bg-[#FAFAFA]"
-                      }`}
-                    >
-                      <span className={`text-[11px] font-bold uppercase tracking-wider ${selectedDate === d.index ? "text-emerald-700" : "text-[#888]"}`}>
-                        {d.dayName}
-                      </span>
-                      <span className={`text-xl font-bold mt-1 ${selectedDate === d.index ? "text-emerald-900" : "text-[#111]"}`}>
-                        {d.day}
-                      </span>
-                      <span className={`text-[10px] mt-0.5 ${selectedDate === d.index ? "text-emerald-600" : "text-[#666]"}`}>
-                        {d.month}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right Time Slots */}
-              <div className="w-full md:w-64 flex-shrink-0">
-                <h3 className="text-sm font-semibold text-[#111] mb-4 flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-blue-600" />
-                  Time Slots
-                </h3>
-                {selectedDate === null ? (
-                  <div className="h-full min-h-[200px] border-2 border-dashed border-[#E8E8E8] rounded-xl flex items-center justify-center p-6 text-center">
-                    <p className="text-[13px] text-[#888] font-light">Select a date on the left to see available times.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 pb-2">
-                    {TIME_SLOTS.map((time) => (
-                      <button
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`w-full text-left px-4 py-3 rounded-xl border transition-all flex justify-between items-center ${
-                          selectedTime === time
-                            ? "border-blue-500 bg-blue-50 ring-1 ring-blue-200 shadow-sm"
-                            : "border-[#E8E8E8] hover:border-blue-300 hover:bg-[#FAFAFA]"
-                        }`}
-                      >
-                        <span className={`text-[13px] font-semibold ${selectedTime === time ? "text-blue-900" : "text-[#333]"}`}>
-                          {time}
-                        </span>
-                        {selectedTime === time && (
-                          <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="max-w-xl mx-auto py-4">
-              <h3 className="text-lg font-bold text-[#111] mb-2">Prepare for your session</h3>
-              <p className="text-[13px] text-[#666] mb-6 font-light leading-relaxed">
-                Uthman reviews this before the call to ensure you maximize your time. What firms are you targeting? What specific roadblocks are you facing with your outreach right now?
-              </p>
-              
-              <div className="bg-[#F8F8F8] border border-[#E8E8E8] rounded-xl p-4 mb-6 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] text-[#888] font-bold uppercase tracking-wider mb-1">Selected Slot</p>
-                  <p className="text-[13px] font-semibold text-[#111]">
-                    {dates.find(d => d.index === selectedDate)?.fullDate.toLocaleDateString('en-GB', {weekday: 'long', day: 'numeric', month: 'long'})} at {selectedTime}
-                  </p>
-                </div>
-                <button onClick={() => setStep(1)} className="text-[12px] font-medium text-emerald-600 hover:text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg bg-emerald-50">
-                  Change
-                </button>
-              </div>
-
-              <label className="block text-[13px] font-semibold text-[#111] mb-2">Session Notes (Optional)</label>
-              <textarea
-                value={details}
-                onChange={(e) => setDetails(e.target.value)}
-                placeholder="E.g., I'm targeting boutique IB firms in London. I've sent 20 emails using the guide's template but haven't gotten replies. I want to review my subject lines..."
-                className="w-full text-[13px] h-32 p-4 border border-[#E8E8E8] rounded-xl focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none resize-none"
-              />
-            </div>
-          )}
-        </div>
-
-        <div className="bg-[#FAFAFA] border-t border-[#E8E8E8] p-6 flex items-center justify-end gap-3">
-          {step === 1 ? (
-            <button
-              disabled={!selectedDate || !selectedTime}
-              onClick={() => setStep(2)}
-              className="px-6 py-3 rounded-xl bg-emerald-600 text-white text-sm font-bold shadow-md hover:bg-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              Next Step
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          ) : (
-            <div className="w-full flex justify-between items-center">
-              <p className="text-[11px] text-[#888] flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5" />
-                This will redirect you to confirm your slot securely.
-              </p>
-              <button
-                onClick={handleFinalSubmit}
-                className="px-6 py-3 rounded-xl bg-[#111] text-white text-sm font-bold shadow-md hover:bg-[#222] transition-all flex items-center gap-2"
-              >
-                Confirm via Calendar
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          )}
+        <div className="flex-1 overflow-hidden" style={{ minHeight: "500px" }}>
+          <iframe
+            src={calUrl}
+            className="w-full h-full border-0"
+            style={{ minHeight: "500px" }}
+            title={`Book ${sessionName}`}
+            allow="payment"
+          />
         </div>
       </div>
     </div>
   );
 }
-
 
 /* ─── Main Component ─── */
 
