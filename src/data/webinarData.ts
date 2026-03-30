@@ -1,19 +1,19 @@
-// -- Webinar metadata --
+// -- Recording metadata --
 export const WEBINAR_TITLE =
   "How Uthman got 20 internship offers in 3 weeks through cold emailing";
 export const WEBINAR_SUBTITLE =
-  "Learn the exact strategy that turned rejections from Morgan Stanley, Jane Street, and JPMorgan into 20 offers in just 3 weeks, all through cold emails.";
-export const WEBINAR_DATE = "28 March 2026";
-export const WEBINAR_TIME = "7:00 PM GMT";
-export const WEBINAR_DURATION = "90 min";
+  "Watch the full 90-minute recording of the exact cold emailing framework that generated a 21% response rate and turned blank inboxes into real internship offers. Real emails. Real screenshots. Real results - on demand.";
 
-
+// Recording-specific constants
+export const IS_RECORDING = true;
+export const RECORDING_VIEWER_COUNT = "150+";
+export const RECORDING_DURATION = "90 min";
 
 // -- Stripe Payment Links --
 export const STRIPE_WEBINAR_ONLY_LINK =
-  "https://buy.stripe.com/eVq9AS8iUfWh3iy3SA2400a";
+  "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
 export const STRIPE_BUNDLE_LINK =
-  "https://buy.stripe.com/bJe00ifLm6lH6uK88Q2400b";
+  "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
 
 // -- Form option lists --
 export const INDUSTRY_OPTIONS = [
@@ -60,7 +60,7 @@ export const COACHING_OPTIONS = [
   {
     value: "no",
     label: "No thanks",
-    description: "I'm just here for the webinar",
+    description: "I'm just here for the recording",
   },
 ] as const;
 
@@ -79,26 +79,29 @@ export interface Ticket {
 export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
   webinarOnly: {
     id: "webinar-only",
-    name: "Webinar Only",
+    name: "Recording Only",
     price: 10,
     originalPrice: 19,
-    description: "Live 90-min session + Q&A",
+    description: "Full 90-min recording - watch anytime",
     features: [
-      "Live webinar access",
-      "Q&A with the speaker",
-      "Recording sent after",
+      "Full 90-min recording",
+      "Watch anytime, anywhere",
+      "Lifetime access",
+      "24/7 Q&A access to Uthman regarding any cold-emailing queries",
+      "Includes extra cold-emailing resources",
     ],
     stripeLink: STRIPE_WEBINAR_ONLY_LINK,
   },
   bundle: {
     id: "bundle",
-    name: "Webinar + Cold Email Guide",
+    name: "Recording + Cold Email Guide",
     price: 29,
-    description: "Everything in Webinar Only, plus the complete cold email playbook",
+    description: "Everything in the recording, plus the complete cold email playbook",
     features: [
-      "Live webinar access",
-      "Q&A with the speaker",
-      "Recording sent after",
+      "Full 90-min recording",
+      "Watch anytime, anywhere",
+      "Lifetime access",
+      "24/7 Q&A access to Uthman regarding any cold-emailing queries",
       "Cold Email Guide (PDF)",
       "Find emails of CEOs and key decision-makers",
       "Write messages that actually get replies",
@@ -109,4 +112,3 @@ export const TICKETS: Record<"webinarOnly" | "bundle", Ticket> = {
     stripeLink: STRIPE_BUNDLE_LINK,
   },
 };
-export const WEBINAR_TARGET_DATE = "2026-03-28T19:00:00Z";

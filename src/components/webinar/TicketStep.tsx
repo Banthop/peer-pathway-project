@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TICKETS, WEBINAR_TARGET_DATE } from "@/data/webinarData";
+import { TICKETS, RECORDING_VIEWER_COUNT } from "@/data/webinarData";
 import { cn } from "@/lib/utils";
-import { Check, Lock, ArrowRight, Zap, Star, BookOpen, Clock, ShieldCheck, Users, ChevronDown, ChevronUp, HelpCircle, X as XIcon, Maximize2, Info } from "lucide-react";
+import { Check, Lock, ArrowRight, Zap, Star, BookOpen, ShieldCheck, Users, ChevronDown, ChevronUp, HelpCircle, X as XIcon, Maximize2, Play, Info } from "lucide-react";
 import type { WebinarFormData } from "@/hooks/useWebinarForm";
 
 interface TicketStepProps {
@@ -11,37 +11,6 @@ interface TicketStepProps {
   onSelect: (id: "webinar-only" | "bundle") => void;
   onCheckout: () => void;
   formData: WebinarFormData;
-}
-
-/* ---- Countdown Timer ---- */
-function MiniCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    function calc() {
-      const diff = new Date(WEBINAR_TARGET_DATE).getTime() - Date.now();
-      if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      return {
-        days: Math.floor(diff / 86400000),
-        hours: Math.floor((diff % 86400000) / 3600000),
-        minutes: Math.floor((diff % 3600000) / 60000),
-        seconds: Math.floor((diff % 60000) / 1000),
-      };
-    }
-    setTimeLeft(calc());
-    const id = setInterval(() => setTimeLeft(calc()), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center gap-1.5 text-xs font-sans tabular-nums">
-      <Clock className="h-3.5 w-3.5 text-amber-600" />
-      <span className="text-amber-700 font-medium">
-        {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-      </span>
-      <span className="text-muted-foreground">until webinar</span>
-    </div>
-  );
 }
 
 /* ---- Image Lightbox ---- */
@@ -76,13 +45,62 @@ function ImageLightbox({ src, onClose }: { src: string; onClose: () => void }) {
   );
 }
 
+/* ---- Recording Includes ---- */
+function RecordingIncludes() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="rounded-xl border border-blue-100 bg-white overflow-hidden transition-all shadow-sm">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between bg-blue-50/50 px-4 py-3.5 hover:bg-blue-50 transition-colors"
+      >
+        <div className="flex items-center gap-2 text-blue-700">
+          <Info className="h-4 w-4" />
+          <span className="text-sm font-sans font-medium">What's included in the recording?</span>
+        </div>
+        {open ? (
+          <ChevronUp className="h-4 w-4 text-blue-500" />
+        ) : (
+          <ChevronDown className="h-4 w-4 text-blue-500" />
+        )}
+      </button>
+
+      {open && (
+        <div className="px-5 py-4 bg-white animate-in fade-in slide-in-from-top-2 duration-200 border-t border-blue-50">
+          <h4 className="text-[11px] font-sans font-bold text-blue-900 uppercase tracking-wider mb-3">
+            90-MINUTE RECORDING COVERS
+          </h4>
+          <ul className="space-y-2.5">
+            {[
+              "Walkthrough of the entire cold emailing process from start to finish",
+              "How to use Apollo to find decision-maker emails at any firm",
+              "Mail-merge demo - watch real emails get sent in real-time",
+              "How to write subject lines that actually get opened",
+              "Handling rejections and turning them into opportunities",
+              "24/7 Q&A access to Uthman regarding any cold-emailing queries",
+              "Access to free cold-emailing resources"
+            ].map((item, i) => (
+              <li key={i} className="flex items-start gap-2.5">
+                <Check className="h-4 w-4 mt-[1px] shrink-0 text-blue-500" />
+                <span className="text-sm font-sans font-light text-slate-600 leading-snug">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* ---- FAQ ---- */
 function MiniFAQ() {
   const [open, setOpen] = useState<number | null>(null);
   const faqs = [
-    { q: "Will there be a recording?", a: "Yes - all ticket holders get the recording within 24 hours of the webinar." },
+    { q: "How long do I have access?", a: "Lifetime. Watch as many times as you want, at your own pace. The recording is yours forever." },
     { q: "Is this relevant for non-finance roles?", a: "Absolutely. The cold emailing framework works for any industry - law, tech, consulting, media, and more." },
-    { q: "What if I can't make the live session?", a: "No worries! You'll still get the recording and all bundled materials sent to your email." },
+    { q: "Can I watch on mobile?", a: "Yes - the recording works perfectly on any device. Watch on your phone, tablet, or laptop." },
     { q: "Can I get a refund?", a: "Yes - if you're not satisfied, email us and we'll refund you." },
   ];
 
@@ -120,52 +138,6 @@ function MiniFAQ() {
   );
 }
 
-/* ---- Webinar Reminder ---- */
-function WebinarReminder() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="w-full">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between bg-blue-50/60 border border-blue-200/60 rounded-xl px-4 py-3 transition-all hover:border-blue-300"
-      >
-        <div className="flex items-center gap-2">
-          <Info className="h-4 w-4 text-blue-600 shrink-0" />
-          <span className="text-sm font-sans font-medium text-blue-800">What's included in the webinar?</span>
-        </div>
-        {open ? (
-          <ChevronUp className="h-4 w-4 text-blue-400 shrink-0" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-blue-400 shrink-0" />
-        )}
-      </button>
-      {open && (
-        <div className="mt-2 bg-blue-50/40 border border-blue-200/40 rounded-xl px-4 py-3 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-          <p className="text-xs font-sans font-semibold text-blue-800 uppercase tracking-wider mb-2">
-            90-minute live session covers
-          </p>
-          {[
-            "Live walkthrough of the entire cold emailing process from start to finish",
-            "How to use Apollo to find decision-maker emails at any firm",
-            "Live mail-merge demo - watch real emails get sent in real-time",
-            "How to write subject lines that actually get opened",
-            "Handling rejections and turning them into opportunities",
-            "Live Q&A - get your specific questions answered",
-            "Recording sent to all attendees within 24 hours",
-          ].map((item) => (
-            <div key={item} className="flex items-start gap-2">
-              <Check className="h-3.5 w-3.5 mt-0.5 shrink-0 text-blue-600" />
-              <span className="text-sm font-sans font-light text-blue-900/80 leading-snug">{item}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export function TicketStep({
   selectedTicket,
   onSelect,
@@ -196,22 +168,23 @@ export function TicketStep({
         <p className="text-sm text-muted-foreground font-sans font-light">
           Pick the option that's right for you
         </p>
-        {/* Countdown */}
-        <div className="pt-2">
-          <MiniCountdown />
-        </div>
       </div>
 
       {/* Social proof */}
-      <div className="flex items-center justify-center gap-2 text-sm text-emerald-700 font-sans font-medium bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2">
-        <Users className="h-4 w-4" />
-        78% of students choose the bundle
+      <div className="space-y-2">
+        <div className="flex items-center justify-center gap-2 text-sm text-emerald-700 font-sans font-medium bg-emerald-50 border border-emerald-200 rounded-full px-4 py-2">
+          <Users className="h-4 w-4" />
+          78% of students choose the bundle
+        </div>
+        <div className="flex items-center justify-center gap-2 text-xs text-foreground/60 font-sans font-medium bg-white/60 border border-border rounded-full px-4 py-2">
+          <Play className="h-3.5 w-3.5" />
+          {RECORDING_VIEWER_COUNT} students have already watched this recording
+        </div>
       </div>
 
-      {/* Webinar reminder */}
-      <WebinarReminder />
+      <RecordingIncludes />
 
-      {/* WEBINAR ONLY card - intentionally basic/muted */}
+      {/* RECORDING ONLY card - intentionally basic/muted */}
       <button
         type="button"
         onClick={() => onSelect("webinar-only")}
@@ -227,6 +200,9 @@ export function TicketStep({
           <span className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-600 text-xs font-semibold font-sans px-3 py-1 rounded-full">
             <Zap className="h-3.5 w-3.5" />
             47% OFF
+          </span>
+          <span className="text-xs text-amber-600 font-sans font-semibold">
+            This week only
           </span>
         </div>
 
@@ -299,7 +275,7 @@ export function TicketStep({
             Most Popular
           </span>
           <span className="text-xs text-amber-600 font-sans font-semibold">
-            Spots are limited
+            This week only
           </span>
         </div>
 
@@ -307,7 +283,7 @@ export function TicketStep({
           {bundle.name}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground font-sans font-light">
-          Everything in the webinar, plus the complete playbook that landed 20+ offers
+          Everything in the recording, plus the complete playbook that landed 20+ offers
         </p>
 
         {/* Price */}
@@ -317,9 +293,9 @@ export function TicketStep({
           </span>
         </div>
 
-        {/* Features + guide tick */}
+        {/* Features */}
         <ul className="mt-5 space-y-2">
-          {webinar.features.map((f) => (
+          {["Full 90-min recording", "Watch anytime, anywhere", "Lifetime access", "24/7 Q&A access to Uthman regarding any cold-emailing queries"].map((f) => (
             <li key={f} className="flex items-start gap-2.5 text-sm font-sans font-light text-foreground">
               <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
               {f}
@@ -327,7 +303,7 @@ export function TicketStep({
           ))}
           <li className="flex items-start gap-2.5 text-sm font-sans text-foreground">
             <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
-            <span><strong>The Cold Email Guide</strong> - get access instantly, and use it to prepare ahead of the webinar</span>
+            <span><strong>The Cold Email Guide</strong> - get access instantly, and apply the strategies while you watch</span>
           </li>
         </ul>
 
@@ -345,7 +321,7 @@ export function TicketStep({
             copy and <strong>start using today</strong>.
           </p>
           <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
-            It's perfect for breaking into <strong>{industry}</strong>. Use it to start researching and preparing before the webinar.
+            It's perfect for breaking into <strong>{industry}</strong>. Use it alongside the recording to start applying immediately.
           </p>
 
           {/* Clickable email proof - taller preview */}
@@ -426,7 +402,7 @@ export function TicketStep({
         >
           {isBundleSelected
             ? "Get Instant Access for £29"
-            : "Lock In My £10 Spot"}
+            : "Get the Recording for £10"}
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
 
@@ -438,7 +414,7 @@ export function TicketStep({
 
         <p className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground font-sans font-light">
           <Lock className="h-3 w-3" />
-          Secure checkout via Stripe
+          Secure checkout via Stripe · Instant access after payment
         </p>
       </div>
 

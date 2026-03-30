@@ -4,8 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import {
-  WEBINAR_DATE,
-  WEBINAR_TIME,
+  WEBINAR_TITLE,
 } from "@/data/webinarData";
 import {
   ArrowLeft,
@@ -168,16 +167,8 @@ export default function WebinarQuestions() {
                 Got a question?
               </h1>
               <p className="text-sm text-muted-foreground font-sans font-light max-w-md leading-relaxed">
-                Can't make the live webinar on{" "}
-                <strong className="text-foreground font-medium">
-                  {WEBINAR_DATE}
-                </strong>{" "}
-                at{" "}
-                <strong className="text-foreground font-medium">
-                  {WEBINAR_TIME}
-                </strong>
-                ? No worries - submit your question here and the EarlyEdge team
-                will reply via email.
+                Have a question about cold emailing or the recording?
+                Submit it here and the EarlyEdge team will reply via email.
               </p>
             </div>
 

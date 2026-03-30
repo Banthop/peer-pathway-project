@@ -14,7 +14,7 @@ interface IndustryStepProps {
 }
 
 const INDUSTRY_REINFORCEMENT: Record<string, string> = {
-  Finance: "Great pick. The webinar covers exactly how to email investment banks, hedge funds, and PE firms.",
+  Finance: "Great pick. The recording covers exactly how to email investment banks, hedge funds, and PE firms.",
   Law: "Perfect. You'll learn how to reach partners and associates at top law firms directly.",
   Consulting: "Solid choice. Cold emailing is one of the most effective ways into MBB and Big 4.",
   Tech: "Smart. The guide includes templates tailored for tech PMs, engineers, and startup founders.",

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 
 const FinalCTA = () => {
   return (
@@ -10,10 +10,10 @@ const FinalCTA = () => {
           Your future self will thank you.
         </h2>
         <p className="text-base font-sans font-light text-background/60 mb-10 max-w-lg mx-auto">
-          Book a free intro call with a coach who's been exactly where you are — and got to where you want to be.
+          Book a free intro call with a coach who's been exactly where you are - and got to where you want to be.
         </p>
 
-        {/* Dual CTAs */}
+        {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link to="/browse">
             <Button
@@ -22,6 +22,15 @@ const FinalCTA = () => {
             >
               Find a Coach
               <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </Link>
+          <Link to="/webinar">
+            <Button
+              size="lg"
+              className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 py-6 text-base font-sans font-medium"
+            >
+              <Play className="w-4 h-4 mr-2" />
+              Watch the Cold Email Masterclass
             </Button>
           </Link>
           <Link to="/become-a-coach">

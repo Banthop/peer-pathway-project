@@ -18,7 +18,7 @@ import { ChevronLeft, CheckCircle2, Loader2, Zap, BookOpen, ArrowRight, Lock } f
 const GUIDE_UPGRADE_LINK = "https://buy.stripe.com/3cI14m1Uw11n4mC4WE2400c";
 
 function SuccessScreen({ name, ticket }: { name: string; ticket: string }) {
-  const isWebinarOnly = ticket !== "bundle";
+  const isRecordingOnly = ticket !== "bundle";
   const [showGuideDetails, setShowGuideDetails] = useState(false);
 
   return (
@@ -30,38 +30,36 @@ function SuccessScreen({ name, ticket }: { name: string; ticket: string }) {
             <CheckCircle2 className="h-7 w-7 text-emerald-600" />
           </div>
           <h1 className="text-2xl md:text-3xl font-sans font-light text-foreground">
-            You're in{name ? `, ${name}` : ""}!
+            You're all set{name ? `, ${name}` : ""}!
           </h1>
           <p className="text-muted-foreground font-sans font-light text-sm leading-relaxed max-w-sm mx-auto">
-            Check your email for your Zoom link and confirmation details.
-            We'll send a reminder before we go live.
+            Check your email for your recording access link.
+            You can start watching immediately.
           </p>
         </div>
 
-        {/* Webinar details card */}
+        {/* Recording access card */}
         <div className="bg-white border border-border rounded-2xl p-5 space-y-3">
           <div className="flex items-center gap-2 text-sm font-sans font-semibold text-foreground">
             <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-            Your webinar details
+            Your recording is ready
           </div>
-          <div className="grid grid-cols-2 gap-3 text-sm font-sans">
-            <div>
-              <p className="text-muted-foreground text-xs uppercase tracking-wider font-medium">Date</p>
-              <p className="font-medium text-foreground">Saturday 28th March</p>
-            </div>
-            <div>
-              <p className="text-muted-foreground text-xs uppercase tracking-wider font-medium">Time</p>
-              <p className="font-medium text-foreground">7:00 PM GMT</p>
-            </div>
-          </div>
-          <p className="text-xs text-muted-foreground font-sans font-light">
-            Zoom link sent to your email. Recording included if you can't make it live.
+          <p className="text-sm text-muted-foreground font-sans font-light leading-relaxed">
+            You now have lifetime access to the full 90-minute Cold Email Masterclass recording.
+            Watch anytime, on any device.
           </p>
+          <a
+            href="/portal"
+            className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-sans font-semibold text-sm rounded-xl py-3 px-6 transition-all shadow-md hover:shadow-lg"
+          >
+            Watch the Recording Now
+            <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
 
-        {isWebinarOnly ? (
+        {isRecordingOnly ? (
           <>
-            {/* ── UPSELL CARD for webinar-only buyers ── */}
+            {/* ── UPSELL CARD for recording-only buyers ── */}
             <div className="relative bg-gradient-to-br from-blue-50/60 via-white to-emerald-50/40 border-2 border-emerald-600/40 rounded-2xl p-6 md:p-8 space-y-5 shadow-lg">
               {/* Badge */}
               <div className="absolute -top-3 left-6">
@@ -73,12 +71,12 @@ function SuccessScreen({ name, ticket }: { name: string; ticket: string }) {
 
               <div className="space-y-2 pt-2">
                 <h2 className="text-xl font-sans font-semibold text-foreground">
-                  Want the exact templates before Saturday?
+                  Want the exact templates to follow along?
                 </h2>
                 <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
-                  Most students who attend the webinar <strong>without</strong> the guide don't
-                  know what to do next. The ones who have it? They come to the live session
-                  already prepared, ask better questions, and start sending emails the same night.
+                  Most students who watch the recording <strong>without</strong> the guide don't
+                  know what to do next. The ones who have it? They follow along with the recording,
+                  take action immediately, and start sending emails the same day.
                 </p>
               </div>
 
@@ -158,7 +156,7 @@ function SuccessScreen({ name, ticket }: { name: string; ticket: string }) {
                 </h2>
               </div>
               <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
-                Read through it before Saturday so you can follow along perfectly during the live session.
+                Use the guide alongside the recording to follow along and apply the strategies in real time.
                 The guide link has been sent to your email.
               </p>
               <a
@@ -209,7 +207,7 @@ export default function Webinar() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "EarlyEdge - Cold-Emailing Webinar";
+    document.title = "EarlyEdge - Cold Email Masterclass Recording";
     return () => { document.title = prev; };
   }, []);
   const isSuccess = searchParams.get("success") === "true";
@@ -300,7 +298,7 @@ export default function Webinar() {
     url.searchParams.set("prefilled_email", form.formData.email);
     url.searchParams.set("client_reference_id", form.formData.email);
 
-    window.location.href = url.toString();
+    window.open(url.toString(), '_blank');
   };
 
   if (showTransition) {
