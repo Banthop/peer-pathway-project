@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { BUYER_LOOKUP } from "@/data/buyerLookup";
 
 interface BuyerStatus {
   isBuyer: boolean;
@@ -39,7 +38,6 @@ function logAccess(email: string) {
       userAgent: navigator.userAgent,
       screenRes: `${screen.width}x${screen.height}`,
     });
-    // Keep last 50 entries
     if (log.length > 50) log.splice(0, log.length - 50);
     localStorage.setItem(ACCESS_LOG_KEY, JSON.stringify(log));
   } catch {}
@@ -59,18 +57,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
 
     const emailKey = user.email.toLowerCase().trim();
 
-    // --- LOCAL CSV LOOKUP (takes priority) ---
-    const csvTier = BUYER_LOOKUP[emailKey];
-    if (csvTier) {
-      const isBuyer = true;
-      const isBundle = csvTier === "bundle";
-      setBuyerStatus({ isBuyer, isBundle, tags: isBundle ? ["stripe_customer", "bundle"] : ["stripe_customer"], accessCount: 0 });
-      logAccess(user.email);
-      setLoading(false);
-      return;
-    }
-
-    // --- FALLBACK: Supabase CRM lookup ---
+    // --- Supabase CRM lookup (single source of truth) ---
     if (!supabase) {
       setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
       setLoading(false);
@@ -85,6 +72,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
         .limit(1);
 
       if (!data || data.length === 0) {
+        // Email not in CRM — no access
         setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
         setLoading(false);
         return;
@@ -98,10 +86,8 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       setBuyerStatus({ isBuyer, isBundle, tags, accessCount: 0 });
 
       if (isBuyer) {
-        // Log access event for anti-sharing monitoring
         logAccess(user.email);
 
-        // Update CRM with portal access
         const portalTag = "portal_access";
         const newTags = [...new Set([...tags, portalTag])];
         await supabase
@@ -123,7 +109,6 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, [user?.email]);
 
-  // Check buyer status whenever auth user changes
   useEffect(() => {
     if (user) {
       checkBuyerStatus();
