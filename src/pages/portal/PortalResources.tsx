@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
-import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, KeyRound, X, ShieldAlert, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles } from "lucide-react";
 
-const GUIDE_LINK = "https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62";
+const GUIDE_LINK = "/portal/cold-email-guide";
 const CHECKLIST_LINK = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
 const TRACKER_LINK = "https://docs.google.com/spreadsheets/d/19ZPYW15MrrZ-0Wnr-yAbthWA5tPMD0QsZl_jU0e4gkE/edit?gid=1156363533#gid=1156363533";
 const FIRMS_LIST_LINK = "https://earlyedge-1758913924.subpage.co/1581-2e5bf708";
@@ -23,7 +25,6 @@ const PHASES = [
         gradient: "from-zinc-800 to-black",
         bundleOnly: true,
         type: "Master Guide",
-        hasPassword: true,
         actionText: "Access The Vault"
       }
     ]
@@ -88,48 +89,9 @@ const PHASES = [
   }
 ];
 
-function PasswordModal({ onClose }: { onClose: () => void }) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
-      <div className="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 animate-in fade-in zoom-in-95 duration-200 border border-white/20">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 bg-[#F5F5F5] rounded-full text-[#999] hover:text-[#111] hover:bg-[#EBEBEB] transition-colors"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div className="text-center space-y-5 mt-2">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800 to-black flex items-center justify-center mx-auto shadow-lg shadow-black/20">
-            <KeyRound className="w-8 h-8 text-white" />
-          </div>
-
-          <div>
-            <p className="text-xs text-[#888] font-bold uppercase tracking-wider mb-2">Password</p>
-            <div className="bg-[#F8F8F8] border-2 border-[#E8E8E8] rounded-xl py-4 px-4">
-              <p className="text-3xl font-black text-[#111] tracking-wider select-all font-mono">
-                RedMango
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3 bg-red-50 border border-red-100 rounded-xl p-4 text-left">
-            <ShieldAlert className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-            <p className="text-[12px] text-red-700 leading-relaxed font-medium">
-              This password is tied to your account signature. <strong>Do not share it.</strong> Accounts found sharing access will be permanently banned without refund.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function PortalResources() {
   const { buyerStatus } = useBuyerAuth();
   const isBundle = buyerStatus?.isBundle ?? false;
-  const [showPassword, setShowPassword] = useState(false);
 
   // Count exactly how many resources are unlocked vs locked for gamification
   const totalResources = PHASES.reduce((acc, phase) => acc + phase.resources.length, 0);
@@ -139,7 +101,6 @@ export default function PortalResources() {
 
   return (
     <div className="w-full bg-[#FAFAFA] min-h-screen pb-20">
-      {showPassword && <PasswordModal onClose={() => setShowPassword(false)} />}
 
       {/* ════════ HEADER (The Execution Blueprint) ════════ */}
       <div className="bg-white border-b border-[#E8E8E8]">
@@ -275,24 +236,24 @@ export default function PortalResources() {
                         </p>
 
                         <div className="space-y-2.5 mt-auto">
-                          <a
-                            href={resource.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full py-3.5 rounded-xl bg-[#111] text-white text-[13px] font-bold hover:bg-[#222] hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300"
-                          >
-                            {resource.actionText}
-                            <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                          </a>
-                          
-                          {resource.hasPassword && (
-                            <button
-                              onClick={() => setShowPassword(true)}
-                              className="w-full py-3.5 rounded-xl bg-[#F8F8F8] border border-[#E8E8E8] text-[#333] text-[13px] font-bold hover:bg-[#F0F0F0] hover:border-[#DDD] transition-colors flex items-center justify-center gap-2"
+                          {resource.link.startsWith("/") ? (
+                            <Link
+                              to={resource.link}
+                              className="w-full py-3.5 rounded-xl bg-[#111] text-white text-[13px] font-bold hover:bg-[#222] hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300 no-underline"
                             >
-                              <KeyRound className="w-4 h-4 text-[#666]" />
-                              Show Password
-                            </button>
+                              {resource.actionText}
+                              <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                            </Link>
+                          ) : (
+                            <a
+                              href={resource.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-full py-3.5 rounded-xl bg-[#111] text-white text-[13px] font-bold hover:bg-[#222] hover:shadow-lg transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300"
+                            >
+                              {resource.actionText}
+                              <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                            </a>
                           )}
                         </div>
                       </div>

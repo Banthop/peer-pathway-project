@@ -2,14 +2,13 @@ import { NavLink, Outlet, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
-import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Mail } from "lucide-react";
+import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { to: "/portal", icon: Play, label: "Recording", end: true },
   { to: "/portal/resources", icon: BookOpen, label: "Resources" },
   { to: "/portal/book-uthman", icon: UserCheck, label: "Book Uthman" },
-  { to: "/portal/cold-email-guide", icon: Mail, label: "Cold Email Guide" },
 ];
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
