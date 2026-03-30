@@ -14,7 +14,7 @@ interface AuthState {
 interface AuthContextValue extends AuthState {
     signUp: (email: string, password: string, name: string, type: UserType) => Promise<{ error: AuthError | Error | null }>;
     signIn: (email: string, password: string) => Promise<{ error: AuthError | Error | null; userType: string | null }>;
-    signInWithGoogle: () => Promise<{ error: AuthError | Error | null }>;
+    signInWithGoogle: (redirectTo?: string) => Promise<{ error: AuthError | Error | null }>;
     signOut: () => Promise<void>;
     resetPassword: (email: string) => Promise<{ error: AuthError | Error | null }>;
 }
@@ -228,11 +228,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { error: null, userType };
     }, []);
 
-    const signInWithGoogle = useCallback(async () => {
+    const signInWithGoogle = useCallback(async (redirectTo?: string) => {
         if (!supabase) return { error: new Error("Supabase not configured") };
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
-            options: { redirectTo: `${window.location.origin}/dashboard` },
+            options: { redirectTo: redirectTo || `${window.location.origin}/dashboard` },
         });
         return { error };
     }, []);

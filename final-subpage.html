@@ -1,0 +1,867 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap');
+
+  .ee-doc {
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    background: #FFFFFF;
+    color: #111111;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Typography ── */
+  .ee-doc h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: #111111;
+    margin: 0 0 8px 0;
+  }
+  .ee-doc h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #111111;
+    margin: 0 0 20px 0;
+  }
+  .ee-doc h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #888888;
+    margin: 0 0 16px 0;
+  }
+  .ee-doc p {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #333333;
+    margin: 0 0 20px 0;
+  }
+  .ee-doc p:last-child { margin-bottom: 0; }
+  .ee-doc ul, .ee-doc ol {
+    font-size: 16px;
+    line-height: 1.75;
+    color: #333333;
+    margin: 0 0 20px 0;
+    padding-left: 22px;
+  }
+  .ee-doc li { margin-bottom: 10px; }
+  .ee-doc strong { font-weight: 700; color: #111111; }
+  .ee-doc em { font-style: italic; color: #555555; }
+  .ee-doc code {
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+    font-size: 13px;
+    background: #F4F4F5;
+    border: 1px solid #E8E8E8;
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: #111111;
+  }
+
+  /* ── Cover ── */
+  .ee-cover {
+    background: #111111;
+    border-radius: 16px;
+    padding: 48px 40px;
+    margin-bottom: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ee-cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ee-cover-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 16px;
+  }
+  .ee-cover h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+  }
+  .ee-cover-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 12px;
+    margin-bottom: 0;
+  }
+
+  /* ── Stats bar ── */
+  .ee-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+  .ee-stat {
+    background: #FAFAFA;
+    border: 1px solid #E8E8E8;
+    border-radius: 12px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .ee-stat-value {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: #111111;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .ee-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #999999;
+  }
+
+  /* ── Section divider ── */
+  .ee-divider {
+    border: 0;
+    border-top: 1px solid #E8E8E8;
+    margin: 56px 0;
+  }
+
+  /* ── Module header ── */
+  .ee-module-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .ee-module-num {
+    width: 44px;
+    height: 44px;
+    background: #111111;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 20px;
+    color: #FFFFFF;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .ee-module-meta {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #BBBBBB;
+    margin-bottom: 6px;
+  }
+
+  /* ── Section heading (inline h3 within content) ── */
+  .ee-section-heading {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+    margin: 40px 0 14px 0;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  /* ── Callout card ── */
+  .ee-callout {
+    background: #FAFAFA;
+    border: 1px solid #E8E8E8;
+    border-left: 3px solid #111111;
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 32px 0;
+  }
+  .ee-callout-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+    margin: 0 0 12px 0;
+  }
+  .ee-callout p, .ee-callout ul, .ee-callout ol {
+    font-size: 15px;
+  }
+  .ee-callout p:last-child { margin-bottom: 0; }
+
+  /* ── Email example card ── */
+  .ee-email-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E8E8;
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 28px 0;
+  }
+  .ee-email-card-header {
+    background: #111111;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ee-email-card-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin: 0;
+  }
+  .ee-email-card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111111;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+  .ee-email-subject {
+    padding: 16px 24px 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111111;
+    border-bottom: 1px solid #F4F4F5;
+    padding-bottom: 12px;
+    margin-bottom: 0;
+  }
+  .ee-email-body {
+    padding: 20px 24px 24px;
+  }
+  .ee-email-body p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333333;
+    margin: 0 0 14px 0;
+  }
+  .ee-email-body p:last-child { margin-bottom: 0; }
+
+  /* ── Tip pill ── */
+  .ee-tip {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: #FAFAFA;
+    border: 1px solid #E8E8E8;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .ee-tip-icon {
+    font-size: 16px;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+  .ee-tip-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #444444;
+    margin: 0;
+  }
+  .ee-tip-text strong { color: #111111; }
+
+  /* ── Numbered step ── */
+  .ee-steps { counter-reset: ee-step; margin: 0 0 24px 0; padding: 0; list-style: none; }
+  .ee-steps li {
+    counter-increment: ee-step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .ee-steps li::before {
+    content: counter(ee-step);
+    width: 26px;
+    height: 26px;
+    background: #111111;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ee-steps li span {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333333;
+  }
+
+  /* ── Firm list grid ── */
+  .ee-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 20px 0 28px;
+  }
+  .ee-grid-item {
+    background: #FAFAFA;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+  }
+
+  /* ── Rules list ── */
+  .ee-rules { list-style: none; padding: 0; margin: 0 0 24px 0; }
+  .ee-rules li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid #F4F4F5;
+    margin-bottom: 0;
+  }
+  .ee-rules li:first-child { border-top: 1px solid #F4F4F5; }
+  .ee-rule-num {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 20px;
+    color: #DDDDDD;
+    flex-shrink: 0;
+    width: 28px;
+    line-height: 1.5;
+  }
+  .ee-rule-content { flex: 1; }
+  .ee-rule-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111111;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .ee-rule-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #555555;
+    margin: 0;
+  }
+
+  /* ── Sign-off ── */
+  .ee-signoff {
+    background: #111111;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-top: 56px;
+    text-align: center;
+  }
+  .ee-signoff p {
+    color: rgba(255,255,255,0.65);
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+  .ee-signoff strong { color: #FFFFFF; }
+
+  @media (max-width: 600px) {
+    .ee-cover { padding: 32px 24px; }
+    .ee-cover h1 { font-size: 30px; }
+    .ee-stats { grid-template-columns: repeat(3, 1fr); }
+    .ee-stats .ee-stat:nth-child(4),
+    .ee-stats .ee-stat:nth-child(5) { grid-column: span 1; }
+    .ee-grid-2 { grid-template-columns: 1fr; }
+    .ee-email-card-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .ee-doc h1 { font-size: 28px; }
+    .ee-doc h2 { font-size: 22px; }
+    .ee-callout { padding: 20px; }
+  }
+</style>
+
+<div class="ee-doc">
+
+  <!-- Cover -->
+  <div class="ee-cover">
+    <div class="ee-cover-label">EarlyEdge · Cold Email Course</div>
+    <h1>The Early Edge<br>Cold Email System</h1>
+    <p class="ee-cover-sub">Your complete playbook for landing internships through direct outreach — step by step.</p>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="ee-stats">
+    <div class="ee-stat">
+      <div class="ee-stat-value">1,062</div>
+      <div class="ee-stat-label">Emails Sent</div>
+    </div>
+    <div class="ee-stat">
+      <div class="ee-stat-value">223</div>
+      <div class="ee-stat-label">Replies</div>
+    </div>
+    <div class="ee-stat">
+      <div class="ee-stat-value">21%</div>
+      <div class="ee-stat-label">Reply Rate</div>
+    </div>
+    <div class="ee-stat">
+      <div class="ee-stat-value">24%</div>
+      <div class="ee-stat-label">Meeting Rate</div>
+    </div>
+    <div class="ee-stat">
+      <div class="ee-stat-value">20</div>
+      <div class="ee-stat-label">Offers</div>
+    </div>
+  </div>
+
+  <!-- Welcome -->
+  <h3>Welcome</h3>
+  <h2>How to use this guide</h2>
+
+  <p>This document is designed to provide an in-depth analysis of what we discuss in the Webinar, without overloading your eyes with text. We recommend listening to the Webinar first and then using this in conjunction with it to really familiarise yourself with the content.</p>
+  <p>Anything explained briefly on the webinar will be here in detail for you to understand. If you wish to know how to do specifics, like using mailmerge or exporting leads from Apollo, these are covered in the webinar via diagrams and live walkthroughs, which is recorded.</p>
+  <p>Still confused? Drop Uthman an email at <strong>u5636199@live.warwick.ac.uk</strong> or connect with him on LinkedIn.</p>
+
+  <div class="ee-callout">
+    <p class="ee-callout-title">Congratulations — you've just made one of the best moves of your uni life.</p>
+    <p>You decided to back yourself and learn a skill that actually gets you noticed. Follow this properly, and you <strong>will</strong> land a summer internship. Even as a first-year. Even without experience. Even if you don't know anyone in finance yet.</p>
+    <p>Cold emailing <strong>works</strong>. Not overnight, but if you stick with it, you'll get replies, build real relationships, and open doors most students never even see.</p>
+  </div>
+
+  <hr class="ee-divider">
+
+  <!-- Where This Came From -->
+  <h3>Background</h3>
+  <h2>Where This Course Came From</h2>
+
+  <p>We built this because we were tired of watching smart students miss out just because they didn't have connections.</p>
+  <p>We started testing cold emails ourselves, sending messages to analysts, partners, and founders. We saw what worked and what didn't. Then we helped other students try it. We refined, tested again, and improved every part of it.</p>
+  <p>Finally, we built this course together with <strong>Don</strong>, our cofounder and cold email specialist. Before Early Edge, Don ran his own lead generation business, using cold outreach to connect with founders, land clients, and even help those clients win more deals.</p>
+  <p>So when he helped design this course, he added the exact systems and strategies he'd developed and tested over years of real outreach — the same frameworks that helped him get replies from hard-to-reach people, build trust quickly, and cut hours off the boring parts.</p>
+
+  <p>This isn't theory. This is the exact method we've seen students use to:</p>
+  <ul>
+    <li>Land roles at London-based boutiques</li>
+    <li>Get interviews with niche PE funds</li>
+    <li>Secure paid, part-time work during term</li>
+    <li>Build a finance CV before uni even starts</li>
+    <li>Walk into final year already sorted with a grad offer</li>
+  </ul>
+
+  <p>This is the playbook we wish someone handed us when we started out. Now it's yours. Let's go get that internship.</p>
+  <p><em>— Team Early Edge</em></p>
+
+  <hr class="ee-divider">
+
+  <!-- Module 1 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">1</div>
+    <div>
+      <div class="ee-module-meta">Module 1</div>
+      <h2 style="margin-bottom:0;">Why Cold Email Works in Finance</h2>
+    </div>
+  </div>
+
+  <p>Most students think breaking into finance means only applying to the big-name banks and going through endless application stages. But that's not the only way in.</p>
+  <p>There's a whole world of <strong>smaller firms</strong> — hedge funds, family offices, PE boutiques, and prop shops — that pay just as well, give you real experience, and don't make you jump through 10 hoops to get in.</p>
+  <p>They usually hire through referrals or people already in their network. So yeah, they're probably not "looking" for interns. But that doesn't mean they won't take one on… if the right person reaches out.</p>
+  <p>That's where <strong>cold email</strong> comes in. Instead of competing with 1,000 other students through a portal, you're starting a direct conversation with someone who can actually say "Sure, let's talk."</p>
+
+  <p>That message can lead to:</p>
+  <ul>
+    <li>A remote project</li>
+    <li>A paid internship</li>
+    <li>A referral or part-time role that was never posted</li>
+  </ul>
+
+  <p>Most students never try this. Not because they're lazy — they just don't know it's even an option. But now you do. You're not sitting around hoping some online portal gets back to you. You're taking the first step, reaching out to people who actually make the decisions.</p>
+
+  <hr class="ee-divider">
+
+  <!-- Module 2 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">2</div>
+    <div>
+      <div class="ee-module-meta">Module 2</div>
+      <h2 style="margin-bottom:0;">Who to Email (and How to Find Them Fast)</h2>
+    </div>
+  </div>
+
+  <p>Before you start reaching out, take a second to ask yourself: <strong>What areas of finance actually interest me?</strong> You don't need a perfect answer. But having a rough idea will help you focus your outreach, sound more intentional, and avoid wasting time on firms you don't actually want to work at.</p>
+  <p>Here's a list of types of firms where cold outreach tends to work well. Pick 3 to target first:</p>
+
+  <div class="ee-grid-2">
+    <div class="ee-grid-item">Asset Managers</div>
+    <div class="ee-grid-item">Hedge Funds</div>
+    <div class="ee-grid-item">Private Equity Funds</div>
+    <div class="ee-grid-item">Search Funds</div>
+    <div class="ee-grid-item">Corporate Finance Boutiques / M&amp;A Advisory</div>
+    <div class="ee-grid-item">Family Offices</div>
+    <div class="ee-grid-item">Real Estate Investment Firms</div>
+    <div class="ee-grid-item">Venture Capital / Growth Equity</div>
+    <div class="ee-grid-item">Prop Trading Shops</div>
+    <div class="ee-grid-item">Distressed Debt Investors</div>
+    <div class="ee-grid-item">Tech / Healthcare Boutiques</div>
+    <div class="ee-grid-item">ESG / Private Credit Shops</div>
+  </div>
+
+  <p>Once you've picked your targets, figure out who to contact. Since these are small firms, your best shot is going straight to senior people. Prioritise:</p>
+  <ol>
+    <li>Founders / Managing Partners</li>
+    <li>Managing Directors (MDs)</li>
+    <li>Vice Presidents (VPs)</li>
+    <li>CEOs</li>
+  </ol>
+  <p>If you're struggling to find enough contacts at that level, you can also reach out to Associates and Analysts.</p>
+
+  <p class="ee-section-heading">Finding Firms on Apollo.io (Company Search)</p>
+  <p>First, sign up to Apollo.io. Once you're in, go to the <strong>Companies</strong> tab.</p>
+  <ul>
+    <li><strong>Location:</strong> United Kingdom (or specifically your city — London, Birmingham, Manchester).</li>
+    <li><strong>Employees:</strong> Custom range (3–15 or 10–30). You want to target SMEs which are leaner — they have no designated HR function, letting you reach MDs and CEOs directly.</li>
+    <li><strong>Industry &amp; Keywords:</strong> Apollo's industry filter is quite broad. Think of Industry as your rough category, then in Keywords add "asset management" or "private equity" to make sure the firm actually mentions that term.</li>
+  </ul>
+
+  <div class="ee-tip">
+    <span class="ee-tip-icon">💡</span>
+    <p class="ee-tip-text">If you're stuck, ask ChatGPT: <em>"What industries and keywords should I use on Apollo to find small private equity firms in the UK?"</em> You'll get a solid list of inputs to try.</p>
+  </div>
+
+  <p class="ee-section-heading">Finding Contacts on Apollo (People Search)</p>
+  <p>Once you've got your firms, head to the <strong>People</strong> tab. Filter by Job Title (Managing Partner, MD, VP, CEO). You can also add Associates and Analysts. Then set Contact Location to match your company search (e.g., United Kingdom or London).</p>
+
+  <p class="ee-section-heading">Exporting The Smarter Way (ExportApollo)</p>
+  <p>With Apollo's free plan, you can only manually view around 175 people before it blocks you and asks you to upgrade. Manually copying them works, but it's slow and emails aren't verified.</p>
+  <p><strong>The smarter way (what we use):</strong> ExportApollo is a third-party tool that pulls your entire Apollo search into a clean Google Sheet with verified emails, cleaned company names, and extra data.</p>
+
+  <ol class="ee-steps">
+    <li><span>Go to exportapollo.com, press Sign Up and head over to the Dashboard. Name your list (e.g., "UK Private Equity 3–15 Staff").</span></li>
+    <li><span>Copy the URL from your Apollo people search and paste it into ExportApollo. Enter the amount of leads to extract. (If it's under 1,000, still enter 1,000 — that's the minimum charge.)</span></li>
+    <li><span><strong>Adjust Settings:</strong> Turn ON "Scrape only available emails" (avoids wasting credits), "Email verification" (double-checks emails), "Company Name Cleaning" (removes "LLP" or "Limited"), and "Extra Data".</span></li>
+  </ol>
+  <p>Click "Pay &amp; Scrape" and you'll receive a Google Sheet delivered to your email. <strong>Note:</strong> Leads often take 48h to deliver — which gives you perfect time to work on the template.</p>
+
+  <div class="ee-callout">
+    <p class="ee-callout-title">Your 200 Firm Head Start</p>
+    <p>We've put together a curated list of 200 firms across Private Equity, Venture Capital, Investment Banking, Law, Consulting, Hedge Funds, SaaS, and Fintech — all based in the UK, all with small teams, and all the type of firm that responds to cold emails.</p>
+    <p>[Access the full list here] — Combine it with your own Apollo searches and you'll never run out of people to email.</p>
+  </div>
+
+  <hr class="ee-divider">
+
+  <!-- Module 3 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">3</div>
+    <div>
+      <div class="ee-module-meta">Module 3</div>
+      <h2 style="margin-bottom:0;">Clean Your Leads and Write First Lines</h2>
+    </div>
+  </div>
+
+  <p>Now that you've exported your Apollo leads as a CSV, it's time to clean them up so you're only messaging people at firms that actually matter, with personalised openers that make you stand out.</p>
+  <p>Download the <strong>EarlyEdge Cold Email Tracker</strong>. This is where all of your contacts will live from start to finish — clean your leads, track your sends, log responses, and monitor your stats.<br>[Download the EarlyEdge Cold Email Tracker here]</p>
+  <p>Open your CSV file. Delete all columns except: First Name, Last Name, Title, Email, LinkedIn Link, Cleaned Company Name, Company Website, Company Full Name, Company Short Description. Copy your CSV data straight into the 'Outreach' sheet of your EarlyEdge Tracker.</p>
+
+  <p class="ee-section-heading">The "First Line" Column</p>
+  <p>You'll see a 'First Line' column already set up in your Outreach sheet. This is where you'll write your personalised opening sentence. Don't spend 10 minutes per contact trying to find the perfect thing to say.</p>
+  <p><strong>Structure: An Observation + A Simple Question.</strong> The goal is to show you've looked them up and you're genuinely curious about learning more.</p>
+
+  <p><strong>The 2-minute method:</strong></p>
+  <ul>
+    <li>Check their LinkedIn profile (30 seconds). Scan their headline, current role, and look for a career change, previous notable firm, or promotion.</li>
+    <li>Check the Company Short Description (30 seconds). Does the firm do something specific or specialise in a niche area? Have they won an award?</li>
+    <li>Check the Company Website (30 seconds). Scan their homepage or 'About' page. Look for a recent project or mission statement.</li>
+    <li>Write the line (30 seconds). Take whatever you found and turn it into a short observation followed by a simple question.</li>
+  </ul>
+
+  <p><strong>Fallback templates if you're stuck:</strong></p>
+  <ul>
+    <li>"I came across your profile and was inspired by your story, especially how you [interesting thing] — what was that like?"</li>
+    <li>"I saw you've been at [Current Firm] for [X] years now, how's the experience been so far?"</li>
+    <li>"I saw you've moved from [IB/Consulting] into [New Type of Work] — what was that transition like?"</li>
+    <li>"I noticed you went from a larger fund to a boutique — does it feel more hands-on day to day?"</li>
+    <li>"I noticed X deals in [Company aim] — how are you navigating in this economic climate?"</li>
+  </ul>
+
+  <p>Clean your sheet row by row. Read the Company Description — if the firm isn't relevant, delete the row. Make sure the "Cleaned Company Name" reads naturally (e.g., change "Phoenix Asset Management Partners" to "Phoenix"). Every row in your Outreach sheet should be a relevant contact at a firm you actually want to work at.</p>
+
+  <hr class="ee-divider">
+
+  <!-- Module 4 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">4</div>
+    <div>
+      <div class="ee-module-meta">Module 4</div>
+      <h2 style="margin-bottom:0;">Write Your Cold Email Template</h2>
+    </div>
+  </div>
+
+  <p>When writing your template, keep in mind those you outreach to are extremely busy. Think of your cold email as a conversation starter, not a cover letter. It should be short, clear, and human — something the person can read in under 30 seconds.</p>
+  <p>Your goal is to prove three things: 1) You're genuinely interested in what the firm does, 2) You're eager to learn, 3) You'd be happy to help in any way you can.</p>
+
+  <p class="ee-section-heading">Email Template Structure</p>
+  <ol class="ee-steps">
+    <li><span><strong>Subject Line:</strong> Get this wrong and even the best cold email sits unread. The format we recommend: <code>[Your Name], [Your University] Cold Email</code> — or <code>[UNI] student eager to contribute</code>. This format consistently gets 3× more opens because it looks like a real email, not a sales pitch.</span></li>
+    <li><span><strong>Personalised First Line:</strong> Plug in your First Line observation. Show you've done your research.</span></li>
+    <li><span><strong>Intro + Context:</strong> Who you are, what you're studying. Keep it short — 1–2 sentences max.</span></li>
+    <li><span><strong>Why You're Reaching Out (The Ask):</strong> Briefly explain why you're messaging them. Make it clear you are seeking paid or unpaid experience this summer, even to contribute for a short period. This is the <strong>human touch</strong> most AI-driven outreach lacks.</span></li>
+    <li><span><strong>Experience or Proof of Initiative:</strong> Show HOW your experience relates. Spring Weeks, society work, or anything relevant — mention it. If you don't have experience, lean into curiosity ("I've been exploring the industry via societies, reading about deals, building a project..."). Identify areas where you can provide value: slide deck prep, market research, Excel models.</span></li>
+    <li><span><strong>Close + CV:</strong> Thank them, let them know your CV is attached, and say you're happy to chat briefly.</span></li>
+  </ol>
+
+  <p class="ee-section-heading">7 Rules for Writing</p>
+  <ul class="ee-rules">
+    <li>
+      <span class="ee-rule-num">1</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Personalise the First Line</span>
+        <p class="ee-rule-desc">Always start with something specific to the person or firm.</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">2</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Keep It Short and Skimmable</span>
+        <p class="ee-rule-desc">120–180 words is the sweet spot. Use line breaks after every 2–3 sentences. Don't cram your CV into the email.</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">3</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Lead With Humility</span>
+        <p class="ee-rule-desc">Don't act like you're owed a job. Position it as: "I'm keen to learn, and happy to help wherever I can."</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">4</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Offer Paid or Unpaid Help</span>
+        <p class="ee-rule-desc">It shows you're genuinely looking to learn. Most firms will respect this, and many will offer to pay you anyway.</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">5</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Make Your Ask Clear</span>
+        <p class="ee-rule-desc">Don't say "I'd love to connect" or "pick your brain." Say: "I'd love to gain experience at your firm this summer."</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">6</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Attach Your CV (Always)</span>
+        <p class="ee-rule-desc">Mention that it's attached so they know to look.</p>
+      </div>
+    </li>
+    <li>
+      <span class="ee-rule-num">7</span>
+      <div class="ee-rule-content">
+        <span class="ee-rule-title">Read Your Email Out Loud</span>
+        <p class="ee-rule-desc">If it sounds robotic, rewrite it. If it sounds like something you'd actually say, it's ready.</p>
+      </div>
+    </li>
+  </ul>
+
+  <!-- Email example 1 -->
+  <div class="ee-email-card">
+    <div class="ee-email-card-header">
+      <p class="ee-email-card-title">Example Email 1</p>
+      <span class="ee-email-card-badge">No Formal Experience</span>
+    </div>
+    <p class="ee-email-subject">Subject: Dylan Dhariwal, LSE Cold Email</p>
+    <div class="ee-email-body">
+      <p>Hi Mr Johnson,</p>
+      <p>I came across your firm while researching smaller private equity funds — I was wondering, what's it like working in a smaller team environment?</p>
+      <p>My name is Dylan Dhariwal, and I'm a first-year Finance student at the London School of Economics. I'm reaching out because I'd love to get unpaid or paid experience this summer at ABC Ventures, and gain exposure to the kind of investing work your team does.</p>
+      <p>I've been exploring the space through LSE societies, reading about deals, and building a project where I track and break down interesting funds in Europe. It's made me realise how much I enjoy thinking like an investor and I'd love to learn from people doing this day-to-day.</p>
+      <p>I'd be grateful for any opportunity to support your team, whether through research, presentation support, or analytical tasks. I've attached my CV for reference, and I'd be happy to jump on a quick call if useful.</p>
+      <p>Best regards,<br>Dylan Dhariwal</p>
+    </div>
+  </div>
+
+  <!-- Email example 2 -->
+  <div class="ee-email-card">
+    <div class="ee-email-card-header">
+      <p class="ee-email-card-title">Example Email 2</p>
+      <span class="ee-email-card-badge">Some Experience</span>
+    </div>
+    <p class="ee-email-subject">Subject: Tony Walker, LSE Cold Email</p>
+    <div class="ee-email-body">
+      <p>Hi Mr Allen,</p>
+      <p>I saw you joined ABC Associates not too long ago — what drew you to the team?</p>
+      <p>My name is Tony Walker, and I'm a first-year BSc Finance student at the London School of Economics. I'm reaching out to express interest in getting unpaid or paid experience this summer at ABC Associates, even just a short project would be a great chance to learn.</p>
+      <p>I've completed spring weeks at RBC and Nomura, interned at J.P. Morgan, and currently work as an analyst at Sortino M&amp;A, a student-led research group. These experiences taught me how to build pitch decks, analyse companies, and think critically about deals — and they've made me realise I really enjoy corporate finance and advisory work.</p>
+      <p>I'd be grateful for any opportunity to contribute, whether through market research, supporting presentations, or analytical tasks. I've linked my CV for reference.</p>
+      <p>Best regards,<br>Tony Walker</p>
+    </div>
+  </div>
+
+  <!-- Email example 3 -->
+  <div class="ee-email-card">
+    <div class="ee-email-card-header">
+      <p class="ee-email-card-title">Example Email 3</p>
+      <span class="ee-email-card-badge">Referral</span>
+    </div>
+    <p class="ee-email-subject">Subject: Priya Sharma, UCL | Introduced by Sarah Mitchell</p>
+    <div class="ee-email-body">
+      <p>Hi Mrs Langford,</p>
+      <p>Sarah Mitchell kindly suggested I reach out to you after we spoke about the advisory work your team does at Whitmore Partners, particularly around the mid-market M&amp;A space.</p>
+      <p>My name is Priya, and I'm a first-year Economics student at UCL. Sarah mentioned that your team occasionally brings on interns, and I wanted to reach out directly to see if there might be an opportunity to gain unpaid or paid experience this summer.</p>
+      <p>I've spent the last year as a research lead at UCL's student-run investment fund, where I've been covering European industrials and presenting stock pitches to our committee. It's given me a genuine interest in how deals come together and I'd love to see that process up close in a live environment.</p>
+      <p>I'd be happy to help with anything that's useful to the team, whether that's research, due diligence support, or putting together materials. I've attached my CV and am happy to chat whenever suits you.</p>
+      <p>Best regards,<br>Priya Sharma</p>
+    </div>
+  </div>
+
+  <!-- Email example 4 -->
+  <div class="ee-email-card">
+    <div class="ee-email-card-header">
+      <p class="ee-email-card-title">Example Email 4</p>
+      <span class="ee-email-card-badge">Non-Finance Industry</span>
+    </div>
+    <p class="ee-email-subject">Subject: Marcus Campbell, Warwick Cold Email</p>
+    <div class="ee-email-body">
+      <p>Hi Mr Evans,</p>
+      <p>I read your recent LinkedIn post about the operational restructuring project you led for a public sector client last year. Cutting procurement costs by 30% without reducing headcount really stood out to me — how did you manage to do that?</p>
+      <p>My name is Marcus Campbell and I'm a second-year Politics and Economics student at Warwick. I'm reaching out to express my interest in gaining unpaid or paid experience at Aventa this summer — I would love to see how your firm helps organisations solve problems that seem impossible from the inside.</p>
+      <p>Through my role as VP of Warwick's Consulting Society, I've led two pro-bono projects for local businesses — one focused on customer retention strategy and another on streamlining internal operations for a small logistics company. Both taught me how much I enjoy breaking down messy problems and working in small teams to find practical solutions.</p>
+      <p>I'd be grateful for any opportunity to contribute this summer, whether it's research, client support, workshop prep, or whatever would be most helpful. I've attached my CV and am happy to jump on a quick call at any time that suits you.</p>
+      <p>Best regards,<br>Marcus Campbell</p>
+    </div>
+  </div>
+
+  <hr class="ee-divider">
+
+  <!-- Module 5 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">5</div>
+    <div>
+      <div class="ee-module-meta">Module 5</div>
+      <h2 style="margin-bottom:0;">How to Send Cold Emails Using Outlook Mail Merge</h2>
+    </div>
+  </div>
+
+  <p>You've done the hard work: built your list, cleaned it, written first lines, and built a solid cold email template. Now it's time to actually send the emails. This module walks you through how to send using Outlook Mail Merge — the cleanest, safest method we recommend for students.</p>
+  <p><strong>Why Outlook?</strong> We've tested this. Outlook gets better reply rates than Gmail for cold emails. Every student has access to Microsoft tools via their university login, and sending from an academic <code>.ac.uk</code> domain bypasses the stringent spam filters that crush random Gmails.</p>
+
+  <p class="ee-section-heading">Step-by-Step Outlook Mail Merge</p>
+  <ol class="ee-steps">
+    <li><span><strong>Duplicate and Prepare Your Sheet.</strong> Go back to the Google Sheet and make a copy (e.g. "Internship Sending Sheet"). Add a new column called "Sent" and format it as checkboxes. Download this as a CSV file to your desktop.</span></li>
+    <li><span><strong>Start Mail Merge.</strong> Open Microsoft Word. Go to <strong>Mailings → Start Mail Merge → Email Messages</strong>. Click <strong>Select Recipients → Use an Existing List</strong> and upload your CSV.</span></li>
+    <li><span><strong>Write Template with Placeholders.</strong> Paste your draft and use <strong>Insert Merge Field</strong> for First name, Last name, First Line, Cleaned Company Name. e.g. <code>Hi Mr «Last_Name_»,</code> and <code>«First_Line_»</code>. Note: do not leave manual spaces in your spreadsheet as this may corrupt uneven spacing.</span></li>
+    <li><span><strong>Add Your CV Link.</strong> Upload your CV to Google Drive or OneDrive, set to "Anyone with the link can view". Use Ctrl+K in Word to hyperlink it.</span></li>
+  </ol>
+
+  <div class="ee-callout">
+    <p class="ee-callout-title">⚠️ Step 5: Critical Check</p>
+    <p>Click <strong>"Edit Individual Documents"</strong> on the Finish &amp; Merge icon before sending. This is a lifesaver. Always check this to correct typos, grammar issues, and corrupted text before it goes to a CEO.</p>
+    <p><strong>Step 6: Finish &amp; Send.</strong> Click Merge to Email. Ensure Outlook is your default mail app. Enter your Subject line (e.g. "[Their Name], LSE Cold Email"). Make sure it is sent as <code>HTML message</code> format (mandatory — or your formatting breaks). Hit OK to start sending.</p>
+    <p>Well done. You've just done what 99% of the student population are NOT doing.</p>
+  </div>
+
+  <div class="ee-tip">
+    <span class="ee-tip-icon">⏰</span>
+    <p class="ee-tip-text"><strong>When to send:</strong> Sending 7–8 AM or 3–5 PM is suboptimal. Send exactly at <strong>9:03 AM</strong> — it jumps to the top of all the client emails and morning junk they just cleared, standing out in the 9–10 AM window.</p>
+  </div>
+
+  <p class="ee-section-heading">Automate Your Outreach with GMass</p>
+  <p>Sending 30–50 emails daily through Outlook takes time. If you're juggling coursework, GMass automates the entire process directly from your Gmail account.</p>
+
+  <p><strong>Important trade-off to understand:</strong></p>
+  <ul>
+    <li><strong>Outlook (via school email):</strong> Higher reply rates, emails land directly in inboxes because <code>.ac.uk</code> domains have a strong reputation. But it's an intentional, manual process.</li>
+    <li><strong>GMass (via Gmail):</strong> Fully automated (set it and forget it, send hundreds while you sleep). But you'll see lower deliverability — Gmail addresses hit spam filters more often.</li>
+  </ul>
+
+  <p><strong>Our recommendation:</strong> Start with Outlook to test your template and get initial replies. Once you've proven what works, consider GMass if you need to scale massively and can accept lower reply rates in exchange for volume. Remember: 10 quality conversations from Outlook beats 100 ignored Gmail emails.</p>
+
+  <hr class="ee-divider">
+
+  <!-- Module 6 -->
+  <div class="ee-module-header">
+    <div class="ee-module-num">6</div>
+    <div>
+      <div class="ee-module-meta">Module 6</div>
+      <h2 style="margin-bottom:0;">What to Do After Sending (Responses &amp; Follow-Ups)</h2>
+    </div>
+  </div>
+
+  <p>Now it's about consistency. After you send, go back to your Google Sheet and tick the checkbox under the "Sent" column. Keep a consistent schedule: send 30 cold emails per day minimum. If deliverability is good, scale it to 50 a day. Send Monday to Friday (avoid weekends). Aim for a consistent time (9:03 AM). Note: it's very common for 2–3 out of 50 emails to bounce back — this is perfectly normal.</p>
+  <p>You will likely receive typical rejections. But sometimes, MDs will reject you and offer advice or a 10-minute chat instead. Treat this as a massive win — say YES to every call.</p>
+
+  <p class="ee-section-heading">The Follow-Up Method</p>
+  <p>The fortune is in the follow-up. It shows persistence, which MDs respect. Schedule follow-ups the night before to be sent at exactly 9:03 AM the next day. If you don't get a reply after 5–7 days, send one polite follow-up nudge.</p>
+  <p><strong>When to follow up:</strong> Create a 'Followed up?' tab and enter the date. Example: an email sent Monday 1st January would need to be followed up on Monday January 8th. As you progress, tighten this to 4 business days (e.g., email sent Monday January 22nd → followed up Friday 26th). At peak I was sending 100 emails a day: 50 follow-ups and 50 mail-merges.</p>
+
+  <div class="ee-tip">
+    <span class="ee-tip-icon">✉️</span>
+    <p class="ee-tip-text"><strong>Example nudge:</strong> <em>"Hi [Name], Just wanted to follow up on my previous email in case it got lost in your inbox. I'd still love the chance to learn more about your work at [Firm Name] and help however I can this summer. Thanks again, [Your Name]."</em></p>
+  </div>
+
+  <p class="ee-section-heading">I Have a Meeting — What Next?</p>
+  <ol class="ee-steps">
+    <li><span><strong>Reply immediately.</strong> Aim to reply within the first 10 minutes. Suggest times to make it frictionless for them. Mark it in your calendar.</span></li>
+    <li><span><strong>Be Punctual &amp; Prepared.</strong> Do your due diligence on a recent deal or their background. Drop a nugget of insight in the first 5 minutes to quickly impress them.</span></li>
+    <li><span><strong>Be Human.</strong> Share the excitement without being inauthentic. 95% of these calls are informal chats. Go in open-minded, ready to learn and ask questions. Ask how their day was, and be curious about the work they do.</span></li>
+    <li><span><strong>Be Direct.</strong> When asked to introduce yourself and what you're looking for, don't be afraid to set out your aims and desires. You don't want to spend the summer doing something you hate.</span></li>
+    <li><span><strong>Follow-Up Email.</strong> Write a reflection after every call. Note what they asked and deals they mentioned. Include this detail in your post-meeting "Thank You" email, and make sure to connect with them on LinkedIn.</span></li>
+  </ol>
+
+  <div class="ee-callout">
+    <p class="ee-callout-title">Meeting 10: What I did after 15 offers</p>
+    <p>Let's set the scene: you've been at it for 1–2 weeks and landed 5 offers but you want to keep searching to find what's right for you. Your answers get refined with each call and your confidence grows. You dictate where the conversation goes, asking to take a few days to think before accepting or declining.</p>
+    <p>Gauge your offers based on 4 factors:</p>
+    <ul style="margin:8px 0 0 0;">
+      <li>A) Will I have actual tangible work?</li>
+      <li>B) Is it paid and can I grow my network?</li>
+      <li>C) Is the work meaningful or just repetitive admin?</li>
+      <li>D) Is their support framework going to help me flourish?</li>
+    </ul>
+  </div>
+
+  <p class="ee-section-heading">Top Tips to Optimise Your Outreach</p>
+  <ul>
+    <li><strong>Identifying Tangible Leads:</strong> Flag deals and leads you could convert, and pin their conversations in Outlook so they're easily accessible.</li>
+    <li><strong>Immediate Scheduling:</strong> As soon as you finish a meeting, write a follow-up or rejection email and schedule it for another date so you won't forget.</li>
+    <li><strong>Reflecting Daily:</strong> Reflect on the day's emails and identify next steps you need to take.</li>
+    <li><strong>Batching the Workload:</strong> Over time your motivation will fade, so relying on this exact system is critical. Writing 50 first lines felt like it took forever — split it up: 5 first lines at the start of every hour, or 25 in the morning and 25 in the evening to manage the workload and prevent burnout.</li>
+    <li><strong>Simplifying the Process:</strong> Do the simplest things to make your outreach seamless. Load up 25 emails ready to send on your laptop so the first thing you open is mail merge and you can press send immediately.</li>
+  </ul>
+
+  <hr class="ee-divider">
+
+  <!-- Final Thoughts -->
+  <h3>That's a wrap</h3>
+  <h2>Final Thoughts</h2>
+
+  <p>Congratulations — you've successfully completed the course! If you've made it this far, you've already done more than 99% of students who say they "want" finance experience.</p>
+  <p>You've learned how to find the right lean firms, pull verified contacts effectively, write genuine outreach, format First Lines that stand out, bypass Gmail spam filters with Outlook Mail Merge, and dominate the 9:03 AM inbox window.</p>
+  <p>This system is simple, but it works because it's consistent, targeted, and intensely personal. Every new email sent and meeting had is a chance to learn and meet new people.</p>
+
+  <p class="ee-section-heading">Need Help or Want Feedback?</p>
+  <p>If you get stuck at any point — whether that's cleaning your list, writing first lines, or in Mail Merge — feel free to reach out. By the time you're reading this, the Early Edge Cold Email Community should be live. We share results and learn together.</p>
+  <p>Or email Don directly at <strong>d.awotwi@lse.ac.uk</strong> — he will personally help you troubleshoot or refine your outreach.</p>
+
+  <p class="ee-section-heading">What Happens Next</p>
+  <p>If you stick with this and send consistently, you will start getting replies. Those replies will lead to calls. And those calls will turn into opportunities. It won't happen overnight, but it will happen if you keep going.</p>
+  <p>You now have the full system. You know what to do. All that's left is to show up and send the next email.</p>
+
+  <div class="ee-signoff">
+    <p>You've got this.<br><strong>— Team Early Edge</strong></p>
+  </div>
+
+</div>

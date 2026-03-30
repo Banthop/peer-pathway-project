@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/dongraham/Desktop/cryptoedge sed -i  s|from '@/lib/lib/utils'|g src/components/layout/hooks/hooks/useProgress'|g src/components/layout/data/data/levels'|g src/components/layout/data/data/modules'|g src/components/layout/LearnLayout.tsx for f in src/components/challenges/*.tsx do sed -i  s|from '@/lib/lib/hooks/hooks/data/data/data/data/levels'|g $f done for f in src/pages/*.tsx do sed -i  s|from '@/lib/utils'|from '../lib/utils'|g $f sed -i  s|from '../hooks/useProgress'|from '../hooks/useProgress'|g $f sed -i  s|from '../data/modules'|from '../data/modules'|g $f sed -i  s|from '../data/challenges'|from '../data/challenges'|g $f sed -i  s|from '../data/levels'|from '../data/**)",
+      "Bash(/Users/dongraham/Desktop/cryptoedge/src/main.tsx:*)",
+      "Bash(__NEW_LINE_ba6280320584780c__ cat:*)",
+      "Bash(/Users/dongraham/Desktop/cryptoedge/src/App.tsx:*)",
+      "Bash(__NEW_LINE_ba6280320584780c__ echo:*)"
+    ]
+  }
+}

@@ -109,16 +109,7 @@ function saveSentEmails(emails) {
   fs.writeFileSync(SENT_LOG_PATH, JSON.stringify(emails, null, 2));
 }
 
-async function sendEmail(toEmail) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_EMAIL, to: [toEmail], subject: EMAIL_SUBJECT, html: EMAIL_HTML }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(`Resend error for ${toEmail}: ${JSON.stringify(result)}`);
-  return result;
-}
+import { sendBroadcast } from './resend-broadcast.mjs';
 
 async function upsertCrmContact(contact) {
   if (!supabase) return;
@@ -127,44 +118,48 @@ async function upsertCrmContact(contact) {
   const lastName = nameParts.slice(1).join(' ') || '';
   const email = contact.email.toLowerCase().trim();
 
-  // Check if contact exists
-  const { data: existing } = await supabase.from('crm_contacts').select('id, first_name, last_name').eq('email', email).maybeSingle();
+  const { data: existing } = await supabase.from('crm_contacts').select('id, first_name, last_name, tags').eq('email', email).maybeSingle();
 
   if (existing) {
-    // Update name if currently blank
     const updates = {};
     if (!existing.first_name && firstName) updates.first_name = firstName;
     if (!existing.last_name && lastName) updates.last_name = lastName;
+    // Add linkedin_emailed tag if not present
+    const tags = existing.tags || [];
+    if (!tags.includes('linkedin_emailed')) {
+      updates.tags = [...new Set([...tags, 'linkedin_emailed', 'email_sent'])];
+    }
     if (Object.keys(updates).length > 0) {
-      await supabase.from('crm_contacts').update(updates).eq('id', existing.id);
-      console.log(`   📝 Updated name for ${email}: ${firstName} ${lastName}`);
+      await supabase.from('crm_contacts').update({ ...updates, last_activity_at: new Date().toISOString() }).eq('id', existing.id);
     }
   } else {
-    // Insert new contact
     await supabase.from('crm_contacts').insert({
       email,
       first_name: firstName,
       last_name: lastName,
       source: 'linkedin',
-      status: 'new',
-      tags: ['linkedin_scraped'],
+      status: 'contacted',
+      tags: ['linkedin_scraped', 'linkedin_emailed', 'email_sent'],
       metadata: {},
       last_activity_at: new Date().toISOString(),
     });
-    console.log(`   ➕ Added to CRM: ${firstName} ${lastName} <${email}>`);
+    console.log(`   + Added to CRM: ${firstName} ${lastName} <${email}>`);
   }
 }
 
 // ── Main ──
-async function main() {
-  console.log('\n🚀 Sending "wait is this you??" to browser-scraped contacts\n');
+const LIVE_SEND = process.argv.includes('--send');
 
-  if (!RESEND_KEY) { console.error('❌ Missing RESEND_API_KEY'); process.exit(1); }
+async function main() {
+  console.log('\n🚀 LinkedIn First-Touch Outreach (Broadcast API)\n');
+  console.log(LIVE_SEND ? '🔴 LIVE MODE\n' : '🟡 DRY RUN (use --send to go live)\n');
+
+  if (!RESEND_KEY) { console.error('Missing RESEND_API_KEY'); process.exit(1); }
 
   // Load scraped contacts
   const scrapedPath = path.join(__dirname, '..', 'scraped-post1-comments.json');
   const scraped = JSON.parse(fs.readFileSync(scrapedPath, 'utf-8'));
-  console.log(`📋 Loaded ${scraped.length} scraped contacts`);
+  console.log(`Loaded ${scraped.length} scraped contacts`);
 
   // Load already-sent log
   const sentEmails = loadSentEmails();
@@ -175,49 +170,66 @@ async function main() {
   console.log(`   New to send:  ${newContacts.length}\n`);
 
   if (newContacts.length === 0) {
-    console.log('✅ All caught up! No new emails to send.');
-    // Still update CRM names for existing contacts
-    console.log('\n📝 Updating CRM names for all contacts...');
+    console.log('All caught up! No new emails to send.');
+    console.log('\nUpdating CRM names for all contacts...');
     for (const contact of scraped) {
       await upsertCrmContact(contact);
     }
-    console.log('✅ CRM names updated!');
+    console.log('CRM names updated!');
     return;
   }
 
-  let sent = 0, failed = 0;
+  // Show who would receive
+  for (const c of newContacts.slice(0, 10)) {
+    console.log(`   ${c.name} <${c.email}>`);
+  }
+  if (newContacts.length > 10) console.log(`   ... and ${newContacts.length - 10} more`);
 
-  for (const contact of newContacts) {
-    try {
-      await sendEmail(contact.email);
-      sentEmails.push(contact.email.toLowerCase());
-      sent++;
-      console.log(`   ✅ Sent to ${contact.name} <${contact.email}>`);
-
-      // Also upsert into CRM with name
-      await upsertCrmContact(contact);
-
-      await new Promise(r => setTimeout(r, 400));
-    } catch (err) {
-      failed++;
-      console.log(`   ❌ Failed: ${contact.email} — ${err.message}`);
-    }
+  if (!LIVE_SEND) {
+    console.log('\nRun with --send to actually send via Broadcast API.');
+    return;
   }
 
-  saveSentEmails(sentEmails);
+  // Send via Broadcast API (no transactional quota)
+  console.log('\nSending via Broadcast API...\n');
+  try {
+    const result = await sendBroadcast({
+      name: 'LinkedIn First Touch',
+      from: FROM_EMAIL,
+      subject: EMAIL_SUBJECT,
+      html: EMAIL_HTML,
+      contacts: newContacts.map(c => {
+        const nameParts = c.name.trim().split(/\s+/);
+        return { email: c.email, first_name: nameParts[0] || '', last_name: nameParts.slice(1).join(' ') || '' };
+      }),
+      send: true,
+    });
+    console.log(`Broadcast sent to ${result.sent} contacts`);
 
-  // Update names for contacts that already had email sent but no name
-  console.log('\n📝 Updating CRM names for previously-sent contacts...');
+    // Update sent log
+    for (const c of newContacts) {
+      sentEmails.push(c.email.toLowerCase());
+    }
+    saveSentEmails(sentEmails);
+
+    // Update CRM for all contacts
+    console.log('\nUpdating CRM...');
+    for (const contact of newContacts) {
+      await upsertCrmContact(contact);
+    }
+  } catch (err) {
+    console.error(`Broadcast failed: ${err.message}`);
+  }
+
+  // Update names for previously-sent contacts too
+  console.log('\nUpdating CRM names for previously-sent contacts...');
   const alreadySent = scraped.filter(c => sentSet.has(c.email.toLowerCase()));
   for (const contact of alreadySent) {
     await upsertCrmContact(contact);
   }
 
-  console.log(`\n📊 Results:`);
-  console.log(`   Sent:   ${sent}`);
-  console.log(`   Failed: ${failed}`);
-  console.log(`   Total sent all-time: ${sentEmails.length}`);
-  console.log('\n✅ Done!');
+  console.log(`\nTotal sent all-time: ${sentEmails.length}`);
+  console.log('Done!');
 }
 
 main().catch(console.error);

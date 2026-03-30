@@ -19,7 +19,7 @@ const RESEND_KEY = Deno.env.get("RESEND_API_KEY")!;
 const FROM = "dylan@yourearlyedge.co.uk";
 
 const ZOOM = "https://us05web.zoom.us/j/81619515454?pwd=Es8e29zvOEAsJ45BoSICugps7ataVp.1";
-const GUIDE = "https://webinar.yourearlyedge.co.uk/resources/cold-email-guide";
+const GUIDE = "https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62";
 const CHECKLIST = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
 const WEBINAR_LINK = "https://webinar.yourearlyedge.co.uk/webinar";
 

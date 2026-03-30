@@ -10,6 +10,12 @@ entrypoint = "./functions/stripe-webhook/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/stripe-webhook/*.html" ]
 
+[functions.auto-emailer]
+enabled = true
+verify_jwt = false
+import_map = "./functions/auto-emailer/deno.json"
+entrypoint = "./functions/auto-emailer/index.ts"
+
 [functions.resend-sync]
 enabled = true
 verify_jwt = true

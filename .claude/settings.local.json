@@ -15,7 +15,26 @@
       "Bash(cmd /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project & npm run build\")",
       "Bash(cmd.exe /c \"cd /d C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project && npx tsc --noEmit && echo SUCCESS || echo FAIL\")",
       "Bash(powershell -Command \"Set-Location ''C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project''; npx tsc --noEmit; Write-Host ''EXIT CODE:'' $LASTEXITCODE\")",
-      "Bash(powershell -Command \"Set-Location 'C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project'; npm run build 2>&1 | Out-String\":*)"
+      "Bash(powershell -Command \"Set-Location 'C:\\\\Users\\\\Dylan\\\\.antigravity\\\\peer-pathway-project'; npm run build 2>&1 | Out-String\":*)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''''\\\\n''''.join\\(sorted\\(d.get\\(''''dependencies'''',{}\\).keys\\(\\)\\)\\)\\)\")",
+      "Bash(git commit:*)",
+      "Bash(git revert:*)",
+      "Bash(mkdir -p /Users/dongraham/Desktop/cryptoedge)",
+      "Read(//Users/dongraham/Desktop/**)",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(/Users/dongraham/Desktop/cryptoedge/tsconfig.json:*)",
+      "Bash(__NEW_LINE_0258fd10eb0b646d__ cat:*)",
+      "Bash(/Users/dongraham/Desktop/cryptoedge/tsconfig.app.json:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3 -c \"import pptx; print\\(''''pptx ok''''\\)\")",
+      "Bash(python3 -c \"import pptx; print\\(''pptx ok''\\)\")",
+      "Bash(python3 -c \"from pptx.util import Inches, Pt; from pptx.dml.color import RGBColor; from pptx.enum.text import PP_ALIGN; from pptx.enum.shapes import MSO_SHAPE_TYPE; print\\(''all imports ok''\\)\")",
+      "Bash(python3 build_pptx.py)"
+    ],
+    "additionalDirectories": [
+      "/Users/dongraham/Desktop"
     ]
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ const Login = () => {
   const { signIn, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,13 +34,18 @@ const Login = () => {
         variant: "destructive",
       });
     } else {
-      // Redirect based on actual account type, not the manual toggle
-      navigate(userType === "coach" ? "/coach-dashboard" : "/dashboard");
+      // If a redirect URL was provided (e.g. from /portal), use that
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else {
+        navigate(userType === "coach" ? "/coach-dashboard" : "/dashboard");
+      }
     }
   };
 
   const handleGoogle = async () => {
-    const { error } = await signInWithGoogle();
+    const googleRedirect = redirectTo ? `${window.location.origin}${redirectTo}` : undefined;
+    const { error } = await signInWithGoogle(googleRedirect);
     if (error) {
       toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
     }

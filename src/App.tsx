@@ -43,6 +43,11 @@ import PublicResources from "./pages/PublicResources";
 import Webinar from "./pages/Webinar";
 import ColdEmailGuide from "./pages/ColdEmailGuide";
 import ColdEmailChecklist from "./pages/ColdEmailChecklist";
+import { BuyerAuthProvider } from "@/contexts/BuyerAuthContext";
+import PortalLayout from "./components/portal/PortalLayout";
+import PortalRecording from "./pages/portal/PortalRecording";
+import PortalResources from "./pages/portal/PortalResources";
+import BookUthman from "./pages/portal/BookUthman";
 
 const queryClient = new QueryClient();
 
@@ -133,6 +138,14 @@ const AppRoutes = () => {
         <Route path="/webinar" element={<Webinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
+        <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+        <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/portal" element={<PortalLayout />}>
+          <Route index element={<PortalRecording />} />
+          <Route path="resources" element={<PortalResources />} />
+          <Route path="book-uthman" element={<BookUthman />} />
+        </Route>
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
     );
@@ -175,6 +188,11 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
+      <Route path="/portal" element={<PortalLayout />}>
+        <Route index element={<PortalRecording />} />
+        <Route path="resources" element={<PortalResources />} />
+        <Route path="book-uthman" element={<BookUthman />} />
+      </Route>
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
         <Route index element={<AdminDashboard />} />
         <Route path="coaches" element={<AdminCoaches />} />
@@ -191,13 +209,15 @@ const AppRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <BuyerAuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </BuyerAuthProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

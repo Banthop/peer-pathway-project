@@ -193,38 +193,31 @@ function classifyContact(contact) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SEND + CRM UPDATE
+// SEND VIA BROADCAST API (Marketing Pro - unlimited, no daily quota)
 // ═══════════════════════════════════════════════════════════════
 
-async function sendEmail(toEmail, template) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${RESEND_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM_EMAIL, to: [toEmail], subject: template.subject, html: template.html }),
-  });
-  const result = await response.json();
-  if (!response.ok) throw new Error(`Resend error: ${JSON.stringify(result)}`);
-  return result;
-}
+import { sendBroadcast } from './resend-broadcast.mjs';
 
-async function updateCrmAfterSend(contactId, existingTags, templateTag) {
-  const newTags = [...existingTags];
-  if (!newTags.includes(templateTag)) newTags.push(templateTag);
-  if (!newTags.includes('email_sent')) newTags.push('email_sent');
+async function tagContactsBatch(contactItems, templateTag) {
+  for (const item of contactItems) {
+    const newTags = [...(item.contact.tags || [])];
+    if (!newTags.includes(templateTag)) newTags.push(templateTag);
+    if (!newTags.includes('email_sent')) newTags.push('email_sent');
 
-  const { error } = await supabase
-    .from('crm_contacts')
-    .update({
-      tags: newTags,
-      last_activity_at: new Date().toISOString(),
-      metadata: {
-        last_funnel_email: templateTag,
-        last_funnel_email_date: new Date().toISOString(),
-      },
-    })
-    .eq('id', contactId);
+    const { error } = await supabase
+      .from('crm_contacts')
+      .update({
+        tags: newTags,
+        last_activity_at: new Date().toISOString(),
+        metadata: {
+          last_funnel_email: templateTag,
+          last_funnel_email_date: new Date().toISOString(),
+        },
+      })
+      .eq('id', item.contact.id);
 
-  if (error) console.error(`   ⚠️ CRM update failed for ${contactId}: ${error.message}`);
+    if (error) console.error(`   Warning: CRM update failed for ${item.contact.id}: ${error.message}`);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -232,8 +225,8 @@ async function updateCrmAfterSend(contactId, existingTags, templateTag) {
 // ═══════════════════════════════════════════════════════════════
 
 async function main() {
-  console.log('\n🎯 Smart Funnel Email Sender\n');
-  console.log(LIVE_SEND ? '🔴 LIVE MODE - emails WILL be sent\n' : '🟡 DRY RUN - no emails will be sent (use --send to go live)\n');
+  console.log('\n🎯 Smart Funnel Email Sender (Broadcast Mode)\n');
+  console.log(LIVE_SEND ? '🔴 LIVE MODE - broadcasts WILL be sent\n' : '🟡 DRY RUN - no emails will be sent (use --send to go live)\n');
 
   // Load all CRM contacts
   const { data: contacts, error } = await supabase
@@ -241,7 +234,7 @@ async function main() {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) { console.error('❌ Failed to load contacts:', error.message); process.exit(1); }
+  if (error) { console.error('Failed to load contacts:', error.message); process.exit(1); }
 
   console.log(`📋 Loaded ${contacts.length} contacts from CRM\n`);
 
@@ -272,12 +265,12 @@ async function main() {
   console.log(`\n   📨 Emails to send: ${toSend.length}\n`);
 
   if (toSend.length === 0) {
-    console.log('✅ Everyone is covered! No funnel emails needed right now.');
+    console.log('All covered! No funnel emails needed right now.');
     console.log('   (Contacts move stages when Resend webhooks report opens/clicks)');
     return;
   }
 
-  // Group by email template for display
+  // Group by email template
   const byStage = {};
   for (const item of toSend) {
     const key = item.emailNeeded.tag;
@@ -287,7 +280,7 @@ async function main() {
 
   for (const [tag, items] of Object.entries(byStage)) {
     const subject = items[0].emailNeeded.subject;
-    console.log(`\n── "${subject}" (${tag}) - ${items.length} recipients ──`);
+    console.log(`\n-- "${subject}" (${tag}) - ${items.length} recipients --`);
     for (const item of items.slice(0, 10)) {
       const name = [item.contact.first_name, item.contact.last_name].filter(Boolean).join(' ') || 'Unknown';
       console.log(`   ${name} <${item.contact.email}>`);
@@ -296,34 +289,45 @@ async function main() {
   }
 
   if (!LIVE_SEND) {
-    console.log('\n💡 Run with --send to actually send these emails.');
+    console.log('\nRun with --send to actually send these emails.');
     console.log('   Example: node scripts/send-funnel-emails.mjs --send');
     console.log('   Example: node scripts/send-funnel-emails.mjs --send --stage=2');
     return;
   }
 
-  // Send emails
-  let sent = 0, failed = 0;
-  console.log('\n📨 Sending...\n');
+  // Send each stage as a separate broadcast (unlimited via Marketing Pro)
+  console.log('\n📨 Sending via Broadcast API (no daily quota)...\n');
 
-  for (const item of toSend) {
+  for (const [tag, items] of Object.entries(byStage)) {
+    const template = items[0].emailNeeded;
+    const contacts = items.map(i => ({
+      email: i.contact.email,
+      first_name: i.contact.first_name || '',
+      last_name: i.contact.last_name || '',
+    }));
+
+    console.log(`\n📦 Broadcasting "${template.subject}" to ${contacts.length} recipients...`);
+
     try {
-      await sendEmail(item.contact.email, item.emailNeeded);
-      await updateCrmAfterSend(item.contact.id, item.contact.tags || [], item.emailNeeded.tag);
-      sent++;
-      const name = [item.contact.first_name, item.contact.last_name].filter(Boolean).join(' ') || 'Unknown';
-      console.log(`   ✅ ${name} <${item.contact.email}> - "${item.emailNeeded.subject}"`);
-      await new Promise(r => setTimeout(r, 400)); // Rate limit
+      const result = await sendBroadcast({
+        name: `Funnel ${tag}`,
+        from: FROM_EMAIL,
+        subject: template.subject,
+        html: template.html,
+        contacts,
+        send: true,
+      });
+      console.log(`   Broadcast sent to ${result.sent} contacts`);
+
+      // Tag all contacts in CRM
+      await tagContactsBatch(items, tag);
+      console.log(`   Tagged ${items.length} contacts as ${tag}`);
     } catch (err) {
-      failed++;
-      console.log(`   ❌ ${item.contact.email} - ${err.message}`);
+      console.error(`   Broadcast failed for ${tag}: ${err.message}`);
     }
   }
 
-  console.log(`\n📊 Results:`);
-  console.log(`   Sent:   ${sent}`);
-  console.log(`   Failed: ${failed}`);
-  console.log('\n✅ Done! CRM tags updated automatically. No duplicates possible.');
+  console.log('\nDone! All funnel broadcasts sent via Marketing API. CRM tags updated.');
 }
 
 main().catch(console.error);
