@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
+const IS_WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,6 +39,8 @@ const Login = () => {
       // If a redirect URL was provided (e.g. from /portal), use that
       if (redirectTo) {
         navigate(redirectTo);
+      } else if (IS_WEBINAR_ONLY) {
+        navigate("/portal");
       } else {
         navigate(userType === "coach" ? "/coach-dashboard" : "/dashboard");
       }
@@ -44,7 +48,12 @@ const Login = () => {
   };
 
   const handleGoogle = async () => {
-    const googleRedirect = redirectTo ? `${window.location.origin}${redirectTo}` : undefined;
+    // In WEBINAR_ONLY mode, default Google redirect to /portal
+    const googleRedirect = redirectTo
+      ? `${window.location.origin}${redirectTo}`
+      : IS_WEBINAR_ONLY
+        ? `${window.location.origin}/portal`
+        : undefined;
     const { error } = await signInWithGoogle(googleRedirect);
     if (error) {
       toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
@@ -53,13 +62,32 @@ const Login = () => {
 
   return (
     <AuthLayout>
+      {/* First-time buyer banner when redirected from portal */}
+      {redirectTo === "/portal" && (
+        <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-center">
+          <p className="text-sm font-sans text-blue-900 font-medium mb-1">
+            First time here? Create an account first
+          </p>
+          <p className="text-xs font-sans text-blue-700 mb-3">
+            Use the same email you used to buy your ticket
+          </p>
+          <Link
+            to="/signup?redirect=/portal"
+            className="inline-block rounded-md bg-[#111] text-white text-sm font-sans font-medium px-5 py-2 hover:bg-[#333] transition-colors"
+          >
+            Create account
+          </Link>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <h1 className="text-3xl font-sans font-light text-foreground">
-          Welcome back
+          {redirectTo === "/portal" ? "Or log in" : "Welcome back"}
         </h1>
       </div>
 
       {/* Role Toggle */}
+      {!IS_WEBINAR_ONLY && (
       <div className="flex justify-center mb-6">
         <div className="relative inline-flex rounded-full p-1 bg-muted">
           <div
@@ -90,6 +118,7 @@ const Login = () => {
           </button>
         </div>
       </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -171,14 +200,25 @@ const Login = () => {
       </div>
 
       <div className="mt-6 text-center space-y-3">
-        {role === "student" && (
-          <p className="text-sm font-sans text-muted-foreground">
-            Don't have an account?{" "}
+        <Link
+          to="/forgot-password"
+          className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline"
+        >
+          Forgot password?
+        </Link>
+
+        <p className="text-sm font-sans text-muted-foreground">
+          Don't have an account?{" "}
+          {!IS_WEBINAR_ONLY && role === "coach" ? (
+            <Link to="/coach/signup" className="text-foreground hover:underline">
+              Apply to coach
+            </Link>
+          ) : (
             <Link to="/signup" className="text-foreground hover:underline">
               Sign up
             </Link>
-          </p>
-        )}
+          )}
+        </p>
       </div>
     </AuthLayout>
   );

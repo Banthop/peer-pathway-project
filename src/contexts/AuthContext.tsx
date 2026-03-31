@@ -3,6 +3,8 @@ import { Session, User, AuthError } from "@supabase/supabase-js";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import type { DbUser, UserType } from "@/integrations/supabase/types";
 
+const IS_WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
+
 interface AuthState {
     user: User | null;
     session: Session | null;
@@ -147,13 +149,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return;
             }
 
+            // For OAuth sign-ins (Google), ensure profile exists in the users table
+            if (event === 'SIGNED_IN') {
+                ensureProfile(session.user).catch(console.error);
+            }
+
             // Use user_metadata as fallback for userType
             const metaType = (session.user.user_metadata?.type as UserType) ?? null;
             setState(prev => ({
                 ...prev,
                 user: session.user,
                 session,
-                userType: prev.userType || metaType,
+                userType: prev.userType || metaType || "student",
                 loading: false,
             }));
         });
@@ -230,9 +237,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const signInWithGoogle = useCallback(async (redirectTo?: string) => {
         if (!supabase) return { error: new Error("Supabase not configured") };
+        // In WEBINAR_ONLY mode, default redirect to /portal instead of /dashboard
+        const defaultRedirect = IS_WEBINAR_ONLY ? "/portal" : "/dashboard";
         const { error } = await supabase.auth.signInWithOAuth({
             provider: "google",
-            options: { redirectTo: redirectTo || `${window.location.origin}/dashboard` },
+            options: {
+                redirectTo: redirectTo || `${window.location.origin}${defaultRedirect}`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
+            },
         });
         return { error };
     }, []);

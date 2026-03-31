@@ -6,8 +6,9 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
  * 
  * Runs every 15 minutes via pg_cron. Handles:
  * 1. Form abandonment → discount email (30 min after form_started, no form_lead)
- * 2. New buyer confirmation → Zoom link + guide/checklist
- * 3. Future: scheduled nurture emails
+ * 2. New buyer confirmation → Zoom link + guide/checklist (original webinar)
+ * 3. Recording buyer confirmation → portal access + package-specific content
+ * 4. Clicker discount → 25% off nudge
  */
 
 const supabase = createClient(
@@ -22,6 +23,9 @@ const ZOOM = "https://us05web.zoom.us/j/81619515454?pwd=Es8e29zvOEAsJ45BoSICugps
 const GUIDE = "https://earlyedge-1758913924.subpage.co/Cold-Email-System-copy75c6db62";
 const CHECKLIST = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
 const WEBINAR_LINK = "https://webinar.yourearlyedge.co.uk/webinar";
+const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
+const PORTAL_LOGIN = "https://webinar.yourearlyedge.co.uk/login?redirect=/portal";
+const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
 
 // ── Email helpers ──
 function p(t: string) { return `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">${t}</td></tr>`; }
@@ -96,6 +100,68 @@ function webinarOnlyConfirmation(firstName: string) {
   };
 }
 
+// ═══════════════════════════════════════════
+//  NEW: Recording Purchase Confirmation Emails
+// ═══════════════════════════════════════════
+
+function recordingOnlyConfirmation(firstName: string) {
+  return {
+    subject: "you're in — here's your recording access",
+    html: wrap(
+      p(`Hey ${firstName || "there"},`) +
+      p("You're in. Your recording access is ready.") +
+      p("Uthman's full Cold Email Masterclass — 90 minutes of the exact system he used to land 20 internship offers using nothing but cold emails. No connections, no crazy CV, just a system that works.") +
+      p("Here's what's inside:") +
+      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; How to find emails of CEOs and decision-makers at <strong>any</strong> firm<br>&#8226; The exact email template behind a 21% reply rate<br>&#8226; Live demo of the mail-merge system (50+ emails/day, zero spam)<br>&#8226; Follow-up sequences that keep conversations alive<br>&#8226; The full Q&A with real student questions answered</td></tr>` +
+      p("To access your recording, sign in to the Cold Email Platform with the email you used to purchase:") +
+      btn("Access Your Recording", PORTAL_LOGIN) +
+      p(`Here's the cold email checklist as a quick reference to get started: <a href="${CHECKLIST}" style="color:#0066cc;">Download&nbsp;Checklist</a>`) +
+      p("Watch it, take notes, and start sending emails this week. That's the plan."),
+      "Don & Dylan"
+    ),
+  };
+}
+
+function recordingBundleConfirmation(firstName: string) {
+  return {
+    subject: "you're in — recording + guide ready",
+    html: wrap(
+      p(`Hey ${firstName || "there"},`) +
+      p("You're in. Good decision — you went for the full bundle so you're getting everything.") +
+      p("Uthman's full Cold Email Masterclass recording + the complete Cold Email Guide. This is the exact system he used to land 20 internship offers.") +
+      p("Here's what you've got:") +
+      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> — 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> — the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> — quick reference sheet<br>&#8226; <strong>Platform access</strong> — everything in one place</td></tr>` +
+      p("Sign in to the Cold Email Platform to access everything:") +
+      btn("Access Your Platform", PORTAL_LOGIN) +
+      p("Your Cold Email Guide is also available here:") +
+      btn("Open Cold Email Guide", GUIDE) +
+      p(`And here's the checklist for quick reference: <a href="${CHECKLIST}" style="color:#0066cc;">Download Checklist</a>`) +
+      p("Honestly, start with the guide. Read through it, then watch the recording to see Uthman do it live. That combo is how people get results fastest."),
+      "Don & Dylan"
+    ),
+  };
+}
+
+function recordingPremiumConfirmation(firstName: string) {
+  return {
+    subject: "you're in — recording + guide + 1:1 call booked",
+    html: wrap(
+      p(`Hey ${firstName || "there"},`) +
+      p("You're in. You went for the premium package — smart move. This is the fastest path to results.") +
+      p("Here's everything you've got:") +
+      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> — 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> — the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> — quick reference sheet<br>&#8226; <strong>1-on-1 call with Uthman</strong> — personalised strategy session<br>&#8226; <strong>Platform access</strong> — everything in one place</td></tr>` +
+      p("Step 1: Sign in to the Cold Email Platform to access everything:") +
+      btn("Access Your Platform", PORTAL_LOGIN) +
+      p("Step 2: Read through your Cold Email Guide:") +
+      btn("Open Cold Email Guide", GUIDE) +
+      p("Step 3: Book your 1-on-1 call with Uthman. He'll review your specific situation, help you build your lead list, and create custom templates for your target industry:") +
+      btn("Book Your Call with Uthman", BOOK_UTHMAN) +
+      p("Pro tip: Watch the recording and read the guide <strong>before</strong> your call with Uthman. You'll get 10x more out of it if you come prepared with questions."),
+      "Don & Dylan"
+    ),
+  };
+}
+
 // ── Send via Resend Marketing (broadcast) to bypass transactional quota ──
 async function sendEmail(to: string, subject: string, html: string) {
   const headers = { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" };
@@ -136,12 +202,10 @@ async function sendEmail(to: string, subject: string, html: string) {
 
 // ── Main handler ──
 Deno.serve(async (_req) => {
-  const results = { form_abandon: 0, buyer_confirm: 0, clicker_discount: 0, errors: [] as string[] };
+  const results = { form_abandon: 0, buyer_confirm: 0, recording_confirm: 0, clicker_discount: 0, errors: [] as string[] };
 
   try {
     // ═══ 1. FORM ABANDONMENT ═══
-    // Find contacts tagged form_started but NOT form_lead and NOT converted
-    // who last had activity >30 minutes ago
     const thirtyMinAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
 
     const { data: formAbandoners } = await supabase
@@ -172,8 +236,7 @@ Deno.serve(async (_req) => {
       }
     }
 
-    // ═══ 2. NEW BUYER CONFIRMATIONS ═══
-    // Find converted contacts without confirmation_sent tag
+    // ═══ 2. NEW BUYER CONFIRMATIONS (original webinar + recording) ═══
     const { data: newBuyers } = await supabase
       .from("crm_contacts")
       .select("id, email, first_name, tags, metadata")
@@ -185,10 +248,28 @@ Deno.serve(async (_req) => {
     for (const buyer of newBuyers || []) {
       try {
         const tags = buyer.tags || [];
-        const isBundle = tags.includes("bundle");
-        const template = isBundle
-          ? bundleConfirmation(buyer.first_name || "")
-          : webinarOnlyConfirmation(buyer.first_name || "");
+        const meta = buyer.metadata || {};
+        const productType = meta.product_type || "";
+        const firstName = buyer.first_name || "";
+        
+        let template;
+        let isRecording = false;
+        
+        // ── Determine which confirmation template to use ──
+        if (productType === "recording_premium") {
+          template = recordingPremiumConfirmation(firstName);
+          isRecording = true;
+        } else if (productType === "recording_bundle") {
+          template = recordingBundleConfirmation(firstName);
+          isRecording = true;
+        } else if (productType === "recording_only" || tags.includes("recording_access")) {
+          template = recordingOnlyConfirmation(firstName);
+          isRecording = true;
+        } else if (tags.includes("bundle")) {
+          template = bundleConfirmation(firstName);
+        } else {
+          template = webinarOnlyConfirmation(firstName);
+        }
 
         await sendEmail(buyer.email, template.subject, template.html);
         const newTags = [...new Set([...tags, "confirmation_sent"])];
@@ -196,8 +277,15 @@ Deno.serve(async (_req) => {
           tags: newTags,
           last_activity_at: new Date().toISOString(),
         }).eq("id", buyer.id);
-        console.log(`  ✅ Confirmation sent to ${buyer.email} (${isBundle ? "bundle" : "webinar-only"})`);
-        results.buyer_confirm++;
+        
+        const typeLabel = isRecording ? `recording:${productType}` : (tags.includes("bundle") ? "bundle" : "webinar-only");
+        console.log(`  ✅ Confirmation sent to ${buyer.email} (${typeLabel})`);
+        
+        if (isRecording) {
+          results.recording_confirm++;
+        } else {
+          results.buyer_confirm++;
+        }
       } catch (e: any) {
         console.error(`  ❌ Failed for ${buyer.email}: ${e.message}`);
         results.errors.push(`confirm:${buyer.email}:${e.message}`);
@@ -205,7 +293,6 @@ Deno.serve(async (_req) => {
     }
 
     // ═══ 3. CLICKER DISCOUNT ═══
-    // Anyone who clicked an email link 1+ hour ago but hasn't bought or received discount
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
 
     const { data: clickers } = await supabase
@@ -220,7 +307,7 @@ Deno.serve(async (_req) => {
     // Filter to only those who clicked more than 1 hour ago
     const clickerTargets = (clickers || []).filter(c => {
       const clickedAt = c.metadata?.last_click_at || c.metadata?.last_email_event_at;
-      if (!clickedAt) return true; // no timestamp, safe to send
+      if (!clickedAt) return true;
       return new Date(clickedAt).getTime() < Date.now() - 60 * 60 * 1000;
     });
 
@@ -258,7 +345,7 @@ Deno.serve(async (_req) => {
       }
     }
 
-    console.log(`\n📊 Auto-emailer complete: ${results.form_abandon} abandon, ${results.buyer_confirm} confirmations, ${results.clicker_discount} clicker discounts, ${results.errors.length} errors`);
+    console.log(`\n📊 Auto-emailer complete: ${results.form_abandon} abandon, ${results.buyer_confirm} webinar confirms, ${results.recording_confirm} recording confirms, ${results.clicker_discount} clicker discounts, ${results.errors.length} errors`);
 
     return new Response(JSON.stringify(results), {
       headers: { "Content-Type": "application/json" },
@@ -269,4 +356,3 @@ Deno.serve(async (_req) => {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 });
-

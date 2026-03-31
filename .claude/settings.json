@@ -5,7 +5,8 @@
       "Bash(/Users/dongraham/Desktop/cryptoedge/src/main.tsx:*)",
       "Bash(__NEW_LINE_ba6280320584780c__ cat:*)",
       "Bash(/Users/dongraham/Desktop/cryptoedge/src/App.tsx:*)",
-      "Bash(__NEW_LINE_ba6280320584780c__ echo:*)"
+      "Bash(__NEW_LINE_ba6280320584780c__ echo:*)",
+      "Bash(vercel ls:*)"
     ]
   }
 }

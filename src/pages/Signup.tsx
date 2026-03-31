@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ const PASSWORD_RULES = [
   { label: "Contains a number", test: (pw: string) => /\d/.test(pw) },
 ];
 
+const IS_WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
+
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -24,6 +26,8 @@ const Signup = () => {
   const { signUp, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
 
   const allRulesPassed = PASSWORD_RULES.every((r) => r.test(password));
   const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
@@ -48,13 +52,16 @@ const Signup = () => {
     if (error) {
       toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Account created!", description: "Check your email for a verification link." });
-      navigate("/portal");
+      toast({ title: "Account created!", description: "You're in! Redirecting..." });
+      navigate(redirectTo || (IS_WEBINAR_ONLY ? "/portal" : "/dashboard"));
     }
   };
 
   const handleGoogle = async () => {
-    const { error } = await signInWithGoogle();
+    const googleRedirect = IS_WEBINAR_ONLY
+      ? `${window.location.origin}/portal`
+      : undefined;
+    const { error } = await signInWithGoogle(googleRedirect);
     if (error) {
       toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
     }
@@ -66,6 +73,11 @@ const Signup = () => {
         <h1 className="text-3xl font-sans font-light text-foreground">
           Create your account
         </h1>
+        {redirectTo === "/portal" && (
+          <p className="text-sm font-sans text-muted-foreground mt-2">
+            Use the same email you used to buy your ticket
+          </p>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
