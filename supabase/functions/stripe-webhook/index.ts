@@ -9,6 +9,88 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") as string, {
 
 const cryptoProvider = Stripe.createSubtleCryptoProvider();
 
+const RESEND_KEY = Deno.env.get("RESEND_API_KEY") || "";
+const FROM_EMAIL = "Dylan <dylan@yourearlyedge.co.uk>";
+const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
+const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
+
+/**
+ * Send automated portal access email to buyer right after purchase.
+ * Uses Resend broadcast pattern to land in Primary inbox.
+ */
+async function sendPortalAccessEmail(email: string, firstName: string, isBundle: boolean) {
+    if (!RESEND_KEY) {
+        console.warn("RESEND_API_KEY not set — skipping portal access email");
+        return;
+    }
+
+    const headers = { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" };
+    const name = firstName || "there";
+
+    const guideSection = isBundle
+        ? `<p>Your Cold Email Guide is in the vault. When it asks for a password, use: <strong>RedMango</strong></p>`
+        : "";
+
+    const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:27px;color:#222;">
+<p>Hey ${name},</p>
+<p>Thanks for your purchase — everything is ready for you.</p>
+<p><strong>Here's how to access your materials:</strong></p>
+<p>1. Go to <a href="${PORTAL_LINK}">${PORTAL_LINK}</a><br>
+2. Click "Create account"<br>
+3. Sign up using <strong>${email}</strong> (the email you just used to pay)<br>
+4. Set any password you like<br>
+5. You're in — recording, resources, everything</p>
+${guideSection}
+<p>If you want personalised help, Uthman does 1-on-1 strategy calls where he'll build your lead list and write custom templates for your target industry:</p>
+<p><a href="${BOOK_UTHMAN}">Book a call with Uthman →</a></p>
+<p>Any issues at all, just reply to this email.</p>
+<p>Dylan<br>
+<span style="color:#999;font-size:13px;">EarlyEdge</span></p>
+</div>`;
+
+    try {
+        // 1. Create temp audience
+        const audRes = await fetch("https://api.resend.com/audiences", {
+            method: "POST", headers,
+            body: JSON.stringify({ name: `auto_${Date.now()}_${email.split("@")[0]}` }),
+        });
+        const aud = await audRes.json();
+        if (!aud.id) { console.error("Audience create failed:", aud); return; }
+
+        // 2. Add contact
+        await fetch(`https://api.resend.com/audiences/${aud.id}/contacts`, {
+            method: "POST", headers,
+            body: JSON.stringify({ email, unsubscribed: false }),
+        });
+
+        // 3. Create broadcast
+        const brRes = await fetch("https://api.resend.com/broadcasts", {
+            method: "POST", headers,
+            body: JSON.stringify({
+                audience_id: aud.id,
+                from: FROM_EMAIL,
+                subject: "your recording + resources are ready",
+                html,
+                name: `auto_portal_${email.split("@")[0]}`,
+            }),
+        });
+        const br = await brRes.json();
+        if (!br.id) { console.error("Broadcast create failed:", br); return; }
+
+        // 4. Send
+        await fetch(`https://api.resend.com/broadcasts/${br.id}/send`, {
+            method: "POST", headers, body: "{}",
+        });
+
+        // 5. Cleanup
+        await fetch(`https://api.resend.com/audiences/${aud.id}`, { method: "DELETE", headers });
+
+        console.log(`📧 Portal access email sent to ${email} (${isBundle ? "bundle" : "webinar-only"})`);
+    } catch (e: any) {
+        console.error(`Failed to send portal access email to ${email}:`, e.message);
+    }
+}
+
 Deno.serve(async (req) => {
     const signature = req.headers.get("Stripe-Signature");
     const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
@@ -141,6 +223,11 @@ Deno.serve(async (req) => {
                 }
                 
                 console.log(`Successfully updated ${email} as converted stripe_customer (${productType}).`);
+                
+                // ── AUTO-SEND portal access email ──
+                const buyerFirstName = session.customer_details?.name?.split(" ")[0] || "";
+                const isBundleBuyer = productType === "bundle" || productType === "recording_bundle" || productType === "recording_premium";
+                await sendPortalAccessEmail(email, buyerFirstName, isBundleBuyer);
             }
         }
 
