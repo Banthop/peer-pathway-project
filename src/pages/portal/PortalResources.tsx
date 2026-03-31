@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
-import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Copy, Check } from "lucide-react";
 
 const GUIDE_LINK = "/portal/cold-email-guide";
 const CHECKLIST_LINK = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
@@ -92,6 +91,13 @@ const PHASES = [
 export default function PortalResources() {
   const { buyerStatus } = useBuyerAuth();
   const isBundle = buyerStatus?.isBundle ?? false;
+  const [copied, setCopied] = useState(false);
+
+  const copyPassword = () => {
+    navigator.clipboard.writeText("RedMango");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   // Count exactly how many resources are unlocked vs locked for gamification
   const totalResources = PHASES.reduce((acc, phase) => acc + phase.resources.length, 0);
@@ -234,6 +240,23 @@ export default function PortalResources() {
                         <p className="text-[13px] text-[#666] leading-relaxed font-light mb-8 flex-1">
                           {resource.description}
                         </p>
+
+                        {/* Password hint for the Cold Email Guide */}
+                        {resource.id === "guide" && (
+                          <div className="mb-4 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-center justify-between">
+                            <div>
+                              <p className="text-xs font-medium text-amber-900">Password required</p>
+                              <p className="text-sm font-mono font-bold text-amber-800 mt-0.5">RedMango</p>
+                            </div>
+                            <button
+                              onClick={copyPassword}
+                              className="flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
+                            >
+                              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                              {copied ? "Copied" : "Copy"}
+                            </button>
+                          </div>
+                        )}
 
                         <div className="space-y-2.5 mt-auto">
                           {resource.link.startsWith("/") ? (
