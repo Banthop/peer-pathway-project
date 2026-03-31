@@ -26,9 +26,8 @@ import {
  *  CONFIG - Update these as needed
  * ═══════════════════════════════════════════════════════════════ */
 
-const UTHMAN_EMAIL = "uthman6696@gmail.com";
-const FROM_EMAIL = "Uthman <uthman@yourearlyedge.co.uk>";
-const RESEND_KEY = "re_6GL9cHXk_CFJesQr8nq2XKS6LqN72Vj7F";
+const SUPABASE_URL = "https://cidnbhphbmwvbozdxqhe.supabase.co";
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE";
 
 // ── Cal.com Integration ──
 // Set Uthman's Cal.com username below to enable Cal.com scheduling.
@@ -231,7 +230,7 @@ function buildIcsFile(session: SessionType, date: Date, time: string, studentNam
     `DTEND:${toIcs(end)}`,
     `SUMMARY:${session.name} — EarlyEdge`,
     `DESCRIPTION:Session with Uthman. ${session.description}\n\nBooked by: ${studentName}`,
-    `ORGANIZER;CN=Uthman:mailto:${UTHMAN_EMAIL}`,
+    `ORGANIZER;CN=Uthman:mailto:uthman6696@gmail.com`,
     "STATUS:CONFIRMED",
     `UID:earlyedge-${Date.now()}@yourearlyedge.co.uk`,
     "END:VEVENT",
@@ -251,67 +250,35 @@ function downloadIcsFile(icsContent: string, filename: string) {
   URL.revokeObjectURL(url);
 }
 
-/* ─── Email helpers ─── */
+/* ─── Send booking confirmation via server-side edge function (broadcast pattern) ─── */
 
-function buildConfirmationEmail(name: string, session: SessionType, date: string, time: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:0;background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;"><tr><td align="center" style="padding:32px 16px;"><table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;width:100%;">
-<tr><td style="font-size:13px;color:#999999;padding:0 0 24px 0;letter-spacing:-0.3px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span> <span style="font-weight:300;color:#bbbbbb;">Cold Email</span></td></tr>
-<tr><td style="font-size:22px;font-weight:600;color:#111111;padding:0 0 8px 0;">Booking confirmed</td></tr>
-<tr><td style="font-size:15px;color:#555555;padding:0 0 24px 0;line-height:1.6;">Hey ${name}, your session with Uthman is locked in. Here are the details:</td></tr>
-<tr><td style="background-color:#f9f9f9;border-radius:12px;padding:20px;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0">
-<tr><td style="font-size:12px;color:#999;padding:0 0 4px 0;">SESSION</td></tr>
-<tr><td style="font-size:15px;font-weight:600;color:#111;padding:0 0 16px 0;">${session.name} (${session.duration})</td></tr>
-<tr><td style="font-size:12px;color:#999;padding:0 0 4px 0;">DATE & TIME</td></tr>
-<tr><td style="font-size:15px;font-weight:600;color:#111;padding:0 0 16px 0;">${date} at ${time}</td></tr>
-<tr><td style="font-size:12px;color:#999;padding:0 0 4px 0;">ZOOM</td></tr>
-<tr><td style="font-size:15px;padding:0 0 16px 0;color:#555;">Uthman will send you a Zoom link before your session</td></tr>
-<tr><td style="font-size:12px;color:#999;padding:0 0 4px 0;">PRICE</td></tr>
-<tr><td style="font-size:15px;font-weight:600;color:#111;padding:0;">${session.price}</td></tr>
-</table>
-</td></tr>
-<tr><td style="font-size:14px;color:#888;padding:20px 0 0 0;line-height:1.6;">Need to reschedule? Just reply to this email at least 24 hours before your session.</td></tr>
-<tr><td style="font-size:15px;color:#222;padding:24px 0 2px 0;">Uthman</td></tr>
-<tr><td style="font-size:13px;color:#999999;padding:0;letter-spacing:-0.3px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span></td></tr>
-</table></td></tr></table></body></html>`;
-}
-
-function buildUthmanNotifEmail(studentName: string, studentEmail: string, session: SessionType, date: string, time: string): string {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
-<div style="max-width:480px;margin:0 auto;padding:32px 16px;">
-<h2 style="color:#111;margin:0 0 8px 0;">New booking</h2>
-<p style="color:#555;font-size:15px;margin:0 0 20px 0;">Someone just booked a session with you.</p>
-<div style="background:#f9f9f9;border-radius:12px;padding:20px;">
-<p style="margin:0 0 4px 0;font-size:12px;color:#999;">STUDENT</p>
-<p style="margin:0 0 16px 0;font-size:15px;font-weight:600;color:#111;">${studentName} (${studentEmail})</p>
-<p style="margin:0 0 4px 0;font-size:12px;color:#999;">SESSION</p>
-<p style="margin:0 0 16px 0;font-size:15px;font-weight:600;color:#111;">${session.name} (${session.duration})</p>
-<p style="margin:0 0 4px 0;font-size:12px;color:#999;">DATE & TIME</p>
-<p style="margin:0 0 16px 0;font-size:15px;font-weight:600;color:#111;">${date} at ${time}</p>
-<p style="margin:0 0 4px 0;font-size:12px;color:#999;">PRICE</p>
-<p style="margin:0 0 0 0;font-size:15px;font-weight:600;color:#111;">${session.price}</p>
-</div>
-<p style="color:#888;font-size:14px;margin:20px 0 0 0;">Please send them a Zoom link before the session.</p>
-</div></body></html>`;
-}
-
-/* ─── Send email via Resend ─── */
-
-async function sendEmail(to: string, subject: string, html: string) {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${RESEND_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: FROM_EMAIL,
-      to: [to],
-      subject,
-      html,
-    }),
-  });
-  return res.ok;
+async function sendBookingConfirmation(data: {
+  studentEmail: string;
+  studentName: string;
+  sessionName: string;
+  sessionId: string;
+  duration: string;
+  dateStr: string;
+  time: string;
+  price: string;
+}) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-booking-confirmation`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${ANON_KEY}`,
+        "apikey": ANON_KEY,
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    console.log("Booking confirmation email result:", result);
+    return result;
+  } catch (err) {
+    console.error("Failed to send booking confirmation emails:", err);
+    return { status: "error", errors: [String(err)] };
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -365,19 +332,17 @@ export default function BookUthman() {
               });
             }
 
-            // Email Student
-            await sendEmail(
-              data.studentEmail,
-              `Booking confirmed: ${data.sessionName} on ${data.dateStr}`,
-              buildConfirmationEmail(data.studentName, selectedSessionDummy, data.dateStr, data.time)
-            );
-
-            // Email Uthman
-            await sendEmail(
-              UTHMAN_EMAIL,
-              `New booking: ${data.studentName} - ${data.sessionName} on ${data.dateStr}`,
-              buildUthmanNotifEmail(data.studentName, data.studentEmail, selectedSessionDummy, data.dateStr, data.time)
-            );
+            // Send confirmation emails via server-side broadcast
+            await sendBookingConfirmation({
+              studentEmail: data.studentEmail,
+              studentName: data.studentName,
+              sessionName: data.sessionName,
+              sessionId: data.sessionId,
+              duration: selectedSessionDummy.duration,
+              dateStr: data.dateStr,
+              time: data.time,
+              price: selectedSessionDummy.price,
+            });
 
             // Clean up
             localStorage.removeItem("earlyedge_pending_booking");
@@ -440,15 +405,12 @@ export default function BookUthman() {
 
     // Request Stripe Checkout via direct fetch to Edge Function
     try {
-      const session = await supabase.auth.getSession();
-      const accessToken = session?.data?.session?.access_token;
-      
-      const res = await fetch("https://cidnbhphbmwvbozdxqhe.supabase.co/functions/v1/create-booking-checkout", {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-booking-checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${accessToken || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE"}`,
-          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE",
+          "Authorization": `Bearer ${ANON_KEY}`,
+          "apikey": ANON_KEY,
         },
         body: JSON.stringify({
           sessionName: selectedSession.name,
@@ -467,46 +429,14 @@ export default function BookUthman() {
         return;
       } else {
         console.error("No checkout URL:", result);
+        alert("Something went wrong creating your checkout. Please try again.");
       }
     } catch (err) {
       console.error("Failed to generate Stripe checkout session:", err);
-      // Fallback below if checkout fails
+      alert("Connection error. Please try again.");
     }
 
-    // Fallback: book directly without payment if Edge function fails
-    try {
-      if (supabase) {
-        await (supabase as any).from("portal_bookings").insert({
-          student_email: user.email,
-          student_name: studentName,
-          session_type: selectedSession.id,
-          session_date: dateISO,
-          session_time: selectedTime,
-          price_pennies: selectedSession.pricePennies,
-          notes: notes || null,
-          meeting_link: null,
-        });
-      }
-
-      await sendEmail(
-        user.email!,
-        `Booking confirmed: ${selectedSession.name} on ${dateStr}`,
-        buildConfirmationEmail(studentName, selectedSession, dateStr, selectedTime)
-      );
-
-      await sendEmail(
-        UTHMAN_EMAIL,
-        `New booking: ${studentName} - ${selectedSession.name} on ${dateStr}`,
-        buildUthmanNotifEmail(studentName, user.email!, selectedSession, dateStr, selectedTime)
-      );
-
-      setBooked(true);
-      setStep("done");
-    } catch (err) {
-      console.error("Booking error:", err);
-    } finally {
-      setBooking(false);
-    }
+    setBooking(false);
   };
 
   const resetBooking = () => {
