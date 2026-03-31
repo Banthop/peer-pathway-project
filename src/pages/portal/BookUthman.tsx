@@ -438,32 +438,35 @@ export default function BookUthman() {
     };
     localStorage.setItem("earlyedge_pending_booking", JSON.stringify(bookingData));
 
-    // Request Stripe Checkout from Edge Function
+    // Request Stripe Checkout via direct fetch to Edge Function
     try {
-      const { data, error } = await supabase.functions.invoke("create-booking-checkout", {
-        body: {
+      const session = await supabase.auth.getSession();
+      const accessToken = session?.data?.session?.access_token;
+      
+      const res = await fetch("https://cidnbhphbmwvbozdxqhe.supabase.co/functions/v1/create-booking-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE"}`,
+          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE",
+        },
+        body: JSON.stringify({
           sessionName: selectedSession.name,
           pricePennies: selectedSession.pricePennies,
           studentEmail: user.email,
           studentName,
           sessionId: selectedSession.id,
-        },
+        }),
       });
 
-      if (error) throw error;
-      
-      // Handle response — data may be already parsed or may need parsing
-      let parsedData = data;
-      if (typeof data === "string") {
-        try { parsedData = JSON.parse(data); } catch { /* keep as-is */ }
-      }
-      
-      const checkoutUrl = parsedData?.url;
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
+      const result = await res.json();
+      console.log("Stripe checkout response:", result);
+
+      if (result?.url) {
+        window.location.href = result.url;
         return;
       } else {
-        console.error("No checkout URL in response:", parsedData);
+        console.error("No checkout URL:", result);
       }
     } catch (err) {
       console.error("Failed to generate Stripe checkout session:", err);
