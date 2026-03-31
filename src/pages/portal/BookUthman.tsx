@@ -413,7 +413,11 @@ export default function BookUthman() {
   };
 
   const handleBook = async () => {
-    if (!selectedSession || !selectedDate || !selectedTime || !user) return;
+    console.log("handleBook called:", { selectedSession: !!selectedSession, selectedDate: !!selectedDate, selectedTime, user: !!user });
+    if (!selectedSession || !selectedDate || !selectedTime || !user) {
+      console.error("handleBook aborted — missing:", { selectedSession: !selectedSession, selectedDate: !selectedDate, selectedTime: !selectedTime, user: !user });
+      return;
+    }
     setBooking(true);
 
     const studentName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Student";
@@ -447,9 +451,19 @@ export default function BookUthman() {
       });
 
       if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
+      
+      // Handle response — data may be already parsed or may need parsing
+      let parsedData = data;
+      if (typeof data === "string") {
+        try { parsedData = JSON.parse(data); } catch { /* keep as-is */ }
+      }
+      
+      const checkoutUrl = parsedData?.url;
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
         return;
+      } else {
+        console.error("No checkout URL in response:", parsedData);
       }
     } catch (err) {
       console.error("Failed to generate Stripe checkout session:", err);
