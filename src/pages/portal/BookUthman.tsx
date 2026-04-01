@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Star,
@@ -7,21 +7,23 @@ import {
   CheckCircle2,
   Users,
   Trophy,
+  MessageSquare,
   ChevronDown,
   ArrowRight,
   Sparkles,
   X as XIcon,
   Zap,
   Target,
+  AlertCircle,
 } from "lucide-react";
 
-/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+/* ═══════════════════════════════════════════════════════════════
  *  CAL.COM SETUP - see original for instructions
- * ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
+ * ═══════════════════════════════════════════════════════════════ */
 
 const CAL_USERNAME = "uthm4n";
 
-/* ÔöÇÔöÇÔöÇ Session types ÔöÇÔöÇÔöÇ */
+/* ─── Session types ─── */
 
 interface SessionType {
   id: string;
@@ -53,7 +55,7 @@ const SESSION_TYPES: SessionType[] = [
       "Strategy feedback & template fixes",
       "Clear action plan for your next steps",
     ],
-    calSlug: "https://cal.com/uthm4n/strategy-call?overlayCalendar=true",
+    calSlug: "strategy-call",
     testimonial: {
       text: "Fixed my subject lines and got 3 replies in the first week",
       name: "Priya M.",
@@ -76,7 +78,8 @@ const SESSION_TYPES: SessionType[] = [
       "Personalised follow-up sequences",
       "7-day email support after the session",
     ],
-    calSlug: "https://cal.com/uthm4n/deep-dive-session",
+    calSlug: "deep-dive-session",
+    popular: true,
     testimonial: {
       text: "Had my call on Monday, fixed my templates the same day, and immediately started seeing higher open rates.",
       name: "Jake L.",
@@ -98,7 +101,8 @@ const SESSION_TYPES: SessionType[] = [
       "Group Q&A",
       "Recording of the session",
     ],
-    calSlug: "https://cal.com/uthm4n/group-workshop",
+    calSlug: "group-workshop",
+    isGroup: true,
     maxParticipants: 8,
     testimonial: {
       text: "Brilliant workshop. Learned so much from other people's questions too",
@@ -109,7 +113,7 @@ const SESSION_TYPES: SessionType[] = [
   },
 ];
 
-/* ÔöÇÔöÇÔöÇ Package ÔöÇÔöÇÔöÇ */
+/* ─── Package ─── */
 
 const PACKAGE = {
   name: "3x Deep Dive Bundle",
@@ -120,10 +124,10 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "https://cal.com/uthm4n/3xdeepdivebundle",
+  calSlug: "3xdeepdivebundle",
 };
 
-/* ÔöÇÔöÇÔöÇ Testimonials ÔöÇÔöÇÔöÇ */
+/* ─── Testimonials ─── */
 
 const TESTIMONIALS = [
   {
@@ -163,7 +167,7 @@ const TESTIMONIALS = [
   },
 ];
 
-/* ÔöÇÔöÇÔöÇ FAQ ÔöÇÔöÇÔöÇ */
+/* ─── FAQ ─── */
 
 const FAQ = [
   {
@@ -192,28 +196,29 @@ const FAQ = [
   },
 ];
 
-
 /* ─── Main Component ─── */
-
-
 
 export default function BookUthman() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleBookClick = (_sessionName: string, calUrl: string) => {
+  const handleExternalBookClick = (calSlug: string) => {
+    const baseUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?overlayCalendar=true`;
+    
     const params = new URLSearchParams();
     if (user?.email) params.set("email", user.email);
     const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
     if (name) params.set("name", name);
-    const separator = calUrl.includes("?") ? "&" : "?";
-    window.open(params.toString() ? `${calUrl}${separator}${params.toString()}` : calUrl, "_blank");
+    
+    // Determine the connector (either & or ?) since overlayCalendar=true is already present
+    const finalUrl = params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
+    window.open(finalUrl, "_blank");
   };
 
   return (
     <div className="w-full relative">
 
-      {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ HERO SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+      {/* ════════ HERO SECTION ════════ */}
       <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
         <div className="flex flex-col md:flex-row items-start gap-6">
           {/* Avatar */}
@@ -250,7 +255,7 @@ export default function BookUthman() {
       </div>
 
       <div className="px-6 md:px-10 lg:px-12 pb-10">
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ PAIN SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ PAIN SECTION ════════ */}
         <div className="bg-[#FFFBF5] border border-amber-200 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
           <h3 className="text-[15px] font-semibold text-[#111] mb-3 flex items-center gap-2 relative z-10">
@@ -283,7 +288,7 @@ export default function BookUthman() {
           </div>
         </div>
 
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ COMPARISON ANCHOR ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ COMPARISON ANCHOR ════════ */}
         <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-5 mb-8 text-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
           <p className="text-[13px] text-[#888] font-light">
             Professional career coaching firms charge <strong className="text-[#111] font-semibold">£150-300/hr</strong>.
@@ -296,7 +301,7 @@ export default function BookUthman() {
           </p>
         </div>
 
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ SESSION CARDS ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ SESSION CARDS ════════ */}
         <div className="space-y-5">
           <h3 className="text-base font-semibold text-[#111] flex items-center justify-between">
             Choose a session
@@ -391,7 +396,7 @@ export default function BookUthman() {
                 )}
 
                 <button
-                  onClick={() => handleBookClick(session.name, session.calSlug)}
+                  onClick={() => handleExternalBookClick(session.calSlug)}
                   className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
                     session.popular
                       ? "bg-[#111] text-white hover:bg-[#222] shadow-sm hover:-translate-y-0.5"
@@ -407,7 +412,7 @@ export default function BookUthman() {
           ))}
         </div>
 
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ BUNDLE PACKAGE ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ BUNDLE PACKAGE ════════ */}
         <div className="relative bg-[#111] border border-[#222] rounded-xl p-6 text-white mt-6">
           <div className="flex items-start justify-between mb-3 pt-2">
             <div>
@@ -438,7 +443,7 @@ export default function BookUthman() {
           </div>
 
           <button
-            onClick={() => handleBookClick(PACKAGE.name, PACKAGE.calSlug)}
+            onClick={() => handleExternalBookClick(PACKAGE.calSlug)}
             className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-md hover:-translate-y-0.5"
           >
             <CalendarIcon className="w-4 h-4" />
@@ -447,7 +452,7 @@ export default function BookUthman() {
           </button>
         </div>
 
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ TESTIMONIALS SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ TESTIMONIALS SECTION ════════ */}
         <div className="mt-12 mb-8">
           <div className="text-center mb-6">
             <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-1">
@@ -483,7 +488,7 @@ export default function BookUthman() {
           </div>
         </div>
 
-        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ FAQ ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        {/* ════════ FAQ ════════ */}
         <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden mt-8">
           <div className="px-5 py-4 border-b border-[#E8E8E8]">
             <h3 className="text-[13px] font-semibold text-[#111]">
@@ -519,4 +524,3 @@ export default function BookUthman() {
     </div>
   );
 }
-
