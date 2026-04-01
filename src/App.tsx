@@ -29,6 +29,12 @@ import PortalRecording from "./pages/portal/PortalRecording";
 import PortalResources from "./pages/portal/PortalResources";
 import BookUthman from "./pages/portal/BookUthman";
 import PortalColdEmailGuide from "./pages/portal/ColdEmailGuide";
+import GeneralPortalLayout from "./components/portal/GeneralPortalLayout";
+import GeneralRecording from "./pages/portal/GeneralRecording";
+import GeneralResources from "./pages/portal/GeneralResources";
+import BookAndrew from "./pages/portal/BookAndrew";
+import BookMohammad from "./pages/portal/BookMohammad";
+import DaWebinar from "./pages/DaWebinar";
 
 // Heavier pages -- loaded lazily to reduce initial bundle size
 const CoachProfile = lazy(() => import("./pages/CoachProfile"));
@@ -170,6 +176,13 @@ const AppRoutes = () => {
           <Route path="book-uthman" element={<BookUthman />} />
           <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
         </Route>
+        <Route path="/general-portal" element={<GeneralPortalLayout />}>
+          <Route index element={<GeneralRecording />} />
+          <Route path="resources" element={<GeneralResources />} />
+          <Route path="book-andrew" element={<BookAndrew />} />
+          <Route path="book-mohammad" element={<BookMohammad />} />
+        </Route>
+        <Route path="/da-webinar" element={<DaWebinar />} />
         <Route path="/spring-week-portal" element={<ErrorBoundary><SpringWeekPortalLayout /></ErrorBoundary>}>
           <Route index element={<SpringWeekPortal />} />
         </Route>
@@ -222,8 +235,15 @@ const AppRoutes = () => {
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
         <Route path="book-uthman" element={<BookUthman />} />
-          <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
+        <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
       </Route>
+      <Route path="/general-portal" element={<GeneralPortalLayout />}>
+        <Route index element={<GeneralRecording />} />
+        <Route path="resources" element={<GeneralResources />} />
+        <Route path="book-andrew" element={<BookAndrew />} />
+        <Route path="book-mohammad" element={<BookMohammad />} />
+      </Route>
+      <Route path="/da-webinar" element={<DaWebinar />} />
       <Route path="/spring-week-portal" element={<ErrorBoundary><SpringWeekPortalLayout /></ErrorBoundary>}>
         <Route index element={<SpringWeekPortal />} />
       </Route>
