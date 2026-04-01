@@ -186,32 +186,72 @@ async function triggerLoopsEvents(
 
     const headers = { Authorization: `Bearer ${LOOPS_API_KEY}`, "Content-Type": "application/json" };
 
-    // Determine webinar type for Loops sequence branching
-    const webinarType = productType.startsWith("spring_week") ? "spring_week" : "cold_email";
+    const isSpringWeek = productType.startsWith("spring_week");
+    const webinarType = isSpringWeek ? "spring_week" : "cold_email";
 
-    // 1. Fire 'purchase_completed' Event to trigger the automated Buyer Welcome Sequence
-    try {
-        const evtRes = await fetch("https://app.loops.so/api/v1/events/send", {
-            method: "POST", headers,
-            body: JSON.stringify({
-                email,
-                eventName: "purchase_completed",
-                eventProperties: {
-                    spend: lifetimeSpend,
-                    productType,
-                    webinarType,
-                    isBundle
-                }
-            })
-        });
-        if (!evtRes.ok) {
-            const errText = await evtRes.text();
-            console.error(`Loops events/send HTTP ${evtRes.status}:`, errText);
-        } else {
-            console.log(`Triggered Loops 'purchase_completed' event for ${email}`);
+    if (isSpringWeek) {
+        // Fire 'spring_week_purchase_completed' to trigger Flow 6 (Spring Week Welcome Sequence)
+        const hasPlaybook = productType === "spring_week_bundle" || productType === "spring_week_premium";
+        const hasCoaching = productType === "spring_week_premium";
+        const webinarPart = productType === "spring_week_part1" ? "1"
+            : productType === "spring_week_part2" ? "2"
+            : "both";
+        const hasBothParts = productType === "spring_week_bundle" || productType === "spring_week_premium";
+
+        try {
+            const evtRes = await fetch("https://app.loops.so/api/v1/events/send", {
+                method: "POST", headers,
+                body: JSON.stringify({
+                    email,
+                    eventName: "spring_week_purchase_completed",
+                    eventProperties: {
+                        spend: lifetimeSpend,
+                        productType,
+                        webinarType,
+                        isBundle,
+                        hasPlaybook,
+                        hasCoaching,
+                        webinarPart,
+                        hasBothParts,
+                        portalLink: PORTAL_LINK,
+                        bookUthmanLink: BOOK_UTHMAN,
+                    }
+                })
+            });
+            if (!evtRes.ok) {
+                const errText = await evtRes.text();
+                console.error(`Loops events/send HTTP ${evtRes.status}:`, errText);
+            } else {
+                console.log(`Triggered Loops 'spring_week_purchase_completed' event for ${email}`);
+            }
+        } catch (e: any) {
+            console.error("Loops Spring Week Event Error:", e.message);
         }
-    } catch (e: any) {
-        console.error("Loops Event Error:", e.message);
+    } else {
+        // Fire 'purchase_completed' to trigger Flow 1 (Cold Email Buyer Welcome Sequence)
+        try {
+            const evtRes = await fetch("https://app.loops.so/api/v1/events/send", {
+                method: "POST", headers,
+                body: JSON.stringify({
+                    email,
+                    eventName: "purchase_completed",
+                    eventProperties: {
+                        spend: lifetimeSpend,
+                        productType,
+                        webinarType,
+                        isBundle
+                    }
+                })
+            });
+            if (!evtRes.ok) {
+                const errText = await evtRes.text();
+                console.error(`Loops events/send HTTP ${evtRes.status}:`, errText);
+            } else {
+                console.log(`Triggered Loops 'purchase_completed' event for ${email}`);
+            }
+        } catch (e: any) {
+            console.error("Loops Event Error:", e.message);
+        }
     }
 
     // 2. Fire Transactional Portal Access Email (requires LOOPS_PORTAL_TRANSACTIONAL_ID)

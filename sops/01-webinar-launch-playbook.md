@@ -1,4 +1,4 @@
-# 🎤 Webinar Launch Playbook
+# Webinar Launch Playbook
 
 **Owner:** Don (strategy) + Uthman (speaker sourcing + delivery)
 **Timeline:** 4 weeks before event
@@ -20,7 +20,7 @@
 - [ ] Begin DM outreach using templates (Sheet 2 of tracker)
 - [ ] Follow up on no-replies after 3-5 days
 
-### Milestone: 3+ speakers confirmed → lock in the date
+### Milestone: 3+ speakers confirmed, lock in the date
 
 ---
 
@@ -30,9 +30,9 @@
 - [ ] Clone webinar landing page (duplicate `Webinar.tsx`, update copy)
 - [ ] Create Stripe products for each tier
 - [ ] Create checkout edge function (or reuse `create-booking-checkout`)
-- [ ] Set up HubSpot:
-  - [ ] Create a List for this webinar's registrants
-  - [ ] Build registration confirmation workflow
+- [ ] Set up Loops:
+  - [ ] Create a contact list/segment for this webinar's registrants
+  - [ ] Build registration confirmation flow
   - [ ] Build reminder sequence (3-day, day-of, 1-hour-before)
 - [ ] Create event in Cal.com for speaker run-of-show
 
@@ -48,7 +48,7 @@
 - [ ] Do a tech rehearsal with all speakers (Zoom test)
 
 ### Both
-- [ ] Test full flow: landing page → form → Stripe → confirmation email → HubSpot contact created
+- [ ] Test full flow: landing page, form, Stripe, confirmation email, Attio contact created
 
 ---
 
@@ -76,7 +76,7 @@
 ## Week 1: Final Push
 
 - [ ] Send urgency email: "Last X spots"
-- [ ] Send discount email to hot leads (HubSpot segment: clicked but didn't buy)
+- [ ] Send discount email to hot leads (Attio segment: clicked but didn't buy)
 - [ ] Final speaker confirmation + share run-of-show
 - [ ] Tech rehearsal #2 (day before)
 - [ ] Prepare post-webinar sequence:
@@ -92,7 +92,7 @@
 ### 2 hours before
 - [ ] Test Zoom/StreamYard link
 - [ ] Post "going live in 2 hours" on LinkedIn + IG stories
-- [ ] HubSpot: send 1-hour reminder email
+- [ ] Loops: send 1-hour reminder email
 
 ### During
 - [ ] Don moderates, Uthman presents
@@ -102,9 +102,9 @@
 
 ### After (within 2 hours)
 - [ ] Upload recording to portal
-- [ ] Send "recording is live" email via HubSpot workflow
+- [ ] Send "recording is live" email via Loops flow
 - [ ] Post highlight clips on social
-- [ ] Update HubSpot: tag all attendees as `webinar_attended`
+- [ ] Update Attio: tag all attendees as `webinar_attended`
 
 ---
 
@@ -130,7 +130,7 @@
 
 ---
 
-## Metrics to Track (HubSpot Dashboard)
+## Metrics to Track (Attio Dashboard)
 
 | Metric | Target |
 |--------|--------|

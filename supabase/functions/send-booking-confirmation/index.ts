@@ -57,6 +57,9 @@ Deno.serve(async (req) => {
       dateStr,
       time,
       price,
+      coachName,
+      coachFirm,
+      isSpringWeekCoaching,
     } = await req.json();
 
     if (!studentEmail || !sessionName) {
@@ -69,7 +72,7 @@ Deno.serve(async (req) => {
     console.log(`Processing booking confirmation for ${studentEmail}: ${sessionName} on ${dateStr} at ${time}`);
 
     const errors: string[] = [];
-    const eventProps = {
+    const eventProps: Record<string, any> = {
         studentName: studentName || "there",
         studentEmail,
         sessionName,
@@ -77,13 +80,23 @@ Deno.serve(async (req) => {
         duration: duration || "",
         dateStr: dateStr || "",
         time: time || "",
-        price: price || ""
+        price: price || "",
+        bookUthmanLink: "https://webinar.yourearlyedge.co.uk/portal/book-uthman",
     };
+
+    // Add coach details for spring week panellist coaching
+    if (coachName) eventProps.coachName = coachName;
+    if (coachFirm) eventProps.coachFirm = coachFirm;
+
+    // Determine which event to fire based on coaching type
+    const studentEventName = isSpringWeekCoaching
+        ? "spring_week_coaching_booked"
+        : "booking_confirmed";
 
     // 1. Send confirmation to student via Loops Event
     try {
-      await sendLoopsEvent(studentEmail, "booking_confirmed", eventProps);
-      console.log(`✅ Student confirmation event sent to ${studentEmail}`);
+      await sendLoopsEvent(studentEmail, studentEventName, eventProps);
+      console.log(`Student ${studentEventName} event sent to ${studentEmail}`);
     } catch (e: any) {
       console.error(`Failed to send student email event: ${e.message}`);
       errors.push(`student: ${e.message}`);
@@ -92,7 +105,7 @@ Deno.serve(async (req) => {
     // 2. Send notification to Uthman via Loops Event
     try {
       await sendLoopsEvent(UTHMAN_EMAIL, "new_booking_notification", eventProps);
-      console.log(`✅ Uthman notification event sent to ${UTHMAN_EMAIL}`);
+      console.log(`Uthman notification event sent to ${UTHMAN_EMAIL}`);
     } catch (e: any) {
       console.error(`Failed to send Uthman notification event: ${e.message}`);
       errors.push(`uthman: ${e.message}`);

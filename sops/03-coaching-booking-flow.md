@@ -1,6 +1,6 @@
-# 🗓️ Coaching Booking Flow SOP
+# Coaching Booking Flow SOP
 
-**Owner:** Uthman (delivery) + Automated (booking + emails)  
+**Owner:** Uthman (delivery) + Automated (booking + emails)
 **Last updated:** April 2026
 
 ---
@@ -17,15 +17,15 @@ Selects session type + date/time
 Clicks "Pay & Book"
         │
         ▼
-Stripe Checkout opens → student pays
+Stripe Checkout opens, student pays
         │
         ▼
 Redirect back to portal with ?success=true
         │
-        ├──▶ Supabase: save to portal_bookings
-        ├──▶ Resend: send student confirmation (broadcast)
-        ├──▶ Resend: send Uthman notification (broadcast)
-        └──▶ HubSpot: create/update deal (when integrated)
+        ├── Supabase: save to portal_bookings
+        ├── Loops event "booking_confirmed": send student confirmation email
+        ├── Loops event "new_booking_notification": send Uthman notification email
+        └── Attio: create/update deal in Student Sales pipeline
         │
         ▼
 Student sees "You're booked" confirmation + calendar download
@@ -40,7 +40,7 @@ Student sees "You're booked" confirmation + calendar download
 | Strategy Call | 30 min | £35 | create-booking-checkout |
 | Deep Dive | 60 min | £59 | create-booking-checkout |
 | Group Workshop | 90 min | £20/person | create-booking-checkout |
-| 3x Deep Dive Bundle | 3 × 60 min | £140 | create-booking-checkout |
+| 3x Deep Dive Bundle | 3 x 60 min | £140 | create-booking-checkout |
 
 ---
 
@@ -67,9 +67,9 @@ Student sees "You're booked" confirmation + calendar download
   - [ ] Next session recommendation (if applicable)
 
 ### After Session (Day 7)
-- [ ] HubSpot workflow sends automated testimonial request:
+- [ ] Loops flow sends automated testimonial request:
   - "Hey [name], it's been a week since our session. How are you getting on with the cold emails? Quick favour - would you mind sharing a 2-3 sentence review of the session? Would really help other students considering coaching."
-- [ ] If they respond with testimonial → add to BookUthman page reviews
+- [ ] If they respond with testimonial, add to BookUthman page reviews
 
 ---
 
@@ -86,7 +86,7 @@ Student sees "You're booked" confirmation + calendar download
 
 - Within 24 hours of session: full refund or follow-up session, no questions asked
 - Process refund via Stripe dashboard
-- Update HubSpot deal to "Refunded"
+- Update Attio deal stage to "Refunded"
 - Send brief "sorry it didn't work out" email, ask for feedback
 
 ---
@@ -108,12 +108,12 @@ When `CAL_USERNAME` is set in BookUthman.tsx:
 
 ---
 
-## Metrics (Track in HubSpot)
+## Metrics (Track in Attio)
 
 | Metric | Target | How to Track |
 |--------|--------|-------------|
-| Bookings per week | 3+ | HubSpot deal count (stage: "Coaching Booked") |
-| Revenue per week | £150+ | HubSpot deal value |
+| Bookings per week | 3+ | Attio pipeline deal count (stage: "Coaching Booked") |
+| Revenue per week | £150+ | Attio deal value |
 | Show-up rate | 95%+ | Manual - Uthman marks no-shows |
-| Testimonial response rate | 50%+ | HubSpot workflow completion rate |
-| Repeat bookings | 20%+ | HubSpot "# of deals" per contact |
+| Testimonial response rate | 50%+ | Loops flow completion rate |
+| Repeat bookings | 20%+ | Attio "number of deals" per contact |

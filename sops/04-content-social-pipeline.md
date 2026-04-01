@@ -1,7 +1,7 @@
-# 📱 Content & Social Pipeline SOP
+# Content & Social Pipeline SOP
 
-**Owner:** Don (LinkedIn, strategy) + Uthman (Instagram, delivery)  
-**Cadence:** Weekly  
+**Owner:** Don (LinkedIn, strategy) + Uthman (Instagram, delivery)
+**Cadence:** Weekly
 **Last updated:** April 2026
 
 ---
@@ -11,11 +11,11 @@
 ### Monday - Plan & Review (30 min sync)
 - [ ] Review last week's metrics:
   - LinkedIn post impressions (Don + Uthman)
-  - Email open/click rates (HubSpot)
+  - Email open/click rates (Loops dashboard)
   - New leads this week
   - Revenue this week
 - [ ] Plan this week's content (3-4 posts each)
-- [ ] Identify any hot leads to follow up with
+- [ ] Identify any hot leads to follow up with (check Attio)
 - [ ] Check content calendar in Notion - anything overdue?
 
 ### Tuesday-Thursday - Create & Engage
@@ -25,7 +25,7 @@
 - [ ] Both: DM 3-5 warm leads who engaged with content
 
 ### Friday - Newsletter & Review
-- [ ] Send weekly value email to CRM via HubSpot
+- [ ] Send weekly value email to CRM via Loops
 - [ ] Review engagement on this week's posts - what worked?
 - [ ] Queue any weekend content
 - [ ] Update Notion content calendar
@@ -49,34 +49,34 @@
 ### LinkedIn Post Structure (Don)
 ```
 Hook line (pattern interrupt, 1 line)
-↓
+
 Empty line
-↓
+
 Context / story (3-5 lines)
-↓
+
 Empty line
-↓
+
 Key insight / framework (3-5 bullet points)
-↓
+
 Empty line
-↓
+
 CTA (soft - "What's been your experience?" or "DM me if you want the template")
 ```
 
 ### LinkedIn Post Structure (Uthman)
 ```
 Bold claim or stat (1 line)
-↓
+
 Empty line
-↓
+
 Personal story that proves it (4-6 lines)
-↓
+
 Empty line
-↓
+
 The lesson / what I'd do differently (2-3 lines)
-↓
+
 Empty line
-↓
+
 CTA (engage - question for comments)
 ```
 
@@ -94,7 +94,7 @@ CTA (engage - question for comments)
 
 ## Email Newsletter Content
 
-**Frequency:** Weekly (Friday)  
+**Frequency:** Weekly (Friday)
 **Format:** Short, personal, one clear CTA
 
 ```
@@ -104,7 +104,7 @@ Structure:
 1. One personal observation / lesson from the week (2-3 sentences)
 2. One actionable tip they can use today (3-5 bullet points)
 3. One piece of social proof (student result, stat)
-4. CTA: "If you want help with this → [link to relevant product]"
+4. CTA: "If you want help with this, [link to relevant product]"
 5. Sign off: casual, like a text from a mate
 ```
 
