@@ -118,7 +118,10 @@ export function DaWelcomeStep({ onContinue }: DaWelcomeStepProps) {
       </div>
 
       {/* Social proof */}
-      <div className="w-full animate-fade-up" style={{ animationDelay: "0.28s" }}>
+      <div
+        className="w-full animate-fade-up"
+        style={{ animationDelay: "0.28s" }}
+      >
         <div className="inline-flex items-center justify-center gap-2 text-sm text-emerald-700 font-sans font-medium bg-emerald-50 border border-emerald-200 rounded-full px-5 py-2.5">
           <Users className="h-4 w-4" />
           <CountUp target={142} />+ ambitious students have already registered
@@ -126,7 +129,10 @@ export function DaWelcomeStep({ onContinue }: DaWelcomeStepProps) {
       </div>
 
       {/* Metadata pills */}
-      <div className="flex flex-wrap items-center justify-center gap-3 animate-fade-up" style={{ animationDelay: "0.3s" }}>
+      <div
+        className="flex flex-wrap items-center justify-center gap-3 animate-fade-up"
+        style={{ animationDelay: "0.3s" }}
+      >
         <span className="border border-border rounded-xl px-5 py-2.5 bg-white/80 backdrop-blur-sm text-sm font-sans font-medium text-foreground shadow-sm flex items-center gap-1.5">
           <Play className="h-3.5 w-3.5" />
           90 Min Masterclass
@@ -138,7 +144,10 @@ export function DaWelcomeStep({ onContinue }: DaWelcomeStepProps) {
       </div>
 
       {/* CTA */}
-      <div className="animate-fade-up flex flex-col items-center gap-2 pt-2" style={{ animationDelay: "0.35s" }}>
+      <div
+        className="animate-fade-up flex flex-col items-center gap-2 pt-2"
+        style={{ animationDelay: "0.35s" }}
+      >
         <Button
           onClick={onContinue}
           className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-10 py-5 text-base md:text-lg rounded-xl shadow-md hover:shadow-lg transition-all"
@@ -152,18 +161,23 @@ export function DaWelcomeStep({ onContinue }: DaWelcomeStepProps) {
       </div>
 
       {/* Panellists Section */}
-      <div className="w-full pt-10 animate-fade-up border-t border-slate-200 mt-8" style={{ animationDelay: "0.4s" }}>
+      <div 
+        className="w-full pt-10 animate-fade-up border-t border-slate-200 mt-8"
+        style={{ animationDelay: "0.4s" }}
+      >
         <p className="text-[11px] uppercase tracking-widest text-muted-foreground font-sans font-semibold mb-6">
           Meet your masterclass panel
         </p>
+        
+        {/* We use grid-cols-2 on mobile, flex on desktop to wrap them naturally */}
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {PANELLISTS.map((panellist) => (
             <div key={panellist.name} className="flex flex-col items-center bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 hover:-translate-y-1 transition-transform w-[140px] md:w-[150px]">
               <div className="w-full aspect-square rounded-xl overflow-hidden mb-3 bg-slate-100">
-                <img
-                  src={panellist.image}
+                <img 
+                  src={panellist.image} 
                   alt={panellist.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover filter contrast-[1.05]"
                 />
               </div>
               <h4 className="text-sm font-bold text-foreground font-sans leading-tight">

@@ -11,7 +11,7 @@ const DA_YEAR_OPTIONS = [
   "Year 13",
   "Gap Year",
   "Apprentice",
-  "Other",
+  "Other"
 ];
 
 interface DaSchoolStepProps {
@@ -54,7 +54,7 @@ export function DaSchoolStep({
             placeholder="Type your School or Sixth Form name..."
             value={school}
             onChange={(e) => onUpdate("university", e.target.value)}
-            className="font-sans text-base h-14 border-border pl-11 rounded-xl shadow-sm"
+            className="font-sans text-base h-14 border-border pl-11 rounded-xl shadow-sm focus:ring-emerald-500/20 focus:border-emerald-500"
             autoComplete="off"
             required
           />

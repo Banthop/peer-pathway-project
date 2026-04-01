@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { REFERRAL_OPTIONS } from "@/data/webinarData";
@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, Trophy, CheckCircle2 } from "lucide-react";
 
 interface DaIndustryStepProps {
+  // Parent state is technically a string, so we'll store comma-separated values
   industry: string;
   industryDetail: string;
   referralSource: string;
@@ -20,7 +21,7 @@ const DA_INDUSTRIES = [
   "Technology / Software",
   "Consulting",
   "Law",
-  "Other",
+  "Other"
 ];
 
 export function DaIndustryStep({
@@ -30,8 +31,9 @@ export function DaIndustryStep({
   onUpdate,
   onContinue,
 }: DaIndustryStepProps) {
+  // Convert parent string "Finance, Tech" into array state
   const [selectedIndustries, setSelectedIndustries] = useState<string[]>(
-    industry ? industry.split(", ").filter(Boolean) : []
+    industry ? industry.split(", ") : []
   );
 
   const toggleIndustry = (option: string) => {
@@ -42,6 +44,7 @@ export function DaIndustryStep({
       newSelection.push(option);
     }
     setSelectedIndustries(newSelection);
+    // Sync to parent
     onUpdate("industry", newSelection.join(", "));
   };
 
@@ -56,11 +59,11 @@ export function DaIndustryStep({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
-      {/* DA motivation stat */}
+      {/* DA specific motivation stat */}
       <div className="flex items-start gap-3 bg-emerald-50/80 border border-emerald-200/60 rounded-xl px-4 py-4 shadow-sm">
         <Trophy className="h-5 w-5 mt-0.5 shrink-0 text-emerald-600" />
         <p className="text-sm font-sans font-medium text-emerald-900 leading-relaxed">
-          Top Degree Apprenticeships get over <strong className="font-bold">5,000+ applications</strong> for just 20 spots.
+          Top Degree Apprenticeships get over <strong className="font-bold">5,000+ applications</strong> for just 20 spots. 
           The frameworks taught in this Masterclass have helped students secure offers against those exact odds.
         </p>
       </div>
@@ -96,9 +99,11 @@ export function DaIndustryStep({
         })}
       </div>
 
-      {/* Detail field */}
+      {/* Detail field - only show if something is selected */}
       {selectedIndustries.length > 0 && (
-        <div className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <div
+          className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
           <label className="text-sm text-foreground font-sans font-medium">
             Any specific firms in mind? <span className="text-muted-foreground font-light">(optional)</span>
           </label>
@@ -107,12 +112,12 @@ export function DaIndustryStep({
             placeholder="e.g. Goldman Sachs, BAE Systems, Google..."
             value={industryDetail}
             onChange={(e) => onUpdate("industryDetail", e.target.value)}
-            className="font-sans text-base h-14 border-border rounded-xl shadow-sm"
+            className="font-sans text-base h-14 border-border rounded-xl shadow-sm focus:ring-emerald-500/20 focus:border-emerald-500"
           />
         </div>
       )}
 
-      {/* Referral source */}
+      {/* REFERRAL SOURCE */}
       <div className="space-y-4 pt-4 border-t border-border/60">
         <h2 className="text-lg font-sans font-medium text-foreground tracking-tight">
           How did you hear about us?
@@ -126,7 +131,7 @@ export function DaIndustryStep({
               className={cn(
                 "px-4 py-2 text-sm rounded-lg border font-sans font-light transition-all duration-200",
                 referralSource === option
-                  ? "bg-[#111] text-white border-[#111] shadow-sm"
+                  ? "bg-[#111] text-white border-[#111] shadow-sm transform scale-[1.02]"
                   : "bg-white text-foreground border-border hover:border-[#111]/40",
               )}
             >

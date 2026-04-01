@@ -12,7 +12,7 @@ import { DaSchoolStep } from "@/components/webinar/DaSchoolStep";
 import { DaIndustryStep } from "@/components/webinar/DaIndustryStep";
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
 import { saveCrmContact } from "@/utils/crmTracking";
-import { ChevronLeft, CheckCircle2, Loader2 } from "lucide-react";
+import { ChevronLeft, CheckCircle2, Loader2, ArrowRight } from "lucide-react";
 
 const PANELLISTS = [
   { name: "Sarah J.", firm: "Goldman Sachs", role: "Software Engineering DA", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200" },
@@ -26,7 +26,7 @@ function DaSuccessScreen({ name }: { name: string }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 flex items-start justify-center px-4 py-12 md:py-20">
       <div className="w-full max-w-lg space-y-8">
-        {/* Header */}
+        {/* Confirmation header */}
         <div className="text-center space-y-4">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-100">
             <CheckCircle2 className="h-7 w-7 text-emerald-600" />
@@ -47,30 +47,41 @@ function DaSuccessScreen({ name }: { name: string }) {
             Registration Confirmed
           </div>
           <p className="text-sm text-muted-foreground font-sans font-light leading-relaxed">
-            Please check your inbox immediately for the calendar invite link. Important updates prior to the event will also be sent there. Make sure to check spam just in case!
+            Please check your inbox immediately for the calendar invite link. Important updates out prior to the event will also be sent there. Make sure to check spam just in case!
           </p>
         </div>
 
-        {/* Panellists */}
-        <div className="pt-6 border-t border-slate-200/60">
+        {/* Success Grid - Panellists */}
+        <div className="pt-6 animate-fade-up border-t border-slate-200/60" style={{ animationDelay: "0.2s" }}>
           <p className="text-xs uppercase tracking-widest text-emerald-800 font-sans font-semibold mb-6 text-center">
             You just secured access to:
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             {PANELLISTS.slice(0, 4).map((panellist) => (
-              <div key={panellist.name} className="flex flex-col items-center bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 hover:-translate-y-1 transition-transform w-[130px]">
+              <div key={panellist.name} className="flex flex-col items-center bg-white p-2.5 rounded-2xl shadow-sm border border-slate-100 hover:-translate-y-1 transition-transform w-[140px]">
                 <div className="w-full aspect-square rounded-xl overflow-hidden mb-3 bg-slate-100">
-                  <img src={panellist.image} alt={panellist.name} className="w-full h-full object-cover" />
+                  <img 
+                    src={panellist.image} 
+                    alt={panellist.name}
+                    className="w-full h-full object-cover filter contrast-[1.05]"
+                  />
                 </div>
-                <h4 className="text-[13px] font-bold text-foreground font-sans leading-tight">{panellist.name}</h4>
-                <p className="text-[9px] text-muted-foreground font-sans font-medium uppercase tracking-wide mt-1">{panellist.firm}</p>
+                <h4 className="text-[13px] font-bold text-foreground font-sans leading-tight">
+                  {panellist.name}
+                </h4>
+                <p className="text-[9px] text-muted-foreground font-sans font-medium uppercase tracking-wide mt-1">
+                  {panellist.firm}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
         <div className="text-center">
-          <a href="/" className="inline-block text-sm text-muted-foreground underline underline-offset-4 font-sans font-light hover:text-foreground/70 transition-colors">
+          <a
+            href="/"
+            className="inline-block text-sm text-muted-foreground underline underline-offset-4 font-sans font-light hover:text-foreground/70 transition-colors"
+          >
             Back to EarlyEdge
           </a>
         </div>
@@ -79,6 +90,7 @@ function DaSuccessScreen({ name }: { name: string }) {
   );
 }
 
+/* ---- Transition screen between industry and Success ---- */
 function PreparingTicket({ firstName }: { firstName: string }) {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -142,6 +154,7 @@ export default function DaWebinar() {
       return error;
     }
 
+    // Capture CRM data at different stages
     if (currentStep === 1) {
       saveCrmContact({
         email: form.formData.email,
@@ -159,16 +172,18 @@ export default function DaWebinar() {
         email: form.formData.email,
         firstName: form.formData.firstName,
         lastName: form.formData.lastName,
-        university: form.formData.university,
+        university: form.formData.university, // Being used for school tracking
         source: "webinar",
         tags: ["form_started", "da_interest"],
         metadata: { form_step: 2, year_of_study: form.formData.yearOfStudy, source_override: "da_webinar" },
       });
     }
 
+    // If transitioning from industry (step 3), this is the FINAL step for a free webinar
     if (currentStep === 3) {
+      // Create lead
       saveWebinarLead({ ...form.formData, selectedTicket: "webinar-only" });
-
+      
       localStorage.setItem(
         "webinar_signup",
         JSON.stringify({
@@ -178,9 +193,11 @@ export default function DaWebinar() {
         }),
       );
 
+      // Immediately mark as checked out (because it's free)
       markLeadCheckout(form.formData.email);
 
-      form.prevStep();
+      // Show processing, then jump to success screen
+      form.prevStep(); // visually hold
       setShowTransition(true);
       setTimeout(() => {
         setIsSuccess(true);
@@ -195,7 +212,10 @@ export default function DaWebinar() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
         <div className="fixed top-0 left-0 right-0 z-40">
-          <Progress value={100} className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600" />
+          <Progress
+            value={100}
+            className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+          />
         </div>
         <div className="absolute top-5 left-6 z-50">
           <Logo to="#" className="text-xl pointer-events-none" />
@@ -205,18 +225,25 @@ export default function DaWebinar() {
     );
   }
 
+  // Calculate actual progress based on 4 total steps (0-3) instead of the 5 inside useWebinarForm
   const daProgress = (form.step / 3) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+      {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 z-40">
-        <Progress value={daProgress} className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600" />
+        <Progress
+          value={daProgress}
+          className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+        />
       </div>
 
+      {/* Logo */}
       <div className="absolute top-5 left-6 z-50">
         <Logo to="#" className="text-xl pointer-events-none" />
       </div>
 
+      {/* Step counter */}
       {form.step > 0 && (
         <div className="absolute top-6 right-6 z-50">
           <span className="text-xs text-muted-foreground font-sans font-light">
@@ -225,6 +252,7 @@ export default function DaWebinar() {
         </div>
       )}
 
+      {/* Back button */}
       {form.step > 0 && (
         <button
           type="button"
@@ -236,6 +264,7 @@ export default function DaWebinar() {
         </button>
       )}
 
+      {/* Form steps */}
       <main className="min-h-screen flex items-center justify-center px-4 py-24">
         <div className="w-full max-w-xl mx-auto">
           <WebinarFormStep isActive={form.step === 0} direction={form.direction}>

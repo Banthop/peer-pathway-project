@@ -54,6 +54,7 @@ import GeneralRecording from "./pages/portal/GeneralRecording";
 import GeneralResources from "./pages/portal/GeneralResources";
 import BookAndrew from "./pages/portal/BookAndrew";
 import BookMohammad from "./pages/portal/BookMohammad";
+import DaWebinar from "./pages/DaWebinar";
 
 const queryClient = new QueryClient();
 
@@ -141,6 +142,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
+        <Route path="/da-webinar" element={<DaWebinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -200,6 +202,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
+      <Route path="/da-webinar" element={<DaWebinar />} />
       <Route path="/portal" element={<PortalLayout />}>
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
