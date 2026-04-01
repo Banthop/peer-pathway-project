@@ -7,7 +7,6 @@ import {
   CheckCircle2,
   Users,
   Trophy,
-  MessageSquare,
   ChevronDown,
   ArrowRight,
   Sparkles,
@@ -16,13 +15,13 @@ import {
   Target,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════════════════════════
- *  CAL.COM CONFIG
- * ═══════════════════════════════════════════════════════════════ */
+/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+ *  CAL.COM SETUP - see original for instructions
+ * ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */
 
 const CAL_USERNAME = "uthm4n";
 
-/* ─── Session types ─── */
+/* ÔöÇÔöÇÔöÇ Session types ÔöÇÔöÇÔöÇ */
 
 interface SessionType {
   id: string;
@@ -54,13 +53,13 @@ const SESSION_TYPES: SessionType[] = [
       "Strategy feedback & template fixes",
       "Clear action plan for your next steps",
     ],
-    calSlug: "strategy-call",
+    calSlug: "https://cal.com/uthm4n/strategy-call?overlayCalendar=true",
     testimonial: {
       text: "Fixed my subject lines and got 3 replies in the first week",
       name: "Priya M.",
       uni: "LSE",
     },
-    nextAvailable: "Tomorrow",
+    nextAvailable: "Tue 1 Apr",
   },
   {
     id: "deep-dive",
@@ -77,14 +76,13 @@ const SESSION_TYPES: SessionType[] = [
       "Personalised follow-up sequences",
       "7-day email support after the session",
     ],
-    calSlug: "deep-dive-session",
-    popular: true,
+    calSlug: "https://cal.com/uthm4n/deep-dive-session",
     testimonial: {
       text: "Had my call on Monday, fixed my templates the same day, and immediately started seeing higher open rates.",
       name: "Jake L.",
       uni: "Warwick",
     },
-    nextAvailable: "This week",
+    nextAvailable: "Mon 31 Mar",
   },
   {
     id: "group-workshop",
@@ -93,26 +91,25 @@ const SESSION_TYPES: SessionType[] = [
     price: "£20",
     priceLabel: "per person",
     description:
-      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option.",
+      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option and learn from others' questions.",
     includes: [
       "Full system walkthrough",
       "Live template building",
       "Group Q&A",
       "Recording of the session",
     ],
-    calSlug: "group-workshop",
-    isGroup: true,
+    calSlug: "https://cal.com/uthm4n/group-workshop",
     maxParticipants: 8,
     testimonial: {
       text: "Brilliant workshop. Learned so much from other people's questions too",
       name: "Amina R.",
       uni: "UCL",
     },
-    nextAvailable: "This weekend",
+    nextAvailable: "Sat 5 Apr",
   },
 ];
 
-/* ─── Package ─── */
+/* ÔöÇÔöÇÔöÇ Package ÔöÇÔöÇÔöÇ */
 
 const PACKAGE = {
   name: "3x Deep Dive Bundle",
@@ -123,10 +120,10 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "3xdeepdivebundle",
+  calSlug: "https://cal.com/uthm4n/3xdeepdivebundle",
 };
 
-/* ─── Testimonials ─── */
+/* ÔöÇÔöÇÔöÇ Testimonials ÔöÇÔöÇÔöÇ */
 
 const TESTIMONIALS = [
   {
@@ -166,7 +163,7 @@ const TESTIMONIALS = [
   },
 ];
 
-/* ─── FAQ ─── */
+/* ÔöÇÔöÇÔöÇ FAQ ÔöÇÔöÇÔöÇ */
 
 const FAQ = [
   {
@@ -195,28 +192,28 @@ const FAQ = [
   },
 ];
 
+
 /* ─── Main Component ─── */
+
+
 
 export default function BookUthman() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleExternalBookClick = (calSlug: string) => {
-    const baseUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?overlayCalendar=true`;
-
+  const handleBookClick = (_sessionName: string, calUrl: string) => {
     const params = new URLSearchParams();
     if (user?.email) params.set("email", user.email);
     const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
     if (name) params.set("name", name);
-
-    const finalUrl = params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
-    window.open(finalUrl, "_blank");
+    const separator = calUrl.includes("?") ? "&" : "?";
+    window.open(params.toString() ? `${calUrl}${separator}${params.toString()}` : calUrl, "_blank");
   };
 
   return (
     <div className="w-full relative">
 
-      {/* ════════ HERO SECTION ════════ */}
+      {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ HERO SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
       <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
         <div className="flex flex-col md:flex-row items-start gap-6">
           {/* Avatar */}
@@ -247,17 +244,13 @@ export default function BookUthman() {
                 <Trophy className="w-3.5 h-3.5 text-[#888]" />
                 <span className="text-[11px] text-[#666] font-medium">20+ offers across PE, IB, VC</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 shadow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-[11px] text-emerald-800 font-semibold">£30,000+ in first-year internship earnings</span>
-              </div>
             </div>
           </div>
         </div>
       </div>
 
       <div className="px-6 md:px-10 lg:px-12 pb-10">
-        {/* ════════ PAIN SECTION ════════ */}
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ PAIN SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
         <div className="bg-[#FFFBF5] border border-amber-200 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
           <h3 className="text-[15px] font-semibold text-[#111] mb-3 flex items-center gap-2 relative z-10">
@@ -280,230 +273,250 @@ export default function BookUthman() {
             ))}
           </div>
           <div className="mt-4 pt-4 border-t border-amber-200/50 relative z-10">
-            <p className="text-[13px] text-amber-900 font-medium">
-              A single session fixes all of this. One call → one focused system → replies in days.
+            <p className="text-[14px] font-semibold text-[#111] flex items-center gap-2">
+              <Zap className="w-4 h-4 text-amber-600" />
+              A single call with Uthman fixes this.
+            </p>
+            <p className="text-[12px] text-[#888] mt-1 font-light">
+              Every week you wait is a week of internship applications going to someone else.
             </p>
           </div>
         </div>
 
-        {/* ════════ SESSION CARDS ════════ */}
-        <div className="space-y-4 mb-8">
-          <h2 className="text-base font-semibold text-[#111]">Choose a session</h2>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {SESSION_TYPES.map((session) => (
-              <div
-                key={session.id}
-                className={`bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow relative ${
-                  session.popular ? "border-emerald-300 ring-1 ring-emerald-200" : "border-[#E8E8E8]"
-                }`}
-              >
-                {session.popular && (
-                  <div className="bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 text-center">
-                    Most Popular
-                  </div>
-                )}
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ COMPARISON ANCHOR ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-5 mb-8 text-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+          <p className="text-[13px] text-[#888] font-light">
+            Professional career coaching firms charge <strong className="text-[#111] font-semibold">£150-300/hr</strong>.
+          </p>
+          <p className="text-[13px] text-[#888] font-light mt-1">
+            A single internship offer can be worth <strong className="text-[#111] font-semibold">£30,000+</strong> in first-year earnings alone.
+          </p>
+          <p className="text-[14px] text-emerald-700 font-semibold mt-2">
+            A Deep Dive Session costs a fraction of what a bad application cycle will.
+          </p>
+        </div>
 
-                <div className="p-5 flex-shrink-0 space-y-5">
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ SESSION CARDS ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        <div className="space-y-5">
+          <h3 className="text-base font-semibold text-[#111] flex items-center justify-between">
+            Choose a session
+          </h3>
+
+          {SESSION_TYPES.map((session) => (
+            <div
+              key={session.id}
+              className={`relative bg-white border rounded-xl overflow-hidden transition-all hover:shadow-lg ${
+                session.popular
+                  ? "border-emerald-400 shadow-md border-l-4 ring-1 ring-emerald-100"
+                  : "border-[#E8E8E8] hover:border-[#CCC]"
+              }`}
+            >
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-3">
                   <div>
-                    <div className="flex items-start justify-between gap-2">
-                      <h3 className="text-[15px] font-bold text-[#111] leading-tight">{session.name}</h3>
+                    <h4 className="text-[15px] font-semibold text-[#111] flex items-center gap-2">
+                      {session.name}
+                      {session.popular && (
+                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                          POPULAR
+                        </span>
+                      )}
+                      {session.isGroup && (
+                        <span className="bg-blue-50 text-blue-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                          <Users className="w-3 h-3" />
+                          Group
+                        </span>
+                      )}
+                    </h4>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className="flex items-center gap-1 text-[12px] text-[#888]">
+                        <Clock className="w-3.5 h-3.5" />
+                        {session.duration}
+                      </span>
+                      <span className="flex items-center gap-1 text-[12px] text-[#888]">
+                        <CalendarIcon className="w-3.5 h-3.5" />
+                        Zoom
+                      </span>
+                      {session.maxParticipants && (
+                        <span className="flex items-center gap-1 text-[12px] text-[#888]">
+                          <Users className="w-3.5 h-3.5" />
+                          Max {session.maxParticipants}
+                        </span>
+                      )}
                       {session.nextAvailable && (
-                        <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
-                          {session.nextAvailable}
+                        <span className="flex items-center gap-1 text-[11px] text-[#888] font-medium">
+                          Next: <span className="text-[#111]">{session.nextAvailable}</span>
                         </span>
                       )}
                     </div>
-
-                    <div className="flex items-center gap-3 mt-2">
-                      <div className="flex items-center gap-1 text-[12px] text-[#888]">
-                        <Clock className="w-3.5 h-3.5" />
-                        {session.duration}
-                      </div>
-                      {session.isGroup && (
-                        <div className="flex items-center gap-1 text-[12px] text-[#888]">
-                          <Users className="w-3.5 h-3.5" />
-                          Max {session.maxParticipants}
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="text-[12px] text-[#666] mt-3 leading-relaxed font-light">{session.description}</p>
                   </div>
-
-                  <ul className="space-y-1.5">
-                    {session.includes.map((item) => (
-                      <li key={item} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-[12px] text-[#555] font-light">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {session.testimonial && (
-                    <div className="bg-[#FAFAFA] rounded-xl p-3 border border-[#F0F0F0]">
-                      <p className="text-[11px] text-[#555] font-light italic leading-relaxed">
-                        "{session.testimonial.text}"
-                      </p>
-                      <p className="text-[10px] text-[#999] mt-1.5 font-medium">
-                        — {session.testimonial.name}, {session.testimonial.uni}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="pt-1">
-                    <div className="flex items-baseline gap-1.5 mb-3">
-                      <span className="text-2xl font-bold text-[#111]">{session.price}</span>
-                      <span className="text-[11px] text-[#999]">{session.priceLabel}</span>
-                    </div>
-
-                    <button
-                      onClick={() => handleExternalBookClick(session.calSlug)}
-                      className={`w-full py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
-                        session.popular
-                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                          : "bg-[#111] text-white hover:bg-[#222]"
-                      }`}
-                    >
-                      <CalendarIcon className="w-4 h-4" />
-                      Select Time Slot
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-xl font-bold text-[#111]">{session.price}</p>
+                    <p className="text-[10px] text-[#BBB]">{session.priceLabel}</p>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* ════════ PACKAGE DEAL ════════ */}
-        <div className="relative bg-gradient-to-br from-[#111] to-[#1a1a2e] rounded-2xl p-6 md:p-8 mb-10 overflow-hidden shadow-xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
-          <div className="relative">
-            <div className="flex flex-col md:flex-row md:items-start gap-6">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-amber-400/20 text-amber-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-amber-400/30">
-                    Best Value
-                  </span>
-                  <span className="text-white/40 text-[11px] line-through">{PACKAGE.originalPrice}</span>
-                  <span className="text-emerald-400 text-[11px] font-bold">{PACKAGE.priceLabel}</span>
-                </div>
-
-                <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">{PACKAGE.name}</h3>
-                <p className="text-[13px] text-white/60 mt-1 font-light">{PACKAGE.sessions}</p>
-                <p className="text-[13px] text-white/70 mt-3 leading-relaxed font-light max-w-lg">
-                  {PACKAGE.description}
+                <p className="text-[13px] text-[#666] font-light leading-relaxed mb-4">
+                  {session.description}
                 </p>
 
-                <div className="mt-4 space-y-2">
-                  {PACKAGE.journey.map((step, i) => (
-                    <div key={step} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
-                        <span className="text-[9px] font-bold text-emerald-400">{i + 1}</span>
-                      </div>
-                      <span className="text-[12px] text-white/70 font-light">{step}</span>
+                {/* What you'll walk away with */}
+                <p className="text-[11px] text-[#999] font-semibold uppercase tracking-wider mb-2">
+                  What you'll walk away with
+                </p>
+                <div className="space-y-2 mb-4">
+                  {session.includes.map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                      <span className="text-[12px] text-[#555]">{item}</span>
                     </div>
                   ))}
                 </div>
-              </div>
 
-              <div className="md:w-[220px] flex-shrink-0">
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/10">
-                  <p className="text-white/50 text-[11px] uppercase tracking-wider mb-1">Bundle price</p>
-                  <div className="flex items-baseline gap-1.5 mb-4">
-                    <span className="text-3xl font-bold text-white">{PACKAGE.price}</span>
-                    <span className="text-white/40 text-xs">total</span>
+                {/* Inline testimonial */}
+                {session.testimonial && (
+                  <div className="bg-emerald-50/60 border border-emerald-100 rounded-lg px-4 py-3 mb-4">
+                    <div className="flex gap-0.5 mb-1">
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <p className="text-[12px] text-emerald-800 font-light italic leading-relaxed">
+                      "{session.testimonial.text}"
+                    </p>
+                    <p className="text-[11px] text-emerald-600 font-medium mt-1">
+                      {session.testimonial.name}, {session.testimonial.uni}
+                    </p>
                   </div>
-                  <button
-                    onClick={() => handleExternalBookClick(PACKAGE.calSlug)}
-                    className="w-full py-3 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-400 transition-all shadow-lg flex items-center justify-center gap-2"
-                  >
-                    <CalendarIcon className="w-4 h-4" />
-                    Select Time Slot
-                  </button>
-                  <p className="text-white/30 text-[10px] text-center mt-2">
-                    Book first session — remaining 2 scheduled on the call
-                  </p>
-                </div>
+                )}
+
+                <button
+                  onClick={() => handleBookClick(session.name, session.calSlug)}
+                  className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    session.popular
+                      ? "bg-[#111] text-white hover:bg-[#222] shadow-sm hover:-translate-y-0.5"
+                      : "bg-[#F5F5F5] text-[#111] hover:bg-[#EBEBEB] border border-[#E0E0E0] hover:-translate-y-0.5"
+                  }`}
+                >
+                  <CalendarIcon className="w-4 h-4" />
+                  Select Time Slot
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        {/* ════════ TESTIMONIALS ════════ */}
-        <div className="mb-10">
-          <div className="flex items-center gap-2 mb-5">
-            <h2 className="text-base font-semibold text-[#111]">What students say</h2>
-            <div className="flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              ))}
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ BUNDLE PACKAGE ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        <div className="relative bg-[#111] border border-[#222] rounded-xl p-6 text-white mt-6">
+          <div className="flex items-start justify-between mb-3 pt-2">
+            <div>
+              <h4 className="text-[15px] font-semibold">{PACKAGE.name}</h4>
+              <p className="text-[12px] text-white/50 mt-0.5">{PACKAGE.sessions}</p>
             </div>
-            <span className="text-[12px] text-[#888]">5.0 · {TESTIMONIALS.length} reviews</span>
+            <div className="text-right">
+              <div className="flex items-center gap-2">
+                <p className="text-[15px] text-white/40 line-through">{PACKAGE.originalPrice}</p>
+                <p className="text-xl font-bold">{PACKAGE.price}</p>
+              </div>
+              <p className="text-[11px] text-emerald-400 font-semibold">{PACKAGE.priceLabel}</p>
+            </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="bg-white border border-[#E8E8E8] rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-0.5 mb-3">
-                  {[...Array(t.rating)].map((_, i) => (
+          <p className="text-[13px] text-white/70 font-light leading-relaxed mb-4">
+            {PACKAGE.description}
+          </p>
+
+          {/* Journey steps */}
+          <div className="grid grid-cols-3 gap-2 mb-5">
+            {PACKAGE.journey.map((step, idx) => (
+              <div key={step} className="bg-white/10 rounded-lg px-3 py-2.5 text-center">
+                <p className="text-[10px] text-white/40 font-semibold mb-0.5">STEP {idx + 1}</p>
+                <p className="text-[11px] text-white/80 font-medium">{step}</p>
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={() => handleBookClick(PACKAGE.name, PACKAGE.calSlug)}
+            className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-md hover:-translate-y-0.5"
+          >
+            <CalendarIcon className="w-4 h-4" />
+            Book Package slots
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ TESTIMONIALS SECTION ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        <div className="mt-12 mb-8">
+          <div className="text-center mb-6">
+            <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-1">
+              Real results from real students
+            </p>
+            <h3 className="text-lg font-semibold text-[#111]">
+              What happened after they booked
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {TESTIMONIALS.map((review) => (
+              <div key={review.name} className="bg-[#F0FDF4] border border-emerald-100 rounded-xl p-5">
+                <div className="flex gap-0.5 mb-2">
+                  {Array.from({ length: review.rating }).map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-[13px] text-[#444] font-light leading-relaxed italic">"{t.text}"</p>
-                <div className="mt-3 pt-3 border-t border-[#F5F5F5]">
-                  <p className="text-[12px] font-semibold text-[#111]">{t.name}</p>
-                  <p className="text-[11px] text-[#999] font-light">{t.uni} · {t.year}</p>
+                <p className="text-[13px] text-[#333] font-light italic leading-relaxed mb-3">
+                  "{review.text}"
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-emerald-700 flex items-center justify-center text-[10px] text-white font-semibold">
+                    {review.name[0]}
+                  </div>
+                  <div>
+                    <p className="text-[12px] font-semibold text-[#111]">{review.name}</p>
+                    <p className="text-[11px] text-[#888]">{review.year}, {review.uni}</p>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* ════════ FAQ ════════ */}
-        <div className="mb-10">
-          <h2 className="text-base font-semibold text-[#111] mb-4">Common questions</h2>
-          <div className="space-y-2">
+        {/* ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ FAQ ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ */}
+        <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden mt-8">
+          <div className="px-5 py-4 border-b border-[#E8E8E8]">
+            <h3 className="text-[13px] font-semibold text-[#111]">
+              Common Questions
+            </h3>
+          </div>
+          <div className="divide-y divide-[#F0F0F0]">
             {FAQ.map((faq, idx) => (
-              <div key={idx} className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden shadow-sm">
-                <button
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#FAFAFA] transition-colors"
-                >
-                  <span className="text-[13px] font-medium text-[#111]">{faq.q}</span>
+              <button
+                key={idx}
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full text-left px-5 py-3.5 hover:bg-[#FAFAFA] transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-[13px] font-medium text-[#111]">{faq.q}</p>
                   <ChevronDown
-                    className={`w-4 h-4 text-[#999] flex-shrink-0 ml-4 transition-transform ${
+                    className={`w-4 h-4 text-[#999] transition-transform flex-shrink-0 ml-2 ${
                       openFaq === idx ? "rotate-180" : ""
                     }`}
                   />
-                </button>
+                </div>
                 {openFaq === idx && (
-                  <div className="px-5 pb-4">
-                    <p className="text-[13px] text-[#666] font-light leading-relaxed">{faq.a}</p>
-                  </div>
+                  <p className="text-[12px] text-[#666] font-light leading-relaxed mt-2 pr-6 animate-in fade-in slide-in-from-top-1 duration-200">
+                    {faq.a}
+                  </p>
                 )}
-              </div>
+              </button>
             ))}
           </div>
         </div>
-
-        {/* ════════ BOTTOM CTA ════════ */}
-        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 text-center shadow-sm">
-          <Zap className="w-6 h-6 text-emerald-600 mx-auto mb-3" />
-          <h3 className="text-[16px] font-bold text-[#111] mb-1">Ready to start getting replies?</h3>
-          <p className="text-[13px] text-[#666] font-light mb-5 max-w-md mx-auto leading-relaxed">
-            Choose a session above and book directly. Uthman's availability syncs automatically via Cal.com.
-          </p>
-          <button
-            onClick={() => handleExternalBookClick(SESSION_TYPES[1].calSlug)}
-            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 hover:-translate-y-0.5 transition-all shadow-md"
-          >
-            <CalendarIcon className="w-4 h-4" />
-            Book a Deep Dive Session
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
       </div>
+
     </div>
   );
 }
+
