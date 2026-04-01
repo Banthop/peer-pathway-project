@@ -257,7 +257,7 @@
 
 /* ─── FLOATING ANIMATIONS ─── */
 
-/* Primary float — gentle elliptical hover */
+/* Primary float - gentle elliptical hover */
 @keyframes float {
 
   0%,
@@ -278,7 +278,7 @@
   }
 }
 
-/* Reverse — mirrored path for visual variety */
+/* Reverse - mirrored path for visual variety */
 @keyframes float-reverse {
 
   0%,
@@ -299,7 +299,7 @@
   }
 }
 
-/* Gentle — slow vertical bob, minimal horizontal */
+/* Gentle - slow vertical bob, minimal horizontal */
 @keyframes float-gentle {
 
   0%,
@@ -312,7 +312,7 @@
   }
 }
 
-/* Slow — very relaxed figure-8 path */
+/* Slow - very relaxed figure-8 path */
 @keyframes float-slow {
 
   0%,
@@ -353,7 +353,7 @@
   }
 }
 
-/* Card float — translate only, NO rotation (preserves inline rotate on coach cards) */
+/* Card float - translate only, NO rotation (preserves inline rotate on coach cards) */
 @keyframes float-card {
 
   0%,

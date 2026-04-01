@@ -50,3 +50,9 @@ enabled = true
 verify_jwt = false
 import_map = "./functions/resend-webhook/deno.json"
 entrypoint = "./functions/resend-webhook/index.ts"
+
+[functions.loops-sync]
+enabled = true
+verify_jwt = false
+import_map = "./functions/loops-sync/deno.json"
+entrypoint = "./functions/loops-sync/index.ts"

@@ -4,7 +4,7 @@ export const WEBINAR_TITLE =
 export const WEBINAR_SUBTITLE =
   "A 2-part panel with students who actually did it at Goldman, Citi, Barclays, and more";
 
-// -- Stripe Payment Links (placeholders - replace with real links once Stripe products are created) --
+// -- Stripe Payment Links (live) --
 export const STRIPE_PART1_LINK =
   "https://buy.stripe.com/dRmbJ06aM9xTg5k74M2400f";
 export const STRIPE_PART2_LINK =

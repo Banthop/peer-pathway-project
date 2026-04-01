@@ -1,4 +1,4 @@
-# EarlyEdge — Complete Technical & Business Context
+# EarlyEdge  - Complete Technical & Business Context
 
 > This document is the single source of truth for building EarlyEdge. Feed this to your AI agent before any task. It contains business logic, technical requirements, design system, database schema, API contracts, payment flows, and all decisions made to date.
 
@@ -6,7 +6,7 @@
 
 ## 1. What Is EarlyEdge
 
-EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 sessions with coaches who are students or recent graduates that recently achieved something competitive — Spring Weeks at investment banks, Oxbridge offers, UCAT scores, training contracts at magic circle law firms, tech internships at FAANG companies.
+EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 sessions with coaches who are students or recent graduates that recently achieved something competitive  - Spring Weeks at investment banks, Oxbridge offers, UCAT scores, training contracts at magic circle law firms, tech internships at FAANG companies.
 
 **Core value proposition:** Learn from someone who just did it. Not career coaches who did it 10 years ago and charge £150+/hour. Peers who did it in the last 1-3 years, remember everything, and charge £25-60/hour.
 
@@ -18,25 +18,25 @@ EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 session
 
 **1-on-1 Sessions & Packages (Core)**
 - Coaches set their own per-session prices (typically £25-60/hour)
-- Packages (3-5 sessions) are the default, not an upsell — 3.75x higher AOV
+- Packages (3-5 sessions) are the default, not an upsell  - 3.75x higher AOV
 
 **Group Sessions / Workshops:**
 - Coaches create ticketed group events (workshops, bootcamps, AMAs, panels)
 - Pricing: typically £15-25 per attendee for workshops, £50-100 for multi-session bootcamps
 - Platform takes the same commission as 1-on-1 sessions
-- Example: "Spring Week Conversion Workshop" — 1 coach, 15 students, £20 each = £300 total
+- Example: "Spring Week Conversion Workshop"  - 1 coach, 15 students, £20 each = £300 total
 
 **Paid Resources / Digital Products:**
 - Coaches upload and sell guides, templates, checklists, toolkits
 - Pricing: £5-15 per resource (impulse purchase territory for students)
-- Free resources exist as lead magnets — require account creation to access
+- Free resources exist as lead magnets  - require account creation to access
 - Platform takes 20% of paid resource sales
-- Example: "My exact Goldman Sachs application — annotated" — £10, sells repeatedly with zero marginal cost
+- Example: "My exact Goldman Sachs application  - annotated"  - £10, sells repeatedly with zero marginal cost
 
 **Events (Larger Scale):**
 - Ticketed webinars, panels, live Q&As
 - Pricing: £10-20 per ticket, 20-50+ attendees
-- Example: "AMA with a Goldman Sachs Analyst — £10, 50 spots"
+- Example: "AMA with a Goldman Sachs Analyst  - £10, 50 spots"
 
 > The revenue stack is designed so a single student can spend money in multiple ways: free intro → paid session/package → group workshop → paid resource → more sessions. Average revenue per student should increase over time as more products become available.
 
@@ -56,10 +56,10 @@ EarlyEdge is a two-sided peer coaching marketplace. Students book 1-on-1 session
 
 ### Key Business Decisions
 1. Coaches can be students OR recent grads (within 2-3 years of achievement)
-2. Coach churn is expected — students become coaches, knowledge stays fresh
-3. Packages are the default, not an upsell — push packages over single sessions (3.75x higher AOV)
-4. Parents pay for UCAT/Oxbridge — different price sensitivity
-5. Launch Feb 15 even if imperfect — speed over perfection
+2. Coach churn is expected  - students become coaches, knowledge stays fresh
+3. Packages are the default, not an upsell  - push packages over single sessions (3.75x higher AOV)
+4. Parents pay for UCAT/Oxbridge  - different price sensitivity
+5. Launch Feb 15 even if imperfect  - speed over perfection
 6. 10% discount for student referrals
 7. Sponsored/featured coach profiles (clearly labelled) as future revenue stream
 8. Cold emailing is its own coaching category
@@ -82,7 +82,7 @@ Assessment Centre Prep, IELTS / TOEFL, SQE Prep, Scholarship Applications, Gradu
 |-------|-----------|-------|
 | Frontend | React (via Lovable / Antigravity) | Single page app with client-side routing |
 | Backend / Database | Supabase (PostgreSQL + Auth + Realtime) | Hosted PostgreSQL, built-in auth, row-level security, realtime subscriptions |
-| Payments | Stripe Connect | Marketplace payments — platform collects, splits to coaches |
+| Payments | Stripe Connect | Marketplace payments  - platform collects, splits to coaches |
 | Scheduling | Cal.com or custom build | Automated emails: 24hrs before, 1hr before, 24hrs after (review prompt) |
 | Video Calls | Zoom or Google Meet links | External links, not built in-app |
 | Email | Resend or SendGrid | Transactional emails (booking confirmations, reminders, review prompts) |
@@ -572,7 +572,7 @@ POST   supabase.auth.updateUser({ password })
 POST   supabase.auth.signOut()
 ```
 
-### Coaches — Browse & Discovery
+### Coaches  - Browse & Discovery
 ```
 GET    /coaches                         -- List active coaches, with filters
        ?category=Investment Banking
@@ -698,7 +698,7 @@ GET /trending-topics -- list active trending topics sorted by sort_order
    a. Update booking status to 'confirmed'
    b. Store stripe_payment_intent_id on booking
    c. Send confirmation email to student and coach
-6. Free intro calls skip Stripe entirely — just create booking with price=0
+6. Free intro calls skip Stripe entirely  - just create booking with price=0
 
 -- Commission calculation function
 CREATE OR REPLACE FUNCTION calculate_commission(p_coach_id UUID, p_amount INTEGER)
@@ -748,7 +748,7 @@ $$ LANGUAGE plpgsql;
 2. Edge Function creates PaymentIntent with `application_fee_amount` (commission)
 3. Frontend confirms payment via Stripe Elements
 4. On success: create `resource_purchase`, reveal download link
-5. Free resources skip Stripe — require account creation only
+5. Free resources skip Stripe  - require account creation only
 
 ### Payment Splitting for Packages
 For packages over £100, offer "Pay per session" option:
@@ -903,7 +903,7 @@ Using Cal.com integration or custom via Resend/SendGrid:
 
 ---
 
-## 13. Frontend Pages — Complete List
+## 13. Frontend Pages  - Complete List
 
 ### Public Pages (No Auth)
 | Page | Status | Notes |
@@ -911,7 +911,7 @@ Using Cal.com integration or custom via Resend/SendGrid:
 | Landing page | Needs fixes | Hero copy, hide reviews until real, add FAQ, add "Become a Coach" CTA |
 | Browse coaches | Needs build | Filters, search, sort, coach cards, mobile responsive |
 | Coach profile (public) | Needs build | Full bio, reviews, packages, services, booking CTAs |
-| How it works | Done | — |
+| How it works | Done |  - |
 | FAQ | Not started | 6-8 questions |
 | Become a Coach | Needs build | Benefits, earnings potential, sign up CTA |
 
@@ -1081,11 +1081,11 @@ CREATE TRIGGER on_booking_completed
 
 ### Three-Tier Display
 Every coach profile shows three options side by side:
-1. **Single session** (highest per-session price — serves as anchor/decoy)
-2. **Main package** (highlighted as "Most popular" — the option you want them to buy)
+1. **Single session** (highest per-session price  - serves as anchor/decoy)
+2. **Main package** (highlighted as "Most popular"  - the option you want them to buy)
 3. **Shorter package** (mid-tier option for price-sensitive students)
 
-The primary CTA below all tiers is always "Book free intro — 15 min, no charge." The tiers are informational — purchase happens after the free intro.
+The primary CTA below all tiers is always "Book free intro  - 15 min, no charge." The tiers are informational  - purchase happens after the free intro.
 
 ### Anchoring
 Show a subtle comparison on coach profiles:
@@ -1111,19 +1111,19 @@ For founding coaches: show "Founding price: £25/session ~~(normally £35)~~" wi
 
 ## 18. Landing Page Structure
 
-1. **Seasonal banner** — thin, dismissible, pulls from `season_banners` table. Shows current urgent deadlines.
-2. **Header** — EarlyEdge | Browse | Become a Coach | How it works | Log in | Get Started
-3. **Hero** — headline "Your edge, unlocked." in Inter Bold. Subheadline. Guided category selector (NOT a free-text search bar). Floating uni/firm logos. NO floating coach cards. Anchor text: "Book a free intro call · Sessions from £25 · Packages from £99"
-4. **How it works** — 3 steps. "Browse coaches" button (not "Get Started"). 15-minute free intro (not 10).
-5. **Featured coaches** — redesigned cards showing: avatar, name, credential, tagline (outcome-focused), service tags, signature package name + session count, per-session price. NO ratings/review counts at launch.
-6. **Resource bank** — white background (no dark container). Trending topics row. Category filters. Coach booking links on each resource. Sign-up gate for access.
-7. **FAQ** — For Students / For Coaches toggle. No changes.
-8. **Final CTA** — "Your future self will thank you." + "Book a Free Intro" button.
-9. **Footer** — no changes.
+1. **Seasonal banner**  - thin, dismissible, pulls from `season_banners` table. Shows current urgent deadlines.
+2. **Header**  - EarlyEdge | Browse | Become a Coach | How it works | Log in | Get Started
+3. **Hero**  - headline "Your edge, unlocked." in Inter Bold. Subheadline. Guided category selector (NOT a free-text search bar). Floating uni/firm logos. NO floating coach cards. Anchor text: "Book a free intro call · Sessions from £25 · Packages from £99"
+4. **How it works**  - 3 steps. "Browse coaches" button (not "Get Started"). 15-minute free intro (not 10).
+5. **Featured coaches**  - redesigned cards showing: avatar, name, credential, tagline (outcome-focused), service tags, signature package name + session count, per-session price. NO ratings/review counts at launch.
+6. **Resource bank**  - white background (no dark container). Trending topics row. Category filters. Coach booking links on each resource. Sign-up gate for access.
+7. **FAQ**  - For Students / For Coaches toggle. No changes.
+8. **Final CTA**  - "Your future self will thank you." + "Book a Free Intro" button.
+9. **Footer**  - no changes.
 
 **Removed sections:**
-- "Coaches From 50+ Universities and Firms" + headshot strip — DELETED (redundant with hero logos and featured coaches)
-- "Why students choose EarlyEdge" — DELETED (redundant with hero subheadline)
+- "Coaches From 50+ Universities and Firms" + headshot strip  - DELETED (redundant with hero logos and featured coaches)
+- "Why students choose EarlyEdge"  - DELETED (redundant with hero subheadline)
 
 ---
 
@@ -1134,7 +1134,7 @@ For founding coaches: show "Founding price: £25/session ~~(normally £35)~~" wi
 [Avatar] Name · University '24
          Credential headline
 
-"Outcome-focused tagline — what students get from working with this coach"
+"Outcome-focused tagline  - what students get from working with this coach"
 
 Service Tag · Service Tag · Service Tag
 

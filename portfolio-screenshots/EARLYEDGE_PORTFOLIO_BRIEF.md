@@ -1,4 +1,4 @@
-# EarlyEdge — Full Portfolio Brief
+# EarlyEdge  - Full Portfolio Brief
 
 > Use this document to build a portfolio case study for the EarlyEdge platform. It contains detailed descriptions of every page, the tech stack, architecture decisions, and key features built.
 
@@ -8,7 +8,7 @@
 
 **EarlyEdge** is a peer-to-peer coaching marketplace connecting university students with verified mentors who've recently landed offers at top firms (Goldman Sachs, McKinsey, Clifford Chance, Meta, etc.). The platform enables students to book 1-on-1 coaching sessions for career prep across investment banking, consulting, law, software engineering, Oxbridge applications, and more.
 
-**My Role:** Full-stack developer — designed and built the entire platform from scratch, including the frontend, backend, payment infrastructure, email automation system, and marketing funnel.
+**My Role:** Full-stack developer  - designed and built the entire platform from scratch, including the frontend, backend, payment infrastructure, email automation system, and marketing funnel.
 
 **Live URL:** earlyedge.co
 
@@ -36,11 +36,11 @@
 **Design:** A bold, clean landing page with the headline "Your edge, unlocked." in large serif typography. The subheadline reads: "1-on-1 coaching from students who just landed the offers you want."
 
 **Visual Elements:**
-- **Floating Logos:** University crests (UCL, Cambridge, Oxford, Imperial, LSE) and company logos (Goldman Sachs, Clifford Chance, Jane Street, Google) float in an animated orbit around the central content — conveying credibility and the calibre of coaches
+- **Floating Logos:** University crests (UCL, Cambridge, Oxford, Imperial, LSE) and company logos (Goldman Sachs, Clifford Chance, Jane Street, Google) float in an animated orbit around the central content  - conveying credibility and the calibre of coaches
 - **Search Bar:** Prominent coach search input ("Search for coaches...") centred below the headline
 - **CTA Bar:** "Book a free intro call • Sessions from £25 • Packages from £99"
-- **Category Pills:** Clickable filter buttons — Law, Assessment Centre Prep, Cold Emailing, Consulting, Investment Banking, UCAT, Graduate Schemes, Oxbridge, Software Engineering, Personal Statements
-- **Stats Bar:** Four animated counters at the bottom — "200+ Students coached", "4.9 Average rating", "15 min Free intro call", "22 Career categories"
+- **Category Pills:** Clickable filter buttons  - Law, Assessment Centre Prep, Cold Emailing, Consulting, Investment Banking, UCAT, Graduate Schemes, Oxbridge, Software Engineering, Personal Statements
+- **Stats Bar:** Four animated counters at the bottom  - "200+ Students coached", "4.9 Average rating", "15 min Free intro call", "22 Career categories"
 
 **Colour Palette:** Light blue-grey gradient background (#f0f4f8 → #e8eef4), dark typography, green accent for CTAs (#4a7c59)
 
@@ -62,10 +62,10 @@
 - Category pills with colour-coded dots: All, Investment Banking, Consulting, Law, UCAT, Oxbridge, Software Engineering
 
 **Coach Cards (examples):**
-- **Sarah K.** — Goldman Sachs Incoming Analyst · Oxford '24 · £50/hr · ⭐ 4.9 (47) · 63 sessions — "Landed Spring Weeks at Goldman & Citi. Helped 15+ friends get offers." — Package: "Spring Week Sprint" 5 sessions · £30/session = £150 — Tags: Investment Banking, Spring Week, CV Review
-- **James L.** — Meta Software Engineer · Imperial '22 · £55/hr · ⭐ 4.9 (41) · 52 sessions — "SWE at Meta. Did 100+ LeetCode problems and went through the full tech interview loop!" — Package: "Tech Interview Prep" 5 sessions · £45/session = £225
-- **David W.** — McKinsey Summer Associate · Cambridge '23 · £60/hr · ⭐ 5 (32) · 48 sessions — Package: "Case Interview Intensive" 4 sessions = £200
-- **Tom H.** — Oxford PPE '24 · Eton College · £55/hr · ⭐ 4.9 (35) · 41 sessions — Package: "Oxbridge Interview Prep" 4 sessions = £180
+- **Sarah K.**  - Goldman Sachs Incoming Analyst · Oxford '24 · £50/hr · ⭐ 4.9 (47) · 63 sessions  - "Landed Spring Weeks at Goldman & Citi. Helped 15+ friends get offers."  - Package: "Spring Week Sprint" 5 sessions · £30/session = £150  - Tags: Investment Banking, Spring Week, CV Review
+- **James L.**  - Meta Software Engineer · Imperial '22 · £55/hr · ⭐ 4.9 (41) · 52 sessions  - "SWE at Meta. Did 100+ LeetCode problems and went through the full tech interview loop!"  - Package: "Tech Interview Prep" 5 sessions · £45/session = £225
+- **David W.**  - McKinsey Summer Associate · Cambridge '23 · £60/hr · ⭐ 5 (32) · 48 sessions  - Package: "Case Interview Intensive" 4 sessions = £200
+- **Tom H.**  - Oxford PPE '24 · Eton College · £55/hr · ⭐ 4.9 (35) · 41 sessions  - Package: "Oxbridge Interview Prep" 4 sessions = £180
 
 **Card Actions:** "Book again →" or "Book free intro →" CTAs per card
 
@@ -87,7 +87,7 @@
 
 **Content Bullets ("What you'll walk away with"):**
 - How Uthman found the emails of CEOs, MDs, and decision-makers at any firm
-- The exact email template behind his 21% response rate and 20+ offers — word for word
+- The exact email template behind his 21% response rate and 20+ offers  - word for word
 - A live demo of the mail-merge system he used to send 50+ personalised emails a day
 - How he turned rejection emails into networking conversations, mentorship, and referrals
 - The nightly follow-up routine that kept every conversation alive
@@ -96,7 +96,7 @@
 **Countdown Timer:** Days / Hours / Minutes / Seconds digital display
 **Event Details:** "28 March 2026 | 7:00 PM GMT | 90 min | From ~~£19~~ £10"
 **Urgency:** "Spots are limited" in red
-**Recording Notice:** "Can't make the live session? No worries — every ticket holder gets the full recording sent within 24 hours."
+**Recording Notice:** "Can't make the live session? No worries  - every ticket holder gets the full recording sent within 24 hours."
 **CTA Button:** Green "Claim My Spot →" button with "Takes 30 seconds to register" microcopy
 
 ---
@@ -105,16 +105,16 @@
 
 **Design:** A 4-step wizard with progress indicator (e.g. "2 of 4" in top-right).
 
-**Step 1 — Personal Details:**
+**Step 1  - Personal Details:**
 - First Name, Last Name, Email inputs
 - "Save My Details" button
 
-**Step 2 — University:**
+**Step 2  - University:**
 - Searchable university dropdown (all UK universities)
 - Year of study selector (1st Year, 2nd Year, 3rd Year, Masters, PhD)
 - "Continue" button
 
-**Step 3 — Industry & Source:**
+**Step 3  - Industry & Source:**
 - Target industry selector (Finance, Consulting, Law, Tech, etc.)
 - "How did you hear about us?" (Instagram, LinkedIn, TikTok, Friend, etc.)
 - "Continue" button
@@ -130,18 +130,18 @@
 - "Pick the option that's right for you"
 - Countdown timer persistence: "0d 0h 0m 0s until webinar"
 
-**Social Proof Banner:** Green banner at top — "👥 78% of students choose the bundle"
+**Social Proof Banner:** Green banner at top  - "👥 78% of students choose the bundle"
 
-**Tier 1 — Webinar Only:**
+**Tier 1  - Webinar Only:**
 - "⚡ 47% OFF" badge
 - Price: ~~£19~~ £10
 - Features: Live webinar access, Q&A with the speaker, Recording sent after
 - Grey "Select" button
 
-**Tier 2 — Webinar + Cold Email Guide (highlighted):**
+**Tier 2  - Webinar + Cold Email Guide (highlighted):**
 - Green border, "⭐ Most Popular" + "Spots are limited" badges, "BEST VALUE" corner tag
 - Price: £29
-- Features: Everything in Tier 1 + "The Cold Email Guide — get access instantly, and use it to prepare ahead"
+- Features: Everything in Tier 1 + "The Cold Email Guide  - get access instantly, and use it to prepare ahead"
 - Green "Select" button
 
 ---
@@ -151,7 +151,7 @@
 **Design:** An interactive document viewer styled like a macOS window.
 
 **Window Chrome:** Red/yellow/green dots in top-left, "EarlyEdge Viewer" label centred
-**Content:** "The 15-Point Cold Email Checklist" — professional document with:
+**Content:** "The 15-Point Cold Email Checklist"  - professional document with:
 - "EARLYEDGE" brand header in small caps
 - Orange accent on "15-Point" in the title
 - Subheadline: "Uthman went from 0 to 20+ internship offers in 3 weeks."
@@ -185,12 +185,12 @@
 **Header:**
 - Shield icon + "EARLYEDGE GUARANTEE" label
 - "Your sessions are protected" heading
-- "Every session booked through EarlyEdge comes with built-in safeguards so you can focus on what matters — getting ahead."
+- "Every session booked through EarlyEdge comes with built-in safeguards so you can focus on what matters  - getting ahead."
 
 **Trust Cards:**
-1. **✓ 100% Satisfaction Guarantee** — "Not satisfied with your first session? Email us at support@earlyedge.co within 24 hours for a full refund — no questions asked."
-2. **👥 Manually Verified Coaches** — "All coaches are hand-reviewed before they go live. We verify credentials, experience, and coaching quality so you only see coaches who can genuinely help."
-3. **📹 Seamless Video Sessions** — "Sessions happen via video call with a direct link — no downloads, no plugins, no hassle. Just click and connect with your coach."
+1. **✓ 100% Satisfaction Guarantee**  - "Not satisfied with your first session? Email us at support@earlyedge.co within 24 hours for a full refund  - no questions asked."
+2. **👥 Manually Verified Coaches**  - "All coaches are hand-reviewed before they go live. We verify credentials, experience, and coaching quality so you only see coaches who can genuinely help."
+3. **📹 Seamless Video Sessions**  - "Sessions happen via video call with a direct link  - no downloads, no plugins, no hassle. Just click and connect with your coach."
 
 **CTA:** Dark "Browse coaches" button centred at bottom
 
@@ -225,7 +225,7 @@
   - `recording_premium` → tags: `recording_access`, `bundle`, `premium_buyer`
   - Default webinar purchase → tags: `buyer`
 
-### Auto-Emailer (Edge Function — Cron)
+### Auto-Emailer (Edge Function  - Cron)
 - Runs on a schedule via Supabase cron
 - Queries `crm_contacts` for new buyers who haven't received confirmation
 - Sends package-specific confirmation emails via Resend:
@@ -244,14 +244,14 @@
 
 ## Key Technical Achievements
 
-1. **Multi-step funnel with 78% completion rate** — Designed a 4-step registration wizard that reduces friction through progressive disclosure and personalisation
-2. **Real-time animated stats** — Counter animations trigger on scroll using Intersection Observer API
-3. **Floating logo animation** — CSS keyframe animations with staggered timing for organic floating effect
-4. **Stripe payment automation** — End-to-end purchase flow: Stripe → Webhook → CRM tagging → automated email confirmation
-5. **Responsive design** — Full mobile optimization across all pages
-6. **Password-gated premium resources** — Secure document hosting with access management
-7. **Cal.com scheduling integration** — Embeddable booking widget for 1-on-1 coaching sessions
-8. **Broadcast email system** — Custom email automation bypassing transactional limits using Resend broadcast API
+1. **Multi-step funnel with 78% completion rate**  - Designed a 4-step registration wizard that reduces friction through progressive disclosure and personalisation
+2. **Real-time animated stats**  - Counter animations trigger on scroll using Intersection Observer API
+3. **Floating logo animation**  - CSS keyframe animations with staggered timing for organic floating effect
+4. **Stripe payment automation**  - End-to-end purchase flow: Stripe → Webhook → CRM tagging → automated email confirmation
+5. **Responsive design**  - Full mobile optimization across all pages
+6. **Password-gated premium resources**  - Secure document hosting with access management
+7. **Cal.com scheduling integration**  - Embeddable booking widget for 1-on-1 coaching sessions
+8. **Broadcast email system**  - Custom email automation bypassing transactional limits using Resend broadcast API
 
 ---
 
@@ -259,15 +259,15 @@
 
 The following screenshots are saved alongside this document (or in the portfolio-screenshots folder):
 
-1. `01_homepage_hero.png` — Full homepage with floating logos and search
-2. `02_browse_coaches.png` — Coach grid with filters and packages
-3. `03_webinar_landing.png` — Webinar sales page with countdown
-4. `04_ticket_selection.png` — Pricing tiers with social proof
-5. `05_cold_email_checklist.png` — macOS-style document viewer
-6. `06_cold_email_guide.png` — Password-gated resource page
-7. `07_guarantee_page.png` — Trust cards and guarantee
-8. `08_login_page.png` — Clean authentication page
+1. `01_homepage_hero.png`  - Full homepage with floating logos and search
+2. `02_browse_coaches.png`  - Coach grid with filters and packages
+3. `03_webinar_landing.png`  - Webinar sales page with countdown
+4. `04_ticket_selection.png`  - Pricing tiers with social proof
+5. `05_cold_email_checklist.png`  - macOS-style document viewer
+6. `06_cold_email_guide.png`  - Password-gated resource page
+7. `07_guarantee_page.png`  - Trust cards and guarantee
+8. `08_login_page.png`  - Clean authentication page
 
 ---
 
-*Built by Don Graham — Full-stack development, UI/UX design, and growth engineering.*
+*Built by Don Graham  - Full-stack development, UI/UX design, and growth engineering.*

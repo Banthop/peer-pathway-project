@@ -1,5 +1,5 @@
--- CRM Contacts table — unified contact store for all form submissions
--- Run this in Supabase SQL Editor: https://supabase.com/dashboard → SQL Editor
+-- CRM Contacts table - unified contact store for all form submissions
+-- Run this in Supabase SQL Editor: https://supabase.com/dashboard > SQL Editor
 
 CREATE TABLE IF NOT EXISTS crm_contacts (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

@@ -1,54 +1,74 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { BuyerAuthProvider } from "@/contexts/BuyerAuthContext";
+
+// Layout components -- kept as regular imports (needed synchronously for route structure)
+import AdminLayout from "./components/admin/AdminLayout";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
+import CoachDashboardLayout from "./components/coach-dashboard/CoachDashboardLayout";
+import PortalLayout from "./components/portal/PortalLayout";
+import SpringWeekPortalLayout from "./components/spring-week-portal/SpringWeekPortalLayout";
+import ErrorBoundary from "./components/ErrorBoundary";
+
+// Small / immediately-needed pages -- kept as regular imports
 import Index from "./pages/Index";
-import CoachProfile from "./pages/CoachProfile";
-import NotFound from "./pages/NotFound";
-import BecomeACoach from "./pages/BecomeACoach";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
-import CoachSignup from "./pages/CoachSignup";
-import AdminLayout from "./components/admin/AdminLayout";
-import DashboardLayout from "./components/dashboard/DashboardLayout";
-import DashboardOverview from "./pages/dashboard/DashboardOverview";
-import DashboardBookings from "./pages/dashboard/DashboardBookings";
-import DashboardBrowse from "./pages/dashboard/DashboardBrowse";
-import DashboardMessages from "./pages/dashboard/DashboardMessages";
-import DashboardEvents from "./pages/dashboard/DashboardEvents";
-import DashboardResources from "./pages/dashboard/DashboardResources";
-import AdminCoaches from "./pages/admin/AdminCoaches";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminOutreach from "./pages/admin/AdminOutreach";
-import AdminLinkedIn from "./pages/admin/AdminLinkedIn";
-import CoachDashboardLayout from "./components/coach-dashboard/CoachDashboardLayout";
-import CoachOverview from "./pages/coach-dashboard/CoachOverview";
-import CoachSessions from "./pages/coach-dashboard/CoachSessions";
-import CoachEarnings from "./pages/coach-dashboard/CoachEarnings";
-import CoachReviews from "./pages/coach-dashboard/CoachReviews";
-import CoachEditProfile from "./pages/coach-dashboard/CoachEditProfile";
-import CoachAnalytics from "./pages/coach-dashboard/CoachAnalytics";
-import CoachMessages from "./pages/coach-dashboard/CoachMessages";
-import StripeConnect from "./pages/coach-dashboard/StripeConnect";
-import CoachEvents from "./pages/coach-dashboard/CoachEvents";
-import CoachResources from "./pages/coach-dashboard/CoachResources";
-import CoachOnboarding from "./pages/coach-dashboard/CoachOnboarding";
-import Guarantee from "./pages/Guarantee";
-import PublicEvents from "./pages/PublicEvents";
-import PublicResources from "./pages/PublicResources";
 import Webinar from "./pages/Webinar";
-import SpringWeekWebinar from "./pages/SpringWeekWebinar";
-import ColdEmailGuide from "./pages/ColdEmailGuide";
-import ColdEmailChecklist from "./pages/ColdEmailChecklist";
-import { BuyerAuthProvider } from "@/contexts/BuyerAuthContext";
-import PortalLayout from "./components/portal/PortalLayout";
+import NotFound from "./pages/NotFound";
+import StripeConnect from "./pages/coach-dashboard/StripeConnect";
+
+// Portal pages kept as regular imports (small, inside auth-gated layout)
 import PortalRecording from "./pages/portal/PortalRecording";
 import PortalResources from "./pages/portal/PortalResources";
 import BookUthman from "./pages/portal/BookUthman";
 import PortalColdEmailGuide from "./pages/portal/ColdEmailGuide";
+
+// Heavier pages -- loaded lazily to reduce initial bundle size
+const CoachProfile = lazy(() => import("./pages/CoachProfile"));
+const BecomeACoach = lazy(() => import("./pages/BecomeACoach"));
+const CoachSignup = lazy(() => import("./pages/CoachSignup"));
+const Guarantee = lazy(() => import("./pages/Guarantee"));
+const PublicEvents = lazy(() => import("./pages/PublicEvents"));
+const PublicResources = lazy(() => import("./pages/PublicResources"));
+const ColdEmailGuide = lazy(() => import("./pages/ColdEmailGuide"));
+const ColdEmailChecklist = lazy(() => import("./pages/ColdEmailChecklist"));
+const SpringWeekWebinar = lazy(() => import("./pages/SpringWeekWebinar"));
+const SpringWeekPlaybook = lazy(() => import("./pages/SpringWeekPlaybook"));
+const SpringWeekCoaching = lazy(() => import("./pages/SpringWeekCoaching"));
+const SpringWeekPortal = lazy(() => import("./pages/SpringWeekPortal"));
+
+// Admin pages
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminCoaches = lazy(() => import("./pages/admin/AdminCoaches"));
+const AdminOutreach = lazy(() => import("./pages/admin/AdminOutreach"));
+const AdminLinkedIn = lazy(() => import("./pages/admin/AdminLinkedIn"));
+
+// Coach dashboard pages
+const CoachOverview = lazy(() => import("./pages/coach-dashboard/CoachOverview"));
+const CoachSessions = lazy(() => import("./pages/coach-dashboard/CoachSessions"));
+const CoachEarnings = lazy(() => import("./pages/coach-dashboard/CoachEarnings"));
+const CoachReviews = lazy(() => import("./pages/coach-dashboard/CoachReviews"));
+const CoachEditProfile = lazy(() => import("./pages/coach-dashboard/CoachEditProfile"));
+const CoachAnalytics = lazy(() => import("./pages/coach-dashboard/CoachAnalytics"));
+const CoachMessages = lazy(() => import("./pages/coach-dashboard/CoachMessages"));
+const CoachEvents = lazy(() => import("./pages/coach-dashboard/CoachEvents"));
+const CoachResources = lazy(() => import("./pages/coach-dashboard/CoachResources"));
+const CoachOnboarding = lazy(() => import("./pages/coach-dashboard/CoachOnboarding"));
+
+// Student dashboard pages
+const DashboardOverview = lazy(() => import("./pages/dashboard/DashboardOverview"));
+const DashboardBookings = lazy(() => import("./pages/dashboard/DashboardBookings"));
+const DashboardBrowse = lazy(() => import("./pages/dashboard/DashboardBrowse"));
+const DashboardMessages = lazy(() => import("./pages/dashboard/DashboardMessages"));
+const DashboardEvents = lazy(() => import("./pages/dashboard/DashboardEvents"));
+const DashboardResources = lazy(() => import("./pages/dashboard/DashboardResources"));
 
 
 const queryClient = new QueryClient();
@@ -138,7 +158,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
-        <Route path="/spring-week" element={<SpringWeekWebinar />} />
+        <Route path="/spring-week" element={<ErrorBoundary><SpringWeekWebinar /></ErrorBoundary>} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -150,6 +170,11 @@ const AppRoutes = () => {
           <Route path="book-uthman" element={<BookUthman />} />
           <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
         </Route>
+        <Route path="/spring-week-portal" element={<ErrorBoundary><SpringWeekPortalLayout /></ErrorBoundary>}>
+          <Route index element={<SpringWeekPortal />} />
+        </Route>
+        <Route path="/spring-week-playbook" element={<ErrorBoundary><SpringWeekPlaybook /></ErrorBoundary>} />
+        <Route path="/spring-week-coaching" element={<SpringWeekCoaching />} />
         <Route path="*" element={<Navigate to="/webinar" replace />} />
       </Routes>
     );
@@ -169,7 +194,7 @@ const AppRoutes = () => {
       <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/coach/signup" element={<CoachSignup />} />
-      <Route path="/dashboard" element={<StudentRoute><DashboardLayout /></StudentRoute>}>
+      <Route path="/dashboard" element={<ErrorBoundary><StudentRoute><DashboardLayout /></StudentRoute></ErrorBoundary>}>
         <Route index element={<DashboardOverview />} />
         <Route path="bookings" element={<DashboardBookings />} />
         <Route path="browse" element={<DashboardBrowse />} />
@@ -177,8 +202,8 @@ const AppRoutes = () => {
         <Route path="events" element={<DashboardEvents />} />
         <Route path="resources" element={<DashboardResources />} />
       </Route>
-      <Route path="/coach-onboarding" element={<CoachRoute><CoachOnboarding /></CoachRoute>} />
-      <Route path="/coach-dashboard" element={<CoachRoute><CoachDashboardLayout /></CoachRoute>}>
+      <Route path="/coach-onboarding" element={<ErrorBoundary><CoachRoute><CoachOnboarding /></CoachRoute></ErrorBoundary>} />
+      <Route path="/coach-dashboard" element={<ErrorBoundary><CoachRoute><CoachDashboardLayout /></CoachRoute></ErrorBoundary>}>
         <Route index element={<CoachOverview />} />
         <Route path="sessions" element={<CoachSessions />} />
         <Route path="messages" element={<CoachMessages />} />
@@ -192,14 +217,19 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
-      <Route path="/spring-week" element={<SpringWeekWebinar />} />
+      <Route path="/spring-week" element={<ErrorBoundary><SpringWeekWebinar /></ErrorBoundary>} />
       <Route path="/portal" element={<PortalLayout />}>
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
         <Route path="book-uthman" element={<BookUthman />} />
           <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
       </Route>
-      <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+      <Route path="/spring-week-portal" element={<ErrorBoundary><SpringWeekPortalLayout /></ErrorBoundary>}>
+        <Route index element={<SpringWeekPortal />} />
+      </Route>
+      <Route path="/spring-week-playbook" element={<ErrorBoundary><SpringWeekPlaybook /></ErrorBoundary>} />
+      <Route path="/spring-week-coaching" element={<SpringWeekCoaching />} />
+      <Route path="/admin" element={<ErrorBoundary><AdminRoute><AdminLayout /></AdminRoute></ErrorBoundary>}>
         <Route index element={<AdminDashboard />} />
         <Route path="coaches" element={<AdminCoaches />} />
         <Route path="outreach" element={<AdminOutreach />} />
@@ -219,7 +249,9 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AppRoutes />
+            <Suspense fallback={<AuthLoading />}>
+              <AppRoutes />
+            </Suspense>
           </BrowserRouter>
         </TooltipProvider>
       </BuyerAuthProvider>

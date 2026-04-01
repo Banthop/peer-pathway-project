@@ -761,6 +761,542 @@ P.S. After registration closes, the next time we run this webinar will be after 
 
 ---
 
+---
+
+## Flow 6: Spring Week Purchase Completed
+
+**Trigger:** `spring_week_purchase_completed` event
+**Fired by:** `stripe-webhook/index.ts` on `checkout.session.completed` (spring week products)
+**Event properties available:** `firstName`, `productType` (one of: `part1`, `part2`, `bundle`, `premium`), `spend`, `portalLink`, `bookUthmanLink`, `webinarPart` (derived: `1`, `2`, `both`), `hasBothParts` (`true`/`false`), `hasPlaybook` (`true`/`false`), `hasCoaching` (`true`/`false`)
+**Audience:** Student who just bought a spring week webinar product
+
+**Tier logic summary:**
+- `part1` - Part 1 live session + recording. No playbook. No coaching.
+- `part2` - Part 2 live session + recording. No playbook. No coaching.
+- `bundle` - Both parts + recordings + The Spring Week Playbook. No coaching.
+- `premium` - Everything in bundle + 1-on-1 coaching session with a panellist.
+
+---
+
+### Email 1 - Welcome + What You've Got (Immediate)
+
+**Awareness move:** Most Aware - reinforce decision, eliminate buyer's remorse
+**Job:** Tell them exactly what they bought. Get them excited about what's coming. For single-part buyers, plant the seed for the other part. For bundle buyers, set expectation around the Playbook. For premium buyers, direct them toward scheduling coaching.
+
+**Subject line:** you're in - here's what's coming
+**Preview text:** Everything you just unlocked for the Spring Week Conversion Webinar.
+
+---
+
+Hey {{firstName}},
+
+You're registered. Here's what you've got:
+
+{% if productType == "part1" %}
+**Your ticket: Part 1 of the Spring Week Conversion Webinar**
+
+You've got access to the live Part 1 panel session, Q&A with the speakers, and the recording afterward. Speakers confirmed so far have experience at Jefferies, Nomura, Bank of America, and Citi (with a return offer).
+
+You'll get the Zoom link by email before the session. Your recording lands in your portal within 24 hours after the event.
+
+One thing worth knowing: Part 2 covers a different set of firms, including Barclays, Optiver, Millennium, Citadel, and Morgan Stanley. If any of those are on your target list, it's worth grabbing Part 2 as well. The bundle (both parts + The Spring Week Playbook) is £29.
+{% endif %}
+
+{% if productType == "part2" %}
+**Your ticket: Part 2 of the Spring Week Conversion Webinar**
+
+You've got access to the live Part 2 panel session, Q&A with the speakers, and the recording afterward. Speakers confirmed so far have experience at Barclays, Optiver, Millennium, Citadel, and Morgan Stanley.
+
+You'll get the Zoom link by email before the session. Your recording lands in your portal within 24 hours after the event.
+
+One thing worth knowing: Part 1 covers a different set of firms, including Jefferies, Nomura, Bank of America, and Citi (with a return offer). If any of those are on your target list, it's worth grabbing Part 1 as well. The bundle (both parts + The Spring Week Playbook) is £29.
+{% endif %}
+
+{% if productType == "bundle" %}
+**Your ticket: The Bundle (Part 1 + Part 2 + The Spring Week Playbook)**
+
+You've got access to both live panel sessions, Q&A with all speakers, both recordings, and The Spring Week Playbook - an insider guide written by spring week alumni across 10+ firms.
+
+The Playbook isn't ready yet (we're collecting the final write-ups from panellists now). You'll get it in your portal before the webinar date. When it drops, read the section on your target firm first.
+
+Zoom links for both sessions will be sent closer to the dates.
+{% endif %}
+
+{% if productType == "premium" %}
+**Your ticket: Premium (Bundle + 1-on-1 Coaching)**
+
+You've got everything in the bundle, plus a personal coaching session with one of our panellists. This is where you take what you learn in the webinar and apply it to your specific situation, your target firm, your spring week timeline.
+
+Scheduling your coaching session: you'll get a separate email with a booking link. The session happens after the webinar so you can bring specific questions from the panel. Don't book it before watching at least Part 1.
+{% endif %}
+
+Your portal: {{portalLink}}
+
+If anything looks off or you've got a question before the webinar, just reply here.
+
+Don & Dylan
+EarlyEdge
+
+---
+
+**CTA button text:** Open Your Portal
+**CTA link:** `{{portalLink}}`
+**Personalization notes:** Use `{{productType}}` to show/hide the relevant conditional block. Each tier gets its own message. The single-part buyer blocks include a soft cross-sell to the bundle. The coaching scheduling note is premium-only.
+
+---
+
+### Email 2 - How to Prepare (Day 2)
+
+**Awareness move:** Most Aware - deepen value pre-event
+**Job:** Give them something useful to do before the webinar. Students who prepare get more from the Q&A, which means better results, which means testimonials. The prep tasks are tailored to what they bought.
+
+**Subject line:** how to prepare before the webinar
+**Preview text:** Do these 3 things and you'll get twice as much out of it.
+
+---
+
+Hey {{firstName}},
+
+The webinar is coming up and there's a bit of prep worth doing beforehand.
+
+This isn't compulsory. But the students who walk out with the most value are always the ones who arrived with some context - not just showing up cold and hoping to absorb things.
+
+Here's what to do:
+
+**1. Research your target firms**
+
+Look at the specific spring week programmes you're targeting. What do they call the conversion process? Is it a direct return offer, or do summer internship applications open separately? Is there an interview at the end of the programme? Knowing this before the webinar means you can ask sharper questions.
+
+**2. Prepare 3 questions for the Q&A**
+
+Write them down now, before the session. Good questions are specific: "What did you say in your end-of-week follow-up email to your line manager at Citi?" not "How do you network during a spring week?"
+
+The panellists will answer generic questions generically. Specific questions get specific answers.
+
+**3. Review your own timeline**
+
+When is your spring week? Have you already started it, or are you preparing to? Your answers to these questions should shape which parts of the webinar you pay most attention to.
+
+{% if productType == "bundle" or productType == "premium" %}
+One more thing: The Spring Week Playbook will be in your portal before the webinar. Skim the section on your target firm before Part 1. You don't need to read the whole thing, just get familiar with the format so you know what to look up after.
+{% endif %}
+
+{% if productType == "premium" %}
+And for your coaching session: start thinking now about the 2-3 things you most want help with. The more specific you are going in, the more useful the session will be.
+{% endif %}
+
+Your portal: {{portalLink}}
+
+Don & Dylan
+
+---
+
+**CTA button text:** Open Your Portal
+**CTA link:** `{{portalLink}}`
+**Personalization notes:** The Playbook reminder is conditional on `productType` being `bundle` or `premium`. The coaching prep note is premium-only. The core prep content applies to all tiers.
+
+---
+
+### Email 3 - Speaker Tease / Firm Reveal (Day 5)
+
+**Awareness move:** Most Aware - build anticipation, cross-sell
+**Job:** Create excitement around confirmed speakers. Remind them what's coming. For single-part buyers, flag the other part if it covers their target firms.
+
+**Subject line:** confirmed: who's speaking at part {{webinarPart}}
+**Preview text:** We just locked in the speaker from [Firm]. Here's who's on the panel.
+
+---
+
+Hey {{firstName}},
+
+We just confirmed the full speaker lineup and wanted to share it before the webinar.
+
+{% if productType == "part1" or productType == "bundle" or productType == "premium" %}
+**Part 1 panel:**
+
+Speakers with experience converting spring weeks at: Jefferies, Nomura, Bank of America, and Citi (confirmed return offer).
+
+One of our Part 1 speakers received a return offer at Citi after their spring week. We've asked them to walk through, step by step, what the final week looked like - the conversations they had, the follow-up they sent, and what they think made the difference.
+{% endif %}
+
+{% if productType == "part2" or productType == "bundle" or productType == "premium" %}
+**Part 2 panel:**
+
+Speakers with experience converting spring weeks at: Barclays, Optiver, Millennium, Citadel, and Morgan Stanley.
+
+This panel is deliberately spread across investment banking, trading/quant, and asset management - because the conversion dynamic is different in each. You'll hear from someone at a systematic trading firm (Optiver) and someone at a multi-manager hedge fund (Millennium) on the same panel.
+{% endif %}
+
+{% if productType == "part1" %}
+A reminder: Part 2 covers Barclays, Optiver, Millennium, Citadel, and Morgan Stanley. If any of those firms are on your list, you can still upgrade to the bundle (both parts + The Spring Week Playbook) for £29. Reply to this email and I'll sort it.
+{% endif %}
+
+{% if productType == "part2" %}
+A reminder: Part 1 covers Jefferies, Nomura, Bank of America, and Citi. If any of those firms are on your list, you can still upgrade to the bundle (both parts + The Spring Week Playbook) for £29. Reply to this email and I'll sort it.
+{% endif %}
+
+Questions for the panel? Send them in advance by replying to this email. We'll make sure the best ones get covered even if the live Q&A runs short.
+
+Don & Dylan
+
+---
+
+**CTA button text:** (none - reply CTA and soft bundle CTA via reply)
+**Personalization notes:** `{{webinarPart}}` in the subject line: use `1` for part1, `2` for part2, `1 and 2` for bundle/premium. Show Part 1 panel details to part1/bundle/premium buyers. Show Part 2 panel details to part2/bundle/premium buyers. The upgrade nudge is conditional on being a single-part buyer only. Speaker details should be updated with actual names once confirmed.
+
+---
+
+### Email 4 - Countdown (Day 7)
+
+**Awareness move:** Most Aware - final pre-event activation
+**Job:** Build anticipation. Reinforce the value. Give them a clear checklist so they show up ready. Premium buyers get a reminder to book their coaching session.
+
+**Subject line:** your webinar is [X] days away
+**Preview text:** Here's what to have ready before you join.
+
+---
+
+Hey {{firstName}},
+
+The Spring Week Conversion Webinar is almost here.
+
+{% if productType == "part1" %}
+Part 1 is in [X] days.
+{% endif %}
+{% if productType == "part2" %}
+Part 2 is in [X] days.
+{% endif %}
+{% if productType == "bundle" or productType == "premium" %}
+Part 1 is in [X] days. Part 2 follows [Y] days after that.
+{% endif %}
+
+Before you join, run through this:
+
+- Got your questions for the panel written down? (3 minimum, the more specific the better)
+- Researched the spring week programmes for your target firms?
+- Know your own timeline - when your spring week is and what stage you're at?
+{% if hasPlaybook == "true" %}
+- Skimmed the relevant section of The Spring Week Playbook in your portal?
+{% endif %}
+- Got a notebook or something to write on during the session?
+
+The Zoom link will be in your inbox an hour before the session starts. If you don't see it, check spam or reply here.
+
+The sessions are live and the Q&A is real - the panellists aren't scripted. If you've got questions you want answered, submit them in advance by replying to this email or ask live during the session.
+
+{% if productType == "premium" %}
+One more thing: your 1-on-1 coaching session is included with your ticket. You'll receive the booking link after Part 1. The coaching works best when you've watched at least one session first - bring your questions, your target firm list, and any materials you want reviewed.
+{% endif %}
+
+See you there.
+
+Don & Dylan
+
+---
+
+**CTA button text:** Open Your Portal
+**CTA link:** `{{portalLink}}`
+**Personalization notes:** `[X]` days and `[Y]` days are dynamic placeholders - Loops can calculate these from the webinar date variables once dates are confirmed. The Playbook checklist item is conditional on `hasPlaybook == "true"` (bundle + premium). The coaching reminder is premium-only. Subject line `[X]` should be calculated the same way.
+
+---
+
+## Flow 7: Spring Week Post-Webinar
+
+**Trigger:** `spring_week_webinar_complete` event
+**Fired by:** Manual trigger or Supabase edge function after the webinar session
+**Event properties available:** `firstName`, `productType`, `portalLink`, `bookUthmanLink`, `hasPlaybook` (`true`/`false`), `hasCoaching` (`true`/`false`), `sessionAttended` (e.g. `part1`, `part2`, `both`)
+**Audience:** Students who attended one or both sessions of the Spring Week Conversion Webinar
+
+**Note for Loops setup:** Fire this event once per buyer after each session they attended. If a bundle/premium buyer attended Part 1, fire immediately after Part 1. Then fire again after Part 2 (or fire once with `sessionAttended == "both"` if triggering after both are done). The simplest approach is to fire it once after the final session each buyer attended.
+
+---
+
+### Email 1 - Recording Processing (Immediate)
+
+**Awareness move:** Most Aware - lock in post-event engagement
+**Job:** Bridge the gap between "just watched it live" and "ready to use it." Give them a checklist to act on right now so the momentum doesn't die while they wait for the recording.
+
+**Subject line:** thanks for being there
+**Preview text:** Recording is processing - here's what to do while you wait.
+
+---
+
+Hey {{firstName}},
+
+That's a wrap.
+
+Thank you for joining. The recording is processing now and will be in your portal within 24 hours.
+
+While you wait, do this:
+
+**Write down your top 3 takeaways right now.** Not tomorrow, now - while it's fresh. Specifically: what are the 3 things you're going to do differently because of what you heard today?
+
+Then write down any follow-up questions you didn't get to ask. You can put these to a panellist directly in a coaching session, or ask in the portal.
+
+Here's your checklist for the next 24 hours:
+
+- [ ] Written down your 3 takeaways
+- [ ] Written down unanswered questions
+- [ ] Identified which firms from the panel match your target list
+- [ ] Decided what action you're taking this week based on what you heard
+{% if hasPlaybook == "true" %}
+- [ ] Read the full Spring Week Playbook section on your top target firm
+{% endif %}
+
+The recording will be here: {{portalLink}}
+
+You'll get an email as soon as it's live.
+
+Don & Dylan
+
+---
+
+**CTA button text:** (none - no link needed yet, recording isn't live)
+**Personalization notes:** The Playbook checklist item is conditional on `hasPlaybook == "true"` (bundle + premium). The rest applies to all buyers.
+
+---
+
+### Email 2 - Recording Ready (Day 1)
+
+**Awareness move:** Most Aware - drive consumption and upsell
+**Job:** Deliver the recording. Get them to rewatch the parts that apply to them. For bundle/premium buyers, reinforce the Playbook. For premium buyers, push toward booking coaching. For everyone else, introduce coaching as the natural next step.
+
+**Subject line:** your recording is ready
+**Preview text:** It's in your portal now. Here's where to start.
+
+---
+
+Hey {{firstName}},
+
+Your recording is ready. Watch it here: {{portalLink}}
+
+A few things to note when you rewatch:
+
+**Slow down at the follow-up sections.** Almost every panellist mentioned follow-up emails as a critical factor. Pause those moments and write down the exact wording they used. That's the stuff that doesn't survive paraphrasing.
+
+**Note the firm-specific differences.** What worked at an investment bank isn't necessarily what works at a trading firm. If you're targeting multiple firm types, make sure you're applying the right conversion strategy for each.
+
+**Watch the Q&A section twice.** That's where the most honest answers tend to come out. The structured questions get structured answers. The live Q&A gets the real ones.
+
+{% if hasPlaybook == "true" %}
+Your Spring Week Playbook is also in the portal. Cross-reference it with the recording - you'll find that a lot of what the panellists said live is expanded on in the written write-ups.
+{% endif %}
+
+{% if hasCoaching == "true" %}
+Your 1-on-1 coaching session booking link is in your portal. Book it after you've watched the recording - the session is much more useful when you can reference specific things you heard from the panel.
+{% endif %}
+
+{% if hasCoaching == "false" %}
+One option worth considering: a coaching session with one of the panellists. This is where you take the general frameworks from the webinar and apply them to your specific firms, your specific gaps, your specific timeline.
+
+- Strategy Call (30 min, £35) - best for reviewing specific materials or one focused question
+- Deep Dive (60 min, £59) - best for a full plan built around your situation
+
+Book here: {{bookUthmanLink}}
+{% endif %}
+
+Don & Dylan
+
+---
+
+**CTA button text:** Watch the Recording
+**CTA link:** `{{portalLink}}`
+**Personalization notes:** Playbook cross-reference is conditional on `hasPlaybook == "true"`. Coaching booking reminder is conditional on `hasCoaching == "true"`. Coaching upsell block is conditional on `hasCoaching == "false"`. Subject line is universal.
+
+---
+
+### Email 3 - What's Your Next Move? (Day 5)
+
+**Awareness move:** Most Aware - push to action and upsell
+**Job:** Check in. Push toward the most valuable next step based on what they bought. For non-bundle buyers, upsell the Playbook. For premium buyers, ask for a testimonial. For everyone, coaching is the natural step if they haven't booked.
+
+**Subject line:** what's your next move?
+**Preview text:** 5 days on - here's what students who convert actually do next.
+
+---
+
+Hey {{firstName}},
+
+It's been a few days since the webinar. I want to check in and make sure you've actually moved the needle on something.
+
+The students who get results from events like this aren't the ones who watched and thought "that was useful." They're the ones who picked one thing and did it within a week.
+
+So: what's the one thing you're acting on?
+
+If you're not sure, here's a simple decision tree:
+
+**Applying for spring weeks right now?** Focus on preparation: research the programme structure, write your firm-specific follow-up email in advance, know which teams you want to meet.
+
+**Spring week already coming up?** Focus on the conversion framework from the panel. Specifically: your day-by-day plan for building relationships during the programme, and your post-week follow-up strategy.
+
+**Spring week in the future (next cycle)?** Now is the time to find and reach out to someone at your target firm for a coffee chat before applications open. The panellists all mentioned having some form of pre-application connection.
+
+{% if hasPlaybook == "false" %}
+One thing that might help: The Spring Week Playbook. It's the written version of what you heard on the panel, plus insider write-ups from alumni at 10+ firms covering what each programme actually involves, what the conversion process looks like, and what they wish they'd known.
+
+You can add it to your purchase for £14 (bundle upgrade from single-part ticket). Reply to this email if you want a link.
+{% endif %}
+
+{% if hasCoaching == "false" %}
+If you want someone to help you apply the frameworks to your specific situation - your firms, your timeline, your gaps - that's what coaching is for.
+
+- Strategy Call (30 min, £35): {{bookUthmanLink}}
+- Deep Dive (60 min, £59): {{bookUthmanLink}}
+{% endif %}
+
+{% if hasCoaching == "true" %}
+And if you haven't booked your coaching session yet - do that this week. The earlier you go into your spring week with a plan, the better. Book it from your portal: {{portalLink}}
+
+One quick thing: if you've got 2 minutes, would you mind telling me what you got from the webinar? Just reply to this email - I read every one. It helps me make the next one better and helps other students figure out if it's worth it.
+{% endif %}
+
+Don & Dylan
+
+---
+
+**CTA button text:** Book a Coaching Session
+**CTA link:** `{{bookUthmanLink}}`
+**Personalization notes:** Playbook upsell block is conditional on `hasPlaybook == "false"`. Coaching upsell block is conditional on `hasCoaching == "false"`. Premium testimonial/coaching booking nudge is conditional on `hasCoaching == "true"`. The CTA button only appears for non-coaching buyers. If `hasCoaching == "true"`, the CTA is a reply, not a button.
+
+---
+
+## Flow 8: Spring Week Coaching Booked
+
+**Trigger:** `spring_week_coaching_booked` event
+**Fired by:** `send-booking-confirmation/index.ts` (spring week panellist coaching variant)
+**Event properties available:** `studentName`, `studentEmail`, `sessionName`, `sessionId`, `duration`, `dateStr`, `time`, `price`, `coachName`, `coachFirm`, `bookUthmanLink`
+**Audience:** Student who has booked a 1-on-1 coaching session with a spring week panellist
+
+**Note for Loops setup:** This is a parallel flow to Flow 3 (general coaching) but for panellist coaching specifically. The key difference is the context - these buyers have already watched the webinar and are booking a session with someone whose firm-specific conversion story they've heard. The `coachName` and `coachFirm` variables make the emails much more specific and credible.
+
+---
+
+### Email 1 - Booking Confirmed (Immediate)
+
+**Awareness move:** Most Aware - lock in commitment
+**Job:** Confirm the booking details. Build anticipation. Set expectations so they show up having done the right prep.
+
+**Subject line:** booked - your session with {{coachName}} ({{coachFirm}})
+**Preview text:** Here are the details and how to get the most from it.
+
+---
+
+Hey {{studentName}},
+
+Your coaching session is confirmed. Here are the details:
+
+---
+
+**Coach:** {{coachName}}, {{coachFirm}}
+**Session:** {{sessionName}}
+**Date:** {{dateStr}}
+**Time:** {{time}}
+**Duration:** {{duration}}
+**Paid:** {{price}}
+
+---
+
+You'll receive the Zoom link from {{coachName}} within 24 hours of your session. If you don't see it, reply to this email.
+
+**How to prepare:**
+
+{{coachName}} knows the {{coachFirm}} spring week programme from the inside. To make the most of your time:
+
+1. Rewatch the part of the webinar where {{coachName}} was speaking. Write down anything you want to go deeper on.
+2. Come with your specific situation: which firms are you targeting, what stage are you at (pre-application, mid-programme, post-programme?), what's your biggest uncertainty right now.
+3. Write down 3 specific questions. The more concrete, the better. "What did your end-of-week conversation with your manager look like?" beats "How do I impress people during the programme?"
+4. If you have any draft materials (follow-up emails, networking outreach, a list of people you want to approach), send them to uthman6696@gmail.com before the session so {{coachName}} can review them in advance.
+
+This session is yours. There's no fixed agenda - it goes wherever is most useful for your situation.
+
+Don & Uthman
+
+---
+
+**CTA button text:** (none - confirmation email, no conversion needed)
+**Personalization notes:** `{{coachName}}` and `{{coachFirm}}` are used throughout to make this feel personal and specific. All session details from the event payload. Signoff is "Don & Uthman" because Uthman handles logistics for these sessions.
+
+---
+
+### Email 2 - Reminder + Prep Checklist (24 Hours Before)
+
+**Awareness move:** Most Aware - reduce no-shows, maximise session quality
+**Job:** Remind them. Get them to arrive prepared. A prepared student gets more value, which means a better testimonial and more likely to book again.
+
+**Note for Loops setup:** Same scheduling note as Flow 3 Email 2 - this requires scheduling relative to `{{dateStr}}` and `{{time}}`. If Loops doesn't support negative-offset scheduling from a dynamic date, Uthman triggers this manually the day before.
+
+**Subject line:** tomorrow: your session with {{coachName}}
+**Preview text:** Quick prep checklist before you join.
+
+---
+
+Hey {{studentName}},
+
+Just a heads up - your session with {{coachName}} ({{coachFirm}}) is tomorrow.
+
+**{{dateStr}} at {{time}}** | {{duration}}
+
+Before you join:
+
+- [ ] Rewatched the {{coachFirm}} part of the webinar?
+- [ ] Got 3 specific questions written down?
+- [ ] Sent any draft materials to uthman6696@gmail.com for review?
+- [ ] Got a quiet spot with decent WiFi?
+- [ ] Got something to take notes with?
+
+The session goes fast. Having your questions written down means you don't spend the first five minutes trying to remember what you wanted to ask.
+
+If you need to reschedule, email uthman6696@gmail.com at least 24 hours in advance.
+
+The Zoom link is coming from {{coachName}} shortly. See you there.
+
+Don & Uthman
+
+---
+
+**CTA button text:** (none)
+**Personalization notes:** `{{coachName}}` and `{{coachFirm}}` appear throughout. All scheduling variables from the original event payload. Same Loops scheduling caveat as Flow 3.
+
+---
+
+### Email 3 - Post-Session Follow-Up (24 Hours After)
+
+**Awareness move:** Most Aware - drive action, collect social proof
+**Job:** Reinforce the session. Give them a clean framework to act on it. Ask for feedback. Open the door to booking another session.
+
+**Subject line:** how was your session with {{coachName}}?
+**Preview text:** Feedback request + your next steps.
+
+---
+
+Hey {{studentName}},
+
+Hope the session with {{coachName}} was useful.
+
+A quick favour - would you mind sharing a short review? It doesn't need to be long. Just reply to this email with 2-3 sentences:
+
+- Was it useful?
+- What was the most valuable thing you took from it?
+- Would you recommend it to a friend doing a spring week?
+
+These reviews are what help other students figure out whether a coaching session is worth it. And since these sessions are with actual panellists who converted at real firms, not generic coaches, the specifics matter.
+
+If there was something you didn't get to cover in the session, or if something came up since that you want to dig into, you can book a follow-up here: {{bookUthmanLink}}
+
+And if you've still got your spring week ahead of you - now is the time to start executing. The session gave you the plan. The plan only works if you use it.
+
+Uthman
+
+P.S. If anything from the session didn't land or you felt like you didn't get what you needed, reply and let me know. I'd rather hear that directly than have you leave without getting value.
+
+---
+
+**CTA button text:** Book a Follow-Up Session
+**CTA link:** `{{bookUthmanLink}}`
+**Personalization notes:** `{{coachName}}` appears in subject and body. Signoff is "Uthman" because this is a coaching relationship email, not a brand email. The testimonial ask is reply-based - no form, no friction.
+
+---
+
 ## Implementation Notes for Dylan
 
 ### Setting up in Loops
@@ -775,13 +1311,25 @@ P.S. After registration closes, the next time we run this webinar will be after 
 
 5. **Flow 5 (Spring Week Promo):** This is a manual broadcast sequence, NOT event-triggered. Schedule sends for Day 0, Day 2, Day 4, Day 6, Day 8 relative to when you start the campaign. Audience = full Attio contact list synced to Loops.
 
+6. **Flow 6 (Spring Week Purchase Completed):** Create as an automated Loop triggered by the `spring_week_purchase_completed` event. Set delays at Day 0, Day 2, Day 5, Day 7. The `productType` variable (`part1`, `part2`, `bundle`, `premium`) drives all conditional blocks. Derive `hasPlaybook` and `hasCoaching` in the edge function before firing the event so Loops conditional logic stays simple. The Day 5 speaker reveal email will need to be updated manually once speaker names are confirmed - use Loops' draft mode and update before the first buyer hits Day 5 in the sequence.
+
+7. **Flow 7 (Spring Week Post-Webinar):** Triggered by the `spring_week_webinar_complete` event. Fire this event manually (or via a simple edge function trigger) after each session ends. Delays: Email 1 immediate, Email 2 at Day 1, Email 3 at Day 5. Pass `hasPlaybook` and `hasCoaching` as boolean event properties to drive conditional blocks. For bundle/premium buyers who have both sessions, fire the event once after Part 2 concludes - set `sessionAttended = "both"`.
+
+8. **Flow 8 (Spring Week Coaching Booked):** Create as an automated Loop triggered by the `spring_week_coaching_booked` event. Email 1 immediate. Email 2 is the 24h pre-session reminder - same scheduling caveat as Flow 3 Email 2. Email 3 fires 24 hours after the session (requires a separate trigger or a fixed delay from the `dateStr` variable). `coachName` and `coachFirm` must be passed as event properties from the booking system. If panellist bookings are managed via Cal.com (same as Uthman), add a webhook that fires this event on booking completion.
+
 ### Loops Contact Properties to Create
 
 Ensure these properties exist in Loops (synced from Attio or set by events):
 
 - `firstName` (string)
-- `productType` (string)
-- `isBundle` (boolean/string)
+- `productType` (string) - for cold email webinar products
+- `springWeekProductType` (string) - `part1`, `part2`, `bundle`, or `premium`
+- `isBundle` (boolean/string) - cold email webinar
+- `hasPlaybook` (boolean/string) - spring week bundle + premium
+- `hasCoaching` (boolean/string) - spring week premium
+- `sessionAttended` (string) - `part1`, `part2`, or `both` (post-webinar flow)
+- `coachName` (string) - spring week coaching sessions
+- `coachFirm` (string) - spring week coaching sessions
 - `totalSpent` (number)
 - `source` (string)
 

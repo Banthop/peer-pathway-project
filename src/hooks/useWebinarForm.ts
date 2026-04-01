@@ -12,7 +12,7 @@ export interface WebinarFormData {
   industryDetail: string;
   referralSource: string;
   coachingInterest: string;
-  selectedTicket: "webinar-only" | "bundle";
+  selectedTicket: string;
 }
 
 // Steps: 0=Welcome, 1=Details, 2=University, 3=Industry+Referral, 4=Ticket

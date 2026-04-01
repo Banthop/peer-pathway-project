@@ -197,6 +197,26 @@ export default function SpringWeekWebinar() {
   useEffect(() => {
     const prev = document.title;
     document.title = "EarlyEdge - Spring Week Conversion Webinar";
+
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`) as HTMLMetaElement;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(name.startsWith("og:") ? "property" : "name", name);
+        document.head.appendChild(el);
+      }
+      el.content = content;
+    };
+
+    setMeta("description", "Learn how students at Goldman, Citi, Barclays and more converted their spring weeks into return offers. Live 2-part panel webinar with real spring weekers who did it.");
+    setMeta("og:title", "Spring Week Conversion Webinar - EarlyEdge");
+    setMeta("og:description", "Learn how students at Goldman, Citi, Barclays and more turned 1-2 week spring weeks into return offers. Live 2-part panel webinar.");
+    setMeta("og:type", "website");
+    setMeta("og:url", window.location.href);
+    setMeta("twitter:card", "summary_large_image");
+    setMeta("twitter:title", "Spring Week Conversion Webinar - EarlyEdge");
+    setMeta("twitter:description", "Learn how students at Goldman, Citi, Barclays and more turned 1-2 week spring weeks into return offers. Live 2-part panel webinar.");
+
     return () => {
       document.title = prev;
     };
@@ -209,10 +229,11 @@ export default function SpringWeekWebinar() {
   const [showTransition, setShowTransition] = useState(false);
 
   if (isSuccess) {
-    const saved = localStorage.getItem("spring_week_signup");
+    const saved = localStorage.getItem("spring_week_signup") || sessionStorage.getItem("spring_week_signup");
     const parsed = saved ? JSON.parse(saved) : {};
+    const ticketParam = searchParams.get("ticket");
     const name = parsed?.firstName ?? "";
-    const ticket = parsed?.selectedTicket ?? "bundle";
+    const ticket = ticketParam || (parsed?.selectedTicket ?? "bundle");
     return <SuccessScreen name={name} ticket={ticket} />;
   }
 
@@ -262,6 +283,20 @@ export default function SpringWeekWebinar() {
       saveWebinarLead({
         ...form.formData,
       }, "spring_week");
+      saveCrmContact({
+        email: form.formData.email,
+        firstName: form.formData.firstName,
+        lastName: form.formData.lastName,
+        university: form.formData.university,
+        source: "webinar",
+        tags: ["spring_week_form_started", "spring_week_checkout_started"],
+        metadata: {
+          form_step: 4,
+          industry: form.formData.industry,
+          product_type: "spring_week",
+          webinar_type: "spring_week",
+        },
+      });
       form.prevStep();
       setShowTransition(true);
       setTimeout(() => {
@@ -282,20 +317,20 @@ export default function SpringWeekWebinar() {
         ? SPRING_WEEK_TICKETS[ticketId]
         : SPRING_WEEK_TICKETS.bundle;
 
-    localStorage.setItem(
-      "spring_week_signup",
-      JSON.stringify({
-        ...form.formData,
-        productType: "spring_week",
-        timestamp: new Date().toISOString(),
-      }),
-    );
+    const signupData = JSON.stringify({
+      ...form.formData,
+      productType: "spring_week",
+      timestamp: new Date().toISOString(),
+    });
+
+    localStorage.setItem("spring_week_signup", signupData);
+    sessionStorage.setItem("spring_week_signup", signupData);
 
     markLeadCheckout(form.formData.email);
 
     const url = new URL(ticket.stripeLink);
     url.searchParams.set("prefilled_email", form.formData.email);
-    url.searchParams.set("client_reference_id", form.formData.email);
+    url.searchParams.set("client_reference_id", `${form.formData.email}|${ticketId}`);
 
     window.open(url.toString(), "_blank");
   };

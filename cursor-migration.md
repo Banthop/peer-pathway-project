@@ -1,4 +1,4 @@
-# EarlyEdge — Cursor Migration Guide
+# EarlyEdge  - Cursor Migration Guide
 
 > This document provides a complete overview of the EarlyEdge codebase (migrated from Lovable.dev) and step-by-step instructions for removing all Lovable dependencies and running the project in a local development environment.
 
@@ -36,14 +36,14 @@ EarlyEdge is a **two-sided peer coaching marketplace** for UK students. Students
 
 ```
 peer-pathway-project/
-├── .lovable/                    # ❌ Lovable config — DELETE
+├── .lovable/                    # ❌ Lovable config  - DELETE
 │   └── plan.md                  #    Lovable design plan
 ├── public/
 │   ├── favicon.ico
 │   ├── placeholder.svg
 │   └── robots.txt
 ├── src/
-│   ├── App.tsx                  # Root component — routes defined here
+│   ├── App.tsx                  # Root component  - routes defined here
 │   ├── App.css                  # Minimal app-level styles
 │   ├── main.tsx                 # Entry point
 │   ├── index.css                # Global styles + CSS variables + Tailwind
@@ -113,17 +113,17 @@ peer-pathway-project/
 │       └── example.test.ts      # Example test
 ├── components.json              # shadcn/ui config
 ├── eslint.config.js
-├── index.html                   # ❌ Contains Lovable branding — UPDATE
-├── package.json                 # ❌ Contains lovable-tagger — UPDATE
+├── index.html                   # ❌ Contains Lovable branding  - UPDATE
+├── package.json                 # ❌ Contains lovable-tagger  - UPDATE
 ├── postcss.config.js
 ├── tailwind.config.ts
 ├── tsconfig.json
 ├── tsconfig.app.json
 ├── tsconfig.node.json
-├── vite.config.ts               # ❌ Imports lovable-tagger — UPDATE
+├── vite.config.ts               # ❌ Imports lovable-tagger  - UPDATE
 ├── vitest.config.ts
-├── README.md                    # ❌ Lovable documentation — REPLACE
-└── bun.lockb                    # Bun lockfile (from Lovable) — can delete
+├── README.md                    # ❌ Lovable documentation  - REPLACE
+└── bun.lockb                    # Bun lockfile (from Lovable)  - can delete
 ```
 
 ---
@@ -171,7 +171,7 @@ peer-pathway-project/
 
 ---
 
-## 6. Lovable Dependencies — Complete Removal Checklist
+## 6. Lovable Dependencies  - Complete Removal Checklist
 
 Below is every Lovable-specific artifact in this project and how to remove it.
 
@@ -241,7 +241,7 @@ Remove this line from `devDependencies`:
 
 Also consider removing `bun.lockb` (Bun lockfile from Lovable's build pipeline). You'll use `package-lock.json` with npm instead.
 
-### Step 4: Update `index.html` — Replace Lovable branding
+### Step 4: Update `index.html`  - Replace Lovable branding
 
 **Replace the entire `<head>` content with:**
 ```html
@@ -250,10 +250,10 @@ Also consider removing `bun.lockb` (Bun lockfile from Lovable's build pipeline).
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EarlyEdge — Peer Coaching for Students</title>
+    <title>EarlyEdge  - Peer Coaching for Students</title>
     <meta name="description" content="Book 1-on-1 coaching sessions with students and recent grads who just achieved what you're aiming for." />
     <meta name="author" content="EarlyEdge" />
-    <meta property="og:title" content="EarlyEdge — Peer Coaching for Students" />
+    <meta property="og:title" content="EarlyEdge  - Peer Coaching for Students" />
     <meta property="og:description" content="Book 1-on-1 coaching sessions with students and recent grads who just achieved what you're aiming for." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -265,7 +265,7 @@ Also consider removing `bun.lockb` (Bun lockfile from Lovable's build pipeline).
 </html>
 ```
 
-> **Note:** The `og:image` and `twitter:image` meta tags pointed to `lovable.dev` — removed. Add your own OG image once you have one.
+> **Note:** The `og:image` and `twitter:image` meta tags pointed to `lovable.dev`  - removed. Add your own OG image once you have one.
 
 ### Step 5: Replace `README.md`
 
@@ -350,12 +350,12 @@ The app will be available at **http://localhost:8080** with hot module replaceme
 ### Verification
 
 After starting the dev server, verify these routes work:
-- `http://localhost:8080` — Landing page
-- `http://localhost:8080/login` — Login page
-- `http://localhost:8080/signup` — Signup page
-- `http://localhost:8080/dashboard` — Student dashboard (mock data)
-- `http://localhost:8080/coach/1` — Coach profile page
-- `http://localhost:8080/become-a-coach` — Coach recruitment page
+- `http://localhost:8080`  - Landing page
+- `http://localhost:8080/login`  - Login page
+- `http://localhost:8080/signup`  - Signup page
+- `http://localhost:8080/dashboard`  - Student dashboard (mock data)
+- `http://localhost:8080/coach/1`  - Coach profile page
+- `http://localhost:8080/become-a-coach`  - Coach recruitment page
 
 ### Running Tests
 
@@ -392,10 +392,10 @@ npm run preview  # Preview the production build locally
 
 The design system is defined in `src/index.css` (CSS variables) and `tailwind.config.ts` (theme extensions).
 
-- **Fonts:** Inter (sans), Lora (serif), Space Mono (mono) — loaded via `@fontsource` packages + Google Fonts
-- **Color palette:** Primarily neutral/monochrome — defined as HSL CSS variables (see `:root` in `index.css`)
+- **Fonts:** Inter (sans), Lora (serif), Space Mono (mono)  - loaded via `@fontsource` packages + Google Fonts
+- **Color palette:** Primarily neutral/monochrome  - defined as HSL CSS variables (see `:root` in `index.css`)
 - **Dark mode:** Supported via `.dark` class (CSS variables override)
-- **Custom animations:** `float`, `float-reverse`, `fade-up`, `slide-in`, `shimmer` — defined in both `index.css` and `tailwind.config.ts`
+- **Custom animations:** `float`, `float-reverse`, `fade-up`, `slide-in`, `shimmer`  - defined in both `index.css` and `tailwind.config.ts`
 - **shadcn/ui:** 49 components available in `src/components/ui/`, configured via `components.json`
 
 > **Note from `early.md`:** The intended design system uses DM Sans + Instrument Serif, strictly black-and-white. The current implementation uses Inter + Lora, which may need updating to match the spec.
