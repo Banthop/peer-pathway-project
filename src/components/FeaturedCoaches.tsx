@@ -22,7 +22,7 @@ const coaches = [
     image: coachSarah,
     university: "Oxford PPE '24",
     role: "Incoming Analyst, Goldman Sachs",
-    tagline: "I'll help you land a Spring Week — from CV to final interview",
+    tagline: "I'll help you land a Spring Week - from CV to final interview",
     universityLogo: logoOxford,
     companyLogo: logoGoldmanSachs,
     specialties: ["Spring Week Prep", "CV Review", "Mock Interviews"],
@@ -36,7 +36,7 @@ const coaches = [
     image: coachDavid,
     university: "Cambridge Economics",
     role: "Summer Associate, McKinsey",
-    tagline: "From case study basics to offer — I'll coach you through the entire pipeline",
+    tagline: "From case study basics to offer - I'll coach you through the entire pipeline",
     universityLogo: logoCambridge,
     companyLogo: logoMcKinsey,
     specialties: ["Case Studies", "Behavioural Prep", "Consulting Strategy"],
@@ -50,7 +50,7 @@ const coaches = [
     image: coachJames,
     university: "Imperial Computing",
     role: "Software Engineer, Google",
-    tagline: "I'll get you interview-ready for top tech — DSA, system design, and behavioural",
+    tagline: "I'll get you interview-ready for top tech - DSA, system design, and behavioural",
     universityLogo: logoImperial,
     companyLogo: logoGoogle,
     specialties: ["Coding Interview", "System Design", "Tech Applications"],
@@ -64,7 +64,7 @@ const coaches = [
     image: coachEmily,
     university: "LSE Law",
     role: "Trainee Solicitor, Clifford Chance",
-    tagline: "Vac scheme applications demystified — I got offers from 4 magic circle firms",
+    tagline: "Vac scheme applications demystified - I got offers from 4 magic circle firms",
     universityLogo: logoLSE,
     companyLogo: logoCliffordChance,
     specialties: ["Vac Scheme Apps", "Interview Prep", "Cover Letters"],
@@ -148,7 +148,7 @@ const FeaturedCoaches = () => {
               className="flex-shrink-0 w-[310px] md:w-[340px] bg-card rounded-2xl border border-border/50 group cursor-pointer transition-all duration-300 hover:border-foreground/15 hover:shadow-xl hover:shadow-black/[0.04] hover:-translate-y-1 flex flex-col font-sans overflow-hidden"
               style={{ scrollSnapAlign: "start" }}
             >
-              {/* Top section — photo, name, logos */}
+              {/* Top section - photo, name, logos */}
               <div className="p-5 pb-0">
                 <div className="flex items-start gap-3.5 mb-4">
                   {/* Coach photo with ring */}
@@ -185,7 +185,7 @@ const FeaturedCoaches = () => {
                   </div>
                 </div>
 
-                {/* Tagline — italic, personal voice */}
+                {/* Tagline - italic, personal voice */}
                 <p className="text-[13px] text-muted-foreground leading-relaxed mb-3.5 line-clamp-2 font-light">
                   <span className="text-foreground/30">"</span>
                   {coach.tagline}
@@ -205,7 +205,7 @@ const FeaturedCoaches = () => {
                 </div>
               </div>
 
-              {/* Package strip — highlighted */}
+              {/* Package strip - highlighted */}
               <div className="mx-5 mb-4 rounded-xl bg-gradient-to-r from-secondary/80 to-secondary/40 px-4 py-3 border border-border/30">
                 <div className="flex items-center justify-between">
                   <div>
@@ -227,7 +227,7 @@ const FeaturedCoaches = () => {
                 </div>
               </div>
 
-              {/* CTAs — full width bottom bar */}
+              {/* CTAs - full width bottom bar */}
               <div className="mt-auto px-5 pb-5 flex items-center justify-between gap-3">
                 <Link
                   to={`/coach/${coach.id}`}

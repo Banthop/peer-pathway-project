@@ -268,26 +268,26 @@ function saveCoaches(coaches: OutreachCoach[]): void {
 function getDefaultScripts(): OutreachScript[] {
     return [
         {
-            id: uid(), name: "LinkedIn — Initial DM", platform: "linkedin",
-            content: `Hey {name}! Saw your profile — really impressive background in {topic}.\n\nRandom question: do people ever DM you asking for 1-on-1 help? Like paid coaching?\n\nWorking on something that might be relevant if so.`,
+            id: uid(), name: "LinkedIn - Initial DM", platform: "linkedin",
+            content: `Hey {name}! Saw your profile - really impressive background in {topic}.\n\nRandom question: do people ever DM you asking for 1-on-1 help? Like paid coaching?\n\nWorking on something that might be relevant if so.`,
             category: "", useCount: 0, addedBy: "Dylan",
             createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         },
         {
-            id: uid(), name: "LinkedIn — Follow Up", platform: "linkedin",
-            content: `Hey {name}! Following up on my message — would you want to get paid to help people with {topic}?\n\nWe're building EarlyEdge — a peer coaching marketplace for students. Coaches charge £25-60/session and we handle payments, scheduling, everything.\n\nHappy to explain more if you're interested!`,
+            id: uid(), name: "LinkedIn - Follow Up", platform: "linkedin",
+            content: `Hey {name}! Following up on my message - would you want to get paid to help people with {topic}?\n\nWe're building EarlyEdge - a peer coaching marketplace for students. Coaches charge £25-60/session and we handle payments, scheduling, everything.\n\nHappy to explain more if you're interested!`,
             category: "", useCount: 0, addedBy: "Dylan",
             createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         },
         {
-            id: uid(), name: "TikTok — Cold DM", platform: "tiktok",
-            content: `Hey {name}! Love your content on {topic} — really great stuff.\n\nQuick Q: do you ever do 1-on-1 coaching? We're building a platform where people like you get paid £25-60/hr to help students.\n\nWould love to chat if you're open to it!`,
+            id: uid(), name: "TikTok - Cold DM", platform: "tiktok",
+            content: `Hey {name}! Love your content on {topic} - really great stuff.\n\nQuick Q: do you ever do 1-on-1 coaching? We're building a platform where people like you get paid £25-60/hr to help students.\n\nWould love to chat if you're open to it!`,
             category: "", useCount: 0, addedBy: "Dylan",
             createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         },
         {
-            id: uid(), name: "LinkedIn — Warm Intro", platform: "linkedin",
-            content: `Hi {name}! I came across your profile through {credential} — congrats on that.\n\nI'm building EarlyEdge, a peer coaching marketplace where students who recently achieved competitive things (spring weeks, Oxbridge offers, UCAT scores etc.) coach others who are going through the same process.\n\nGiven your background in {topic}, I think you'd be a great fit. Coaches set their own rates (typically £25-60/hr) and we handle everything else.\n\nWould you be open to a quick 10-min chat?`,
+            id: uid(), name: "LinkedIn - Warm Intro", platform: "linkedin",
+            content: `Hi {name}! I came across your profile through {credential} - congrats on that.\n\nI'm building EarlyEdge, a peer coaching marketplace where students who recently achieved competitive things (spring weeks, Oxbridge offers, UCAT scores etc.) coach others who are going through the same process.\n\nGiven your background in {topic}, I think you'd be a great fit. Coaches set their own rates (typically £25-60/hr) and we handle everything else.\n\nWould you be open to a quick 10-min chat?`,
             category: "", useCount: 0, addedBy: "Dylan",
             createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
         },
@@ -566,7 +566,7 @@ function DashboardTab({ coaches }: { coaches: OutreachCoach[] }) {
                                 <div className="flex-1 min-w-0">
                                     <span className="text-sm">
                                         <strong className="text-foreground">{c.name}</strong>
-                                        <span className="text-muted-foreground"> — </span>
+                                        <span className="text-muted-foreground"> - </span>
                                     </span>
                                     <StatusBadge status={c.status} />
                                 </div>
@@ -772,7 +772,7 @@ function DirectoryTab({ coaches, onEdit, onDelete, onUpdateStatus, onAdd }: {
                                                     {formatDate(c.followUpDate)}
                                                 </span>
                                             ) : (
-                                                <span className="text-xs text-muted-foreground/40">—</span>
+                                                <span className="text-xs text-muted-foreground/40">-</span>
                                             )}
                                         </td>
                                         <td className="px-4 py-3">
@@ -968,8 +968,8 @@ function AnalyticsTab({ coaches }: { coaches: OutreachCoach[] }) {
             if (diff >= 0) responseTimes.push(diff);
         }
     });
-    const avgTime = responseTimes.length ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1) : "—";
-    const fastestTime = responseTimes.length ? Math.min(...responseTimes).toFixed(1) : "—";
+    const avgTime = responseTimes.length ? (responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length).toFixed(1) : "-";
+    const fastestTime = responseTimes.length ? Math.min(...responseTimes).toFixed(1) : "-";
 
     // Top categories
     const catCounts: Record<string, number> = {};
@@ -1033,10 +1033,10 @@ function AnalyticsTab({ coaches }: { coaches: OutreachCoach[] }) {
                         {[
                             { label: "LinkedIn Sent", value: liSent, color: "#0A66C2" },
                             { label: "LinkedIn Replied", value: liRep, color: "#10B981" },
-                            { label: "LinkedIn Rate", value: liSent ? `${Math.round(liRep / liSent * 100)}%` : "—", color: "#0A66C2" },
+                            { label: "LinkedIn Rate", value: liSent ? `${Math.round(liRep / liSent * 100)}%` : "-", color: "#0A66C2" },
                             { label: "TikTok Sent", value: ttSent, color: "#FF0050" },
                             { label: "TikTok Replied", value: ttRep, color: "#10B981" },
-                            { label: "TikTok Rate", value: ttSent ? `${Math.round(ttRep / ttSent * 100)}%` : "—", color: "#FF0050" },
+                            { label: "TikTok Rate", value: ttSent ? `${Math.round(ttRep / ttSent * 100)}%` : "-", color: "#FF0050" },
                         ].map(stat => (
                             <div key={stat.label} className="p-3.5 bg-muted/30 rounded-lg">
                                 <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">{stat.label}</span>
@@ -1052,11 +1052,11 @@ function AnalyticsTab({ coaches }: { coaches: OutreachCoach[] }) {
                     <div className="grid grid-cols-3 gap-3">
                         <div className="p-3.5 bg-muted/30 rounded-lg">
                             <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">Average</span>
-                            <span className="text-xl font-bold text-foreground">{avgTime}{avgTime !== "—" ? "d" : ""}</span>
+                            <span className="text-xl font-bold text-foreground">{avgTime}{avgTime !== "-" ? "d" : ""}</span>
                         </div>
                         <div className="p-3.5 bg-muted/30 rounded-lg">
                             <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">Fastest</span>
-                            <span className="text-xl font-bold text-foreground">{fastestTime}{fastestTime !== "—" ? "d" : ""}</span>
+                            <span className="text-xl font-bold text-foreground">{fastestTime}{fastestTime !== "-" ? "d" : ""}</span>
                         </div>
                         <div className="p-3.5 bg-muted/30 rounded-lg">
                             <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">Total Replies</span>
@@ -1709,33 +1709,33 @@ function CoachDialog({ open, onClose, coach, onSave }: {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Tagline</span>
-                                    <p className="text-sm text-foreground">{coach.onboardingData.tagline || "—"}</p>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.tagline || "-"}</p>
                                 </div>
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Category</span>
-                                    <p className="text-sm text-foreground">{coach.onboardingData.category || "—"}</p>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.category || "-"}</p>
                                 </div>
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">University</span>
-                                    <p className="text-sm text-foreground">{coach.onboardingData.uniName || "—"} {coach.onboardingData.uniDegree ? `(${coach.onboardingData.uniDegree})` : ""}</p>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.uniName || "-"} {coach.onboardingData.uniDegree ? `(${coach.onboardingData.uniDegree})` : ""}</p>
                                 </div>
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Company / Role</span>
-                                    <p className="text-sm text-foreground">{coach.onboardingData.companyName || "—"} {coach.onboardingData.companyRole ? `· ${coach.onboardingData.companyRole}` : ""}</p>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.companyName || "-"} {coach.onboardingData.companyRole ? `· ${coach.onboardingData.companyRole}` : ""}</p>
                                 </div>
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Hourly Rate</span>
-                                    <p className="text-sm text-foreground font-semibold">£{coach.onboardingData.hourlyRate || "—"}/hr</p>
+                                    <p className="text-sm text-foreground font-semibold">£{coach.onboardingData.hourlyRate || "-"}/hr</p>
                                 </div>
                                 <div>
                                     <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Skills</span>
-                                    <p className="text-sm text-foreground">{coach.onboardingData.skills || "—"}</p>
+                                    <p className="text-sm text-foreground">{coach.onboardingData.skills || "-"}</p>
                                 </div>
                             </div>
 
                             <div>
                                 <span className="block text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-1">Bio</span>
-                                <p className="text-sm text-foreground whitespace-pre-wrap bg-muted/30 rounded-lg p-3">{coach.onboardingData.bio || "—"}</p>
+                                <p className="text-sm text-foreground whitespace-pre-wrap bg-muted/30 rounded-lg p-3">{coach.onboardingData.bio || "-"}</p>
                             </div>
 
                             {/* Services */}

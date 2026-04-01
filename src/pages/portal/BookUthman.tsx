@@ -35,7 +35,7 @@ const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 // Leave empty to keep using the manual picker.
 const CAL_USERNAME = ""; // e.g. "uthman" or "uthman-ahmed-xyz"
 
-// Custom meeting link — Uthman will send the final link via confirmation email
+// Custom meeting link - Uthman will send the final link via confirmation email
 // This is a default placeholder; the actual link is confirmed per booking
 const DEFAULT_MEETING_LINK = "";
 
@@ -228,7 +228,7 @@ function buildIcsFile(session: SessionType, date: Date, time: string, studentNam
     "BEGIN:VEVENT",
     `DTSTART:${toIcs(start)}`,
     `DTEND:${toIcs(end)}`,
-    `SUMMARY:${session.name} — EarlyEdge`,
+    `SUMMARY:${session.name} - EarlyEdge`,
     `DESCRIPTION:Session with Uthman. ${session.description}\n\nBooked by: ${studentName}`,
     `ORGANIZER;CN=Uthman:mailto:uthman6696@gmail.com`,
     "STATUS:CONFIRMED",
@@ -380,7 +380,7 @@ export default function BookUthman() {
   const handleBook = async () => {
     console.log("handleBook called:", { selectedSession: !!selectedSession, selectedDate: !!selectedDate, selectedTime, user: !!user });
     if (!selectedSession || !selectedDate || !selectedTime || !user) {
-      console.error("handleBook aborted — missing:", { selectedSession: !selectedSession, selectedDate: !selectedDate, selectedTime: !selectedTime, user: !user });
+      console.error("handleBook aborted - missing:", { selectedSession: !selectedSession, selectedDate: !selectedDate, selectedTime: !selectedTime, user: !user });
       return;
     }
     setBooking(true);

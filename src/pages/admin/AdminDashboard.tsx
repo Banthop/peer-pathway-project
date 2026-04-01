@@ -184,7 +184,7 @@ function CoachVerificationTable({ coaches, onVerify }: {
 /* ─── Season Banners Manager ─────────────────────────── */
 function SeasonBannersManager() {
     const [banners, setBanners] = useState([
-        { id: 1, title: "Spring Coaching Sale — 20% off all packages", active: true, color: "#10b981" },
+        { id: 1, title: "Spring Coaching Sale - 20% off all packages", active: true, color: "#10b981" },
         { id: 2, title: "New coaches: Finance & Consulting specialists now live!", active: false, color: "#3b82f6" },
     ]);
     const [newBanner, setNewBanner] = useState("");

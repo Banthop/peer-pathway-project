@@ -25,9 +25,9 @@ interface Resource {
 const resources: Resource[] = [
     {
         id: 1,
-        title: "How I Landed a Spring Week at Goldman Sachs — Step by Step",
+        title: "How I Landed a Spring Week at Goldman Sachs - Step by Step",
         description:
-            "Everything I did from October to December. The application timeline, what I wrote in my cover letter, how I prepped for the online tests, and what actually came up in my interview. No fluff — just what worked.",
+            "Everything I did from October to December. The application timeline, what I wrote in my cover letter, how I prepped for the online tests, and what actually came up in my interview. No fluff - just what worked.",
         type: "guide",
         category: "Investment Banking",
         coachName: "Sarah K.",
@@ -51,7 +51,7 @@ const resources: Resource[] = [
     },
     {
         id: 3,
-        title: "My Vacation Scheme Application — What Actually Made It Stand Out",
+        title: "My Vacation Scheme Application - What Actually Made It Stand Out",
         description:
             "I applied to 12 firms and got offers from 3. Here's the exact approach I took to commercial awareness questions, the research I did before each application, and the one thing most applicants get wrong.",
         type: "article",
@@ -168,7 +168,7 @@ const ResourceBank = () => {
                     ))}
                 </div>
 
-                {/* Resource feed — LinkedIn-style cards */}
+                {/* Resource feed - LinkedIn-style cards */}
                 <div className="max-w-2xl mx-auto space-y-4">
                     {filteredResources.map((resource) => {
                         const TypeIcon = typeIcons[resource.type];

@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import DashboardResources from "@/pages/dashboard/DashboardResources";
 
 /**
- * Public-facing Resources page — wraps the dashboard resources component
+ * Public-facing Resources page - wraps the dashboard resources component
  * with the site header and footer so non-logged-in visitors can browse.
  */
 export default function PublicResources() {

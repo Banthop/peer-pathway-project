@@ -15,7 +15,7 @@ export interface CrmContactInput {
 
 /**
  * Save or update a CRM contact in Supabase.
- * Uses upsert on email to deduplicate — if a contact with the same email
+ * Uses upsert on email to deduplicate - if a contact with the same email
  * already exists, it updates their info instead of creating a duplicate.
  *
  * Call this from any form submission handler. Non-blocking by design.

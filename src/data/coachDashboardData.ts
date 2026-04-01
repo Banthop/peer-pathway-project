@@ -291,7 +291,7 @@ export const coachConversations: CoachConversation[] = [
         messages: [
             { id: 1, sender: "coach", text: "Hi Priya! For Sunday's mock, I'll be running you through a competency-based interview. Make sure to prepare your STAR examples.", time: "2 days ago" },
             { id: 2, sender: "student", text: "Thanks for the heads up! Should I focus on any particular competencies?", time: "2 days ago" },
-            { id: 3, sender: "coach", text: "Focus on leadership, teamwork, and problem-solving. I've also sent you a framework doc — check your email!", time: "Yesterday" },
+            { id: 3, sender: "coach", text: "Focus on leadership, teamwork, and problem-solving. I've also sent you a framework doc - check your email!", time: "Yesterday" },
             { id: 4, sender: "student", text: "Perfect, see you Sunday! I'll practice the framework you sent.", time: "Yesterday" },
         ],
     },

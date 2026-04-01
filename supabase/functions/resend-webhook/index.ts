@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
         }
 
         if (!contact) {
-            console.log(`   Contact ${recipientEmail} not found in CRM — skipping`);
+            console.log(`   Contact ${recipientEmail} not found in CRM - skipping`);
             return new Response(JSON.stringify({ status: "not_found" }), { status: 200 });
         }
 

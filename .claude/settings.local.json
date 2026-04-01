@@ -31,10 +31,53 @@
       "Bash(python3 -c \"import pptx; print\\(''''pptx ok''''\\)\")",
       "Bash(python3 -c \"import pptx; print\\(''pptx ok''\\)\")",
       "Bash(python3 -c \"from pptx.util import Inches, Pt; from pptx.dml.color import RGBColor; from pptx.enum.text import PP_ALIGN; from pptx.enum.shapes import MSO_SHAPE_TYPE; print\\(''all imports ok''\\)\")",
-      "Bash(python3 build_pptx.py)"
+      "Bash(python3 build_pptx.py)",
+      "Bash(claude mcp:*)",
+      "Bash(find ~/.claude -name \".mcp.json\" 2>/dev/null | xargs cat 2>/dev/null; find /Users/dongraham/Desktop/peer-pathway-project -name \".mcp.json\" 2>/dev/null | xargs cat 2>/dev/null2)",
+      "Bash(find:*)",
+      "Bash(find ~/.claude -name \"*.json\" ! -path \"*/plugins/*\" ! -path \"*/projects/*\" 2>/dev/null | xargs ls -la 2>/dev/null)",
+      "Bash(python3 -m json.tool)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\(''mcpServers'', {}\\), indent=2\\)\\)\")",
+      "Bash(curl:*)",
+      "WebSearch",
+      "mcp__attio__list-lists",
+      "mcp__notion__notion-search",
+      "mcp__notion__notion-create-pages",
+      "mcp__notion__notion-fetch",
+      "mcp__clickup__clickup_search",
+      "mcp__clickup__clickup_get_workspace_hierarchy",
+      "mcp__clickup__clickup_create_task",
+      "mcp__clickup__clickup_create_list",
+      "mcp__clickup__clickup_create_folder",
+      "mcp__attio__list-lists",
+      "mcp__attio__list-records",
+      "mcp__attio__list-attribute-definitions",
+      "mcp__supabase__list_edge_functions",
+      "mcp__supabase__list_projects",
+      "mcp__notion__notion-update-page",
+      "mcp__attio__list-list-attribute-definitions",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "mcp__notion__*",
+      "mcp__attio__*",
+      "mcp__clickup__*",
+      "mcp__supabase__*",
+      "mcp__stripe__*"
     ],
     "additionalDirectories": [
       "/Users/dongraham/Desktop"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "attio",
+    "supabase",
+    "stripe",
+    "clickup",
+    "notion"
+  ]
 }

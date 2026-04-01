@@ -50,7 +50,7 @@ const resourceTypes = ["All", "guide", "template", "checklist", "toolkit", "arti
 
 const mockResources: ResourceData[] = [
     {
-        id: "1", coach_id: "c1", title: "My Exact Goldman Sachs Application — Annotated",
+        id: "1", coach_id: "c1", title: "My Exact Goldman Sachs Application - Annotated",
         description: "The complete application I submitted to Goldman Sachs for their Spring Week programme, with annotations explaining every decision I made.",
         category: "Investment Banking", resource_type: "guide", price: 1000, file_url: null,
         preview_text: "Walk through the exact Cover Letter and CV that landed a Spring Week at Goldman Sachs...",
@@ -69,7 +69,7 @@ const mockResources: ResourceData[] = [
         id: "3", coach_id: "c3", title: "Cold Email Templates That Actually Get Replies",
         description: "12 email templates that got me meetings with managing directors at 5 top banks. Includes subject lines, follow-ups, and LinkedIn connection request scripts.",
         category: "Cold Emailing", resource_type: "toolkit", price: 500, file_url: null,
-        preview_text: "Template 1: The 'Warm Intro Request' — use when you have a mutual connection...",
+        preview_text: "Template 1: The 'Warm Intro Request' - use when you have a mutual connection...",
         download_count: 234, is_active: true, is_featured: false, created_at: "2026-02-05T00:00:00Z",
         coach: { user: { name: "David W.", avatar_url: null }, headline: "McKinsey Summer Analyst '24", university: "Oxford" },
     },
@@ -83,7 +83,7 @@ const mockResources: ResourceData[] = [
     },
     {
         id: "5", coach_id: "c5", title: "How I Got Into Oxford PPE",
-        description: "My complete application journey — personal statement drafts, interview preparation notes, and the reading list that helped me stand out.",
+        description: "My complete application journey - personal statement drafts, interview preparation notes, and the reading list that helped me stand out.",
         category: "Oxbridge", resource_type: "article", price: 0, file_url: null,
         preview_text: "The key to my Oxford interview was showing genuine intellectual curiosity...",
         download_count: 187, is_active: true, is_featured: false, created_at: "2026-01-28T00:00:00Z",

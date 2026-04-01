@@ -106,11 +106,11 @@ function webinarOnlyConfirmation(firstName: string) {
 
 function recordingOnlyConfirmation(firstName: string) {
   return {
-    subject: "you're in — here's your recording access",
+    subject: "you're in - here's your recording access",
     html: wrap(
       p(`Hey ${firstName || "there"},`) +
       p("You're in. Your recording access is ready.") +
-      p("Uthman's full Cold Email Masterclass — 90 minutes of the exact system he used to land 20 internship offers using nothing but cold emails. No connections, no crazy CV, just a system that works.") +
+      p("Uthman's full Cold Email Masterclass - 90 minutes of the exact system he used to land 20 internship offers using nothing but cold emails. No connections, no crazy CV, just a system that works.") +
       p("Here's what's inside:") +
       `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; How to find emails of CEOs and decision-makers at <strong>any</strong> firm<br>&#8226; The exact email template behind a 21% reply rate<br>&#8226; Live demo of the mail-merge system (50+ emails/day, zero spam)<br>&#8226; Follow-up sequences that keep conversations alive<br>&#8226; The full Q&A with real student questions answered</td></tr>` +
       p("To access your recording, sign in to the Cold Email Platform with the email you used to purchase:") +
@@ -124,13 +124,13 @@ function recordingOnlyConfirmation(firstName: string) {
 
 function recordingBundleConfirmation(firstName: string) {
   return {
-    subject: "you're in — recording + guide ready",
+    subject: "you're in - recording + guide ready",
     html: wrap(
       p(`Hey ${firstName || "there"},`) +
-      p("You're in. Good decision — you went for the full bundle so you're getting everything.") +
+      p("You're in. Good decision - you went for the full bundle so you're getting everything.") +
       p("Uthman's full Cold Email Masterclass recording + the complete Cold Email Guide. This is the exact system he used to land 20 internship offers.") +
       p("Here's what you've got:") +
-      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> — 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> — the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> — quick reference sheet<br>&#8226; <strong>Platform access</strong> — everything in one place</td></tr>` +
+      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> - 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> - the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> - quick reference sheet<br>&#8226; <strong>Platform access</strong> - everything in one place</td></tr>` +
       p("Sign in to the Cold Email Platform to access everything:") +
       btn("Access Your Platform", PORTAL_LOGIN) +
       p("Your Cold Email Guide is also available here:") +
@@ -144,12 +144,12 @@ function recordingBundleConfirmation(firstName: string) {
 
 function recordingPremiumConfirmation(firstName: string) {
   return {
-    subject: "you're in — recording + guide + 1:1 call booked",
+    subject: "you're in - recording + guide + 1:1 call booked",
     html: wrap(
       p(`Hey ${firstName || "there"},`) +
-      p("You're in. You went for the premium package — smart move. This is the fastest path to results.") +
+      p("You're in. You went for the premium package - smart move. This is the fastest path to results.") +
       p("Here's everything you've got:") +
-      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> — 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> — the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> — quick reference sheet<br>&#8226; <strong>1-on-1 call with Uthman</strong> — personalised strategy session<br>&#8226; <strong>Platform access</strong> — everything in one place</td></tr>` +
+      `<tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">&#8226; <strong>Full recording</strong> - 90-min masterclass with live Q&A<br>&#8226; <strong>Cold Email Guide</strong> - the complete written playbook<br>&#8226; <strong>Cold Email Checklist</strong> - quick reference sheet<br>&#8226; <strong>1-on-1 call with Uthman</strong> - personalised strategy session<br>&#8226; <strong>Platform access</strong> - everything in one place</td></tr>` +
       p("Step 1: Sign in to the Cold Email Platform to access everything:") +
       btn("Access Your Platform", PORTAL_LOGIN) +
       p("Step 2: Read through your Cold Email Guide:") +

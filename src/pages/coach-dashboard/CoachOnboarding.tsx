@@ -121,11 +121,11 @@ export default function CoachOnboarding() {
 
     const canProceed = () => {
         switch (step) {
-            case 0: return true; // Welcome — always proceed
+            case 0: return true; // Welcome - always proceed
             case 1: return form.tagline.trim().length >= 10 && form.bio.trim().length >= 30;
             case 2: return form.category && form.hourlyRate && form.services.some(s => s.name && s.price);
             case 3: return true; // Package is optional
-            case 4: return true; // Share — always proceed
+            case 4: return true; // Share - always proceed
             default: return true;
         }
     };
@@ -199,7 +199,7 @@ export default function CoachOnboarding() {
     /* ─── Step Content ──────────────────────────────────────────── */
 
     const steps = [
-        /* STEP 0 — Welcome */
+        /* STEP 0 - Welcome */
         <div key={0} className="text-center py-8">
             <div className="w-20 h-20 rounded-full bg-foreground flex items-center justify-center mx-auto mb-8">
                 <Sparkles className="w-10 h-10 text-background" />
@@ -215,7 +215,7 @@ export default function CoachOnboarding() {
             </p>
         </div>,
 
-        /* STEP 1 — Tagline & Bio */
+        /* STEP 1 - Tagline & Bio */
         <div key={1}>
             <h2 className="text-2xl font-light text-foreground mb-2">Tell students about you</h2>
             <p className="text-sm text-muted-foreground mb-8">What did you achieve? Why should someone book you?</p>
@@ -266,7 +266,7 @@ export default function CoachOnboarding() {
             </div>
         </div>,
 
-        /* STEP 2 — Pricing & Services */
+        /* STEP 2 - Pricing & Services */
         <div key={2}>
             <h2 className="text-2xl font-light text-foreground mb-2">Set your pricing & services</h2>
             <p className="text-sm text-muted-foreground mb-8">Most coaches charge £30–50/hour. You can change this anytime.</p>
@@ -330,11 +330,11 @@ export default function CoachOnboarding() {
             </div>
         </div>,
 
-        /* STEP 3 — Package (optional) */
+        /* STEP 3 - Package (optional) */
         <div key={3}>
             <h2 className="text-2xl font-light text-foreground mb-2">Create a package</h2>
             <p className="text-sm text-muted-foreground mb-8">
-                Packages are your biggest revenue driver — 3.75× higher than single sessions. Completely optional though.
+                Packages are your biggest revenue driver - 3.75× higher than single sessions. Completely optional though.
             </p>
 
             <div className="space-y-6">
@@ -365,7 +365,7 @@ export default function CoachOnboarding() {
 
                 {!form.enablePackage && (
                     <div className="border border-dashed border-border rounded-xl p-6 text-center">
-                        <p className="text-sm text-muted-foreground mb-2">No worries — you can add one later from your dashboard.</p>
+                        <p className="text-sm text-muted-foreground mb-2">No worries - you can add one later from your dashboard.</p>
                         <button onClick={() => update("enablePackage", true)}
                             className="text-sm font-medium text-foreground hover:underline">
                             Actually, let me add one →
@@ -375,7 +375,7 @@ export default function CoachOnboarding() {
             </div>
         </div>,
 
-        /* STEP 4 — Share */
+        /* STEP 4 - Share */
         <div key={4} className="text-center py-4">
             <div className="w-20 h-20 rounded-full bg-foreground flex items-center justify-center mx-auto mb-8">
                 <Check className="w-10 h-10 text-background" />

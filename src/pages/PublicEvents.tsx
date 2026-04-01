@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import DashboardEvents from "@/pages/dashboard/DashboardEvents";
 
 /**
- * Public-facing Events page — wraps the dashboard events component
+ * Public-facing Events page - wraps the dashboard events component
  * with the site header and footer so non-logged-in visitors can browse.
  */
 export default function PublicEvents() {

@@ -1,7 +1,7 @@
 import { TrendingUp, Users, Star, MessageCircle } from "lucide-react";
 
 /**
- * Social proof strip — shows key metrics to build trust.
+ * Social proof strip - shows key metrics to build trust.
  * Uses real-looking numbers appropriate for an early-stage platform.
  */
 const SocialProof = () => {

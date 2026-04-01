@@ -28,7 +28,7 @@ const popularCategories = [
   "Personal Statements",
 ];
 
-// 3D Logo Box Component — thick floating tile with visible edges
+// 3D Logo Box Component - thick floating tile with visible edges
 const LogoBox = ({
   src,
   alt,
@@ -113,9 +113,9 @@ const Hero = () => {
       {/* Background Layer - Floating 3D Logo Boxes */}
       <div className="absolute inset-0 pointer-events-none z-[1]">
 
-        {/* ───── LEFT CLUSTER — Universities ───── */}
+        {/* ───── LEFT CLUSTER - Universities ───── */}
 
-        {/* Oxford — mid-left */}
+        {/* Oxford - mid-left */}
         <LogoBox
           src={logoOxford}
           alt="University of Oxford"
@@ -128,7 +128,7 @@ const Hero = () => {
           style={{ top: "62%", left: "14%" }}
         />
 
-        {/* Cambridge — lower-left */}
+        {/* Cambridge - lower-left */}
         <LogoBox
           src={logoCambridge}
           alt="University of Cambridge"
@@ -140,7 +140,7 @@ const Hero = () => {
           style={{ top: "58%", left: "4%" }}
         />
 
-        {/* UCL — upper left */}
+        {/* UCL - upper left */}
         <LogoBox
           src={logoUcl}
           alt="UCL"
@@ -152,7 +152,7 @@ const Hero = () => {
           style={{ top: "28%", left: "1%" }}
         />
 
-        {/* Imperial — far bottom left */}
+        {/* Imperial - far bottom left */}
         <LogoBox
           src={logoImperial}
           alt="Imperial College London"
@@ -165,7 +165,7 @@ const Hero = () => {
           style={{ top: "84%", left: "3%" }}
         />
 
-        {/* LSE — inward bottom left */}
+        {/* LSE - inward bottom left */}
         <LogoBox
           src={logoLse}
           alt="LSE"
@@ -178,9 +178,9 @@ const Hero = () => {
           style={{ top: "82%", left: "20%" }}
         />
 
-        {/* ───── RIGHT CLUSTER — Companies ───── */}
+        {/* ───── RIGHT CLUSTER - Companies ───── */}
 
-        {/* Goldman Sachs — mid-right */}
+        {/* Goldman Sachs - mid-right */}
         <LogoBox
           src={logoGoldmanSachs}
           alt="Goldman Sachs"
@@ -193,7 +193,7 @@ const Hero = () => {
           style={{ top: "62%", right: "14%" }}
         />
 
-        {/* Jane Street — lower right */}
+        {/* Jane Street - lower right */}
         <LogoBox
           src={logoJaneStreet}
           alt="Jane Street"
@@ -205,7 +205,7 @@ const Hero = () => {
           style={{ top: "58%", right: "4%" }}
         />
 
-        {/* Clifford Chance — upper right */}
+        {/* Clifford Chance - upper right */}
         <LogoBox
           src={logoCliffordChance}
           alt="Clifford Chance"
@@ -217,7 +217,7 @@ const Hero = () => {
           style={{ top: "28%", right: "1%" }}
         />
 
-        {/* McKinsey — inward bottom right */}
+        {/* McKinsey - inward bottom right */}
         <LogoBox
           src={logoMckinsey}
           alt="McKinsey & Company"
@@ -230,7 +230,7 @@ const Hero = () => {
           style={{ top: "82%", right: "20%" }}
         />
 
-        {/* Google — far bottom right */}
+        {/* Google - far bottom right */}
         <LogoBox
           src={logoGoogle}
           alt="Google"
@@ -287,7 +287,7 @@ const Hero = () => {
           />
         </div>
 
-        {/* Pricing Hint — updated with packages anchor */}
+        {/* Pricing Hint - updated with packages anchor */}
         <p
           className="text-muted-foreground mb-6 animate-fade-up text-sm font-sans font-light"
           style={{ animationDelay: "0.25s" }}

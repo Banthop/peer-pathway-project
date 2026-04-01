@@ -78,7 +78,7 @@ export default function CoachResources() {
             <div className="bg-muted/30 border border-dashed border-border rounded-xl p-5 mb-8">
                 <h3 className="text-sm font-semibold text-foreground mb-1">💡 Resource tips</h3>
                 <p className="text-xs text-muted-foreground">
-                    Free resources work as lead magnets — students need an account to access them. Paid resources (£5-15) sell repeatedly with zero marginal cost. Example: "My exact Goldman Sachs application — annotated" can sell for £10 on repeat.
+                    Free resources work as lead magnets - students need an account to access them. Paid resources (£5-15) sell repeatedly with zero marginal cost. Example: "My exact Goldman Sachs application - annotated" can sell for £10 on repeat.
                 </p>
             </div>
 
@@ -90,7 +90,7 @@ export default function CoachResources() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Title</label>
-                            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full mt-1 px-3 py-2.5 bg-background border border-border rounded-lg text-sm" placeholder="My Goldman Sachs Application — Annotated" />
+                            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full mt-1 px-3 py-2.5 bg-background border border-border rounded-lg text-sm" placeholder="My Goldman Sachs Application - Annotated" />
                         </div>
                         <div>
                             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Type</label>

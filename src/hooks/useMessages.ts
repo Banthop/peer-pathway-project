@@ -27,7 +27,7 @@ export function useConversations() {
                 if (!coachId) return [];
             }
 
-            // Simple filter based on user type — no subqueries
+            // Simple filter based on user type - no subqueries
             let query = supabase
                 .from("conversations")
                 .select(`

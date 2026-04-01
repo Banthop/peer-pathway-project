@@ -103,7 +103,7 @@ export default function DashboardEvents() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const { user } = useAuth();
 
-  // Try to load from Supabase — fallback to mock data
+  // Try to load from Supabase - fallback to mock data
   const { data: dbEvents = [] } = useEvents(selectedCategory !== "All" ? selectedCategory : undefined);
   const { data: myRegistrations = [] } = useMyEventRegistrations();
   const registerMutation = useRegisterForEvent();

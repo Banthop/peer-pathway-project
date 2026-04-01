@@ -32,12 +32,12 @@ export default function Guarantee() {
                     Your sessions are protected
                 </h1>
                 <p className="text-base text-foreground/60 font-light leading-relaxed mb-12">
-                    Every session booked through EarlyEdge comes with built‑in safeguards so you can focus on what matters — getting ahead.
+                    Every session booked through EarlyEdge comes with built‑in safeguards so you can focus on what matters - getting ahead.
                 </p>
 
                 {/* Guarantees */}
                 <div className="flex flex-col gap-8">
-                    {/* 1 — Satisfaction */}
+                    {/* 1 - Satisfaction */}
                     <div className="border border-border rounded-2xl p-7">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center">
@@ -48,11 +48,11 @@ export default function Guarantee() {
                         <p className="text-[14px] text-foreground/60 font-light leading-relaxed">
                             Not satisfied with your first session? Email us at{" "}
                             <span className="font-medium text-foreground">support@earlyedge.co</span>{" "}
-                            within 24 hours for a full refund — no questions asked.
+                            within 24 hours for a full refund - no questions asked.
                         </p>
                     </div>
 
-                    {/* 2 — Verified Coaches */}
+                    {/* 2 - Verified Coaches */}
                     <div className="border border-border rounded-2xl p-7">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center">
@@ -65,7 +65,7 @@ export default function Guarantee() {
                         </p>
                     </div>
 
-                    {/* 3 — Seamless Sessions */}
+                    {/* 3 - Seamless Sessions */}
                     <div className="border border-border rounded-2xl p-7">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center">
@@ -74,7 +74,7 @@ export default function Guarantee() {
                             <h2 className="text-lg font-semibold text-foreground">Seamless Video Sessions</h2>
                         </div>
                         <p className="text-[14px] text-foreground/60 font-light leading-relaxed">
-                            Sessions happen via video call with a direct link — no downloads, no plugins, no hassle. Just click and connect with your coach.
+                            Sessions happen via video call with a direct link - no downloads, no plugins, no hassle. Just click and connect with your coach.
                         </p>
                     </div>
                 </div>

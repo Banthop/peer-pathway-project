@@ -15,6 +15,52 @@ const ATTIO_API_KEY = Deno.env.get("ATTIO_API_KEY") || "";
 const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
 const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
 
+// Spring Week Webinar product ID mapping
+// Maps Stripe product IDs to their product type and relevant tags
+const SPRING_WEEK_PRODUCTS: Record<string, { productType: string; tags: string[] }> = {
+    "prod_UFrcUWCwGdzNqo": {
+        productType: "spring_week_part1",
+        tags: ["stripe_customer", "spring_week", "spring_week_part1"],
+    },
+    "prod_UFrcmX59L7wHRW": {
+        productType: "spring_week_part2",
+        tags: ["stripe_customer", "spring_week", "spring_week_part2"],
+    },
+    "prod_UFrcsQHhGy0WES": {
+        productType: "spring_week_bundle",
+        tags: ["stripe_customer", "spring_week", "spring_week_bundle", "playbook_access"],
+    },
+    "prod_UFrcW9BHxahd9E": {
+        productType: "spring_week_premium",
+        tags: ["stripe_customer", "spring_week", "spring_week_premium", "playbook_access", "coaching_included"],
+    },
+};
+
+/**
+ * Resolve product info from Stripe line items.
+ * Checks line_items for Spring Week product IDs and returns matching config.
+ */
+async function resolveSpringWeekProduct(session: any): Promise<{ productType: string; tags: string[] } | null> {
+    try {
+        // Expand line items to get product IDs
+        const expanded = await stripe.checkout.sessions.retrieve(session.id, {
+            expand: ["line_items.data.price.product"],
+        });
+        const lineItems = expanded.line_items?.data || [];
+        for (const item of lineItems) {
+            const productId = typeof item.price?.product === "string"
+                ? item.price.product
+                : (item.price?.product as any)?.id;
+            if (productId && SPRING_WEEK_PRODUCTS[productId]) {
+                return SPRING_WEEK_PRODUCTS[productId];
+            }
+        }
+    } catch (e: any) {
+        console.error("Error resolving Spring Week product:", e.message);
+    }
+    return null;
+}
+
 /**
  * Sync contact to Attio CRM and place in Student Sales pipeline (Paid stage).
  */
@@ -22,13 +68,17 @@ async function syncToAttio(email: string, firstName: string, lastName: string, s
     if (!ATTIO_API_KEY) return;
     try {
         const fullName = `${firstName} ${lastName}`.trim() || email.split("@")[0];
-        
+
         // Map productType to Attio Select Option (fallback to string if unmapped)
         let mappedProductType = productType;
         if (productType === "bundle" || productType === "recording_bundle") mappedProductType = "Bundle";
         else if (productType === "recording_premium") mappedProductType = "Premium";
         else if (productType.includes("webinar")) mappedProductType = "Recording Only";
-        
+        else if (productType === "spring_week_part1") mappedProductType = "Spring Week Part 1";
+        else if (productType === "spring_week_part2") mappedProductType = "Spring Week Part 2";
+        else if (productType === "spring_week_bundle") mappedProductType = "Spring Week Bundle";
+        else if (productType === "spring_week_premium") mappedProductType = "Spring Week Premium";
+
         // 1. Upsert Person
         const personRes = await fetch("https://api.attio.com/v2/objects/people/records?matching_attribute=email_addresses", {
             method: "PUT",
@@ -43,18 +93,18 @@ async function syncToAttio(email: string, firstName: string, lastName: string, s
                         name: [{ first_name: firstName || undefined, last_name: lastName || undefined, full_name: fullName }],
                         stripe_customer: [{ value: true }],
                         total_spent: [{ value: spend }],
-                        product_type: [{ option: mappedProductType }] // Tries mapping to valid options
+                        product_type: [{ option: mappedProductType }]
                     }
                 }
             })
         });
-        
+
         const personData = await personRes.json();
         const recordId = personData?.data?.id?.record_id;
-        
+
         if (recordId) {
             // 2. Add to Student Sales pipeline inside the 'Paid' stage
-            const listRes = await fetch("https://api.attio.com/v2/lists/student_sales/entries", {
+            await fetch("https://api.attio.com/v2/lists/student_sales/entries", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${ATTIO_API_KEY}`,
@@ -70,7 +120,7 @@ async function syncToAttio(email: string, firstName: string, lastName: string, s
                     }
                 })
             });
-            console.log(`✅ Synced ${email} to Attio Student Sales Pipeline (Paid)`);
+            console.log(`Synced ${email} to Attio Student Sales Pipeline (Paid)`);
         } else {
             console.error("Attio Sync person payload failed:", JSON.stringify(personData));
         }
@@ -84,12 +134,15 @@ async function syncToAttio(email: string, firstName: string, lastName: string, s
  */
 async function triggerLoopsEvents(email: string, firstName: string, spend: number, productType: string, isBundle: boolean) {
     if (!LOOPS_API_KEY) {
-        console.warn("LOOPS_API_KEY not set — skipping Loops event & transactional emails");
+        console.warn("LOOPS_API_KEY not set - skipping Loops event & transactional emails");
         return;
     }
 
     const headers = { Authorization: `Bearer ${LOOPS_API_KEY}`, "Content-Type": "application/json" };
-    
+
+    // Determine webinar type for Loops sequence branching
+    const webinarType = productType.startsWith("spring_week") ? "spring_week" : "cold_email";
+
     // 1. Fire 'purchase_completed' Event to trigger the automated Buyer Welcome Sequence
     try {
         await fetch("https://app.loops.so/api/v1/events/send", {
@@ -100,15 +153,16 @@ async function triggerLoopsEvents(email: string, firstName: string, spend: numbe
                 eventProperties: {
                     spend,
                     productType,
+                    webinarType,
                     isBundle
                 }
             })
         });
-        console.log(`✅ Triggered Loops 'purchase_completed' event for ${email}`);
+        console.log(`Triggered Loops 'purchase_completed' event for ${email}`);
     } catch (e: any) {
         console.error("Loops Event Error:", e.message);
     }
-    
+
     // 2. Fire Transactional Portal Access Email (Requires LOOPS_PORTAL_TRANSACTIONAL_ID)
     if (LOOPS_PORTAL_TRANSACTIONAL_ID) {
         try {
@@ -121,16 +175,18 @@ async function triggerLoopsEvents(email: string, firstName: string, spend: numbe
                         firstName: firstName || "there",
                         portalLink: PORTAL_LINK,
                         bookUthmanLink: BOOK_UTHMAN,
-                        isBundle: isBundle ? "true" : "false" // used in loops template logic
+                        isBundle: isBundle ? "true" : "false",
+                        productType,
+                        webinarType
                     }
                 })
             });
-            console.log(`📧 Sent Loops portal access email to ${email}`);
+            console.log(`Sent Loops portal access email to ${email}`);
         } catch (e: any) {
             console.error("Loops Transactional Error:", e.message);
         }
     } else {
-        console.warn("LOOPS_PORTAL_TRANSACTIONAL_ID not set — skipping manual portal access email but sequence was triggered");
+        console.warn("LOOPS_PORTAL_TRANSACTIONAL_ID not set - skipping manual portal access email but sequence was triggered");
     }
 }
 
@@ -144,7 +200,7 @@ Deno.serve(async (req) => {
     try {
         const body = await req.text();
         let event;
-        
+
         try {
             event = await stripe.webhooks.signature.verifyHeaderAsync(
                 body,
@@ -168,33 +224,45 @@ Deno.serve(async (req) => {
             const spend = session.amount_total ? session.amount_total / 100 : 0;
             const firstName = session.customer_details?.name?.split(" ")[0] || "";
             const lastName = session.customer_details?.name?.split(" ").slice(1).join(" ") || "";
-            
+
             if (email) {
-                console.log(`Processing checkout for ${email} with spend £${spend}...`);
-                
+                console.log(`Processing checkout for ${email} with spend ${spend}...`);
+
                 // Fetch existing contact
                 const { data: contact } = await supabase
                     .from("crm_contacts")
                     .select("id, tags, metadata")
                     .eq("email", email)
                     .maybeSingle();
-                
+
                 const updatedTags = contact?.tags ? [...new Set([...contact.tags, "stripe_customer"])] : ["stripe_customer"];
-                
+
                 const stripeProductType = session.metadata?.product_type || "";
-                
+
+                // Check if this is a Spring Week product by looking up line items
+                const swProduct = await resolveSpringWeekProduct(session);
+
                 let productType = "webinar_only";
-                if (stripeProductType) {
+
+                if (swProduct) {
+                    // Spring Week product detected via Stripe product ID
+                    productType = swProduct.productType;
+                    for (const tag of swProduct.tags) {
+                        if (!updatedTags.includes(tag)) updatedTags.push(tag);
+                    }
+                    console.log(`Spring Week product detected: ${productType}`);
+                } else if (stripeProductType) {
                     productType = stripeProductType;
                 } else if (spend >= 20 || spend === 12) {
                     productType = "bundle";
                 }
-                
+
                 // Remove webinar_only if upgrading
-                if (productType === "bundle" && updatedTags.includes("webinar_only")) {
+                if (productType !== "webinar_only" && updatedTags.includes("webinar_only")) {
                     updatedTags.splice(updatedTags.indexOf("webinar_only"), 1);
                 }
-                
+
+                // Handle cold email recording products
                 const isRecording = productType.startsWith("recording_");
                 if (isRecording) {
                     if (!updatedTags.includes("recording_access")) updatedTags.push("recording_access");
@@ -205,9 +273,9 @@ Deno.serve(async (req) => {
                         if (!updatedTags.includes("premium_buyer")) updatedTags.push("premium_buyer");
                     }
                 }
-                
+
                 if (!updatedTags.includes(productType)) updatedTags.push(productType);
-                
+
                 const currentSpend = (contact?.metadata?.stripe_spend || 0) + spend;
                 const updatedMetadata = contact?.metadata || {};
                 updatedMetadata.stripe_spend = currentSpend;
@@ -216,6 +284,10 @@ Deno.serve(async (req) => {
                 if (isRecording) {
                     updatedMetadata.recording_package = productType;
                     updatedMetadata.recording_purchased_at = new Date().toISOString();
+                }
+                if (swProduct) {
+                    updatedMetadata.spring_week_product = productType;
+                    updatedMetadata.spring_week_purchased_at = new Date().toISOString();
                 }
 
                 let error;
@@ -248,14 +320,18 @@ Deno.serve(async (req) => {
                     console.error("Supabase Error:", error.message);
                     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
                 }
-                
+
                 console.log(`Successfully updated ${email} as converted stripe_customer (${productType}).`);
-                
-                // ── SYNC TO ATTIO ──
+
+                // -- SYNC TO ATTIO --
                 await syncToAttio(email, firstName, lastName, currentSpend, productType);
-                
-                // ── TRIGGER LOOPS EVENTS / EMAILS ──
-                const isBundleBuyer = productType === "bundle" || productType === "recording_bundle" || productType === "recording_premium";
+
+                // -- TRIGGER LOOPS EVENTS / EMAILS --
+                const isBundleBuyer = productType === "bundle"
+                    || productType === "recording_bundle"
+                    || productType === "recording_premium"
+                    || productType === "spring_week_bundle"
+                    || productType === "spring_week_premium";
                 await triggerLoopsEvents(email, firstName, currentSpend, productType, isBundleBuyer);
             }
         }

@@ -8,7 +8,7 @@ export const supabaseAvailable = Boolean(supabaseUrl && supabaseAnonKey);
 
 if (!supabaseAvailable) {
     console.warn(
-        "[EarlyEdge] Supabase not configured — running in demo mode with sample data. " +
+        "[EarlyEdge] Supabase not configured - running in demo mode with sample data. " +
         "Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local to connect."
     );
 }

@@ -1,5 +1,5 @@
 /**
- * Local buyer lookup — auto-generated from matched_payments.csv
+ * Local buyer lookup - auto-generated from matched_payments.csv
  * Maps Lead Email (lowercase) → product tier
  * Used by BuyerAuthContext as a local override for access control
  */

@@ -22,7 +22,7 @@ const steps: Step[] = [
   {
     icon: Video,
     headline: "Start coaching",
-    body: "Book sessions, get prepped, and get the edge you need. CVs, interviews, applications — whatever you need.",
+    body: "Book sessions, get prepped, and get the edge you need. CVs, interviews, applications - whatever you need.",
   },
 ];
 

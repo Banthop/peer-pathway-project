@@ -7,7 +7,7 @@ import { saveCrmContact } from "./crmTracking";
  * Called when user completes the referral step (all key data collected).
  * Non-blocking - fires and forgets so it doesn't slow the form.
  */
-export async function saveWebinarLead(formData: WebinarFormData): Promise<void> {
+export async function saveWebinarLead(formData: WebinarFormData, webinarType: string = "cold_email"): Promise<void> {
     if (!supabaseAvailable || !supabase) {
         console.log("[WebinarLead] Supabase not configured - skipping save");
         return;
@@ -27,6 +27,7 @@ export async function saveWebinarLead(formData: WebinarFormData): Promise<void> 
             referral_source: formData.referralSource,
             selected_ticket: formData.selectedTicket,
             completed_checkout: false,
+            webinar_type: webinarType,
         });
 
         if (error) {

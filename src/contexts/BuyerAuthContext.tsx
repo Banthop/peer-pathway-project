@@ -72,7 +72,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
         .limit(1);
 
       if (!data || data.length === 0) {
-        // Email not in CRM — no access
+        // Email not in CRM - no access
         setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
         setLoading(false);
         return;

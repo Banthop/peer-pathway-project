@@ -24,7 +24,6 @@ import AdminCoaches from "./pages/admin/AdminCoaches";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOutreach from "./pages/admin/AdminOutreach";
 import AdminLinkedIn from "./pages/admin/AdminLinkedIn";
-import AdminCRM from "./pages/admin/AdminCRM";
 import CoachDashboardLayout from "./components/coach-dashboard/CoachDashboardLayout";
 import CoachOverview from "./pages/coach-dashboard/CoachOverview";
 import CoachSessions from "./pages/coach-dashboard/CoachSessions";
@@ -41,6 +40,7 @@ import Guarantee from "./pages/Guarantee";
 import PublicEvents from "./pages/PublicEvents";
 import PublicResources from "./pages/PublicResources";
 import Webinar from "./pages/Webinar";
+import SpringWeekWebinar from "./pages/SpringWeekWebinar";
 import ColdEmailGuide from "./pages/ColdEmailGuide";
 import ColdEmailChecklist from "./pages/ColdEmailChecklist";
 import { BuyerAuthProvider } from "@/contexts/BuyerAuthContext";
@@ -138,6 +138,7 @@ const AppRoutes = () => {
     return (
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
+        <Route path="/spring-week" element={<SpringWeekWebinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -191,6 +192,7 @@ const AppRoutes = () => {
       </Route>
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
+      <Route path="/spring-week" element={<SpringWeekWebinar />} />
       <Route path="/portal" element={<PortalLayout />}>
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
@@ -202,7 +204,6 @@ const AppRoutes = () => {
         <Route path="coaches" element={<AdminCoaches />} />
         <Route path="outreach" element={<AdminOutreach />} />
         <Route path="linkedin" element={<AdminLinkedIn />} />
-        <Route path="crm" element={<AdminCRM />} />
       </Route>
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />

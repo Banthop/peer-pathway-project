@@ -15,7 +15,7 @@ const studentFAQs: FAQItem[] = [
     {
         question: "How is this different from a normal tutor or career coach?",
         answer:
-            "Traditional coaches charge £150+/hour and often did the thing years ago. Our coaches are students and recent grads who achieved what you're aiming for within the last 1–2 years. They remember the exact questions, the current process, and what actually worked — at a fraction of the price.",
+            "Traditional coaches charge £150+/hour and often did the thing years ago. Our coaches are students and recent grads who achieved what you're aiming for within the last 1–2 years. They remember the exact questions, the current process, and what actually worked - at a fraction of the price.",
     },
     {
         question: "How much does it cost?",

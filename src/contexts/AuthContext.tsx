@@ -103,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             return;
         }
 
-        // Get the initial session — set state immediately from metadata
+        // Get the initial session - set state immediately from metadata
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session?.user) {
                 const metaType = (session.user.user_metadata?.type as UserType) ?? null;
@@ -195,7 +195,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     loading: false,
                 }));
             } else if (data.user) {
-                // Email confirmation enabled — user exists but no session yet.
+                // Email confirmation enabled - user exists but no session yet.
                 // Set user+type so CoachRoute allows access to onboarding.
                 signInHandledRef.current = true;
                 setState(prev => ({

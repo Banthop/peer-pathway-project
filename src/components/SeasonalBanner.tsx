@@ -23,15 +23,15 @@ const SeasonalBanner = () => {
         cta = "Get prepped now";
     } else if (month >= 4 && month <= 6) {
         // May–Jul: Summer internship conversion, UCAT prep begins
-        message = "UCAT season is here — top scorers started prepping now";
+        message = "UCAT season is here - top scorers started prepping now";
         cta = "Find a UCAT coach";
     } else if (month >= 7 && month <= 9) {
         // Aug–Oct: UCAS, grad scheme apps, autumn recruitment
-        message = "Graduate scheme deadlines are approaching — don't miss out";
+        message = "Graduate scheme deadlines are approaching - don't miss out";
         cta = "Start preparing";
     } else {
         // Nov–Jan: Internship apps, January exams, assessment centres
-        message = "Assessment centre invites are going out — are you ready?";
+        message = "Assessment centre invites are going out - are you ready?";
         cta = "Book a coach";
     }
 

@@ -26,3 +26,27 @@ entrypoint = "./functions/resend-sync/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/resend-sync/*.html" ]
+
+[functions.send-portal-access]
+enabled = true
+verify_jwt = true
+import_map = "./functions/send-portal-access/deno.json"
+entrypoint = "./functions/send-portal-access/index.ts"
+
+[functions.send-booking-confirmation]
+enabled = true
+verify_jwt = false
+import_map = "./functions/send-booking-confirmation/deno.json"
+entrypoint = "./functions/send-booking-confirmation/index.ts"
+
+[functions.create-booking-checkout]
+enabled = true
+verify_jwt = false
+import_map = "./functions/create-booking-checkout/deno.json"
+entrypoint = "./functions/create-booking-checkout/index.ts"
+
+[functions.resend-webhook]
+enabled = true
+verify_jwt = false
+import_map = "./functions/resend-webhook/deno.json"
+entrypoint = "./functions/resend-webhook/index.ts"

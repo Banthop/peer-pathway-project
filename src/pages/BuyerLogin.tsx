@@ -9,7 +9,7 @@ export default function BuyerLogin() {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Already logged in — redirect to portal
+  // Already logged in - redirect to portal
   if (buyer) return <Navigate to="/portal" replace />;
 
   const handleSubmit = async (e: FormEvent) => {

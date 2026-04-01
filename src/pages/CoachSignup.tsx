@@ -19,7 +19,7 @@ const CoachSignup = () => {
   const navigate = useNavigate();
 
   const handleLinkedInSignup = () => {
-    // LinkedIn OAuth not yet configured — open URL in new tab for now
+    // LinkedIn OAuth not yet configured - open URL in new tab for now
     window.open("https://www.linkedin.com/login", "_blank");
   };
 

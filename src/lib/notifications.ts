@@ -48,7 +48,7 @@ const templates: Record<NotificationType, {
     },
     review_prompt: {
         subject: (d) => `How was your session with ${d.coachName}?`,
-        body: (d) => `Hi ${d.studentName},\n\nHope your session with ${d.coachName} went well!\n\nWe'd love to hear your feedback — it helps other students find the right coach and helps coaches improve.\n\n⭐ Leave a review: ${d.reviewLink}\n\nIf you landed an offer or achieved a great outcome, let us know — we'll add it as a badge to your review!\n\nBest,\nThe EarlyEdge Team`,
+        body: (d) => `Hi ${d.studentName},\n\nHope your session with ${d.coachName} went well!\n\nWe'd love to hear your feedback - it helps other students find the right coach and helps coaches improve.\n\n⭐ Leave a review: ${d.reviewLink}\n\nIf you landed an offer or achieved a great outcome, let us know - we'll add it as a badge to your review!\n\nBest,\nThe EarlyEdge Team`,
     },
     review_received: {
         subject: (d) => `New ${d.rating}⭐ review from ${d.studentName}`,
@@ -60,11 +60,11 @@ const templates: Record<NotificationType, {
     },
     coach_verified: {
         subject: () => `Your EarlyEdge profile is now live! 🎉`,
-        body: (d) => `Hi ${d.coachName},\n\nGreat news — your coach profile has been verified and is now live on EarlyEdge!\n\nStudents can now find and book sessions with you.\n\nHere are some tips to get your first bookings:\n1. Share your profile link with your network\n2. Keep your availability up to date\n3. Respond to messages quickly\n\nView your profile: ${d.profileLink}\n\nBest,\nThe EarlyEdge Team`,
+        body: (d) => `Hi ${d.coachName},\n\nGreat news - your coach profile has been verified and is now live on EarlyEdge!\n\nStudents can now find and book sessions with you.\n\nHere are some tips to get your first bookings:\n1. Share your profile link with your network\n2. Keep your availability up to date\n3. Respond to messages quickly\n\nView your profile: ${d.profileLink}\n\nBest,\nThe EarlyEdge Team`,
     },
     welcome: {
         subject: (d) => `Welcome to EarlyEdge, ${d.name}! 🚀`,
-        body: (d) => `Hi ${d.name},\n\nWelcome to EarlyEdge — the peer coaching platform where you learn from students who just did what you're trying to do.\n\n🔍 Browse coaches by category\n📞 Book a free 15-minute intro call\n💬 Message coaches directly\n\nGet started: ${d.dashboardLink}\n\nBest,\nThe EarlyEdge Team`,
+        body: (d) => `Hi ${d.name},\n\nWelcome to EarlyEdge - the peer coaching platform where you learn from students who just did what you're trying to do.\n\n🔍 Browse coaches by category\n📞 Book a free 15-minute intro call\n💬 Message coaches directly\n\nGet started: ${d.dashboardLink}\n\nBest,\nThe EarlyEdge Team`,
     },
 };
 

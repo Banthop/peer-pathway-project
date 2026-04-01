@@ -167,7 +167,7 @@ function LogoImg({
     );
   }
 
-  // No logo at all — return null so parent can show text fallback
+  // No logo at all - return null so parent can show text fallback
   return null;
 }
 
@@ -453,7 +453,7 @@ function HeroSection({ coach }: { coach: Coach }) {
             )}
           </div>
 
-          {/* Success companies — overlapping logo stack */}
+          {/* Success companies - overlapping logo stack */}
           {coach.successCompanies && coach.successCompanies.length > 0 && (
             <div className="flex items-center gap-3">
               <span className="text-[12px] font-light text-foreground/60">
@@ -556,7 +556,7 @@ function ServicesSection({ coach, onBook }: { coach: Coach; onBook: (type: Booki
     <div className="mb-2">
       <h2 className="text-[18px] font-bold text-foreground mb-2">Coaching Services</h2>
 
-      {/* Anchoring comparison — per early.md */}
+      {/* Anchoring comparison - per early.md */}
       <p className="text-[13px] text-foreground/40 font-light mb-6">
         Typical career coach: <span className="line-through">£150+/hr</span> → EarlyEdge coaches: from <span className="text-foreground font-medium">£{coach.hourlyRate}/session</span>
       </p>
@@ -583,7 +583,7 @@ function ServicesSection({ coach, onBook }: { coach: Coach; onBook: (type: Booki
             </button>
           </div>
 
-          {/* Tier 2: Main Package (highlighted — "Most popular") */}
+          {/* Tier 2: Main Package (highlighted - "Most popular") */}
           <div className="relative border-2 border-foreground rounded-2xl p-5 flex flex-col justify-between bg-foreground/[0.02] shadow-lg hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] font-semibold px-3 py-0.5 rounded-full tracking-wider uppercase whitespace-nowrap">
               Most popular
@@ -678,7 +678,7 @@ function ServicesSection({ coach, onBook }: { coach: Coach; onBook: (type: Booki
           onClick={() => onBook("free-intro")}
           className="text-[13px] text-foreground/60 font-light hover:text-foreground transition-colors"
         >
-          Not sure yet? <span className="font-medium text-foreground underline underline-offset-2">Book a free 15-min intro</span> — no charge.
+          Not sure yet? <span className="font-medium text-foreground underline underline-offset-2">Book a free 15-min intro</span> - no charge.
         </button>
       </div>
     </div>
@@ -810,7 +810,7 @@ function ReviewsSection({ coach }: { coach: Coach }) {
         ))}
       </div>
 
-      {/* Outcome badges — overlapping logo stack */}
+      {/* Outcome badges - overlapping logo stack */}
       {coach.successCompanies && coach.successCompanies.length > 0 && (
         <div className="flex items-center gap-3 mb-5">
           <span className="text-[12px] font-light text-foreground/60">
