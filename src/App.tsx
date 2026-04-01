@@ -110,8 +110,7 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
   const { user, userType, loading } = useAuth();
   if (loading) return <AuthLoading />;
   if (user) {
-    const dest = userType === "coach" ? "/coach-dashboard" : "/dashboard";
-    return <Navigate to={dest} replace />;
+    return <Navigate to="/portal" replace />;
   }
   return <>{children}</>;
 }

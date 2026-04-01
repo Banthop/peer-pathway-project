@@ -39,21 +39,18 @@ const Login = () => {
       // If a redirect URL was provided (e.g. from /portal), use that
       if (redirectTo) {
         navigate(redirectTo);
-      } else if (IS_WEBINAR_ONLY) {
-        navigate("/portal");
       } else {
-        navigate(userType === "coach" ? "/coach-dashboard" : "/dashboard");
+        navigate("/portal");
       }
     }
   };
 
   const handleGoogle = async () => {
-    // In WEBINAR_ONLY mode, default Google redirect to /portal
+    // Default Google redirect to /portal
     const googleRedirect = redirectTo
       ? `${window.location.origin}${redirectTo}`
-      : IS_WEBINAR_ONLY
-        ? `${window.location.origin}/portal`
-        : undefined;
+      : `${window.location.origin}/portal`;
+      
     const { error } = await signInWithGoogle(googleRedirect);
     if (error) {
       toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
