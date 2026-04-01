@@ -1,52 +1,26 @@
-import { useState, useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import {
   Star,
-  Calendar,
+  Calendar as CalendarIcon,
   Clock,
   CheckCircle2,
   Users,
   Trophy,
-  Briefcase,
   MessageSquare,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   ArrowRight,
   Sparkles,
-  Loader2,
-  Check,
-  Video,
-  Download,
+  X as XIcon,
+  Zap,
+  Target,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════
- *  CONFIG - Update these as needed
+ *  CAL.COM CONFIG
  * ═══════════════════════════════════════════════════════════════ */
 
-const SUPABASE_URL = "https://cidnbhphbmwvbozdxqhe.supabase.co";
-const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpZG5iaHBoYm13dmJvemR4cWhlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3ODEwOTEsImV4cCI6MjA4NjM1NzA5MX0.KsyJZ3qD-Fw1Dl9Hx1wxMFYyINarKiqPRHXnHICR5nE";
-
-// ── Cal.com Integration ──
-// Set Uthman's Cal.com username below to enable Cal.com scheduling.
-// When set, the manual date/time picker is replaced with Cal.com's embed.
-// Leave empty to keep using the manual picker.
-const CAL_USERNAME = ""; // e.g. "uthman" or "uthman-ahmed-xyz"
-
-// Custom meeting link - Uthman will send the final link via confirmation email
-// This is a default placeholder; the actual link is confirmed per booking
-const DEFAULT_MEETING_LINK = "";
-
-// Available days (0=Sun, 1=Mon ... 6=Sat)
-const AVAILABLE_DAYS = [1, 2, 3, 4, 5]; // Mon-Fri
-
-// Available time slots
-const TIME_SLOTS = [
-  "10:00", "11:00", "12:00", "13:00", "14:00",
-  "15:00", "16:00", "17:00", "18:00",
-];
+const CAL_USERNAME = "uthm4n";
 
 /* ─── Session types ─── */
 
@@ -55,15 +29,15 @@ interface SessionType {
   name: string;
   duration: string;
   price: string;
-  pricePennies: number;
   priceLabel: string;
   description: string;
   includes: string[];
+  calSlug: string;
   popular?: boolean;
   isGroup?: boolean;
   maxParticipants?: number;
-  isBundle?: boolean;
-  bundleSessions?: number;
+  testimonial?: { text: string; name: string; uni: string };
+  nextAvailable?: string;
 }
 
 const SESSION_TYPES: SessionType[] = [
@@ -72,22 +46,27 @@ const SESSION_TYPES: SessionType[] = [
     name: "Strategy Call",
     duration: "30 min",
     price: "£35",
-    pricePennies: 3500,
     priceLabel: "per session",
     description:
       "Quick, focused session to review your cold email strategy, get template feedback, or ask Uthman anything about landing internships.",
     includes: [
       "Personalised email review",
-      "Strategy feedback",
-      "Action plan for next steps",
+      "Strategy feedback & template fixes",
+      "Clear action plan for your next steps",
     ],
+    calSlug: "strategy-call",
+    testimonial: {
+      text: "Fixed my subject lines and got 3 replies in the first week",
+      name: "Priya M.",
+      uni: "LSE",
+    },
+    nextAvailable: "Tomorrow",
   },
   {
     id: "deep-dive",
     name: "Deep Dive Session",
     duration: "60 min",
     price: "£59",
-    pricePennies: 5900,
     priceLabel: "per session",
     description:
       "Full session covering your complete outreach strategy. Walk away with custom templates, a lead list, and a personalised action plan.",
@@ -98,861 +77,431 @@ const SESSION_TYPES: SessionType[] = [
       "Personalised follow-up sequences",
       "7-day email support after the session",
     ],
+    calSlug: "deep-dive-session",
     popular: true,
+    testimonial: {
+      text: "Had my call on Monday, fixed my templates the same day, and immediately started seeing higher open rates.",
+      name: "Jake L.",
+      uni: "Warwick",
+    },
+    nextAvailable: "This week",
   },
   {
     id: "group-workshop",
     name: "Group Cold Email Workshop",
     duration: "90 min",
     price: "£20",
-    pricePennies: 2000,
     priceLabel: "per person",
     description:
-      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option and learn from others' questions.",
+      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option.",
     includes: [
       "Full system walkthrough",
       "Live template building",
       "Group Q&A",
       "Recording of the session",
     ],
+    calSlug: "group-workshop",
     isGroup: true,
     maxParticipants: 8,
+    testimonial: {
+      text: "Brilliant workshop. Learned so much from other people's questions too",
+      name: "Amina R.",
+      uni: "UCL",
+    },
+    nextAvailable: "This weekend",
   },
 ];
 
 /* ─── Package ─── */
 
-const PACKAGE: SessionType = {
-  id: "3-deep-dive-bundle",
+const PACKAGE = {
   name: "3x Deep Dive Bundle",
-  duration: "3 x 60 min",
+  sessions: "3 × 60-min Deep Dive sessions",
   price: "£140",
-  pricePennies: 14000,
+  originalPrice: "£177",
   priceLabel: "save £37",
   description:
-    "Three Deep Dive sessions spread over 3-4 weeks. Full outreach audit, custom templates, lead sourcing, and ongoing accountability as you build your pipeline. Uthman reviews your progress between sessions.",
-  includes: [
-    "3 full Deep Dive sessions",
-    "Custom templates each session",
-    "Progress reviews between sessions",
-    "Access to Uthman's private network for referrals",
-  ],
-  isBundle: true,
-  bundleSessions: 3,
+    "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
+  journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
+  calSlug: "3xdeepdivebundle",
 };
+
+/* ─── Testimonials ─── */
+
+const TESTIMONIALS = [
+  {
+    text: "Before my call I had 0 replies from 30 generic emails. Uthman's system completely changed my approach. I re-sent exactly as he advised and got 4 replies in the first week.",
+    name: "Jake L.",
+    uni: "Warwick",
+    year: "2nd Year",
+    rating: 5,
+  },
+  {
+    text: "Genuinely the most practical session I've had. Uthman doesn't give vague advice - he literally wrote my templates with me on the call. Sent them the same day.",
+    name: "Priya M.",
+    uni: "LSE",
+    year: "2nd Year",
+    rating: 5,
+  },
+  {
+    text: "I was terrified of cold emailing. One call with Uthman and I had a system, a list of 40 firms, and zero excuses left. Got my first reply within 3 days.",
+    name: "Sophie K.",
+    uni: "Bristol",
+    year: "1st Year",
+    rating: 5,
+  },
+  {
+    text: "The group workshop was incredible value for £20. I left with a complete email sequence and a lead list I started using the very next day.",
+    name: "Amina R.",
+    uni: "UCL",
+    year: "3rd Year",
+    rating: 5,
+  },
+  {
+    text: "Booked the 3-session bundle. Within a week I had 12 replies and 2 interview invitations. This isn't advice - it's a service that gets results.",
+    name: "Rahul D.",
+    uni: "LSE",
+    year: "3rd Year",
+    rating: 5,
+  },
+];
 
 /* ─── FAQ ─── */
 
 const FAQ = [
   {
-    q: "How do sessions work?",
-    a: "After paying, you'll pick a date and time. Uthman will send you a Zoom link before your session. Sessions are 1-on-1 Zoom calls (or group for workshops) where Uthman works through your specific situation.",
+    q: "What happens on the call?",
+    a: "You share your situation - what firms you're targeting, any emails you've written, your CV. Uthman then builds or fixes your templates on the call, shows you how to find decision-makers, and gives you a step-by-step plan to follow. You'll leave knowing exactly what to do next.",
   },
   {
-    q: "What should I prepare?",
-    a: "Bring your current CV, any cold emails you've drafted, and a list of target firms or industries. The more Uthman knows, the more useful the session.",
+    q: "I haven't started cold emailing yet - is that okay?",
+    a: "Absolutely. Most students book before they've sent a single email. Uthman will build your strategy from scratch - including which firms to target, how to find emails, and what to write. Starting from zero is often better because there are no bad habits to undo.",
   },
   {
-    q: "Can I reschedule?",
-    a: "Yes, just email uthman6696@gmail.com at least 24 hours before your session and he'll find a new time.",
+    q: "Is this worth it if I already have the guide?",
+    a: "The guide teaches the system. The call applies it to YOUR specific situation - your target industry, your experience, your university. Uthman will write templates tailored to you and review your lead list. Most students say the call is where everything 'clicks.'",
   },
   {
-    q: "What about the group workshop?",
-    a: "Group workshops run with 4-8 people. Dates are posted when enough interest builds. Book your spot and you'll be notified when the next one is confirmed.",
+    q: "I'm a first-year - is it too early?",
+    a: "It's never too early. First-years who start cold emailing now have 2-3 years of runway. The firms you reach out to remember you. Starting early is the single biggest advantage you can have.",
   },
   {
-    q: "Refund policy?",
-    a: "Not satisfied? Email us within 24 hours of your session and we'll arrange a follow-up or full refund. No questions asked.",
+    q: "What if something comes up?",
+    a: "You can reschedule up to 24 hours before your session. Just use the link in your confirmation email.",
+  },
+  {
+    q: "What if it doesn't help me?",
+    a: "If you're not satisfied, email us within 24 hours and we'll arrange a follow-up or full refund.",
   },
 ];
 
-/* ─── Stats ─── */
-
-const STATS = [
-  { icon: Trophy, value: "20+", label: "Offers landed" },
-  { icon: Briefcase, value: "PE, IB, VC", label: "Industries" },
-  { icon: MessageSquare, value: "200+", label: "Emails sent" },
-];
-
-/* ─── Date helpers ─── */
-
-function getNextDays(count: number): Date[] {
-  const days: Date[] = [];
-  const today = new Date();
-  let d = new Date(today);
-  d.setDate(d.getDate() + 1); // start from tomorrow
-  while (days.length < count) {
-    if (AVAILABLE_DAYS.includes(d.getDay())) {
-      days.push(new Date(d));
-    }
-    d.setDate(d.getDate() + 1);
-  }
-  return days;
-}
-
-function formatDate(date: Date): string {
-  return date.toLocaleDateString("en-GB", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  });
-}
-
-function formatDateISO(date: Date): string {
-  return date.toISOString().split("T")[0];
-}
-
-/* ─── Calendar .ics helper ─── */
-
-function buildIcsFile(session: SessionType, date: Date, time: string, studentName: string): string {
-  // Build start/end datetime in UTC
-  const [hours, mins] = time.split(":").map(Number);
-  const start = new Date(date);
-  start.setHours(hours, mins, 0, 0);
-
-  // Parse duration (e.g. "30 min", "60 min", "90 min", "3 x 60 min")
-  const durationMatch = session.duration.match(/(\d+)\s*min/);
-  const durationMinutes = durationMatch ? parseInt(durationMatch[1]) : 60;
-  const end = new Date(start.getTime() + durationMinutes * 60000);
-
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const toIcs = (d: Date) =>
-    `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
-
-  return [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//EarlyEdge//Booking//EN",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "BEGIN:VEVENT",
-    `DTSTART:${toIcs(start)}`,
-    `DTEND:${toIcs(end)}`,
-    `SUMMARY:${session.name} - EarlyEdge`,
-    `DESCRIPTION:Session with Uthman. ${session.description}\n\nBooked by: ${studentName}`,
-    `ORGANIZER;CN=Uthman:mailto:uthman6696@gmail.com`,
-    "STATUS:CONFIRMED",
-    `UID:earlyedge-${Date.now()}@yourearlyedge.co.uk`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-}
-
-function downloadIcsFile(icsContent: string, filename: string) {
-  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-/* ─── Send booking confirmation via server-side edge function (broadcast pattern) ─── */
-
-async function sendBookingConfirmation(data: {
-  studentEmail: string;
-  studentName: string;
-  sessionName: string;
-  sessionId: string;
-  duration: string;
-  dateStr: string;
-  time: string;
-  price: string;
-}) {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-booking-confirmation`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${ANON_KEY}`,
-        "apikey": ANON_KEY,
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await res.json();
-    console.log("Booking confirmation email result:", result);
-    return result;
-  } catch (err) {
-    console.error("Failed to send booking confirmation emails:", err);
-    return { status: "error", errors: [String(err)] };
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════
- *  COMPONENT
- * ═══════════════════════════════════════════════════════════════ */
-
-type BookingStep = "select" | "schedule" | "confirm" | "done";
+/* ─── Main Component ─── */
 
 export default function BookUthman() {
   const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Booking flow state
-  const [step, setStep] = useState<BookingStep>("select");
-  const [selectedSession, setSelectedSession] = useState<SessionType | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [notes, setNotes] = useState("");
-  const [booking, setBooking] = useState(false);
-  const [booked, setBooked] = useState(false);
-  const [weekOffset, setWeekOffset] = useState(0);
+  const handleExternalBookClick = (calSlug: string) => {
+    const baseUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?overlayCalendar=true`;
 
-  // Handle Stripe Success Callback
-  useEffect(() => {
-    const isSuccess = searchParams.get("success") === "true";
-    if (isSuccess && user) {
-      const pendingBookingStr = localStorage.getItem("earlyedge_pending_booking");
-      if (pendingBookingStr) {
-        setBooking(true);
-        (async () => {
-          try {
-            const data = JSON.parse(pendingBookingStr);
-            const selectedSessionDummy = SESSION_TYPES.find((s) => s.id === data.sessionId) || PACKAGE;
+    const params = new URLSearchParams();
+    if (user?.email) params.set("email", user.email);
+    const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
+    if (name) params.set("name", name);
 
-            // Mark visually that we're finalizing
-            setSelectedSession(selectedSessionDummy);
-            setStep("schedule");
-
-            // Save to Supabase
-            if (supabase) {
-              await (supabase as any).from("portal_bookings").insert({
-                student_email: data.studentEmail,
-                student_name: data.studentName,
-                session_type: data.sessionId,
-                session_date: data.date,
-                session_time: data.time,
-                price_pennies: data.pricePennies,
-                notes: data.notes || null,
-                meeting_link: null, // Zoom will be sent separately
-              });
-            }
-
-            // Send confirmation emails via server-side broadcast
-            await sendBookingConfirmation({
-              studentEmail: data.studentEmail,
-              studentName: data.studentName,
-              sessionName: data.sessionName,
-              sessionId: data.sessionId,
-              duration: selectedSessionDummy.duration,
-              dateStr: data.dateStr,
-              time: data.time,
-              price: selectedSessionDummy.price,
-            });
-
-            // Clean up
-            localStorage.removeItem("earlyedge_pending_booking");
-            // Remove success param from URL so refresh doesn't double-book
-            setSearchParams({});
-
-            // Make Date object for confirm screen
-            const dateParts = data.date.split("-");
-            if (dateParts.length === 3) {
-              const d = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
-              setSelectedDate(d);
-            }
-            setSelectedTime(data.time);
-
-            setBooked(true);
-            setStep("done");
-          } catch (err) {
-            console.error("Error finalizing Stripe booking:", err);
-          } finally {
-            setBooking(false);
-          }
-        })();
-      }
-    }
-  }, [searchParams, user, setSearchParams]);
-
-  const availableDates = useMemo(() => getNextDays(21), []);
-  const visibleDates = availableDates.slice(weekOffset * 7, weekOffset * 7 + 7);
-
-  const handleSelectSession = (session: SessionType) => {
-    setSelectedSession(session);
-    setStep("schedule");
+    const finalUrl = params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
+    window.open(finalUrl, "_blank");
   };
 
-  const handleBook = async () => {
-    console.log("handleBook called:", { selectedSession: !!selectedSession, selectedDate: !!selectedDate, selectedTime, user: !!user });
-    if (!selectedSession || !selectedDate || !selectedTime || !user) {
-      console.error("handleBook aborted - missing:", { selectedSession: !selectedSession, selectedDate: !selectedDate, selectedTime: !selectedTime, user: !user });
-      return;
-    }
-    setBooking(true);
-
-    const studentName = user.user_metadata?.name || user.user_metadata?.full_name || user.email?.split("@")[0] || "Student";
-    const dateStr = formatDate(selectedDate);
-    const dateISO = formatDateISO(selectedDate);
-
-    // Save booking info to localStorage for retrieval after Stripe redirect
-    const bookingData = {
-      sessionId: selectedSession.id,
-      sessionName: selectedSession.name,
-      date: dateISO,
-      dateStr,
-      time: selectedTime,
-      notes: notes || "",
-      studentName,
-      studentEmail: user.email,
-      pricePennies: selectedSession.pricePennies,
-    };
-    localStorage.setItem("earlyedge_pending_booking", JSON.stringify(bookingData));
-
-    // Request Stripe Checkout via direct fetch to Edge Function
-    try {
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/create-booking-checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${ANON_KEY}`,
-          "apikey": ANON_KEY,
-        },
-        body: JSON.stringify({
-          sessionName: selectedSession.name,
-          pricePennies: selectedSession.pricePennies,
-          studentEmail: user.email,
-          studentName,
-          sessionId: selectedSession.id,
-        }),
-      });
-
-      const result = await res.json();
-      console.log("Stripe checkout response:", result);
-
-      if (result?.url) {
-        window.location.href = result.url;
-        return;
-      } else {
-        console.error("No checkout URL:", result);
-        alert("Something went wrong creating your checkout. Please try again.");
-      }
-    } catch (err) {
-      console.error("Failed to generate Stripe checkout session:", err);
-      alert("Connection error. Please try again.");
-    }
-
-    setBooking(false);
-  };
-
-  const resetBooking = () => {
-    setStep("select");
-    setSelectedSession(null);
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setNotes("");
-    setBooked(false);
-  };
-
-  /* ─── Booking done screen ─── */
-  if (step === "done" && booked && selectedSession && selectedDate && selectedTime) {
-    const handleDownloadCalendar = () => {
-      const icsContent = buildIcsFile(
-        selectedSession,
-        selectedDate,
-        selectedTime,
-        user?.user_metadata?.name || user?.email?.split("@")[0] || "Student"
-      );
-      downloadIcsFile(icsContent, `earlyedge-session-${selectedSession.id}.ics`);
-    };
-
-    return (
-      <div className="w-full px-6 md:px-10 lg:px-12 py-10">
-        <div className="max-w-lg mx-auto text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto">
-            <Check className="w-8 h-8 text-emerald-600" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-semibold text-[#111]">You're booked</h1>
-            <p className="text-sm text-[#888] mt-2 font-light">
-              Check your email for the confirmation details. Uthman will send you a meeting link before your session.
-            </p>
-          </div>
-
-          <div className="bg-white border border-[#E8E8E8] rounded-xl p-6 text-left space-y-4">
-            <div>
-              <p className="text-[11px] text-[#999] font-medium uppercase tracking-wider">Session</p>
-              <p className="text-[15px] font-semibold text-[#111] mt-1">{selectedSession.name}</p>
-            </div>
-            <div>
-              <p className="text-[11px] text-[#999] font-medium uppercase tracking-wider">Date & Time</p>
-              <p className="text-[15px] font-semibold text-[#111] mt-1">{formatDate(selectedDate)} at {selectedTime}</p>
-            </div>
-            <div>
-              <p className="text-[11px] text-[#999] font-medium uppercase tracking-wider">Zoom</p>
-              <p className="text-[13px] text-[#666] mt-1 font-light">
-                Uthman will send you a Zoom link before the session
-              </p>
-            </div>
-          </div>
-
-          {/* Add to Calendar */}
-          <button
-            onClick={handleDownloadCalendar}
-            className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#E8E8E8] rounded-xl text-sm font-medium text-[#333] hover:bg-[#F5F5F5] transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Add to Calendar
-          </button>
-
-          <button
-            onClick={resetBooking}
-            className="block mx-auto text-sm text-[#888] hover:text-[#111] transition-colors"
-          >
-            Book another session
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* ─── Schedule step ─── */
-  if (step === "schedule" && selectedSession) {
-    // ── Cal.com embed mode ──
-    if (CAL_USERNAME) {
-      // Map session type to Cal.com event slug
-      const calEventSlug = selectedSession.id; // assumes Cal.com event types match session IDs
-      const calUrl = `https://cal.com/${CAL_USERNAME}/${calEventSlug}?embed=true&theme=light`;
-
-      return (
-        <div className="w-full">
-          <div className="px-6 pt-8 pb-2 md:px-10 lg:px-12">
-            <button
-              onClick={() => setStep("select")}
-              className="flex items-center gap-1 text-[13px] text-[#888] hover:text-[#111] mb-4 transition-colors"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Back to sessions
-            </button>
-
-            <div className="flex items-center gap-3 mb-1">
-              <div className="w-8 h-8 rounded-lg bg-[#111] flex items-center justify-center">
-                <Calendar className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-[#111]">{selectedSession.name}</h1>
-                <p className="text-[12px] text-[#888]">{selectedSession.duration} &middot; {selectedSession.price}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-6 md:px-10 lg:px-12 pb-10 mt-4">
-            <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden" style={{ minHeight: 600 }}>
-              <iframe
-                src={calUrl}
-                title="Book a session with Uthman"
-                className="w-full border-0"
-                style={{ height: 650, minHeight: 600 }}
-                allow="payment"
-              />
-            </div>
-            <p className="text-[11px] text-[#BBB] mt-3 text-center">
-              Powered by Cal.com &middot; Uthman's availability syncs automatically
-            </p>
-          </div>
-        </div>
-      );
-    }
-
-    // ── Manual picker mode (fallback) ──
-    return (
-      <div className="w-full">
-        <div className="px-6 pt-8 pb-2 md:px-10 lg:px-12">
-          <button
-            onClick={() => setStep("select")}
-            className="flex items-center gap-1 text-[13px] text-[#888] hover:text-[#111] mb-4 transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4" />
-            Back to sessions
-          </button>
-
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-[#111] flex items-center justify-center">
-              <Calendar className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-semibold text-[#111]">{selectedSession.name}</h1>
-              <p className="text-[12px] text-[#888]">{selectedSession.duration} &middot; {selectedSession.price}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-6 md:px-10 lg:px-12 pb-10 mt-4 space-y-6">
-          {/* Date picker */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[13px] font-semibold text-[#111]">Pick a date</p>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setWeekOffset(Math.max(0, weekOffset - 1))}
-                  disabled={weekOffset === 0}
-                  className="p-1.5 rounded-lg hover:bg-[#F5F5F5] disabled:opacity-30 transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4 text-[#666]" />
-                </button>
-                <button
-                  onClick={() => setWeekOffset(Math.min(2, weekOffset + 1))}
-                  disabled={weekOffset >= 2}
-                  className="p-1.5 rounded-lg hover:bg-[#F5F5F5] disabled:opacity-30 transition-colors"
-                >
-                  <ChevronRight className="w-4 h-4 text-[#666]" />
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-7 gap-2">
-              {visibleDates.map((date) => {
-                const isSelected = selectedDate && formatDateISO(date) === formatDateISO(selectedDate);
-                return (
-                  <button
-                    key={formatDateISO(date)}
-                    onClick={() => { setSelectedDate(date); setSelectedTime(null); }}
-                    className={`flex flex-col items-center py-3 px-1 rounded-xl text-center transition-all ${
-                      isSelected
-                        ? "bg-[#111] text-white shadow-md"
-                        : "bg-white border border-[#E8E8E8] hover:border-[#111] hover:shadow-sm"
-                    }`}
-                  >
-                    <span className={`text-[10px] font-medium uppercase ${isSelected ? "text-white/60" : "text-[#999]"}`}>
-                      {date.toLocaleDateString("en-GB", { weekday: "short" })}
-                    </span>
-                    <span className={`text-lg font-semibold mt-0.5 ${isSelected ? "text-white" : "text-[#111]"}`}>
-                      {date.getDate()}
-                    </span>
-                    <span className={`text-[10px] ${isSelected ? "text-white/50" : "text-[#BBB]"}`}>
-                      {date.toLocaleDateString("en-GB", { month: "short" })}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Time slots */}
-          {selectedDate && (
-            <div>
-              <p className="text-[13px] font-semibold text-[#111] mb-3">Pick a time</p>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-                {TIME_SLOTS.map((time) => (
-                  <button
-                    key={time}
-                    onClick={() => setSelectedTime(time)}
-                    className={`py-3 rounded-xl text-sm font-medium transition-all ${
-                      selectedTime === time
-                        ? "bg-[#111] text-white shadow-md"
-                        : "bg-white border border-[#E8E8E8] text-[#333] hover:border-[#111]"
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Notes */}
-          {selectedTime && (
-            <div>
-              <p className="text-[13px] font-semibold text-[#111] mb-2">Anything Uthman should know? (optional)</p>
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="e.g. I'm targeting PE firms, already sent 50 cold emails with no replies..."
-                className="w-full bg-white border border-[#E8E8E8] rounded-xl px-4 py-3 text-[13px] text-[#333] placeholder:text-[#CCC] focus:outline-none focus:border-[#111] resize-none transition-colors"
-                rows={3}
-              />
-            </div>
-          )}
-
-          {/* Confirm button */}
-          {selectedDate && selectedTime && (
-            <div className="bg-white border border-[#E8E8E8] rounded-xl p-5 space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[13px] font-semibold text-[#111]">{selectedSession.name}</p>
-                  <p className="text-[12px] text-[#888]">
-                    {formatDate(selectedDate)} at {selectedTime}
-                  </p>
-                </div>
-                <p className="text-xl font-semibold text-[#111]">{selectedSession.price}</p>
-              </div>
-
-              <div className="flex items-center gap-2 text-[12px] text-[#888]">
-                <Video className="w-3.5 h-3.5" />
-                <span>Zoom link sent by Uthman before your session</span>
-              </div>
-
-              <button
-                onClick={handleBook}
-                disabled={booking}
-                className="w-full py-3.5 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
-              >
-                {booking ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Booking...
-                  </>
-                ) : (
-                  <>
-                    <Check className="w-4 h-4" />
-                    Pay & Book
-                  </>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  /* ─── Main view: session types ─── */
   return (
-    <div className="w-full">
-      {/* Header */}
-      <div className="px-6 pt-8 pb-2 md:px-10 lg:px-12">
-        <p className="text-xs text-[#999] font-medium uppercase tracking-wider mb-1">
-          1-on-1 Coaching
-        </p>
-        <h1 className="text-2xl md:text-[26px] font-semibold tracking-tight text-[#111]">
-          Book Uthman
-        </h1>
-        <p className="text-sm text-[#888] mt-1 font-light">
-          Get personalised help from the person who built the system
-        </p>
+    <div className="w-full relative">
+
+      {/* ════════ HERO SECTION ════════ */}
+      <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
+        <div className="flex flex-col md:flex-row items-start gap-6">
+          {/* Avatar */}
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#111] to-[#444] flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 ring-4 ring-white shadow-lg overflow-hidden">
+            UA
+          </div>
+
+          <div className="flex-1">
+            <p className="text-xs text-emerald-700 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              Available for 1-on-1 sessions
+            </p>
+            <h1 className="text-2xl md:text-[28px] font-bold tracking-tight text-[#111] leading-tight">
+              The person who landed 20 offers<br className="hidden md:block" /> will personally fix your cold emails
+            </h1>
+            <p className="text-sm text-[#666] mt-2 font-light leading-relaxed max-w-xl">
+              Uthman has helped students at LSE, Warwick, UCL, and Bristol start getting replies within days.
+              He built the exact system in the guide - now he'll apply it to <em>your</em> situation.
+            </p>
+
+            {/* Trust signals */}
+            <div className="flex items-center flex-wrap gap-3 mt-4">
+              <div className="flex items-center gap-1.5 bg-white border border-[#E8E8E8] rounded-full px-3 py-1.5 shadow-sm">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                <span className="text-[11px] text-[#666] font-medium">5.0 average rating</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-white border border-[#E8E8E8] rounded-full px-3 py-1.5 shadow-sm">
+                <Trophy className="w-3.5 h-3.5 text-[#888]" />
+                <span className="text-[11px] text-[#666] font-medium">20+ offers across PE, IB, VC</span>
+              </div>
+              <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5 shadow-sm">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                <span className="text-[11px] text-emerald-800 font-semibold">£30,000+ in first-year internship earnings</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="px-6 md:px-10 lg:px-12 pb-10">
-        <div className="flex flex-col lg:flex-row gap-8 mt-4">
-          {/* Left: Profile */}
-          <div className="lg:w-[340px] flex-shrink-0 space-y-5">
-            {/* Profile card */}
-            <div className="bg-white border border-[#E8E8E8] rounded-xl p-6 space-y-5">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#111] to-[#444] flex items-center justify-center text-white text-xl font-semibold flex-shrink-0">
-                  UA
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-[#111]">Uthman</h2>
-                  <p className="text-[13px] text-[#666]">
-                    20 Internship Offers via Cold Email
-                  </p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <Star className="w-3.5 h-3.5 fill-[#111] text-[#111]" />
-                    <span className="text-[12px] text-[#888]">Webinar Host &middot; Warwick</span>
-                  </div>
-                </div>
+        {/* ════════ PAIN SECTION ════════ */}
+        <div className="bg-[#FFFBF5] border border-amber-200 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+          <h3 className="text-[15px] font-semibold text-[#111] mb-3 flex items-center gap-2 relative z-10">
+            <Target className="w-4 h-4 text-amber-600" />
+            If you recognise any of this...
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 relative z-10">
+            {[
+              "You've drafted cold emails but never sent them",
+              "You've sent emails but got zero replies",
+              "You don't know which firms to target or who to email",
+              "You've watched the recording but feel stuck on execution",
+              "You keep researching instead of actually emailing",
+              "You're worried your emails sound generic or desperate",
+            ].map((pain) => (
+              <div key={pain} className="flex items-start gap-2">
+                <XIcon className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                <span className="text-[13px] text-[#555] font-light">{pain}</span>
               </div>
-
-              <div className="border-t border-[#F0F0F0] pt-4">
-                <p className="text-[13px] text-[#555] leading-relaxed font-light">
-                  Uthman landed 20 internship offers across PE, IB, and VC using
-                  nothing but cold email. He built the exact system taught in
-                  the webinar and cold email guide, and has helped over 100
-                  students replicate his approach.
-                </p>
-              </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                {STATS.map((stat) => (
-                  <div key={stat.label} className="bg-[#FAFAFA] rounded-lg p-3 text-center">
-                    <stat.icon className="w-4 h-4 text-[#888] mx-auto mb-1.5" />
-                    <p className="text-sm font-semibold text-[#111]">{stat.value}</p>
-                    <p className="text-[10px] text-[#999] mt-0.5">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Testimonials */}
-            <div className="bg-white border border-[#E8E8E8] rounded-xl p-5">
-              <p className="text-[11px] text-[#999] font-medium uppercase tracking-wider mb-3">
-                From Students
-              </p>
-              <div className="space-y-3">
-                {[
-                  {
-                    text: "Genuinely the most practical webinar I've attended. Uthman gives actual templates you can use straight away.",
-                    name: "Priya M.",
-                    uni: "LSE",
-                  },
-                  {
-                    text: "Had a call with Uthman and sent my first cold emails the same day. Got 3 offers within a week.",
-                    name: "Jake L.",
-                    uni: "Warwick",
-                  },
-                  {
-                    text: "The group workshop was brilliant. Learned so much from other people's questions too.",
-                    name: "Amina R.",
-                    uni: "UCL",
-                  },
-                ].map((review) => (
-                  <div key={review.name} className="bg-[#FAFAFA] rounded-lg p-3">
-                    <p className="text-[12px] text-[#555] font-light italic leading-relaxed">
-                      "{review.text}"
-                    </p>
-                    <p className="text-[11px] text-[#999] mt-2 font-medium">
-                      {review.name}, {review.uni}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
+          <div className="mt-4 pt-4 border-t border-amber-200/50 relative z-10">
+            <p className="text-[13px] text-amber-900 font-medium">
+              A single session fixes all of this. One call → one focused system → replies in days.
+            </p>
+          </div>
+        </div>
 
-          {/* Right: Session types + FAQ */}
-          <div className="flex-1 space-y-6">
-            {/* Session types */}
-            <div className="space-y-4">
-              <h3 className="text-base font-semibold text-[#111]">Choose a session</h3>
+        {/* ════════ SESSION CARDS ════════ */}
+        <div className="space-y-4 mb-8">
+          <h2 className="text-base font-semibold text-[#111]">Choose a session</h2>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {SESSION_TYPES.map((session) => (
+              <div
+                key={session.id}
+                className={`bg-white border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow relative ${
+                  session.popular ? "border-emerald-300 ring-1 ring-emerald-200" : "border-[#E8E8E8]"
+                }`}
+              >
+                {session.popular && (
+                  <div className="bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 text-center">
+                    Most Popular
+                  </div>
+                )}
 
-              {SESSION_TYPES.map((session) => (
-                <div
-                  key={session.id}
-                  className={`relative bg-white border rounded-xl p-6 transition-all hover:shadow-md ${
-                    session.popular ? "border-[#111] shadow-sm" : "border-[#E8E8E8]"
-                  }`}
-                >
-                  {session.popular && (
-                    <span className="absolute -top-2.5 left-5 bg-[#111] text-white text-[10px] font-semibold px-3 py-1 rounded-full">
-                      Most popular
-                    </span>
+                <div className="p-5 flex-shrink-0 space-y-5">
+                  <div>
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-[15px] font-bold text-[#111] leading-tight">{session.name}</h3>
+                      {session.nextAvailable && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full whitespace-nowrap flex-shrink-0">
+                          {session.nextAvailable}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2">
+                      <div className="flex items-center gap-1 text-[12px] text-[#888]">
+                        <Clock className="w-3.5 h-3.5" />
+                        {session.duration}
+                      </div>
+                      {session.isGroup && (
+                        <div className="flex items-center gap-1 text-[12px] text-[#888]">
+                          <Users className="w-3.5 h-3.5" />
+                          Max {session.maxParticipants}
+                        </div>
+                      )}
+                    </div>
+
+                    <p className="text-[12px] text-[#666] mt-3 leading-relaxed font-light">{session.description}</p>
+                  </div>
+
+                  <ul className="space-y-1.5">
+                    {session.includes.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-[12px] text-[#555] font-light">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {session.testimonial && (
+                    <div className="bg-[#FAFAFA] rounded-xl p-3 border border-[#F0F0F0]">
+                      <p className="text-[11px] text-[#555] font-light italic leading-relaxed">
+                        "{session.testimonial.text}"
+                      </p>
+                      <p className="text-[10px] text-[#999] mt-1.5 font-medium">
+                        — {session.testimonial.name}, {session.testimonial.uni}
+                      </p>
+                    </div>
                   )}
 
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h4 className="text-[15px] font-semibold text-[#111] flex items-center gap-2">
-                        {session.name}
-                        {session.isGroup && (
-                          <span className="bg-blue-50 text-blue-700 text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <Users className="w-3 h-3" />
-                            Group
-                          </span>
-                        )}
-                      </h4>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="flex items-center gap-1 text-[12px] text-[#888]">
-                          <Clock className="w-3.5 h-3.5" />
-                          {session.duration}
-                        </span>
-                        <span className="flex items-center gap-1 text-[12px] text-[#888]">
-                          <Video className="w-3.5 h-3.5" />
-                          Zoom
-                        </span>
-                        {session.maxParticipants && (
-                          <span className="flex items-center gap-1 text-[12px] text-[#888]">
-                            <Users className="w-3.5 h-3.5" />
-                            Max {session.maxParticipants}
-                          </span>
-                        )}
-                      </div>
+                  <div className="pt-1">
+                    <div className="flex items-baseline gap-1.5 mb-3">
+                      <span className="text-2xl font-bold text-[#111]">{session.price}</span>
+                      <span className="text-[11px] text-[#999]">{session.priceLabel}</span>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <p className="text-xl font-semibold text-[#111]">{session.price}</p>
-                      <p className="text-[11px] text-[#999]">{session.priceLabel}</p>
-                    </div>
-                  </div>
 
-                  <p className="text-[13px] text-[#666] font-light leading-relaxed mb-4">
-                    {session.description}
+                    <button
+                      onClick={() => handleExternalBookClick(session.calSlug)}
+                      className={`w-full py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 ${
+                        session.popular
+                          ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                          : "bg-[#111] text-white hover:bg-[#222]"
+                      }`}
+                    >
+                      <CalendarIcon className="w-4 h-4" />
+                      Select Time Slot
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ════════ PACKAGE DEAL ════════ */}
+        <div className="relative bg-gradient-to-br from-[#111] to-[#1a1a2e] rounded-2xl p-6 md:p-8 mb-10 overflow-hidden shadow-xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+          <div className="relative">
+            <div className="flex flex-col md:flex-row md:items-start gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="bg-amber-400/20 text-amber-300 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-amber-400/30">
+                    Best Value
+                  </span>
+                  <span className="text-white/40 text-[11px] line-through">{PACKAGE.originalPrice}</span>
+                  <span className="text-emerald-400 text-[11px] font-bold">{PACKAGE.priceLabel}</span>
+                </div>
+
+                <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">{PACKAGE.name}</h3>
+                <p className="text-[13px] text-white/60 mt-1 font-light">{PACKAGE.sessions}</p>
+                <p className="text-[13px] text-white/70 mt-3 leading-relaxed font-light max-w-lg">
+                  {PACKAGE.description}
+                </p>
+
+                <div className="mt-4 space-y-2">
+                  {PACKAGE.journey.map((step, i) => (
+                    <div key={step} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center flex-shrink-0">
+                        <span className="text-[9px] font-bold text-emerald-400">{i + 1}</span>
+                      </div>
+                      <span className="text-[12px] text-white/70 font-light">{step}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="md:w-[220px] flex-shrink-0">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/10">
+                  <p className="text-white/50 text-[11px] uppercase tracking-wider mb-1">Bundle price</p>
+                  <div className="flex items-baseline gap-1.5 mb-4">
+                    <span className="text-3xl font-bold text-white">{PACKAGE.price}</span>
+                    <span className="text-white/40 text-xs">total</span>
+                  </div>
+                  <button
+                    onClick={() => handleExternalBookClick(PACKAGE.calSlug)}
+                    className="w-full py-3 rounded-xl bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-400 transition-all shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <CalendarIcon className="w-4 h-4" />
+                    Select Time Slot
+                  </button>
+                  <p className="text-white/30 text-[10px] text-center mt-2">
+                    Book first session — remaining 2 scheduled on the call
                   </p>
-
-                  <div className="space-y-2 mb-5">
-                    {session.includes.map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                        <span className="text-[12px] text-[#555]">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={() => handleSelectSession(session)}
-                    className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
-                      session.popular
-                        ? "bg-[#111] text-white hover:bg-[#222]"
-                        : "bg-[#F5F5F5] text-[#111] hover:bg-[#EBEBEB]"
-                    }`}
-                  >
-                    <Calendar className="w-4 h-4" />
-                    Book {session.name}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
                 </div>
-              ))}
-            </div>
-
-            {/* Package deal */}
-            <div className="relative bg-gradient-to-br from-[#111] to-[#1a1a2e] rounded-xl p-6 text-white">
-              <div className="absolute -top-2.5 left-5">
-                <span className="inline-flex items-center gap-1 bg-amber-500 text-black text-[10px] font-bold px-3 py-1 rounded-full">
-                  <Sparkles className="w-3 h-3" />
-                  Best value
-                </span>
-              </div>
-
-              <div className="flex items-start justify-between mb-3 pt-2">
-                <div>
-                  <h4 className="text-[15px] font-semibold">{PACKAGE.name}</h4>
-                  <p className="text-[12px] text-white/50 mt-0.5">{PACKAGE.duration}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xl font-semibold">{PACKAGE.price}</p>
-                  <p className="text-[11px] text-amber-400 font-medium">{PACKAGE.priceLabel}</p>
-                </div>
-              </div>
-
-              <p className="text-[13px] text-white/70 font-light leading-relaxed mb-5">
-                {PACKAGE.description}
-              </p>
-
-              <button
-                onClick={() => handleSelectSession(PACKAGE)}
-                className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2"
-              >
-                <Calendar className="w-4 h-4" />
-                Book Bundle
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* FAQ */}
-            <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-[#E8E8E8]">
-                <h3 className="text-[13px] font-semibold text-[#111]">
-                  Frequently Asked Questions
-                </h3>
-              </div>
-              <div className="divide-y divide-[#F0F0F0]">
-                {FAQ.map((faq, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                    className="w-full text-left px-5 py-3.5 hover:bg-[#FAFAFA] transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="text-[13px] font-medium text-[#111]">{faq.q}</p>
-                      <ChevronDown
-                        className={`w-4 h-4 text-[#999] transition-transform flex-shrink-0 ml-2 ${
-                          openFaq === idx ? "rotate-180" : ""
-                        }`}
-                      />
-                    </div>
-                    {openFaq === idx && (
-                      <p className="text-[12px] text-[#666] font-light leading-relaxed mt-2 pr-6">
-                        {faq.a}
-                      </p>
-                    )}
-                  </button>
-                ))}
               </div>
             </div>
           </div>
+        </div>
+
+        {/* ════════ TESTIMONIALS ════════ */}
+        <div className="mb-10">
+          <div className="flex items-center gap-2 mb-5">
+            <h2 className="text-base font-semibold text-[#111]">What students say</h2>
+            <div className="flex items-center gap-0.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <span className="text-[12px] text-[#888]">5.0 · {TESTIMONIALS.length} reviews</span>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className="bg-white border border-[#E8E8E8] rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-0.5 mb-3">
+                  {[...Array(t.rating)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-[13px] text-[#444] font-light leading-relaxed italic">"{t.text}"</p>
+                <div className="mt-3 pt-3 border-t border-[#F5F5F5]">
+                  <p className="text-[12px] font-semibold text-[#111]">{t.name}</p>
+                  <p className="text-[11px] text-[#999] font-light">{t.uni} · {t.year}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ════════ FAQ ════════ */}
+        <div className="mb-10">
+          <h2 className="text-base font-semibold text-[#111] mb-4">Common questions</h2>
+          <div className="space-y-2">
+            {FAQ.map((faq, idx) => (
+              <div key={idx} className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden shadow-sm">
+                <button
+                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#FAFAFA] transition-colors"
+                >
+                  <span className="text-[13px] font-medium text-[#111]">{faq.q}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[#999] flex-shrink-0 ml-4 transition-transform ${
+                      openFaq === idx ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {openFaq === idx && (
+                  <div className="px-5 pb-4">
+                    <p className="text-[13px] text-[#666] font-light leading-relaxed">{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ════════ BOTTOM CTA ════════ */}
+        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 text-center shadow-sm">
+          <Zap className="w-6 h-6 text-emerald-600 mx-auto mb-3" />
+          <h3 className="text-[16px] font-bold text-[#111] mb-1">Ready to start getting replies?</h3>
+          <p className="text-[13px] text-[#666] font-light mb-5 max-w-md mx-auto leading-relaxed">
+            Choose a session above and book directly. Uthman's availability syncs automatically via Cal.com.
+          </p>
+          <button
+            onClick={() => handleExternalBookClick(SESSION_TYPES[1].calSlug)}
+            className="inline-flex items-center gap-2 bg-emerald-600 text-white px-7 py-3 rounded-xl text-sm font-semibold hover:bg-emerald-700 hover:-translate-y-0.5 transition-all shadow-md"
+          >
+            <CalendarIcon className="w-4 h-4" />
+            Book a Deep Dive Session
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw } from "lucide-react";
+import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Sparkles } from "lucide-react";
 
 /* ─── Chapter data ─────────────────────────────────────────────
    Update these timestamps once you have the final recording.
@@ -253,6 +253,11 @@ export default function PortalRecording() {
             <p className="text-sm text-[#888] mt-1 font-light">
               How Uthman landed 20 internship offers using cold email
             </p>
+            {/* £30k earnings pill */}
+            <div className="mt-3 inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+              <span className="text-[11px] text-emerald-800 font-semibold">£30,000+ earned in first-year internship income</span>
+            </div>
           </div>
 
           {/* Progress badge */}
