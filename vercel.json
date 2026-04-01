@@ -4,7 +4,9 @@
   ],
   "rewrites": [
     { "source": "/webinar", "destination": "/index.html" },
+    { "source": "/da-webinar", "destination": "/index.html" },
     { "source": "/portal/:path*", "destination": "/index.html" },
+    { "source": "/general-portal/:path*", "destination": "/index.html" },
     { "source": "/assets/:path*", "destination": "/assets/:path*" },
     { "source": "/email-proof.png", "destination": "/email-proof.png" },
     { "source": "/:path*", "destination": "/index.html" }
