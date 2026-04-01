@@ -1,64 +1,67 @@
-import { FileText, Link as LinkIcon, Download } from "lucide-react";
-
-const PLACEHOLDER_RESOURCES = [
-  {
-    title: "Resource Pack - Template",
-    description: "Replace with your actual resource download link.",
-    icon: Download,
-    tag: "PDF",
-  },
-  {
-    title: "Useful Link - Template",
-    description: "Replace with a relevant tool or external link.",
-    icon: LinkIcon,
-    tag: "Link",
-  },
-  {
-    title: "Guide - Template",
-    description: "Replace with a step-by-step guide PDF.",
-    icon: FileText,
-    tag: "Guide",
-  },
-];
+import { FileText, Download, ChevronRight, LayoutTemplate } from "lucide-react";
 
 export default function GeneralResources() {
+  const genericResources = [
+    {
+      title: "[Topic Placeholder] Checklist",
+      description: "A comprehensive checklist covering the main concepts from the webinar.",
+      type: "PDF Document",
+      icon: FileText,
+      link: "#",
+    },
+    {
+      title: "[Secondary Resource] Template",
+      description: "A template you can use specifically designed to streamline your workflow.",
+      type: "Google Doc",
+      icon: LayoutTemplate,
+      link: "#",
+    },
+  ];
+
   return (
-    <div className="w-full bg-[#FAFAFA] min-h-screen">
-      <div className="bg-white border-b border-[#E8E8E8]">
-        <div className="px-6 py-6 md:px-10 lg:px-12">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111]">Resources</h1>
-          <p className="text-sm text-[#666] mt-1.5 font-light">
-            Everything you need to take action. Replace placeholders with your real resources.
+    <div className="w-full bg-[#FAFAFA] min-h-screen pb-20">
+      {/* Header */}
+      <div className="bg-white border-b border-[#E8E8E8] pt-12 pb-10 px-6 md:px-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111] text-white text-[11px] font-semibold tracking-wider uppercase mb-5 shadow-sm">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            Included Materials
+          </div>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-[#111] mb-4">
+            Webinar Resources
+          </h1>
+          <p className="text-base text-[#666] max-w-2xl font-light leading-relaxed">
+            All the additional slides, templates, and standard frameworks discussed during the webinar are stored securely below.
           </p>
         </div>
       </div>
 
-      <div className="px-6 md:px-10 lg:px-12 py-8">
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 max-w-2xl">
-          <p className="text-sm text-amber-800 font-light">
-            <span className="font-semibold">Template page:</span> These are placeholder resources. Replace each card with your actual download links, guides, or tools when you run a specific webinar.
-          </p>
-        </div>
-
-        <div className="grid gap-4 max-w-2xl">
-          {PLACEHOLDER_RESOURCES.map((resource) => (
-            <div
-              key={resource.title}
-              className="bg-white border border-[#E8E8E8] rounded-2xl p-5 flex items-start gap-4 shadow-sm hover:shadow-md transition-shadow cursor-not-allowed opacity-70"
+      {/* Grid */}
+      <div className="max-w-5xl mx-auto px-6 md:px-12 mt-10">
+        <div className="grid md:grid-cols-2 gap-6">
+          {genericResources.map((resource, i) => (
+            <a
+              key={i}
+              href={resource.link}
+              onClick={(e) => e.preventDefault()}
+              className="group bg-white border border-[#E8E8E8] rounded-2xl p-6 hover:shadow-lg hover:border-[#DDD] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden"
             >
-              <div className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
-                <resource.icon className="w-5 h-5 text-[#888]" />
+              <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0 duration-300 text-[#111]">
+                {resource.type === "PDF Document" ? <Download className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-[14px] font-semibold text-[#111]">{resource.title}</h3>
-                  <span className="text-[10px] font-bold uppercase tracking-wider bg-[#F0F0F0] text-[#888] px-2 py-0.5 rounded-full">
-                    {resource.tag}
-                  </span>
-                </div>
-                <p className="text-[12px] text-[#888] mt-1 font-light">{resource.description}</p>
+
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-emerald-100 transition-all duration-300">
+                <resource.icon className="w-6 h-6 stroke-[1.5]" />
               </div>
-            </div>
+
+              <h3 className="text-lg font-bold text-[#111] mb-2 pr-8">{resource.title}</h3>
+              <p className="text-sm text-[#666] mb-5 font-light leading-relaxed">{resource.description}</p>
+              
+              <div className="flex items-center gap-2 text-[11px] font-medium text-[#999] uppercase tracking-wider">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#E0E0E0] group-hover:bg-emerald-400 transition-colors" />
+                {resource.type}
+              </div>
+            </a>
           ))}
         </div>
       </div>

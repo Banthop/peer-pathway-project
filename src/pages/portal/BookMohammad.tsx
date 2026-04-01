@@ -1,72 +1,150 @@
-import { Calendar, Clock, Users } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Star, Clock, Video, Euro, CalendarIcon, ArrowRight, CheckCircle2 } from "lucide-react";
 
-const SESSIONS = [
-  { name: "30-min Strategy Call", duration: "30 min", price: "£TBD", desc: "A focused session to get your questions answered." },
-  { name: "60-min Deep Dive", duration: "60 min", price: "£TBD", desc: "Full walkthrough of your personal situation and action plan." },
-  { name: "Group Session", duration: "90 min", price: "£TBD", desc: "Small-group workshop format.", isGroup: true },
+const MOHAMMAD_SESSIONS = [
+  {
+    id: "strategy-call",
+    name: "Strategy Call",
+    duration: "30 min",
+    price: "£35",
+    popular: false,
+    description: "A quick 1-on-1 session to discuss your current trajectory and answer any specific questions.",
+  },
+  {
+    id: "mock-interview",
+    name: "Mock Interview",
+    duration: "1 hour",
+    price: "£59",
+    popular: true,
+    description: "An intensive mock interview practice tailored specifically to your upcoming firm and role.",
+  },
 ];
 
+const MOHAMMAD_PACKAGE = {
+  name: "3x Interview Prep Bundle",
+  sessions: "3 × 1 Hour Sessions",
+  price: "£149",
+  originalPrice: "£177",
+  priceLabel: "Save £28",
+  description: "Perfect for comprehensive preparation. Use these sessions for a mix of competency, technical, and assessment centre prep.",
+  journey: ["Assessment", "Technical Run", "Final Polish"],
+};
+
 export default function BookMohammad() {
+  const { user } = useAuth();
+  
+  const handleDummyClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    alert("This is a placeholder page. Booking is disabled here.");
+  };
+
   return (
-    <div className="w-full bg-[#FAFAFA] min-h-screen">
-      <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 border-b border-[#E8E8E8]">
-        <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#111] to-[#444] flex items-center justify-center text-white text-xl font-bold flex-shrink-0 ring-4 ring-white shadow-lg">
+    <div className="w-full relative">
+      {/* ════════ HERO SECTION ════════ */}
+      <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
+        <div className="flex flex-col md:flex-row items-start gap-6">
+          <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#111] text-white flex items-center justify-center text-3xl font-bold shadow-lg ring-4 ring-white shrink-0">
             M
           </div>
-          <div>
-            <p className="text-xs text-emerald-700 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1.5">
-              <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              Available for sessions
-            </p>
-            <h1 className="text-2xl md:text-[28px] font-bold tracking-tight text-[#111]">
-              Book a Session with Mohammad
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/60 backdrop-blur-sm rounded-full text-[11px] font-semibold tracking-wider text-[#666] uppercase mb-3 border border-[#E8E8E8]">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Available for Booking
+            </div>
+            <h1 className="text-3xl md:text-5xl font-bold text-[#111] tracking-tight mb-2">
+              Book Mohammad
             </h1>
-            <p className="text-sm text-[#666] mt-1.5 font-light max-w-lg">
-              Choose a session type below. This is a template — update the name, bio, and booking links when running a real webinar.
+            <p className="text-base text-[#666] max-w-xl leading-relaxed font-light mb-4">
+              Mohammad is offering exclusive 1-on-1 coaching sessions. Reserve your time below to get personalized guidance on your applications.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="px-6 md:px-10 lg:px-12 py-8">
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 max-w-2xl">
-          <p className="text-sm text-amber-800 font-light">
-            <span className="font-semibold">Placeholder:</span> Connect real cal.com booking links when this template is used for a live webinar.
-          </p>
-        </div>
+      {/* ════════ BOOKING SECTION ════════ */}
+      <div className="px-6 py-10 md:px-10 lg:px-12 max-w-6xl mx-auto">
+        <h2 className="text-xl font-bold text-[#111] mb-6 flex items-center gap-2">
+          Select your session type
+          <span className="text-xs px-2 py-0.5 bg-[#F5F5F5] text-[#888] rounded-full font-medium">Step 1 of 2</span>
+        </h2>
 
-        <div className="grid gap-4 max-w-2xl">
-          {SESSIONS.map((session) => (
-            <div key={session.name} className="bg-white border border-[#E8E8E8] rounded-2xl p-6 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="text-[15px] font-bold text-[#111]">{session.name}</h3>
-                  <p className="text-[13px] text-[#666] mt-1 font-light leading-relaxed">{session.desc}</p>
-                  <div className="flex flex-wrap gap-3 mt-3">
-                    <span className="flex items-center gap-1.5 text-[11px] text-[#888]">
-                      <Clock className="w-3.5 h-3.5" /> {session.duration}
-                    </span>
-                    {session.isGroup && (
-                      <span className="flex items-center gap-1.5 text-[11px] text-[#888]">
-                        <Users className="w-3.5 h-3.5" /> Group format
-                      </span>
-                    )}
-                  </div>
+        <div className="grid md:grid-cols-2 gap-5">
+          {MOHAMMAD_SESSIONS.map((session) => (
+            <div
+              key={session.id}
+              className={`relative bg-white rounded-2xl p-6 transition-all duration-300 border ${
+                session.popular 
+                  ? "border-[#111] shadow-md ring-1 ring-[#111]/5" 
+                  : "border-[#E8E8E8] shadow-sm hover:shadow-md hover:border-[#DDD]"
+              }`}
+            >
+              {session.popular && (
+                <div className="absolute -top-3 right-6 bg-[#111] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-sm">
+                  Most Popular
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <p className="text-lg font-bold text-[#111]">{session.price}</p>
+              )}
+
+              <div className="flex flex-col h-full">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-[#111] mb-1">{session.name}</h3>
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-[#666] mb-3 font-medium">
+                    <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#999]" /> {session.duration}</span>
+                    <span className="flex items-center gap-1.5"><Video className="w-4 h-4 text-[#999]" /> Video Call</span>
+                    <span className="flex items-center gap-1.5 text-[#111]"><Euro className="w-4 h-4" /> {session.price}</span>
+                  </div>
+                  <p className="text-[13px] leading-relaxed text-[#666] font-light">
+                    {session.description}
+                  </p>
+                </div>
+
+                <div className="mt-auto pt-4">
+                  <button
+                    onClick={handleDummyClick}
+                    className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 ${
+                      session.popular
+                        ? "bg-[#111] text-white hover:bg-[#222] shadow-sm"
+                        : "bg-[#F5F5F5] text-[#111] hover:bg-[#EBEBEB] border border-[#E0E0E0]"
+                    }`}
+                  >
+                    <CalendarIcon className="w-4 h-4" />
+                    Select Time Slot
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => alert("Booking link placeholder — connect a real cal.com URL here.")}
-                className="mt-4 w-full py-3 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-colors flex items-center justify-center gap-2"
-              >
-                <Calendar className="w-4 h-4" />
-                Select Time Slot (Placeholder)
-              </button>
             </div>
           ))}
+        </div>
+
+        {/* ════════ BUNDLE PACKAGE ════════ */}
+        <div className="relative bg-[#111] border border-[#222] rounded-xl p-6 text-white mt-6">
+          <div className="flex items-start justify-between mb-3 pt-2">
+            <div>
+              <h4 className="text-[15px] font-semibold">{MOHAMMAD_PACKAGE.name}</h4>
+              <p className="text-[12px] text-white/50 mt-0.5">{MOHAMMAD_PACKAGE.sessions}</p>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-2">
+                <p className="text-[15px] text-white/40 line-through">{MOHAMMAD_PACKAGE.originalPrice}</p>
+                <p className="text-xl font-bold">{MOHAMMAD_PACKAGE.price}</p>
+              </div>
+              <p className="text-[11px] text-emerald-400 font-semibold">{MOHAMMAD_PACKAGE.priceLabel}</p>
+            </div>
+          </div>
+
+           <p className="text-[13px] text-white/70 font-light leading-relaxed mb-6">
+            {MOHAMMAD_PACKAGE.description}
+          </p>
+
+          <button
+            onClick={handleDummyClick}
+            className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-md hover:-translate-y-0.5"
+          >
+            <CalendarIcon className="w-4 h-4" />
+            Book Package slots
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
       </div>
     </div>
