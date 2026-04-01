@@ -9,85 +9,128 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") as string, {
 
 const cryptoProvider = Stripe.createSubtleCryptoProvider();
 
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") || "";
-const FROM_EMAIL = "Dylan <dylan@yourearlyedge.co.uk>";
-const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
+const LOOPS_API_KEY = Deno.env.get("LOOPS_API_KEY") || "";
+const LOOPS_PORTAL_TRANSACTIONAL_ID = Deno.env.get("LOOPS_PORTAL_TRANSACTIONAL_ID") || "";
+const ATTIO_API_KEY = Deno.env.get("ATTIO_API_KEY") || "";
 const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
+const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
 
 /**
- * Send automated portal access email to buyer right after purchase.
- * Uses Resend broadcast pattern to land in Primary inbox.
+ * Sync contact to Attio CRM and place in Student Sales pipeline (Paid stage).
  */
-async function sendPortalAccessEmail(email: string, firstName: string, isBundle: boolean) {
-    if (!RESEND_KEY) {
-        console.warn("RESEND_API_KEY not set — skipping portal access email");
+async function syncToAttio(email: string, firstName: string, lastName: string, spend: number, productType: string) {
+    if (!ATTIO_API_KEY) return;
+    try {
+        const fullName = `${firstName} ${lastName}`.trim() || email.split("@")[0];
+        
+        // Map productType to Attio Select Option (fallback to string if unmapped)
+        let mappedProductType = productType;
+        if (productType === "bundle" || productType === "recording_bundle") mappedProductType = "Bundle";
+        else if (productType === "recording_premium") mappedProductType = "Premium";
+        else if (productType.includes("webinar")) mappedProductType = "Recording Only";
+        
+        // 1. Upsert Person
+        const personRes = await fetch("https://api.attio.com/v2/objects/people/records?matching_attribute=email_addresses", {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${ATTIO_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                data: {
+                    values: {
+                        email_addresses: [{ email_address: email }],
+                        name: [{ first_name: firstName || undefined, last_name: lastName || undefined, full_name: fullName }],
+                        stripe_customer: [{ value: true }],
+                        total_spent: [{ value: spend }],
+                        product_type: [{ option: mappedProductType }] // Tries mapping to valid options
+                    }
+                }
+            })
+        });
+        
+        const personData = await personRes.json();
+        const recordId = personData?.data?.id?.record_id;
+        
+        if (recordId) {
+            // 2. Add to Student Sales pipeline inside the 'Paid' stage
+            const listRes = await fetch("https://api.attio.com/v2/lists/student_sales/entries", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${ATTIO_API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    data: {
+                        parent_object: "people",
+                        parent_record_id: recordId,
+                        entry_values: {
+                            stage: [{ status: "Paid" }]
+                        }
+                    }
+                })
+            });
+            console.log(`✅ Synced ${email} to Attio Student Sales Pipeline (Paid)`);
+        } else {
+            console.error("Attio Sync person payload failed:", JSON.stringify(personData));
+        }
+    } catch (e: any) {
+        console.error("Attio Sync Error:", e.message);
+    }
+}
+
+/**
+ * Trigger Loops Marketing Event & Transactional Portal Email
+ */
+async function triggerLoopsEvents(email: string, firstName: string, spend: number, productType: string, isBundle: boolean) {
+    if (!LOOPS_API_KEY) {
+        console.warn("LOOPS_API_KEY not set — skipping Loops event & transactional emails");
         return;
     }
 
-    const headers = { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" };
-    const name = firstName || "there";
-
-    const guideSection = isBundle
-        ? `<p>Your Cold Email Guide is in the vault. When it asks for a password, use: <strong>RedMango</strong></p>`
-        : "";
-
-    const html = `<div style="font-family:Arial,sans-serif;font-size:15px;line-height:27px;color:#222;">
-<p>Hey ${name},</p>
-<p>Thanks for your purchase — everything is ready for you.</p>
-<p><strong>Here's how to access your materials:</strong></p>
-<p>1. Go to <a href="${PORTAL_LINK}">${PORTAL_LINK}</a><br>
-2. Click "Create account"<br>
-3. Sign up using <strong>${email}</strong> (the email you just used to pay)<br>
-4. Set any password you like<br>
-5. You're in — recording, resources, everything</p>
-${guideSection}
-<p>If you want personalised help, Uthman does 1-on-1 strategy calls where he'll build your lead list and write custom templates for your target industry:</p>
-<p><a href="${BOOK_UTHMAN}">Book a call with Uthman →</a></p>
-<p>Any issues at all, just reply to this email.</p>
-<p>Dylan<br>
-<span style="color:#999;font-size:13px;">EarlyEdge</span></p>
-</div>`;
-
+    const headers = { Authorization: `Bearer ${LOOPS_API_KEY}`, "Content-Type": "application/json" };
+    
+    // 1. Fire 'purchase_completed' Event to trigger the automated Buyer Welcome Sequence
     try {
-        // 1. Create temp audience
-        const audRes = await fetch("https://api.resend.com/audiences", {
-            method: "POST", headers,
-            body: JSON.stringify({ name: `auto_${Date.now()}_${email.split("@")[0]}` }),
-        });
-        const aud = await audRes.json();
-        if (!aud.id) { console.error("Audience create failed:", aud); return; }
-
-        // 2. Add contact
-        await fetch(`https://api.resend.com/audiences/${aud.id}/contacts`, {
-            method: "POST", headers,
-            body: JSON.stringify({ email, unsubscribed: false }),
-        });
-
-        // 3. Create broadcast
-        const brRes = await fetch("https://api.resend.com/broadcasts", {
+        await fetch("https://app.loops.so/api/v1/events/send", {
             method: "POST", headers,
             body: JSON.stringify({
-                audience_id: aud.id,
-                from: FROM_EMAIL,
-                subject: "your recording + resources are ready",
-                html,
-                name: `auto_portal_${email.split("@")[0]}`,
-            }),
+                email,
+                eventName: "purchase_completed",
+                eventProperties: {
+                    spend,
+                    productType,
+                    isBundle
+                }
+            })
         });
-        const br = await brRes.json();
-        if (!br.id) { console.error("Broadcast create failed:", br); return; }
-
-        // 4. Send
-        await fetch(`https://api.resend.com/broadcasts/${br.id}/send`, {
-            method: "POST", headers, body: "{}",
-        });
-
-        // 5. Cleanup
-        await fetch(`https://api.resend.com/audiences/${aud.id}`, { method: "DELETE", headers });
-
-        console.log(`📧 Portal access email sent to ${email} (${isBundle ? "bundle" : "webinar-only"})`);
+        console.log(`✅ Triggered Loops 'purchase_completed' event for ${email}`);
     } catch (e: any) {
-        console.error(`Failed to send portal access email to ${email}:`, e.message);
+        console.error("Loops Event Error:", e.message);
+    }
+    
+    // 2. Fire Transactional Portal Access Email (Requires LOOPS_PORTAL_TRANSACTIONAL_ID)
+    if (LOOPS_PORTAL_TRANSACTIONAL_ID) {
+        try {
+            await fetch("https://app.loops.so/api/v1/transactional", {
+                method: "POST", headers,
+                body: JSON.stringify({
+                    transactionalId: LOOPS_PORTAL_TRANSACTIONAL_ID,
+                    email,
+                    dataVariables: {
+                        firstName: firstName || "there",
+                        portalLink: PORTAL_LINK,
+                        bookUthmanLink: BOOK_UTHMAN,
+                        isBundle: isBundle ? "true" : "false" // used in loops template logic
+                    }
+                })
+            });
+            console.log(`📧 Sent Loops portal access email to ${email}`);
+        } catch (e: any) {
+            console.error("Loops Transactional Error:", e.message);
+        }
+    } else {
+        console.warn("LOOPS_PORTAL_TRANSACTIONAL_ID not set — skipping manual portal access email but sequence was triggered");
     }
 }
 
@@ -123,6 +166,8 @@ Deno.serve(async (req) => {
             const session = event.data.object as any;
             const email = (session.customer_details?.email || session.customer_email || "").toLowerCase().trim();
             const spend = session.amount_total ? session.amount_total / 100 : 0;
+            const firstName = session.customer_details?.name?.split(" ")[0] || "";
+            const lastName = session.customer_details?.name?.split(" ").slice(1).join(" ") || "";
             
             if (email) {
                 console.log(`Processing checkout for ${email} with spend £${spend}...`);
@@ -136,23 +181,10 @@ Deno.serve(async (req) => {
                 
                 const updatedTags = contact?.tags ? [...new Set([...contact.tags, "stripe_customer"])] : ["stripe_customer"];
                 
-                // ── Detect product type from price + session metadata ──
-                // Recording packages (post-webinar):
-                //   recording_only = price TBD
-                //   recording_bundle = price TBD (recording + guide)
-                //   recording_premium = price TBD (recording + guide + 1:1)
-                // Original webinar packages:
-                //   webinar_only = £10
-                //   bundle = £29 or £21.75 (discounted)
-                //   guide addon = £12
-                //
-                // We also check Stripe metadata.product_type if set on the Payment Link
                 const stripeProductType = session.metadata?.product_type || "";
                 
                 let productType = "webinar_only";
-                
                 if (stripeProductType) {
-                    // Trust explicit product type from Stripe metadata
                     productType = stripeProductType;
                 } else if (spend >= 20 || spend === 12) {
                     productType = "bundle";
@@ -163,13 +195,9 @@ Deno.serve(async (req) => {
                     updatedTags.splice(updatedTags.indexOf("webinar_only"), 1);
                 }
                 
-                // Handle recording-specific tags
                 const isRecording = productType.startsWith("recording_");
                 if (isRecording) {
-                    // Add recording access tag
                     if (!updatedTags.includes("recording_access")) updatedTags.push("recording_access");
-                    
-                    // Add specific package tag
                     if (productType === "recording_bundle" || productType === "recording_premium") {
                         if (!updatedTags.includes("bundle")) updatedTags.push("bundle");
                     }
@@ -180,8 +208,9 @@ Deno.serve(async (req) => {
                 
                 if (!updatedTags.includes(productType)) updatedTags.push(productType);
                 
+                const currentSpend = (contact?.metadata?.stripe_spend || 0) + spend;
                 const updatedMetadata = contact?.metadata || {};
-                updatedMetadata.stripe_spend = (updatedMetadata.stripe_spend || 0) + spend;
+                updatedMetadata.stripe_spend = currentSpend;
                 updatedMetadata.last_purchase_at = new Date().toISOString();
                 updatedMetadata.product_type = productType;
                 if (isRecording) {
@@ -191,7 +220,6 @@ Deno.serve(async (req) => {
 
                 let error;
                 if (contact) {
-                    // Update existing
                     console.log(`Updating existing contact: ${contact.id}`);
                     const { error: updError } = await supabase.from("crm_contacts")
                         .update({
@@ -202,12 +230,11 @@ Deno.serve(async (req) => {
                         }).eq("id", contact.id);
                     error = updError;
                 } else {
-                    // Insert new
                     console.log(`Inserting new contact...`);
                     const { error: insError } = await supabase.from("crm_contacts")
                         .insert({
                             email: email,
-                            first_name: session.customer_details?.name?.split(" ")[0] || "",
+                            first_name: firstName,
                             status: "converted",
                             tags: updatedTags,
                             metadata: updatedMetadata,
@@ -224,10 +251,12 @@ Deno.serve(async (req) => {
                 
                 console.log(`Successfully updated ${email} as converted stripe_customer (${productType}).`);
                 
-                // ── AUTO-SEND portal access email ──
-                const buyerFirstName = session.customer_details?.name?.split(" ")[0] || "";
+                // ── SYNC TO ATTIO ──
+                await syncToAttio(email, firstName, lastName, currentSpend, productType);
+                
+                // ── TRIGGER LOOPS EVENTS / EMAILS ──
                 const isBundleBuyer = productType === "bundle" || productType === "recording_bundle" || productType === "recording_premium";
-                await sendPortalAccessEmail(email, buyerFirstName, isBundleBuyer);
+                await triggerLoopsEvents(email, firstName, currentSpend, productType, isBundleBuyer);
             }
         }
 
