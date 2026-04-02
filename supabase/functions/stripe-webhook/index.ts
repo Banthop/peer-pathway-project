@@ -501,6 +501,51 @@ Deno.serve(async (req) => {
         }
     }
 
+    // Handle PaymentIntent success for marketplace coaching bookings
+    // (created by the create-payment-intent edge function)
+    if (event.type === "payment_intent.succeeded") {
+        const intent = event.data.object as any;
+        const bookingId = intent.metadata?.booking_id;
+        if (bookingId) {
+            try {
+                await supabase
+                    .from("bookings")
+                    .update({
+                        status: "confirmed",
+                        stripe_payment_intent_id: intent.id,
+                        updated_at: new Date().toISOString(),
+                    })
+                    .eq("id", bookingId)
+                    .eq("status", "pending");
+                console.log(`Confirmed booking ${bookingId} via PaymentIntent ${intent.id}`);
+            } catch (e: any) {
+                console.error(`Failed to confirm booking ${bookingId}:`, e.message);
+            }
+        }
+    }
+
+    // Handle PaymentIntent cancellation / failure - mark booking back to pending or cancelled
+    if (event.type === "payment_intent.payment_failed") {
+        const intent = event.data.object as any;
+        const bookingId = intent.metadata?.booking_id;
+        if (bookingId) {
+            try {
+                await supabase
+                    .from("bookings")
+                    .update({
+                        status: "cancelled",
+                        cancellation_reason: "payment_failed",
+                        cancelled_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    })
+                    .eq("id", bookingId);
+                console.log(`Cancelled booking ${bookingId} due to failed payment`);
+            } catch (e: any) {
+                console.error(`Failed to cancel booking ${bookingId}:`, e.message);
+            }
+        }
+    }
+
     // Always return 200 to acknowledge the webhook to Stripe.
     return new Response(JSON.stringify({ received: true }), {
         status: 200,

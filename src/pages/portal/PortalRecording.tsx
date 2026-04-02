@@ -244,9 +244,6 @@ export default function PortalRecording() {
                   </p>
                 </div>
                 
-                <div className="hidden md:block bg-[#1A1A1A] text-[#999] text-[11px] px-3 py-1.5 rounded-md font-medium border border-[#333] flex-shrink-0 shadow-inner">
-                  Tip: Use CC for captions
-                </div>
               </div>
             </div>
 
@@ -261,7 +258,7 @@ export default function PortalRecording() {
                     Need these templates applied to YOUR specific situation?
                   </h3>
                   <p className="text-[13px] text-emerald-800 mt-1.5 max-w-xl leading-relaxed font-light">
-                    Watching the system is step 1. Applying it flawlessly is step 2. Get Uthman to personally write your templates, audit your lead list, and build your pipeline on a 1-on-1 Deep Dive.
+                    Watching the system is Step 1. Applying it flawlessly is Step 2. Get Uthman to personally write your templates, audit your lead list, and build your pipeline on a 1-on-1 Deep Dive.
                   </p>
                 </div>
                 <Link 

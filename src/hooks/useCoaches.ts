@@ -34,8 +34,10 @@ function mapDbCoach(row: any, sampleFallback?: Coach): Coach {
             ? `${fb.companyRole} at ${fb.companyName ?? ""}`
             : sampleFallback?.tagline ?? ""),
         photo: row.photo_url || sampleFallback?.photo || "",
-        rating: sampleFallback?.rating ?? 4.8,
-        reviewCount: sampleFallback?.reviewCount ?? 0,
+        rating: row.reviews?.length > 0
+            ? Math.round((row.reviews.reduce((s: number, r: any) => s + r.rating, 0) / row.reviews.length) * 10) / 10
+            : sampleFallback?.rating ?? 4.8,
+        reviewCount: row.reviews?.length ?? sampleFallback?.reviewCount ?? 0,
         sessionsCompleted: row.total_sessions || sampleFallback?.sessionsCompleted || 0,
         followers: row.social_followers || sampleFallback?.followers || 0,
         university: {
@@ -114,9 +116,15 @@ export function useCoaches(filters?: CoachFilters) {
 
             const { data: rows, error } = await supabase
                 .from("coaches")
-                .select("*, user:users(name, email, avatar_url)")
+                .select(`
+                    *,
+                    user:users!coaches_user_id_fkey(name, email, avatar_url),
+                    reviews(rating)
+                `)
                 .eq("is_active", true)
-                .order("created_at", { ascending: true });
+                .eq("verified", true)
+                .order("is_featured", { ascending: false })
+                .order("total_sessions", { ascending: false });
 
             if (error || !rows || rows.length === 0) {
                 console.warn("useCoaches: Supabase query failed or empty, using sample data", error);

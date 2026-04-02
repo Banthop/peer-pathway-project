@@ -21,12 +21,15 @@ function useAllCoaches() {
                 .from('coaches')
                 .select(`
                     id,
+                    user_id,
                     hourly_rate,
-                    bio,
-                    is_verified,
+                    headline,
+                    verified,
                     stripe_onboarded,
+                    total_sessions,
+                    is_active,
                     created_at,
-                    user:users!coaches_id_fkey(name, email, avatar_url)
+                    user:users!coaches_user_id_fkey(name, email, avatar_url)
                 `)
                 .order('created_at', { ascending: false });
             if (error) throw error;
@@ -54,7 +57,7 @@ function useVerifyCoach() {
         mutationFn: async ({ coachId, verified }: { coachId: string; verified: boolean }) => {
             const { error } = await supabase
                 .from('coaches')
-                .update({ is_verified: verified })
+                .update({ verified })
                 .eq('id', coachId);
             if (error) throw error;
         },
@@ -95,8 +98,8 @@ function CoachVerificationTable({ coaches, onVerify }: {
     const [filter, setFilter] = useState<"all" | "pending" | "verified">("all");
 
     const filtered = coaches.filter(c => {
-        if (filter === "pending") return !c.is_verified;
-        if (filter === "verified") return c.is_verified;
+        if (filter === "pending") return !c.verified;
+        if (filter === "verified") return c.verified;
         return true;
     });
 
@@ -111,7 +114,7 @@ function CoachVerificationTable({ coaches, onVerify }: {
                                 ? "bg-foreground text-background shadow-sm"
                                 : "text-muted-foreground hover:text-foreground"
                                 }`}>
-                            {f === "all" ? `All (${coaches.length})` : f === "pending" ? `Pending (${coaches.filter(c => !c.is_verified).length})` : `Verified (${coaches.filter(c => c.is_verified).length})`}
+                            {f === "all" ? `All (${coaches.length})` : f === "pending" ? `Pending (${coaches.filter(c => !c.verified).length})` : `Verified (${coaches.filter(c => c.verified).length})`}
                         </button>
                     ))}
                 </div>
@@ -147,17 +150,17 @@ function CoachVerificationTable({ coaches, onVerify }: {
                                         Stripe ✓
                                     </span>
                                 )}
-                                <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium ${coach.is_verified
+                                <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium ${coach.verified
                                     ? "bg-emerald-50 text-emerald-600"
                                     : "bg-amber-50 text-amber-600"
                                     }`}>
-                                    {coach.is_verified ? "Verified" : "Pending"}
+                                    {coach.verified ? "Verified" : "Pending"}
                                 </span>
                             </div>
 
                             {/* Actions */}
                             <div className="flex gap-1.5">
-                                {!coach.is_verified ? (
+                                {!coach.verified ? (
                                     <button
                                         onClick={() => onVerify(coach.id, true)}
                                         className="px-3 py-1.5 rounded-lg bg-foreground text-background text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-1"
@@ -181,31 +184,53 @@ function CoachVerificationTable({ coaches, onVerify }: {
     );
 }
 
-/* ─── Season Banners Manager ─────────────────────────── */
+/* ─── Season Banners Manager (live Supabase) ─────────────── */
 function SeasonBannersManager() {
-    const [banners, setBanners] = useState([
-        { id: 1, title: "Spring Coaching Sale - 20% off all packages", active: true, color: "#10b981" },
-        { id: 2, title: "New coaches: Finance & Consulting specialists now live!", active: false, color: "#3b82f6" },
-    ]);
+    const queryClient = useQueryClient();
     const [newBanner, setNewBanner] = useState("");
+
+    const { data: banners = [], isLoading } = useQuery({
+        queryKey: ['admin-banners'],
+        queryFn: async () => {
+            const { data, error } = await supabase
+                .from('season_banners')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            return data || [];
+        },
+    });
+
+    const toggleMutation = useMutation({
+        mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
+            const { error } = await supabase.from('season_banners').update({ is_active }).eq('id', id);
+            if (error) throw error;
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-banners'] }),
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const { error } = await supabase.from('season_banners').delete().eq('id', id);
+            if (error) throw error;
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-banners'] }),
+    });
+
+    const addMutation = useMutation({
+        mutationFn: async (title: string) => {
+            const { error } = await supabase.from('season_banners').insert({ title, is_active: false });
+            if (error) throw error;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['admin-banners'] });
+            setNewBanner("");
+        },
+    });
 
     const addBanner = () => {
         if (!newBanner.trim()) return;
-        setBanners([...banners, {
-            id: Date.now(),
-            title: newBanner.trim(),
-            active: false,
-            color: "#6366f1",
-        }]);
-        setNewBanner("");
-    };
-
-    const toggleActive = (id: number) => {
-        setBanners(banners.map(b => b.id === id ? { ...b, active: !b.active } : b));
-    };
-
-    const deleteBanner = (id: number) => {
-        setBanners(banners.filter(b => b.id !== id));
+        addMutation.mutate(newBanner.trim());
     };
 
     return (
@@ -216,22 +241,30 @@ function SeasonBannersManager() {
                 </h3>
             </div>
             <div className="p-5 space-y-3">
-                {banners.map(b => (
-                    <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                        <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: b.color }} />
-                        <span className="text-sm text-foreground flex-1">{b.title}</span>
-                        <button
-                            onClick={() => toggleActive(b.id)}
-                            className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium transition-colors ${b.active ? "bg-emerald-50 text-emerald-600" : "bg-muted text-muted-foreground"
-                                }`}
-                        >
-                            {b.active ? "Active" : "Inactive"}
-                        </button>
-                        <button onClick={() => deleteBanner(b.id)} className="text-muted-foreground hover:text-red-500 transition-colors">
-                            <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-6">
+                        <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                     </div>
-                ))}
+                ) : banners.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-4">No banners yet. Add one below.</p>
+                ) : (
+                    (banners as any[]).map((b: any) => (
+                        <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                            <div className="w-3 h-3 rounded-full flex-shrink-0 bg-foreground/20" />
+                            <span className="text-sm text-foreground flex-1">{b.title}</span>
+                            {b.subtitle && <span className="text-xs text-muted-foreground truncate max-w-[140px]">{b.subtitle}</span>}
+                            <button
+                                onClick={() => toggleMutation.mutate({ id: b.id, is_active: !b.is_active })}
+                                className={`text-[10px] px-2.5 py-0.5 rounded-full font-medium transition-colors ${b.is_active ? "bg-emerald-50 text-emerald-600" : "bg-muted text-muted-foreground"}`}
+                            >
+                                {b.is_active ? "Active" : "Inactive"}
+                            </button>
+                            <button onClick={() => deleteMutation.mutate(b.id)} className="text-muted-foreground hover:text-red-500 transition-colors">
+                                <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    ))
+                )}
                 <div className="flex gap-2 mt-2">
                     <input
                         value={newBanner}
@@ -242,7 +275,8 @@ function SeasonBannersManager() {
                     />
                     <button
                         onClick={addBanner}
-                        className="px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-1"
+                        disabled={addMutation.isPending}
+                        className="px-4 py-2 bg-foreground text-background rounded-lg text-xs font-semibold hover:bg-foreground/90 transition-colors flex items-center gap-1 disabled:opacity-60"
                     >
                         <Plus className="w-3.5 h-3.5" /> Add
                     </button>
@@ -275,8 +309,8 @@ export default function AdminDashboard() {
 
         const completedBookings = bookings.filter((b: any) => b.status === 'completed').length;
         const pendingBookings = bookings.filter((b: any) => b.status === 'pending').length;
-        const verifiedCoaches = coaches.filter((c: any) => c.is_verified).length;
-        const pendingCoaches = coaches.filter((c: any) => !c.is_verified).length;
+        const verifiedCoaches = coaches.filter((c: any) => c.verified).length;
+        const pendingCoaches = coaches.filter((c: any) => !c.verified).length;
 
         return {
             totalRevenue: `£${totalRevenue.toLocaleString()}`,
