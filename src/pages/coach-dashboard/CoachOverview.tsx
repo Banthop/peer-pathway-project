@@ -20,18 +20,26 @@ function StarRating({ rating, size = 13 }: { rating: number; size?: number }) {
                 <Star
                     key={i}
                     style={{ width: size, height: size }}
-                    className={i <= Math.round(rating) ? "fill-foreground text-foreground" : "fill-none text-border"}
+                    className={i <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-none text-border"}
                 />
             ))}
         </div>
     );
 }
 
+const STAT_COLOUR: Record<string, { icon: string; badge: string }> = {
+    Earnings:      { icon: "bg-emerald-100 text-emerald-600", badge: "bg-emerald-50 text-emerald-700" },
+    Sessions:      { icon: "bg-indigo-100 text-indigo-600",   badge: "bg-indigo-50 text-indigo-700" },
+    Rating:        { icon: "bg-amber-100 text-amber-500",     badge: "bg-amber-50 text-amber-700" },
+    "Profile Views": { icon: "bg-violet-100 text-violet-600", badge: "bg-violet-50 text-violet-700" },
+};
+
 function StatCard({ label, value, change, icon: Icon, prefix = "", tooltip }: {
     label: string; value: string | number; change?: number;
     icon: React.ElementType; prefix?: string; tooltip?: string;
 }) {
     const [showTooltip, setShowTooltip] = useState(false);
+    const colours = STAT_COLOUR[label] || { icon: "bg-muted text-muted-foreground", badge: "bg-muted text-muted-foreground" };
     return (
         <div
             className="relative bg-background border border-border rounded-xl p-5 flex flex-col gap-3 cursor-pointer hover:scale-[1.02] transition-transform duration-200"
@@ -46,14 +54,14 @@ function StatCard({ label, value, change, icon: Icon, prefix = "", tooltip }: {
             )}
             <div className="flex items-center justify-between">
                 <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{label}</span>
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                    <Icon className="w-4 h-4 text-muted-foreground" />
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${colours.icon}`}>
+                    <Icon className="w-4 h-4" />
                 </div>
             </div>
             <div className="flex items-end gap-2">
                 <span className="text-2xl font-bold tracking-tight text-foreground">{prefix}{value}</span>
                 {change !== undefined && (
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full mb-1 ${change >= 0 ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"}`}>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full mb-1 ${change >= 0 ? colours.badge : "bg-red-50 text-red-600"}`}>
                         {change >= 0 ? "+" : ""}{change}%
                     </span>
                 )}

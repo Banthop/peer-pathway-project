@@ -20,7 +20,7 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
           style={{ width: size, height: size }}
           className={
             star <= rating
-              ? "fill-foreground text-foreground"
+              ? "fill-amber-400 text-amber-400"
               : "fill-none text-border"
           }
         />

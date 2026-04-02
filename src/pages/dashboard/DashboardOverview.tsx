@@ -19,6 +19,7 @@ import {
 import { CoachCard } from "@/components/dashboard/CoachCard";
 import { freeEvents, userProfile } from "@/data/eventsData";
 import { useStudentBookings } from "@/hooks/useBookings";
+import { useCoaches } from "@/hooks/useCoaches";
 import { useAuth } from "@/contexts/AuthContext";
 
 /* ─── tiny reusable pieces ──────────────────────────────────── */
@@ -32,7 +33,7 @@ function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
           style={{ width: size, height: size }}
           className={
             star <= rating
-              ? "fill-foreground text-foreground"
+              ? "fill-amber-400 text-amber-400"
               : "fill-none text-border"
           }
         />
@@ -148,8 +149,9 @@ function SidebarActivity({ totalSessions, uniqueCoaches, reviewCount }: { totalS
 /* ─── New User View ─────────────────────────────────────────── */
 
 function NewUserView() {
-  const [hoveredCoach, setHoveredCoach] = useState<number | null>(null);
-  const recommendedCoaches = allCoaches.slice(0, 4);
+  const [hoveredCoach, setHoveredCoach] = useState<string | null>(null);
+  const { data: liveCoaches = [] } = useCoaches({ limit: 4 });
+  const recommendedCoaches = liveCoaches.slice(0, 4);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
@@ -327,8 +329,9 @@ function RecommendedEvents() {
 
 function ActiveUserView() {
   const { data: dbBookings = [] } = useStudentBookings("all");
+  const { data: liveCoaches = [] } = useCoaches({ limit: 6 });
 
-  const [hoveredCoach, setHoveredCoach] = useState<number | null>(null);
+  const [hoveredCoach, setHoveredCoach] = useState<string | null>(null);
   const [hoveredPast, setHoveredPast] = useState<string | null>(null);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState("");
@@ -362,7 +365,7 @@ function ActiveUserView() {
 
   const unreviewedCount = pastBookings.filter((s) => !s.reviewed).length;
   const bookedCoaches = allCoaches.filter((c) => c.hasBooked);
-  const unbookedCoaches = allCoaches.filter((c) => !c.hasBooked).slice(0, 2);
+  const unbookedCoaches = liveCoaches.slice(0, 2);
 
   const actTotalSessions = pastBookings.length + upcomingSessions.length;
   const actUniqueCoaches = new Set([...pastBookings, ...upcomingSessions].map((s) => s.coach)).size;

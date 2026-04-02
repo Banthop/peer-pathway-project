@@ -8,32 +8,38 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings, ChevronDown, ExternalLink, LogOut } from "lucide-react";
+import {
+    Settings, ChevronDown, ExternalLink, LogOut,
+    LayoutDashboard, CalendarDays, Ticket, BookOpen,
+    MessageSquare, Wallet, CreditCard, Star, UserPen, BarChart2,
+} from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCoachProfile } from "@/hooks/useCoachProfile";
-
-const totalCoachUnread = 0; // TODO: compute from real data
+import { useUnreadCount } from "@/hooks/useMessages";
 
 const navItems = [
-    { title: "Overview", url: "/coach-dashboard", end: true, dot: false },
-    { title: "My Sessions", url: "/coach-dashboard/sessions", end: false, dot: false },
-    { title: "Events", url: "/coach-dashboard/events", end: false, dot: false },
-    { title: "Resources", url: "/coach-dashboard/resources", end: false, dot: false },
-    { title: "Messages", url: "/coach-dashboard/messages", end: false, dot: totalCoachUnread > 0 },
-    { title: "Earnings", url: "/coach-dashboard/earnings", end: false, dot: false },
-    { title: "Payout Setup", url: "/coach-dashboard/payouts", end: false, dot: false },
-    { title: "Reviews", url: "/coach-dashboard/reviews", end: false, dot: false },
-    { title: "Edit Profile", url: "/coach-dashboard/edit-profile", end: false, dot: false },
-    { title: "Analytics", url: "/coach-dashboard/analytics", end: false, dot: false },
+    { title: "Overview",     url: "/coach-dashboard",               end: true,  Icon: LayoutDashboard },
+    { title: "My Sessions",  url: "/coach-dashboard/sessions",      end: false, Icon: CalendarDays },
+    { title: "Events",       url: "/coach-dashboard/events",        end: false, Icon: Ticket },
+    { title: "Resources",    url: "/coach-dashboard/resources",     end: false, Icon: BookOpen },
+    { title: "Messages",     url: "/coach-dashboard/messages",      end: false, Icon: MessageSquare },
+    { title: "Earnings",     url: "/coach-dashboard/earnings",      end: false, Icon: Wallet },
+    { title: "Payout Setup", url: "/coach-dashboard/payouts",       end: false, Icon: CreditCard },
+    { title: "Reviews",      url: "/coach-dashboard/reviews",       end: false, Icon: Star },
+    { title: "Edit Profile", url: "/coach-dashboard/edit-profile",  end: false, Icon: UserPen },
+    { title: "Analytics",    url: "/coach-dashboard/analytics",     end: false, Icon: BarChart2 },
 ];
 
 export function CoachDashboardSidebar() {
     const { user, signOut } = useAuth();
     const { data: profile } = useCoachProfile();
+    const { data: unreadCount = 0 } = useUnreadCount();
+
     const coachName = profile?.user?.name || user?.email?.split('@')[0] || 'Coach';
     const coachEmail = user?.email || '';
     const coachAvatar = coachName.substring(0, 2).toUpperCase();
     const coachSlug = profile?.id || 'demo';
+
     return (
         <aside className="hidden md:flex md:w-56 lg:w-64 flex-col border-r border-border bg-background">
             {/* Logo */}
@@ -41,29 +47,38 @@ export function CoachDashboardSidebar() {
                 <Logo />
             </div>
 
-            {/* Coach badge */}
+            {/* Coach badge - gradient */}
             <div className="px-7 pb-5">
-                <span className="inline-block px-2.5 py-1 rounded-md bg-foreground text-background text-[10px] font-semibold uppercase tracking-wider">
+                <span className="inline-block px-2.5 py-1 rounded-md gradient-cta text-white text-[10px] font-semibold uppercase tracking-wider">
                     Coach
                 </span>
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 flex flex-col gap-0.5">
-                {navItems.map((item) => (
-                    <NavLink
-                        key={item.title}
-                        to={item.url}
-                        end={item.end}
-                        className="flex items-center justify-between px-7 py-2.5 text-sm text-muted-foreground transition-all duration-200 hover:text-foreground border-l-2 border-transparent tracking-tight"
-                        activeClassName="text-foreground font-semibold !border-foreground"
-                    >
-                        {item.title}
-                        {item.dot && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-foreground" />
-                        )}
-                    </NavLink>
-                ))}
+            <nav className="flex-1 flex flex-col gap-0.5 overflow-y-auto">
+                {navItems.map((item) => {
+                    const isMessages = item.title === "Messages";
+                    const badge = isMessages && unreadCount > 0 ? unreadCount : 0;
+                    return (
+                        <NavLink
+                            key={item.title}
+                            to={item.url}
+                            end={item.end}
+                            className="flex items-center gap-2.5 justify-between px-5 py-2.5 text-sm text-muted-foreground transition-all duration-200 hover:text-foreground border-l-2 border-transparent tracking-tight group"
+                            activeClassName="text-foreground font-semibold !border-l-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20"
+                        >
+                            <span className="flex items-center gap-2.5">
+                                <item.Icon className="w-4 h-4 shrink-0 opacity-60 group-[.active]:opacity-100" />
+                                {item.title}
+                            </span>
+                            {badge > 0 && (
+                                <span className="bg-indigo-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shrink-0">
+                                    {badge > 9 ? "9+" : badge}
+                                </span>
+                            )}
+                        </NavLink>
+                    );
+                })}
             </nav>
 
             {/* View public profile link */}
@@ -82,7 +97,7 @@ export function CoachDashboardSidebar() {
                 <DropdownMenu>
                     <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left hover:bg-muted transition-colors outline-none">
                         <Avatar className="h-8 w-8">
-                            <AvatarFallback className="bg-foreground text-background text-xs font-semibold">
+                            <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-violet-600 text-white text-xs font-semibold">
                                 {coachAvatar}
                             </AvatarFallback>
                         </Avatar>

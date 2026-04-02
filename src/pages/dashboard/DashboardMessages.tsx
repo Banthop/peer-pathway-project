@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Send, CalendarPlus } from "lucide-react";
+import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import {
   conversations as initialConversations,
   allCoaches,
   upcomingSessions,
 } from "@/data/dashboardData";
 import { useAuth } from "@/contexts/AuthContext";
-import { useConversations, useMessages, useSendMessage, useStartConversation } from "@/hooks/useMessages";
+import { useConversations, useMessages, useSendMessage } from "@/hooks/useMessages";
 
 export default function DashboardMessages() {
   const { user } = useAuth();
@@ -54,6 +55,18 @@ export default function DashboardMessages() {
   const isMockActive = typeof activeConvoId === 'number';
   const { data: dbMessages = [] } = useMessages(isMockActive ? undefined : activeConvoId as string);
   const { mutate: sendMessageMutation } = useSendMessage();
+
+  // Mark messages as read when conversation is opened
+  useEffect(() => {
+    if (!user || !activeConvoId || isMockActive || !supabaseAvailable || !supabase) return;
+    supabase
+      .from("messages")
+      .update({ is_read: true })
+      .eq("conversation_id", activeConvoId as string)
+      .eq("recipient_id", user.id)
+      .eq("is_read", false)
+      .then(() => {/* silent */});
+  }, [activeConvoId, user, isMockActive]);
 
   const [messageInput, setMessageInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);

@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Save, Check, ExternalLink, ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCoachProfile, useUpdateCoachProfile } from "@/hooks/useCoachProfile";
+import { useMyAvailability, useSaveAvailability, DAY_NAMES, type AvailabilityInput } from "@/hooks/useAvailability";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 
@@ -95,6 +96,111 @@ function Section({ title, children, defaultOpen = true }: {
             </button>
             {open && <div className="px-5 pb-5">{children}</div>}
         </div>
+    );
+}
+
+/* ─── Availability Section ──────────────────────────────────── */
+
+function AvailabilitySection() {
+    const { data: savedSlots = [] } = useMyAvailability();
+    const { mutate: saveAvailability, isPending: isSaving } = useSaveAvailability();
+    const [saved, setSaved] = useState(false);
+
+    // day_of_week 1-5 = Mon-Fri, 6 = Sat, 0 = Sun
+    const DAYS = [1, 2, 3, 4, 5, 6, 0]; // Mon first
+
+    const [slots, setSlots] = useState<Record<number, { enabled: boolean; start: string; end: string }>>(() => {
+        const init: Record<number, { enabled: boolean; start: string; end: string }> = {};
+        DAYS.forEach(d => { init[d] = { enabled: false, start: "09:00", end: "17:00" }; });
+        return init;
+    });
+
+    // Populate from saved data
+    useEffect(() => {
+        if (savedSlots.length === 0) return;
+        setSlots(prev => {
+            const next = { ...prev };
+            DAYS.forEach(d => { next[d] = { enabled: false, start: "09:00", end: "17:00" }; });
+            savedSlots.forEach(s => {
+                next[s.day_of_week] = {
+                    enabled: s.is_active,
+                    start: s.start_time.slice(0, 5),
+                    end: s.end_time.slice(0, 5),
+                };
+            });
+            return next;
+        });
+    }, [savedSlots]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const toggle = (day: number) => setSlots(p => ({ ...p, [day]: { ...p[day], enabled: !p[day].enabled } }));
+    const setTime = (day: number, field: "start" | "end", val: string) =>
+        setSlots(p => ({ ...p, [day]: { ...p[day], [field]: val } }));
+
+    const handleSave = () => {
+        const inputs: AvailabilityInput[] = DAYS.filter(d => slots[d].enabled).map(d => ({
+            day_of_week: d,
+            start_time: slots[d].start + ":00",
+            end_time: slots[d].end + ":00",
+            is_active: true,
+        }));
+        saveAvailability(inputs, {
+            onSuccess: () => { setSaved(true); setTimeout(() => setSaved(false), 2500); }
+        });
+    };
+
+    return (
+        <Section title="Weekly Availability" defaultOpen={false}>
+            <p className="text-xs text-muted-foreground mb-4">
+                Set the days and hours students can book sessions with you.
+            </p>
+            <div className="space-y-2.5 mb-5">
+                {DAYS.map(d => {
+                    const s = slots[d];
+                    return (
+                        <div key={d} className={`flex items-center gap-3 p-3 rounded-lg border transition-colors ${s.enabled ? "border-foreground/20 bg-muted/30" : "border-border"}`}>
+                            {/* Toggle */}
+                            <button
+                                onClick={() => toggle(d)}
+                                className={`w-8 h-4.5 rounded-full relative transition-colors shrink-0 ${s.enabled ? "bg-foreground" : "bg-muted border border-border"}`}
+                                style={{ width: 32, height: 18 }}
+                            >
+                                <span className={`absolute top-0.5 w-3.5 h-3.5 rounded-full bg-white transition-all shadow-sm ${s.enabled ? "left-[14px]" : "left-0.5"}`} />
+                            </button>
+                            {/* Day name */}
+                            <span className={`text-xs font-semibold w-10 shrink-0 ${s.enabled ? "text-foreground" : "text-muted-foreground"}`}>
+                                {DAY_NAMES[d].slice(0, 3)}
+                            </span>
+                            {/* Time pickers */}
+                            {s.enabled ? (
+                                <div className="flex items-center gap-2 flex-1">
+                                    <input
+                                        type="time" value={s.start}
+                                        onChange={e => setTime(d, "start", e.target.value)}
+                                        className="px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                                    />
+                                    <span className="text-xs text-muted-foreground">to</span>
+                                    <input
+                                        type="time" value={s.end}
+                                        onChange={e => setTime(d, "end", e.target.value)}
+                                        className="px-2.5 py-1.5 rounded-md border border-border bg-background text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                                    />
+                                </div>
+                            ) : (
+                                <span className="text-xs text-muted-foreground">Unavailable</span>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+            <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground text-background text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+                {saved ? <Check className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" />}
+                {saved ? "Saved!" : isSaving ? "Saving..." : "Save Availability"}
+            </button>
+        </Section>
     );
 }
 
@@ -346,27 +452,7 @@ export default function CoachEditProfile() {
                 </Section>
 
                 {/* Availability */}
-                <Section title="Availability" defaultOpen={false}>
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-3">
-                            <Field label="Next Available Slot" value={form.nextSlot} onChange={(v) => update("nextSlot", v)} />
-                            <Field label="Timezone" value={form.timezone} onChange={(v) => update("timezone", v)} />
-                        </div>
-                        {form.slots.map((s, i) => (
-                            <div key={i} className="flex items-end gap-3">
-                                <Field label={i === 0 ? "Day" : ""} value={s.day} onChange={(v) => updateItem("slots", i, "day", v)} placeholder="Tomorrow" className="flex-1" />
-                                <Field label={i === 0 ? "Time" : ""} value={s.time} onChange={(v) => updateItem("slots", i, "time", v)} placeholder="10:00 AM" className="flex-1" />
-                                <button onClick={() => removeItem("slots", i)} className="pb-2.5 text-muted-foreground hover:text-red-500 transition-colors">
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
-                        ))}
-                        <button onClick={() => addItem("slots", { day: "", time: "" })}
-                            className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
-                            <Plus className="w-3.5 h-3.5" /> Add slot
-                        </button>
-                    </div>
-                </Section>
+                <AvailabilitySection />
             </div>
         </div>
     );

@@ -1,39 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search, Clock, ArrowRight } from "lucide-react";
 import { categories, categoryColorMap } from "@/data/dashboardData";
-import { getAllBrowseCoaches } from "@/data/coachStore";
 import { CoachCard } from "@/components/dashboard/CoachCard";
+import { useCoaches } from "@/hooks/useCoaches";
 
 export default function DashboardBrowse() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("recommended");
-  const [hoveredCoach, setHoveredCoach] = useState<number | null>(null);
-  const [allCoaches, setAllCoaches] = useState(getAllBrowseCoaches());
+  const [hoveredCoach, setHoveredCoach] = useState<string | null>(null);
 
-  useEffect(() => {
-    setAllCoaches(getAllBrowseCoaches());
-  }, []);
+  const { data: allCoaches = [] } = useCoaches();
 
   const filteredCoaches = allCoaches
     .filter((c) => {
       const matchCategory =
-        selectedCategory === "All" || c.category === selectedCategory;
+        selectedCategory === "All" ||
+        c.skills.some((s) => s.toLowerCase().includes(selectedCategory.toLowerCase()));
+      const q = searchQuery.toLowerCase();
       const matchSearch =
-        !searchQuery ||
-        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.credential.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.tags.some((t) =>
-          t.toLowerCase().includes(searchQuery.toLowerCase())
-        ) ||
-        c.bio.toLowerCase().includes(searchQuery.toLowerCase());
+        !q ||
+        c.name.toLowerCase().includes(q) ||
+        c.tagline.toLowerCase().includes(q) ||
+        c.skills.some((s) => s.toLowerCase().includes(q)) ||
+        c.bio.toLowerCase().includes(q);
       return matchCategory && matchSearch;
     })
     .sort((a, b) => {
-      if (sortBy === "price-low") return a.rate - b.rate;
-      if (sortBy === "price-high") return b.rate - a.rate;
+      if (sortBy === "price-low") return a.hourlyRate - b.hourlyRate;
+      if (sortBy === "price-high") return b.hourlyRate - a.hourlyRate;
       if (sortBy === "rating") return b.rating - a.rating;
-      return b.sessions - a.sessions;
+      return b.sessionsCompleted - a.sessionsCompleted;
     });
 
   return (
@@ -153,7 +150,6 @@ export default function DashboardBrowse() {
                 coach={coach}
                 hovered={hoveredCoach === coach.id}
                 onHover={setHoveredCoach}
-                large
               />
             ))}
           </div>
