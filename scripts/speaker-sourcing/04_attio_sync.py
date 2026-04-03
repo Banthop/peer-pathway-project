@@ -219,7 +219,7 @@ def move_to_stage(list_id, entry_id, stages, stage_name):
 
 # === Person Record Functions ===
 
-def create_speaker_record(candidate):
+def create_speaker_record(candidate, sourced_by="Don"):
     """Create a new Person record in Attio from a scored candidate."""
     name = candidate.get("name", "")
     name_parts = name.split(maxsplit=1)
@@ -241,8 +241,51 @@ def create_speaker_record(candidate):
     if result:
         record_id = result.get("data", {}).get("id", {}).get("record_id")
         print(f"  Created person record: {name} ({record_id})")
+
+        # Add a note tagging who sourced this candidate
+        add_sourced_note(record_id, name, candidate, sourced_by)
+
         return record_id
     return None
+
+
+def add_sourced_note(record_id, name, candidate, sourced_by):
+    """Add a note to the person record indicating who sourced them."""
+    firms = ", ".join(candidate.get("firms", []))
+    uni = candidate.get("university", "")
+    score = candidate.get("score", "")
+    headline = candidate.get("headline", "")
+    linkedin = candidate.get("linkedin_url", "")
+
+    note_lines = [f"Sourced by {sourced_by}"]
+    if headline:
+        note_lines.append(f"Headline: {headline}")
+    if firms:
+        note_lines.append(f"Firms: {firms}")
+    if uni:
+        note_lines.append(f"University: {uni}")
+    if score:
+        note_lines.append(f"AI Score: {score}")
+    if linkedin:
+        note_lines.append(f"LinkedIn: {linkedin}")
+
+    note_body = "\n".join(note_lines)
+
+    payload = {
+        "data": {
+            "parent_object": "people",
+            "parent_record_id": record_id,
+            "title": f"Sourced by {sourced_by}",
+            "format": "plaintext",
+            "content": note_body,
+        }
+    }
+
+    result = api_request("POST", "/notes", json_data=payload)
+    if result:
+        print(f"    ✓ Note added: Sourced by {sourced_by}")
+    else:
+        print(f"    ⚠ Could not add note (record still created)")
 
 
 def update_speaker_attributes(record_id, attrs):
@@ -321,9 +364,9 @@ def sync_existing():
     print(f"\n=== DONE: {success} updated, {added} added, {skipped} skipped ===")
 
 
-def sync_new_candidates(candidates_file):
+def sync_new_candidates(candidates_file, sourced_by="Don"):
     """Read scored_candidates.json, create records for new candidates, add to pipeline."""
-    print("\n=== ADDING NEW CANDIDATES ===")
+    print(f"\n=== ADDING NEW CANDIDATES (sourced by {sourced_by}) ===")
 
     if not os.path.exists(candidates_file):
         print(f"ERROR: {candidates_file} not found")
@@ -359,8 +402,8 @@ def sync_new_candidates(candidates_file):
 
         print(f"\n  [{priority}] {name} (score: {score}, firms: {firms})")
 
-        # Create person record
-        record_id = create_speaker_record(candidate)
+        # Create person record with sourced-by note
+        record_id = create_speaker_record(candidate, sourced_by=sourced_by)
         if not record_id:
             print(f"    FAILED to create record")
             failed += 1
@@ -385,7 +428,7 @@ def sync_new_candidates(candidates_file):
         # Small delay to be polite to the API
         time.sleep(0.3)
 
-    print(f"\n=== DONE: {created} created, {failed} failed ===")
+    print(f"\n=== DONE: {created} created, {failed} failed (sourced by {sourced_by}) ===")
 
 
 def advance_speaker(name, stage_name):
@@ -532,6 +575,8 @@ Examples:
                         help="Move a speaker to a pipeline stage")
     parser.add_argument("--status", action="store_true",
                         help="Print current pipeline status")
+    parser.add_argument("--sourced-by", default="Don",
+                        help="Tag who sourced these candidates (default: Don)")
 
     args = parser.parse_args()
 
@@ -548,7 +593,7 @@ Examples:
     if args.add_new:
         script_dir = os.path.dirname(os.path.abspath(__file__))
         candidates_file = os.path.join(script_dir, "scored_candidates.json")
-        sync_new_candidates(candidates_file)
+        sync_new_candidates(candidates_file, sourced_by=args.sourced_by)
 
     if args.advance:
         name, stage = args.advance

@@ -4,60 +4,68 @@
 # =============================================================
 set -e
 
+cd "$(dirname "$0")"
+
 echo "================================================"
 echo "  EarlyEdge Speaker Sourcer — Setup"
 echo "================================================"
 echo ""
 
-# Check Python
-if ! command -v python3 &> /dev/null; then
-    echo "ERROR: Python 3 not found."
-    echo "Install it: https://www.python.org/downloads/"
+# Check for uv or pip
+if command -v uv &> /dev/null; then
+    PKG_MGR="uv"
+    echo "[1/4] Found uv package manager."
+elif command -v pip3 &> /dev/null; then
+    PKG_MGR="pip"
+    echo "[1/4] Found pip."
+else
+    echo "ERROR: No Python package manager found."
+    echo "Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
     exit 1
 fi
 
-echo "[1/3] Installing Python packages..."
-pip3 install browser-use langchain-anthropic requests --quiet
+# Create venv
+echo "[2/4] Creating Python virtual environment..."
+if [ ! -d ".venv" ]; then
+    if [ "$PKG_MGR" = "uv" ]; then
+        uv venv --python 3.12 .venv 2>/dev/null || uv venv .venv
+    else
+        python3 -m venv .venv
+    fi
+    echo "  Created .venv"
+else
+    echo "  .venv already exists"
+fi
 
-echo "[2/3] Checking for API key..."
+# Install deps
+echo "[3/4] Installing Python packages..."
+source .venv/bin/activate
+if [ "$PKG_MGR" = "uv" ]; then
+    uv pip install browser-use langchain-anthropic requests playwright --quiet
+else
+    pip install browser-use langchain-anthropic requests playwright --quiet
+fi
+playwright install chromium --with-deps 2>/dev/null || playwright install chromium
+echo "  Packages installed."
+
+# Check API key
+echo "[4/4] Checking API key..."
 if [ -z "$ANTHROPIC_API_KEY" ]; then
     echo ""
-    echo "  You need an Anthropic API key to run the AI sourcer."
-    echo "  Don will give you one. Once you have it, add this line"
-    echo "  to your ~/.zshrc (or ~/.bashrc):"
+    echo "  You need an Anthropic API key for the AI sourcer."
+    echo "  Don will send you one. Add this line to your ~/.zshrc:"
     echo ""
     echo "    export ANTHROPIC_API_KEY='sk-ant-your-key-here'"
     echo ""
-    echo "  Then restart your terminal and run this setup again."
+    echo "  Then restart Terminal and run ./run.sh"
     echo ""
 else
     echo "  ANTHROPIC_API_KEY is set. Good."
 fi
 
-# Optional: Attio key for CRM sync
-if [ -z "$ATTIO_API_KEY" ]; then
-    echo ""
-    echo "  (Optional) For Attio CRM sync, also add:"
-    echo "    export ATTIO_API_KEY='your-attio-key'"
-    echo ""
-else
-    echo "  ATTIO_API_KEY is set. Good."
-fi
-
-echo "[3/3] Verifying scripts..."
-python3 -m py_compile config.py
-python3 -m py_compile 01_linkedin_sourcer.py
-python3 -m py_compile 02_scorer.py
-python3 -m py_compile 03_dm_generator.py
-python3 -m py_compile 04_attio_sync.py
-python3 -m py_compile 05_panel_optimizer.py
-python3 -m py_compile 06_daily_dashboard.py
-echo "  All scripts OK."
-
 echo ""
 echo "================================================"
 echo "  Setup complete!"
 echo ""
-echo "  To start sourcing, run:"
-echo "    ./run.sh"
+echo "  To start: ./run.sh"
 echo "================================================"

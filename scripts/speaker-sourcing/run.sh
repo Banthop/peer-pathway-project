@@ -8,10 +8,15 @@
 #   ./run.sh quick        # Just dashboard (no sourcing)
 #   ./run.sh source       # Just source new candidates
 #   ./run.sh dm           # Just generate DMs
-#   ./run.sh dashboard    # Just show dashboard
+#   ./run.sh score        # Just score existing candidates
 # =============================================================
 
 cd "$(dirname "$0")"
+
+# Activate venv if it exists
+if [ -f ".venv/bin/activate" ]; then
+    source .venv/bin/activate
+fi
 
 MODE="${1:-full}"
 
@@ -30,6 +35,19 @@ if [ "$MODE" = "quick" ] || [ "$MODE" = "dashboard" ]; then
         python3 06_daily_dashboard.py --offline
     else
         python3 06_daily_dashboard.py
+    fi
+    exit 0
+fi
+
+# ─────────────────────────────────────
+# SCORE MODE — just score candidates
+# ─────────────────────────────────────
+if [ "$MODE" = "score" ]; then
+    if [ -f candidates.json ]; then
+        python3 02_scorer.py
+    else
+        echo "No candidates.json found. Scoring existing speakers..."
+        python3 02_scorer.py --existing
     fi
     exit 0
 fi
@@ -63,7 +81,7 @@ fi
 # FULL MODE — everything
 # ─────────────────────────────────────
 
-# Step 1: Show dashboard first so you know what's needed
+# Step 1: Show dashboard first
 echo "────────────────────────────────────────────────"
 echo "  STEP 1: Current status"
 echo "────────────────────────────────────────────────"
@@ -73,7 +91,7 @@ else
     python3 06_daily_dashboard.py --quick
 fi
 
-# Step 2: Source new candidates (if API key available)
+# Step 2: Source new candidates
 if [ -z "$ANTHROPIC_API_KEY" ]; then
     echo ""
     echo "────────────────────────────────────────────────"
@@ -84,8 +102,8 @@ else
     echo ""
     echo "────────────────────────────────────────────────"
     echo "  STEP 2: LinkedIn sourcing"
-    echo "  Browser will open. Log in if needed."
-    echo "  Then sit back — this takes 30-60 min."
+    echo "  Chrome opens. Log in to LinkedIn (60 sec)."
+    echo "  Then sit back — takes 5-10 min per search."
     echo "────────────────────────────────────────────────"
     echo ""
     read -p "  Start sourcing? (y/n): " START
@@ -137,6 +155,7 @@ echo ""
 echo "================================================"
 echo "  DONE! Now:"
 echo "  1. Copy DMs from above and paste into LinkedIn"
-echo "  2. After sending, run: python3 04_attio_sync.py --advance \"Name\" \"DM Sent\""
+echo "  2. After sending, run:"
+echo "     python3 04_attio_sync.py --advance \"Name\" \"DM Sent\""
 echo "  3. Screenshot the dashboard and send to Don"
 echo "================================================"

@@ -303,7 +303,7 @@ async def ensure_logged_in(browser, llm):
     """Navigate to LinkedIn, wait for login if needed."""
     from browser_use import Agent
 
-    print("\nChecking LinkedIn login...")
+    print("\nOpening LinkedIn...")
     agent = Agent(
         task=(
             "Go to https://www.linkedin.com/feed/. "
@@ -326,17 +326,17 @@ async def ensure_logged_in(browser, llm):
         if "LOGIN" in text.upper() and "REQUIRED" in text.upper():
             print("\n" + "=" * 60)
             print("  LINKEDIN LOGIN REQUIRED")
-            print("  Log in to LinkedIn in the browser window.")
-            print("  Then press ENTER here to continue...")
+            print("  Log in NOW in the browser window.")
+            print("  Waiting 60 seconds for you to log in...")
             print("=" * 60)
-            input()
-            print("  Continuing...\n")
+            await asyncio.sleep(60)
+            print("  Continuing — assuming you've logged in.\n")
         else:
             print("  Already logged in.\n")
     except Exception as e:
         print(f"  Could not check login: {e}")
-        print("  If needed, log in manually. Press ENTER to continue...")
-        input()
+        print("  Waiting 45s then continuing...")
+        await asyncio.sleep(45)
 
 
 async def run_sales_nav_search(search, browser, llm, existing_names):
@@ -438,17 +438,19 @@ async def run_regular_search(query, idx, total, browser, llm, existing_names):
 Go to LinkedIn and search for: {query}
 
 Click on the search bar, type the query, press Enter.
-After results load, click the "Posts" tab. If no "Posts" tab, try "People".
+After results load, click the "People" tab to find actual people (NOT Posts).
 
-For each relevant result on the first 2 pages:
-1. Extract: full name, headline, firms (spring weeks/internships), university, LinkedIn URL
-2. Skip non-UK students and existing speakers: {existing_names}
-3. Try to determine gender (M/F/unknown) from name/photo
-4. Note if they mention converting spring week to return offer or summer internship
+Look through the first 2 pages of People results. For each person who appears to be a UK university student or recent graduate with spring week / internship experience at an investment bank or financial firm:
+
+1. Extract their: full name, headline (job title/description), firms they've worked at, university, LinkedIn profile URL
+2. Skip anyone whose name matches: {existing_names}
+3. Skip anyone clearly NOT based in UK or NOT a student/recent graduate
+4. Guess gender (M/F/unknown) from name and photo
+5. Check if their headline mentions "return offer", "summer analyst", "incoming", "returning" which indicates conversion
 
 Return as JSON array with keys: name, headline, firms, university, linkedin_url, gender, has_conversion, conversion_detail
-If no results, return: []
-Return ONLY the JSON array.
+If no relevant results, return: []
+Return ONLY the JSON array, no other text.
 """
 
     print(f"\n  [{idx+1}/{total}] {query[:60]}...")
@@ -473,16 +475,16 @@ Return ONLY the JSON array.
 
 async def main_async(args):
     from browser_use import Browser
-    from browser_use.browser.browser import BrowserConfig
-    from langchain_anthropic import ChatAnthropic
+    from browser_use.llm import ChatAnthropic
 
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("ERROR: ANTHROPIC_API_KEY not set.")
         print("Run:  export ANTHROPIC_API_KEY='sk-ant-...'")
         sys.exit(1)
 
-    llm = ChatAnthropic(model_name="claude-sonnet-4-20250514", timeout=60, stop=None, temperature=0.0)
-    browser = Browser(config=BrowserConfig(headless=False))
+    llm = ChatAnthropic(model="claude-sonnet-4-20250514", temperature=0.0)
+    # keep_alive=True prevents session reset between agents so login persists
+    browser = Browser(headless=False, keep_alive=True)
     existing_names = [s["name"] for s in config.EXISTING_SPEAKERS]
 
     all_candidates = load_candidates()
@@ -544,8 +546,10 @@ async def main_async(args):
             new = await run_regular_search(search, search_idx, len(searches), browser, llm, existing_names)
             source = search if isinstance(search, str) else str(search)
 
-        # Normalize and filter
+        # Normalize and filter (skip non-dict items from AI output)
         for raw in new:
+            if not isinstance(raw, dict):
+                continue
             c = normalize(raw, source=source)
             if not c["name"] or is_existing(c["name"]):
                 continue
@@ -561,9 +565,12 @@ async def main_async(args):
 
     # Close browser
     try:
-        await browser.close()
+        await browser.stop()
     except Exception:
-        pass
+        try:
+            await browser.close()
+        except Exception:
+            pass
 
     # Final summary
     gap_lower = {g.lower() for g in config.GAP_FIRMS}

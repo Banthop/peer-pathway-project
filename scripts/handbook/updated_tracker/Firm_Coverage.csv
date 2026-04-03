@@ -1,0 +1,47 @@
+Firm,Category,Night,Speaker(s),Status,# Speakers,Coverage,Spring Week Date,Notes
+Goldman Sachs,IB,Night 1,"Kishan Patel*",DM Needed,0,⚠️ DM KISHAN,DONE (March),Kishan (UCL) covers this. DM him ASAP.
+JPMorgan,IB,Night 1,"Matthias, Nadiya*",Available + DM,1,🟡 PARTIAL,"w/c April 13 or 20",Matthias available (Don's friend). Nadiya DM needed for backup.
+Morgan Stanley,IB,Night 1,"Dylan, Ayo, Jibril*",Available,2,🟡 UNCONFIRMED,,Dylan + Ayo available. Jibril chasing.
+Barclays,IB,Night 1,"Aashay, Yuyao*",Available + Chase,1,🟡 PARTIAL,"April 14-15",Aashay available (Don's friend). Yuyao being chased.
+Citi,IB,Night 1,"Jason, Matthias",Available,2,🟡 UNCONFIRMED,,Jason + Matthias available. Need to re-ask.
+HSBC,IB,Night 1,"Indiana, Ayo",Available,2,🟡 UNCONFIRMED,,Indiana + Ayo available. Need to re-ask.
+Deutsche Bank,IB,Night 1,"Ayo, Mya*",Available + DM,1,🟡 PARTIAL,DONE (March),Ayo covers. Mya has return offer - DM for Night 3.
+UBS,IB,Night 1,Indiana,Available,1,🟡 UNCONFIRMED,,Indiana available. Need to re-ask.
+Bank of America,IB,Night 1,"Joel, Yuyao*",Available + Chase,1,🟡 PARTIAL,,Joel available (Don's friend). Yuyao being chased.
+Jefferies,IB,Night 1,Jason,Available,1,🟡 UNCONFIRMED,,Jason available. Need to re-ask.
+Nomura,IB,Night 1,"Jason, Serena",Available,2,🟡 UNCONFIRMED,,Jason + Serena available.
+Rothschild,Advisory,Night 1,NOBODY,GAP,0,🔴 CRITICAL GAP,April 23,NOBODY covers this. Uthman must source.
+Lazard,Advisory,Night 1,"Kishan*, Hassan*",DM Needed,0,⚠️ DM BOTH,April,Both need DMs. Kishan is priority.
+Evercore,Advisory,Night 1,"Ayo, Kishan*",Available + DM,1,🟡 PARTIAL,April,Ayo available. Kishan backup.
+BlackRock,AM,Night 1,NOBODY,GAP,0,🔴 CRITICAL GAP,April,NOBODY covers this. Uthman must source.
+Houlihan Lokey,IB,Night 1,"Serena, Aashay",Available,2,🟡 UNCONFIRMED,"April 13-17",Both Don's friends.
+Jane Street,Quant/Trading,Night 1,"Joel, Nadiya*",Available + DM,1,🟡 PARTIAL,"April 13-18",Joel available. Nadiya DM needed.
+Citadel,Hedge Fund,Night 1,Jibril*,Chase,0,⚠️ CHASE JIBRIL,,Chase Jibril.
+Millennium,Hedge Fund,Night 1,"Jibril*, Yuyao*",Chase,0,⚠️ CHASE BOTH,,Chase both.
+Optiver,Quant/Trading,Night 1,Yuyao*,Chase,0,⚠️ CHASE,,Chase Yuyao.
+SIG/Susquehanna,Quant/Trading,Night 1,"Serena, Matthias",Available,2,🟡 UNCONFIRMED,,Both Don's friends.
+Perella Weinberg,Advisory,Night 1,Ayo,Available,1,🟡 UNCONFIRMED,,Ayo available.
+Insight Investment,AM,Night 1,Ayo,Available,1,🟡 UNCONFIRMED,,Ayo available.
+Bain Capital,PE,Night 1,Joel,Available,1,🟡 UNCONFIRMED,,Joel available.
+RBC AM,AM,Night 2,"Ishaq, Serena",Available,2,🟡 UNCONFIRMED,,Ishaq available. Serena backup.
+Schroders,AM,Night 2,"Danyaal, Mustafa",Available + Not Contacted,1,🟡 UNCONFIRMED,,Danyaal available. Mustafa backup.
+Bloomberg,Tech,Night 1,Matthias,Available,1,🟡 UNCONFIRMED,,Matthias available.
+McKinsey,MBB,Night 2,"Danyaal, Alexander",Available + Not Contacted,1,🟡 UNCONFIRMED,,Danyaal available for Night 2. Need to re-ask.
+Deloitte,Big 4,Night 2,Ishaq,Available,1,🟡 UNCONFIRMED,,Ishaq available. Need to re-ask.
+EY,Big 4,Night 2,"Joel, Ali",Available + Not Contacted,1,🟡 UNCONFIRMED,,Joel available.
+KPMG,Big 4,Night 2,Matthias,Available,1,🟡 UNCONFIRMED,,Matthias available.
+PwC,Big 4,Night 2,Jibril*,Chase,0,⚠️ CHASE,,Chase Jibril.
+OC&C,Consulting,Night 2,Ishaq,Available,1,🟡 UNCONFIRMED,,Ishaq available. Need to re-ask.
+Carlyle,PE,Night 2,Ishaq,Available,1,🟡 UNCONFIRMED,,Ishaq available. Need to re-ask.
+BCG,MBB,Night 2,NOBODY,GAP,0,⚠️ GAP,,Nice to have. Not critical.
+Bain,MBB,Night 2,NOBODY,GAP,0,⚠️ GAP,,Nice to have. Not critical.
+BDO,Mid-Tier,Night 2,Rahama,Not Contacted,0,🟡 OPTIONAL,,Only if Night 2 needs numbers.
+Forvis Mazars,Mid-Tier,Night 2,"Sami, Jason",Not Contacted + Available,1,🟡 OPTIONAL,,Sami is non-target (Aston). Good diversity.
+Marsh,Insurance,Night 2,Alexander,Not Contacted,0,🟡 OPTIONAL,,Only if Night 2 needs numbers.
+Linklaters,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,"April 13-24",SEPARATE: Vac Scheme Conversion Webinar.
+Latham & Watkins,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,"April 13-24",SEPARATE: Vac Scheme Conversion Webinar.
+White & Case,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,"April 13-24",SEPARATE: Vac Scheme Conversion Webinar.
+Herbert Smith Freehills,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,"April 13-24",SEPARATE: Vac Scheme Conversion Webinar.
+Clifford Chance,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,,SEPARATE: Vac Scheme Conversion Webinar.
+Freshfields,Law,Separate Event,Matthias,Available,1,🟡 PARTIAL,,SEPARATE: Matthias did Freshfields. Available for law event.
+Baker McKenzie,Law,Separate Event,NOBODY,GAP,0,🔴 GAP - SOURCE,"April 7-24",SEPARATE: Vac Scheme Conversion Webinar.

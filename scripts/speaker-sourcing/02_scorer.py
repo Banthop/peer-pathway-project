@@ -29,7 +29,7 @@ def score_candidate(candidate):
     gender = candidate.get("gender_signal") or candidate.get("gender") or "unknown"
     has_conversion = candidate.get("has_conversion") or candidate.get("confirmed", False)
     conversion_detail = candidate.get("conversion_detail") or candidate.get("conversion") or ""
-    followers = candidate.get("follower_count", 0)
+    followers = candidate.get("follower_count") or 0
 
     # 1. FIRM GAP COVERAGE (0-30 pts)
     gap_firms_lower = [g.lower() for g in config.GAP_FIRMS]
@@ -84,7 +84,21 @@ def score_candidate(candidate):
         score += 5
         reasons.append(f"NEW SECTOR: {', '.join(new_sectors)}")
 
-    # 7. FOLLOWER COUNT (0-5 pts)
+    # 7. MULTI-FIRM BONUS (0-20 pts) — more spring weeks = fewer speakers needed
+    finance_firms = [f for f in firms if f.lower() not in (
+        "investment banking", "not specified", "not mentioned", ""
+    )]
+    if len(finance_firms) >= 4:
+        score += 20
+        reasons.append(f"MULTI-FIRM ({len(finance_firms)} firms)")
+    elif len(finance_firms) >= 3:
+        score += 15
+        reasons.append(f"MULTI-FIRM ({len(finance_firms)} firms)")
+    elif len(finance_firms) >= 2:
+        score += 8
+        reasons.append(f"TWO FIRMS ({len(finance_firms)})")
+
+    # 8. FOLLOWER COUNT (0-5 pts)
     if followers >= 5000:
         score += 5
         reasons.append(f"HIGH FOLLOWERS: {followers}")
