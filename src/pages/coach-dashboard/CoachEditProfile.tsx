@@ -61,6 +61,9 @@ const defaultForm: ProfileForm = {
 
 const categoryOptions = [
     "Investment Banking", "Consulting", "Law", "UCAT", "Oxbridge", "Software Engineering",
+    "Spring Week", "Summer Internships", "Degree Apprenticeships", "IELTS/TOEFL",
+    "Personal Statements", "Interview Prep", "Assessment Centres", "Networking",
+    "CV/Resume", "Cover Letters", "Career Planning",
 ];
 
 /* ─── Reusable field ────────────────────────────────────────── */
@@ -328,18 +331,62 @@ export default function CoachEditProfile() {
             <div className="max-w-[720px] space-y-4">
                 {/* Basic Info */}
                 <Section title="Basic Info">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Field label="Full Name" value={form.name} onChange={(v) => update("name", v)} placeholder="Sarah K." />
+                    <div className="space-y-4">
+                        {/* Photo upload area */}
                         <div>
-                            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category</label>
-                            <select value={form.category} onChange={(e) => update("category", e.target.value)}
-                                className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20">
-                                {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
-                            </select>
+                            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Profile Photo</label>
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-lg font-bold overflow-hidden flex-shrink-0">
+                                    {form.photo ? (
+                                        <img src={form.photo} alt="preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                                    ) : (
+                                        (form.name || "C").substring(0, 2).toUpperCase()
+                                    )}
+                                </div>
+                                <div className="flex-1">
+                                    <Field label="" value={form.photo} onChange={(v) => update("photo", v)} placeholder="Paste photo URL (or upload coming soon)" />
+                                    <p className="text-[10px] text-muted-foreground mt-1">Paste a URL from Imgur, Cloudinary, or any image host</p>
+                                </div>
+                            </div>
                         </div>
-                        <Field label="Tagline" value={form.tagline} onChange={(v) => update("tagline", v)} placeholder="Short description" className="sm:col-span-2" />
-                        <Field label="Photo URL" value={form.photo} onChange={(v) => update("photo", v)} placeholder="https://..." />
-                        <Field label="Hourly Rate (£)" value={form.hourlyRate} onChange={(v) => update("hourlyRate", v)} placeholder="50" type="number" />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <Field label="Full Name" value={form.name} onChange={(v) => update("name", v)} placeholder="Sarah K." />
+                            <Field label="Hourly Rate (£)" value={form.hourlyRate} onChange={(v) => update("hourlyRate", v)} placeholder="50" type="number" />
+                        </div>
+                        <Field label="Tagline" value={form.tagline} onChange={(v) => update("tagline", v)} placeholder='e.g. "Ex-Goldman Sachs | Spring Week Expert"' />
+
+                        {/* Multi-select category pills */}
+                        <div>
+                            <label className="text-xs font-medium text-muted-foreground mb-2 block">
+                                Categories <span className="text-muted-foreground/60">(select all that apply)</span>
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                {categoryOptions.map((cat) => {
+                                    const skills = form.skills.split(",").map(s => s.trim()).filter(Boolean);
+                                    const active = skills.includes(cat);
+                                    return (
+                                        <button
+                                            key={cat}
+                                            type="button"
+                                            onClick={() => {
+                                                const current = form.skills.split(",").map(s => s.trim()).filter(Boolean);
+                                                const next = active
+                                                    ? current.filter(s => s !== cat)
+                                                    : [...current, cat];
+                                                update("skills", next.join(", "));
+                                            }}
+                                            className={`px-3 py-1.5 rounded-full text-[11px] font-medium border transition-all duration-150 ${
+                                                active
+                                                    ? "bg-foreground text-background border-foreground"
+                                                    : "bg-background text-muted-foreground border-border hover:border-foreground/30"
+                                            }`}
+                                        >
+                                            {cat}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
                     </div>
                 </Section>
 
@@ -359,14 +406,23 @@ export default function CoachEditProfile() {
                 </Section>
 
                 {/* About */}
-                <Section title="About & Skills">
+                <Section title="About">
                     <div className="space-y-4">
                         <div>
-                            <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Bio</label>
-                            <textarea value={form.bio} onChange={(e) => update("bio", e.target.value)} rows={5}
-                                className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:ring-1 focus:ring-foreground/20" />
+                            <div className="flex items-center justify-between mb-1.5">
+                                <label className="text-xs font-medium text-muted-foreground">Bio</label>
+                                <span className={`text-[10px] font-medium ${form.bio.length > 480 ? "text-red-500" : "text-muted-foreground"}`}>
+                                    {form.bio.length}/500
+                                </span>
+                            </div>
+                            <textarea
+                                value={form.bio}
+                                onChange={(e) => update("bio", e.target.value.slice(0, 500))}
+                                rows={5}
+                                placeholder="What makes you the right coach? Share your background, what you achieved, and how you help students..."
+                                className="w-full px-3.5 py-2.5 rounded-lg border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                            />
                         </div>
-                        <Field label="Skills (comma-separated)" value={form.skills} onChange={(v) => update("skills", v)} />
                     </div>
                 </Section>
 

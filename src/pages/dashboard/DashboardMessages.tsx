@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Send, CalendarPlus } from "lucide-react";
+import { Send, CalendarPlus, Search, MessageSquare as MsgIcon } from "lucide-react";
 import { supabase, supabaseAvailable } from "@/integrations/supabase/client";
 import {
   conversations as initialConversations,
@@ -131,17 +131,54 @@ export default function DashboardMessages() {
   );
   const totalPastSessions = coachData ? Math.floor(coachData.sessions / 10) : 0;
 
+  const [convoSearch, setConvoSearch] = useState("");
+  const filteredConvos = mappedConvos.filter((c) =>
+    !convoSearch || c.coach.toLowerCase().includes(convoSearch.toLowerCase())
+  );
+
   return (
     <div className="flex h-[calc(100vh-0px)] -m-0">
       {/* Conversation List */}
       <div className="w-80 border-r border-border bg-background flex flex-col shrink-0">
-        <div className="px-5 pt-6 pb-4">
-          <h2 className="text-lg font-semibold tracking-tight text-foreground">
+        <div className="px-5 pt-6 pb-3">
+          <h2 className="text-lg font-semibold tracking-tight text-foreground mb-3">
             Messages
           </h2>
+          {/* Search */}
+          <div className="flex items-center gap-2 bg-muted rounded-lg px-3 py-2">
+            <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+            <input
+              value={convoSearch}
+              onChange={(e) => setConvoSearch(e.target.value)}
+              placeholder="Search conversations..."
+              className="border-none outline-none bg-transparent text-xs flex-1 text-foreground placeholder:text-muted-foreground"
+            />
+          </div>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {mappedConvos.map((convo) => (
+          {/* Empty state */}
+          {filteredConvos.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full px-6 text-center py-16">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                <MsgIcon className="w-5 h-5 text-muted-foreground" />
+              </div>
+              {convoSearch ? (
+                <p className="text-sm text-muted-foreground">No conversations match "{convoSearch}"</p>
+              ) : (
+                <>
+                  <p className="text-sm font-medium text-foreground mb-1">No messages yet</p>
+                  <p className="text-xs text-muted-foreground mb-4">Message a coach from their profile to get started</p>
+                  <Link
+                    to="/dashboard/browse"
+                    className="text-xs font-semibold gradient-cta text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    Browse coaches
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
+          {filteredConvos.map((convo) => (
             <div
               key={convo.id}
               onClick={() => setActiveConvoId(convo.id)}
@@ -193,114 +230,112 @@ export default function DashboardMessages() {
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col bg-muted/30">
-        {/* Chat Header with session context */}
-        <div className="px-7 py-4 border-b border-border bg-background">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground overflow-hidden">
-                {activeConvo?.avatar?.includes("http") ? <img src={activeConvo.avatar} alt="avatar" className="w-full h-full object-cover" /> : activeConvo?.avatar}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">
-                  {activeConvo?.coach}
-                </p>
-                <p className="text-[11px] text-muted-foreground">
-                  {activeConvo?.credential}
-                  {totalPastSessions > 0 && (
-                    <span>
-                      {" "}
-                      · {totalPastSessions} sessions together
-                    </span>
-                  )}
-                  {coachSessions.length > 0 && (
-                    <span className="text-accent-blue">
-                      {" "}
-                      · Next: {coachSessions[0].date} {coachSessions[0].time}
-                    </span>
-                  )}
-                </p>
-              </div>
+        {/* No conversation selected */}
+        {!activeConvo && (
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <MsgIcon className="w-7 h-7 text-muted-foreground" />
             </div>
-            <div className="flex items-center gap-2">
-              <Link
-                to="/dashboard/bookings"
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium text-foreground hover:bg-muted transition-colors"
-              >
-                <CalendarPlus className="w-3.5 h-3.5" />
-                Schedule session
-              </Link>
-              <Link
-                to={`/coach/${coachData?.id || 1}`}
-                className="px-3.5 py-1.5 bg-background border border-border rounded-md text-xs font-medium text-foreground hover:bg-muted transition-colors"
-              >
-                View profile
-              </Link>
-            </div>
+            <p className="text-base font-semibold text-foreground mb-1">Select a conversation</p>
+            <p className="text-sm text-muted-foreground">Choose a conversation from the left to start messaging</p>
           </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-7 py-6 flex flex-col gap-4">
-          {displayMessages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${msg.sender === "student" ? "justify-end" : "justify-start"
-                }`}
-            >
-              <div className="max-w-[70%]">
-                <div
-                  className={`px-4 py-3 rounded-xl text-[13px] leading-relaxed ${msg.sender === "student"
-                    ? "bg-[#3B82F6] text-white rounded-br-sm"
-                    : "bg-background text-foreground border border-border rounded-bl-sm"
-                    }`}
-                >
-                  {msg.text}
+        )}
+        {/* Chat: header + messages + input — only when a convo is active */}
+        {activeConvo && (
+          <>
+            {/* Header */}
+            <div className="px-7 py-4 border-b border-border bg-background">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-xs font-semibold text-muted-foreground overflow-hidden">
+                    {activeConvo.avatar?.includes("http") ? (
+                      <img src={activeConvo.avatar} alt="avatar" className="w-full h-full object-cover" />
+                    ) : activeConvo.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">{activeConvo.coach}</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {activeConvo.credential}
+                      {totalPastSessions > 0 && <span> · {totalPastSessions} sessions together</span>}
+                      {coachSessions.length > 0 && (
+                        <span className="text-blue-500"> · Next: {coachSessions[0].date} {coachSessions[0].time}</span>
+                      )}
+                    </p>
+                  </div>
                 </div>
-                <p
-                  className={`text-[10px] text-muted-foreground mt-1 px-1 ${msg.sender === "student" ? "text-right" : "text-left"
-                    }`}
-                >
-                  {msg.time}
-                </p>
+                <div className="flex items-center gap-2">
+                  <Link
+                    to="/dashboard/bookings"
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-background border border-border rounded-md text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                  >
+                    <CalendarPlus className="w-3.5 h-3.5" />
+                    Schedule session
+                  </Link>
+                  <Link
+                    to={`/coach/${coachData?.id || 1}`}
+                    className="px-3.5 py-1.5 bg-background border border-border rounded-md text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                  >
+                    View profile
+                  </Link>
+                </div>
               </div>
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
 
-        {/* Input */}
-        <div className="px-7 py-4 border-t border-border bg-background">
-          <div className="flex gap-2.5 items-end">
-            <div className="flex-1 bg-muted rounded-lg px-4 py-3 flex items-center">
-              <input
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                placeholder="Type a message..."
-                className="border-none outline-none bg-transparent text-[13px] flex-1 font-sans text-foreground placeholder:text-muted-foreground"
-              />
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto px-7 py-6 flex flex-col gap-4">
+              {displayMessages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.sender === "student" ? "justify-end" : "justify-start"}`}
+                >
+                  <div className="max-w-[70%]">
+                    <div
+                      className={`px-4 py-3 rounded-xl text-[13px] leading-relaxed ${
+                        msg.sender === "student"
+                          ? "bg-[#3B82F6] text-white rounded-br-sm"
+                          : "bg-background text-foreground border border-border rounded-bl-sm"
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
+                    <p className={`text-[10px] text-muted-foreground mt-1 px-1 ${msg.sender === "student" ? "text-right" : "text-left"}`}>
+                      {msg.time}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
             </div>
-            <button
-              onClick={handleSendMessage}
-              className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-200 shrink-0 ${messageInput.trim()
-                ? "bg-foreground cursor-pointer hover:opacity-90"
-                : "bg-muted cursor-default"
-                }`}
-            >
-              <Send
-                className={`w-4 h-4 ${messageInput.trim()
-                  ? "text-background"
-                  : "text-muted-foreground"
+
+            {/* Input */}
+            <div className="px-7 py-4 border-t border-border bg-background">
+              <div className="flex gap-2.5 items-end">
+                <div className="flex-1 bg-muted rounded-lg px-4 py-3 flex items-center">
+                  <input
+                    value={messageInput}
+                    onChange={(e) => setMessageInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
+                    placeholder="Type a message..."
+                    className="border-none outline-none bg-transparent text-[13px] flex-1 font-sans text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                <button
+                  onClick={handleSendMessage}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors duration-200 shrink-0 ${
+                    messageInput.trim() ? "bg-foreground cursor-pointer hover:opacity-90" : "bg-muted cursor-default"
                   }`}
-              />
-            </button>
-          </div>
-        </div>
+                >
+                  <Send className={`w-4 h-4 ${messageInput.trim() ? "text-background" : "text-muted-foreground"}`} />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

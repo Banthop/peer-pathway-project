@@ -9,6 +9,14 @@ import {
   Copy,
   Check,
   Gift,
+  Search,
+  Users,
+  Briefcase,
+  BookOpen,
+  Target,
+  Globe,
+  FileText,
+  Mic,
 } from "lucide-react";
 import { RescheduleModal } from "@/components/RescheduleModal";
 import {
@@ -146,79 +154,165 @@ function SidebarActivity({ totalSessions, uniqueCoaches, reviewCount }: { totalS
   );
 }
 
+/* ─── Goal Selector ─────────────────────────────────────────── */
+
+const GOALS = [
+  { label: "Spring Weeks",       icon: Briefcase,  skill: "Spring Week",          colour: "pill-indigo" },
+  { label: "Summer Internships", icon: Briefcase,  skill: "Investment Banking",   colour: "pill-blue" },
+  { label: "UCAT Prep",          icon: BookOpen,   skill: "UCAT",                 colour: "pill-emerald" },
+  { label: "Consulting",         icon: Target,     skill: "Consulting",           colour: "pill-violet" },
+  { label: "Oxbridge",           icon: Globe,      skill: "Oxbridge",             colour: "pill-amber" },
+  { label: "Personal Statements",icon: FileText,   skill: "Personal Statements",  colour: "pill-rose" },
+  { label: "Interview Prep",     icon: Mic,        skill: "Interview Prep",       colour: "pill-cyan" },
+  { label: "Tech & Coding",      icon: Search,     skill: "Software Engineering", colour: "pill-indigo" },
+];
+
+/* ─── How It Works ──────────────────────────────────────────── */
+
+const HOW_STEPS = [
+  {
+    icon: Search,
+    title: "Browse coaches",
+    desc: "Find someone who's been exactly where you want to go",
+    colour: "bg-indigo-100 text-indigo-600",
+    cta: { label: "Browse coaches", to: "/dashboard/browse" },
+  },
+  {
+    icon: Calendar,
+    title: "Book a free intro",
+    desc: "15-minute call to see if they're the right fit. No charge, no commitment",
+    colour: "bg-emerald-100 text-emerald-600",
+    cta: null,
+  },
+  {
+    icon: Star,
+    title: "Start coaching",
+    desc: "Book sessions or packages and get personalised help on your goals",
+    colour: "bg-amber-100 text-amber-600",
+    cta: null,
+  },
+];
+
+/* ─── Social Proof Banner ───────────────────────────────────── */
+
+function SocialProofBanner() {
+  const stats = [
+    { value: "500+", label: "students helped" },
+    { value: "1,200+", label: "sessions completed" },
+    { value: "4.9", label: "average rating" },
+    { value: "92%", label: "got their target outcome" },
+  ];
+  return (
+    <div className="bg-gradient-to-r from-indigo-50 via-background to-violet-50 border border-indigo-100 rounded-xl px-5 py-4">
+      <div className="flex flex-wrap gap-6 justify-between">
+        {stats.map((s) => (
+          <div key={s.label} className="text-center">
+            <p className="text-lg font-bold text-foreground">{s.value}</p>
+            <p className="text-[11px] text-muted-foreground">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── New User View ─────────────────────────────────────────── */
 
 function NewUserView() {
   const [hoveredCoach, setHoveredCoach] = useState<string | null>(null);
-  const { data: liveCoaches = [] } = useCoaches({ limit: 4 });
-  const recommendedCoaches = liveCoaches.slice(0, 4);
+  const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
+  const { data: liveCoaches = [] } = useCoaches({ limit: 12 });
+
+  const recommendedCoaches = selectedGoal
+    ? liveCoaches.filter((c) =>
+        c.skills.some((s) =>
+          s.toLowerCase().includes(selectedGoal.toLowerCase())
+        )
+      ).slice(0, 4)
+    : liveCoaches.slice(0, 4);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
       {/* Main column */}
       <div className="space-y-8 min-w-0">
-        {/* Get Started */}
+
+        {/* Goal Selector */}
         <div>
-          <h2 className="text-lg font-semibold tracking-tight text-foreground italic mb-1">
-            Get started
+          <h2 className="text-base font-semibold tracking-tight text-foreground mb-1">
+            What are you working towards?
           </h2>
-          <p className="text-sm text-muted-foreground font-light mb-5">
-            Find your coach, book a free intro, and start getting ahead.
+          <p className="text-sm text-muted-foreground font-light mb-4">
+            Pick a goal and we'll show you coaches who've done it.
           </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Step 1 */}
-            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
-              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
-                1
-              </div>
-              <h3 className="text-sm font-semibold text-foreground mb-1">
-                Browse coaches
-              </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed mb-4 flex-1 font-light">
-                Find someone who's been where you want to go
-              </p>
-              <Link
-                to="/dashboard/browse"
-                className="inline-flex items-center gap-1.5 bg-foreground text-background rounded-lg px-4 py-2 text-xs font-semibold hover:bg-foreground/90 transition-colors self-start"
-              >
-                Browse coaches <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
-              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
-                2
-              </div>
-              <h3 className="text-sm font-semibold text-foreground mb-1">
-                Book a free intro
-              </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1 font-light">
-                15-minute call to see if they're the right fit. No charge
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step">
-              <div className="w-9 h-9 rounded-xl bg-foreground text-background flex items-center justify-center text-sm font-bold mb-4 transition-transform duration-200 group-hover/step:scale-105">
-                3
-              </div>
-              <h3 className="text-sm font-semibold text-foreground mb-1">
-                Start coaching
-              </h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed flex-1 font-light">
-                Book sessions or packages and get personalised help
-              </p>
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {GOALS.map((g) => {
+              const Icon = g.icon;
+              const active = selectedGoal === g.skill;
+              return (
+                <button
+                  key={g.label}
+                  onClick={() => setSelectedGoal(active ? null : g.skill)}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium border transition-all duration-150 ${
+                    active
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-background text-foreground border-border hover:border-foreground/30"
+                  }`}
+                >
+                  <Icon className="w-3 h-3" />
+                  {g.label}
+                </button>
+              );
+            })}
           </div>
         </div>
+
+        {/* How It Works */}
+        <div>
+          <h2 className="text-base font-semibold tracking-tight text-foreground mb-4">
+            How it works
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {HOW_STEPS.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <div
+                  key={i}
+                  className="bg-background border border-border rounded-2xl p-5 flex flex-col transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-foreground/15 group/step"
+                >
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-4 transition-transform duration-200 group-hover/step:scale-105 ${step.colour}`}>
+                    <Icon className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} />
+                  </div>
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
+                    Step {i + 1}
+                  </div>
+                  <h3 className="text-sm font-semibold text-foreground mb-1">
+                    {step.title}
+                  </h3>
+                  <p className="text-[12px] text-muted-foreground leading-relaxed flex-1 font-light">
+                    {step.desc}
+                  </p>
+                  {step.cta && (
+                    <Link
+                      to={step.cta.to}
+                      className="inline-flex items-center gap-1.5 gradient-cta text-white rounded-lg px-4 py-2 text-xs font-semibold hover:opacity-90 transition-opacity self-start mt-4"
+                    >
+                      {step.cta.label} <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Social Proof */}
+        <SocialProofBanner />
 
         {/* Recommended for you */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-base font-semibold tracking-tight text-foreground">
-              Recommended for you
+              {selectedGoal ? `Coaches for ${selectedGoal}` : "Recommended for you"}
             </h2>
             <Link
               to="/dashboard/browse"
@@ -227,16 +321,23 @@ function NewUserView() {
               View all →
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-            {recommendedCoaches.map((coach) => (
-              <CoachCard
-                key={coach.id}
-                coach={coach}
-                hovered={hoveredCoach === coach.id}
-                onHover={setHoveredCoach}
-              />
-            ))}
-          </div>
+          {recommendedCoaches.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No coaches found for that goal yet.{" "}
+              <button onClick={() => setSelectedGoal(null)} className="underline">Clear filter</button>
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              {recommendedCoaches.map((coach) => (
+                <CoachCard
+                  key={coach.id}
+                  coach={coach}
+                  hovered={hoveredCoach === coach.id}
+                  onHover={setHoveredCoach}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Recommended Events */}
@@ -370,6 +471,16 @@ function ActiveUserView() {
   const actTotalSessions = pastBookings.length + upcomingSessions.length;
   const actUniqueCoaches = new Set([...pastBookings, ...upcomingSessions].map((s) => s.coach)).size;
   const actReviewCount = pastBookings.filter((s) => s.reviewed).length;
+  const actHoursCoached = Math.round(
+    [...pastBookings].reduce((_acc, _s) => _acc + 1, 0) * 0.75
+  );
+
+  const quickStats = [
+    { label: "Sessions",      value: actTotalSessions,  icon: Calendar,    bg: "bg-indigo-50",  iconCl: "text-indigo-600" },
+    { label: "Coaches",       value: actUniqueCoaches,  icon: Users,        bg: "bg-violet-50",  iconCl: "text-violet-600" },
+    { label: "Reviews Left",  value: actReviewCount,    icon: Star,         bg: "bg-amber-50",   iconCl: "text-amber-500" },
+    { label: "Hours Coached", value: actHoursCoached,   icon: Clock,        bg: "bg-emerald-50", iconCl: "text-emerald-600" },
+  ];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
@@ -427,6 +538,22 @@ function ActiveUserView() {
             </div>
           </div>
         )}
+
+        {/* Quick Stats Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {quickStats.map((s) => {
+            const Icon = s.icon;
+            return (
+              <div key={s.label} className="bg-background border border-border rounded-xl p-4 flex flex-col gap-2">
+                <div className={`w-8 h-8 rounded-lg ${s.bg} flex items-center justify-center`}>
+                  <Icon className={`w-4 h-4 ${s.iconCl}`} />
+                </div>
+                <p className="text-2xl font-bold tracking-tight text-foreground">{s.value}</p>
+                <p className="text-[11px] text-muted-foreground font-medium">{s.label}</p>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Upcoming */}
         <div>

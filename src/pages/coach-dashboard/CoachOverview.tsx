@@ -327,12 +327,15 @@ export default function CoachOverview() {
 
     const nextSession = stats.upcoming.find((s) => s.isNext);
 
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
     return (
         <div className="w-full px-6 py-8 md:px-10 lg:px-12">
             {/* Header */}
             <div className="mb-8">
                 <h1 className="text-2xl md:text-[26px] font-semibold tracking-tight text-foreground mb-1">
-                    Welcome back, {profile?.user?.name || "Coach"}
+                    {greeting}, {profile?.user?.name?.split(" ")[0] || "Coach"}
                 </h1>
                 <p className="text-sm text-muted-foreground">
                     Here's how your coaching is going
