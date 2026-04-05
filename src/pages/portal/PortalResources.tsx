@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
-import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Copy, Check } from "lucide-react";
+import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Presentation } from "lucide-react";
 
 const GUIDE_LINK = "/portal/cold-email-guide";
 const CHECKLIST_LINK = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
 const TRACKER_LINK = "https://docs.google.com/spreadsheets/d/19ZPYW15MrrZ-0Wnr-yAbthWA5tPMD0QsZl_jU0e4gkE/edit?gid=1156363533#gid=1156363533";
 const FIRMS_LIST_LINK = "https://earlyedge-1758913924.subpage.co/1581-2e5bf708";
 const INTERVIEW_QUESTIONS_LINK = "https://docs.google.com/document/d/1zt-sHu-iNZ7GuR9XwZPtECGoBTA6yhLoY7pFaMpJxf8/edit?tab=t.0";
+const WEBINAR_SLIDES_LINK = "https://drive.google.com/file/d/1GtHhkNGEQqKnE8NCzZn4hCcBvyBPDCYf/view?usp=sharing";
 
 const PHASES = [
   {
@@ -18,13 +19,24 @@ const PHASES = [
       {
         id: "guide",
         title: "The Cold Email Guide 2.0",
-        description: "The complete system Uthman used to land 20 internship offers. Email templates, follow-up sequences, lead generation, and the exact strategies that work.",
+        description: "The complete 50-page written playbook Uthman used to land 20 internship offers. Step-by-step email templates, follow-up sequences, lead generation with Apollo.io, and the exact strategies that work - everything you need to run your own campaign from scratch.",
         icon: BookOpen,
         link: GUIDE_LINK,
         gradient: "from-zinc-800 to-black",
         bundleOnly: true,
         type: "Master Guide",
         actionText: "Access The Vault"
+      },
+      {
+        id: "webinar-slides",
+        title: "The Cold Email Webinar Slides",
+        description: "The slides from our 90-minute live webinar where Uthman walked through his entire cold email system - the frameworks, templates, and sequences behind his 20 internship offers.",
+        icon: Presentation,
+        link: WEBINAR_SLIDES_LINK,
+        gradient: "from-violet-600 to-indigo-900",
+        bundleOnly: false,
+        type: "Free Resource",
+        actionText: "Download Slides"
       }
     ]
   },
@@ -91,13 +103,7 @@ const PHASES = [
 export default function PortalResources() {
   const { buyerStatus } = useBuyerAuth();
   const isBundle = buyerStatus?.isBundle ?? false;
-  const [copied, setCopied] = useState(false);
 
-  const copyPassword = () => {
-    navigator.clipboard.writeText("RedMango");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   // Count exactly how many resources are unlocked vs locked for gamification
   const totalResources = PHASES.reduce((acc, phase) => acc + phase.resources.length, 0);
@@ -241,22 +247,7 @@ export default function PortalResources() {
                           {resource.description}
                         </p>
 
-                        {/* Password hint for the Cold Email Guide */}
-                        {resource.id === "guide" && (
-                          <div className="mb-4 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-center justify-between">
-                            <div>
-                              <p className="text-xs font-medium text-amber-900">Password required</p>
-                              <p className="text-sm font-mono font-bold text-amber-800 mt-0.5">RedMango</p>
-                            </div>
-                            <button
-                              onClick={copyPassword}
-                              className="flex items-center gap-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-medium px-3 py-1.5 rounded-md transition-colors"
-                            >
-                              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                              {copied ? "Copied" : "Copy"}
-                            </button>
-                          </div>
-                        )}
+
 
                         <div className="space-y-2.5 mt-auto">
                           {resource.link.startsWith("/") ? (

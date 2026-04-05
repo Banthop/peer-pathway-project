@@ -55,6 +55,7 @@ import GeneralResources from "./pages/portal/GeneralResources";
 import BookAndrew from "./pages/portal/BookAndrew";
 import BookMohammad from "./pages/portal/BookMohammad";
 import DaWebinar from "./pages/DaWebinar";
+import SpringWeekWebinar from "./pages/SpringWeekWebinar";
 
 const queryClient = new QueryClient();
 
@@ -143,6 +144,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/webinar" element={<Webinar />} />
         <Route path="/da-webinar" element={<DaWebinar />} />
+        <Route path="/spring-week" element={<SpringWeekWebinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
@@ -160,7 +162,7 @@ const AppRoutes = () => {
           <Route path="book-andrew" element={<BookAndrew />} />
           <Route path="book-mohammad" element={<BookMohammad />} />
         </Route>
-        <Route path="*" element={<Navigate to="/webinar" replace />} />
+        <Route path="*" element={<Navigate to="/portal" replace />} />
       </Routes>
     );
   }
@@ -203,6 +205,7 @@ const AppRoutes = () => {
       <Route path="/guarantee" element={<Guarantee />} />
       <Route path="/webinar" element={<Webinar />} />
       <Route path="/da-webinar" element={<DaWebinar />} />
+      <Route path="/spring-week" element={<SpringWeekWebinar />} />
       <Route path="/portal" element={<PortalLayout />}>
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
