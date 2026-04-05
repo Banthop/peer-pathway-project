@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LinkedIn Post Image - EarlyEdge</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .card {
+    width: 1080px;
+    height: 1080px;
+    background: #0A0A0A;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 54px 54px;
+    z-index: 0;
+  }
+
+  /* REJECTED */
+  .rejected-section {
+    position: relative;
+    z-index: 1;
+    padding: 40px 44px 28px;
+  }
+  .rejected-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #EF4444;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rejected-label::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: #EF4444;
+    border-radius: 50%;
+  }
+  .logos-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+  .logo-item {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    padding: 0 12px;
+  }
+  .logo-item img {
+    height: 32px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .logo-item::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: #EF4444;
+    opacity: 0.45;
+    transform: rotate(-8deg);
+  }
+
+  /* DIVIDER */
+  .divider {
+    margin: 0 44px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* PIVOT */
+  .pivot-section {
+    position: relative;
+    z-index: 1;
+    padding: 24px 44px 12px;
+  }
+  .pivot-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #4ADE80;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pivot-label::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: #4ADE80;
+    border-radius: 50%;
+  }
+
+  /* STATS */
+  .stats-section {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 44px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 48px;
+    margin-bottom: 28px;
+  }
+  .stat-number {
+    font-size: 68px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    letter-spacing: -3px;
+  }
+  .stat-number.green { color: #4ADE80; }
+  .stat-label {
+    font-size: 15px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 500;
+    margin-top: 6px;
+  }
+  .tagline {
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .tagline strong { color: #FFFFFF; font-weight: 600; }
+
+  /* BOTTOM */
+  .bottom-bar {
+    position: relative;
+    z-index: 1;
+    padding: 24px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .brand-text {
+    font-size: 22px;
+    color: #FFFFFF;
+  }
+  .brand-text span:first-child { font-weight: 300; }
+  .brand-text span:last-child { font-weight: 700; }
+  .bottom-cta {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="rejected-section">
+    <div class="rejected-label">Rejected by</div>
+    <div class="logos-grid">
+      <div class="logo-item"><img src="https://img.logo.dev/jpmorgan.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="JPMorgan"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/goldmansachs.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Goldman Sachs"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/google.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Google"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/mckinsey.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="McKinsey"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/meta.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Meta"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/morganstanley.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Morgan Stanley"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/janestreet.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Jane Street"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/citadel.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Citadel"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/deloitte.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Deloitte"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/barclays.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Barclays"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/cliffordchance.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Clifford Chance"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/linklaters.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Linklaters"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/hsbc.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="HSBC"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/citi.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Citi"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/db.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Deutsche Bank"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/blackrock.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="BlackRock"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/pwc.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="PwC"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/ey.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="EY"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/ubs.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="UBS"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/bcg.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="BCG"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/bain.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Bain"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/lazard.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Lazard"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/rothschildandco.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Rothschild"></div>
+      <div class="logo-item"><img src="https://img.logo.dev/bankofamerica.com?token=pk_Z3IZl0C_TzO4RqLGSGD5LQ" alt="Bank of America"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="pivot-section">
+    <div class="pivot-label">Then he sent cold emails</div>
+  </div>
+
+  <div class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">1,062</div>
+        <div class="stat-label">emails sent</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">223</div>
+        <div class="stat-label">responses</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number green">21%</div>
+        <div class="stat-label">response rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number green">20</div>
+        <div class="stat-label">internship offers</div>
+      </div>
+    </div>
+    <div class="tagline">
+      <strong>3 weeks. No connections. No referrals.</strong><br>
+      Just cold emails and a system that works.
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="brand-text"><span>Early</span><span>Edge</span></div>
+    <div class="bottom-cta">Free slides in comments</div>
+  </div>
+</div>
+</body>
+</html>

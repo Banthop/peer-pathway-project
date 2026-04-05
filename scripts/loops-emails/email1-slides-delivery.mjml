@@ -1,0 +1,35 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif" padding="0" />
+      <mj-text font-size="15px" line-height="24px" color="#222222" padding="0 0 12px 0" />
+      <mj-button background-color="#111111" color="#ffffff" border-radius="8px" font-size="14px" font-weight="600" inner-padding="13px 28px" padding="4px 0 12px 0" />
+      <mj-section padding="0" />
+      <mj-column padding="0" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ffffff">
+    <mj-section padding="24px 24px 0">
+      <mj-column>
+        <mj-text>Hey,</mj-text>
+        <mj-text>Here are Uthman's slides. 56 pages covering the exact system behind 1,062 emails, 223 responses, and 20 offers in 3 weeks.</mj-text>
+        <mj-button href="{{slidesLink}}">Download the slides (PDF)</mj-button>
+        <mj-text>Quick favour though. Don't just save these and forget about them.</mj-text>
+        <mj-text>I know how it goes. You download something, think "I'll look at this later," and later never comes. Meanwhile someone else is already sending their first batch of emails tonight.</mj-text>
+        <mj-text>The students who actually landed offers from this weren't smarter or more qualified. They just started before they felt ready. Uthman's first email was terrible (slide 23, you'll see). He sent it anyway. That email got a reply.</mj-text>
+        <mj-text>So here's what I'd do: open the PDF right now, skip to Section 2 (the template), and write your first draft tonight. It doesn't need to be perfect. Uthman's wasn't.</mj-text>
+        <mj-text>If you want more help beyond the slides, genuinely, this is the best thing we've made:</mj-text>
+        <mj-text>The full 90-minute recording where Uthman walks through every slide live, shares his screen, shows his actual inbox, and answers questions from students in real time. There are 4 live walkthroughs in the webinar that aren't in the PDF. Those are the bits where it properly clicks.</mj-text>
+        <mj-button href="https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d">Watch the full recording (£10)</mj-button>
+        <mj-text font-size="13px" color="#666666">Want the recording plus the complete written cold email guide? <a href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e" style="color:#111111;font-weight:600;">That's here for £29</a></mj-text>
+        <mj-text padding="12px 0 2px 0">Dylan</mj-text>
+        <mj-text font-size="13px" color="#999999" padding="0"><span style="font-weight:300">Early</span><span style="font-weight:700">Edge</span></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section padding="16px 24px 24px">
+      <mj-column>
+        <mj-text font-size="11px" color="#aaaaaa" align="center" padding="0"><a href="{unsubscribe_link}" style="color:#aaaaaa;text-decoration:underline;">Unsubscribe</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

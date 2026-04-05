@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 /**
- * LinkedIn Comment → Email Automation
- * 
+ * LinkedIn Comment -> Loops Automation
+ *
  * Scrapes emails from LinkedIn post comments via Apify,
- * then sends automated emails via Resend.
- * 
+ * then creates/updates contacts in Loops and fires a "slides_requested" event
+ * so the slides giveaway flow kicks off automatically.
+ *
  * Usage:
  *   node scripts/linkedin-email-automation.mjs
- * 
+ *
  * Env vars (set in .env.local or pass directly):
- *   APIFY_API_TOKEN     — Your Apify API token
- *   RESEND_API_KEY      — Your Resend API key
- *   LINKEDIN_POST_URL   — The LinkedIn post URL to scrape
- *   FROM_EMAIL          — Sender email (must be verified in Resend)
+ *   APIFY_API_TOKEN     - Your Apify API token
+ *   LOOPS_API_KEY       - Your Loops API key
+ *   LINKEDIN_POST_URL   - The LinkedIn post URL to scrape (set per post)
  */
 
 import fs from 'fs';
@@ -22,7 +22,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SENT_LOG_PATH = path.join(__dirname, '..', 'linkedin-sent-emails.json');
 
-// ── Load env from .env.local ──
+// Load env from .env.local
 function loadEnv() {
   try {
     const envPath = path.join(__dirname, '..', '.env.local');
@@ -39,87 +39,132 @@ function loadEnv() {
 loadEnv();
 
 const APIFY_TOKEN = process.env.APIFY_API_TOKEN;
-const RESEND_KEY = process.env.RESEND_API_KEY;
-const POST_URL = process.env.LINKEDIN_POST_URL;
-const FROM_EMAIL = process.env.FROM_EMAIL || 'dylan@yourearlyedge.co.uk';
+const LOOPS_API_KEY = process.env.LOOPS_API_KEY;
+const POST_URL = process.env.LINKEDIN_POST_URL || '';
 
-// ── Email Templates ──
+// Helpers
 
-// 1. LinkedIn comment reply — sent to anyone who drops their email on the post
-const EMAIL_SUBJECT = "wait is this you??";
-const EMAIL_PREVIEW = "I'm not sure if this is you";
+function loadSentEmails() {
+  try {
+    return JSON.parse(fs.readFileSync(SENT_LOG_PATH, 'utf-8'));
+  } catch {
+    return [];
+  }
+}
 
-const EMAIL_HTML = `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!--[if mso]>
-  <style>body,table,td{font-family:Arial,sans-serif !important;}</style>
-  <![endif]-->
-</head>
-<body style="margin:0;padding:0;background-color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
-  <!--[if !mso]><!--><div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">I'm not sure if this is you but someone mentioned you were looking for help with cold email and internships</div><!--<![endif]-->
+function saveSentEmails(emails) {
+  fs.writeFileSync(SENT_LOG_PATH, JSON.stringify(emails, null, 2));
+}
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;">
-    <tr>
-      <td align="center" style="padding:32px 16px;">
-        <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;width:100%;">
+function extractEmails(text) {
+  if (!text) return [];
+  // Match email patterns, including common obfuscation like "name [at] domain [dot] com"
+  const cleaned = text
+    .replace(/\s*\[at\]\s*/gi, '@')
+    .replace(/\s*\(at\)\s*/gi, '@')
+    .replace(/\s*\[dot\]\s*/gi, '.')
+    .replace(/\s*\(dot\)\s*/gi, '.');
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Hey,</td></tr>
+  const regex = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+  return [...new Set(cleaned.match(regex) || [])].map(e => e.toLowerCase());
+}
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Did that subject line make you open this? Good.</td></tr>
+// Apify: Scrape LinkedIn post comments
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">That's exactly what cold emailing is - getting a complete stranger to stop what they're doing and pay attention to you.</td></tr>
+async function scrapeComments(postUrl) {
+  console.log('Scraping LinkedIn comments via Apify...');
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">Our coach Uthman mastered it. No connections. No crazy CV. Just 1,000 cold emails, a 21% response rate, and 20+ internship offers in 3 weeks.</td></tr>
+  // apimaestro actor: free, 350k+ runs, 4.9 stars - no rental required
+  const actorId = 'apimaestro~linkedin-post-comments-replies-engagements-scraper-no-cookies';
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 12px 0;">On <strong>28th March at 7pm GMT</strong>, he's going live for 90 minutes to show you everything:</td></tr>
+  // Extract the numeric post ID from the LinkedIn URL
+  // e.g. activity-7439383011457953792-by3I -> 7439383011457953792
+  const postIdMatch = postUrl.match(/activity[-:](\d+)/);
+  if (!postIdMatch) {
+    throw new Error(`Could not extract post ID from URL: ${postUrl}`);
+  }
+  const postId = postIdMatch[1];
+  console.log(`  Post ID: ${postId}`);
 
-          <tr>
-            <td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 20px;">
-              &#8226; How he found the right people to email using Apollo.io<br>
-              &#8226; The exact template behind his 21% response rate<br>
-              &#8226; How he sent 50+ emails a day without them looking automated<br>
-              &#8226; How he turned replies into ACTUAL offers
-            </td>
-          </tr>
+  const runUrl = `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=600`;
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 20px 0;">If you're looking for internships in finance, tech, consulting, or law and you've got nothing lined up - this is for you.</td></tr>
+  const response = await fetch(runUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      postIds: [postId],
+      maxComments: 5000,
+      includeReplies: true,
+    }),
+  });
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 8px 0;">Spots are limited.</td></tr>
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Apify request failed (${response.status}): ${errorText}`);
+  }
 
-          <tr>
-            <td style="padding:0 0 24px 0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="background-color:#111111;border-radius:8px;">
-                    <a href="https://webinar.yourearlyedge.co.uk/webinar" style="display:inline-block;background-color:#111111;color:#ffffff;text-decoration:none;padding:13px 28px;border-radius:8px;font-size:14px;font-weight:600;">Save your spot</a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
+  const data = await response.json();
+  console.log(`  Found ${data.length} item(s) from Apify`);
+  return data;
+}
 
-          <tr><td style="font-size:14px;line-height:25px;color:#888888;font-style:italic;padding:0 0 28px 0;">Can't make it on the night? A recording is included.</td></tr>
+// Loops: Create or update a contact with tag "linkedin_slides_lead"
 
-          <tr><td style="font-size:15px;line-height:27px;color:#222222;padding:0 0 6px 0;">See you there</td></tr>
-          <tr><td style="font-size:15px;color:#222222;padding:0 0 2px 0;">Dylan</td></tr>
-          <tr><td style="font-size:13px;color:#999999;padding:0;letter-spacing:-0.3px;"><span style="font-weight:300;">Early</span><span style="font-weight:700;">Edge</span></td></tr>
+async function createLoopsContact(email) {
+  const response = await fetch('https://app.loops.so/api/v1/contacts/create', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${LOOPS_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      source: 'linkedin_slides_post',
+      userGroup: 'linkedin_slides_lead',
+    }),
+  });
 
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-`;
+  const result = await response.json();
 
+  // 409 means contact already exists - that's fine, we'll still fire the event
+  if (!response.ok && response.status !== 409) {
+    throw new Error(`Loops contact creation error for ${email}: ${JSON.stringify(result)}`);
+  }
 
+  return result;
+}
 
-// 2. Booking confirmation — call this from your Supabase Edge Function / webhook
-// Usage: sendBookingConfirmation({ studentName, coachName, coachCredential, sessionType, date, time, meetingLink, price })
+// Loops: Fire "slides_requested" event to trigger the giveaway flow
+
+async function fireLoopsEvent(email) {
+  const response = await fetch('https://app.loops.so/api/v1/events/send', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${LOOPS_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      eventName: 'slides_requested',
+    }),
+  });
+
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(`Loops event error for ${email}: ${JSON.stringify(result)}`);
+  }
+
+  return result;
+}
+
+// Process a single new email: create contact then fire event
+
+async function processEmail(email) {
+  await createLoopsContact(email);
+  await fireLoopsEvent(email);
+}
+
+// Booking confirmation HTML export (kept for Supabase edge function usage)
 export function bookingConfirmationHtml({ studentName, coachName, coachCredential, sessionType, date, time, meetingLink, price }) {
   const isIntro = price === 0 || sessionType === 'intro';
   return `
@@ -130,7 +175,7 @@ export function bookingConfirmationHtml({ studentName, coachName, coachCredentia
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 0;">
     <tr><td align="center">
       <table width="520" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;">
-        
+
         <!-- Header -->
         <tr>
           <td style="background:#111111;padding:28px 36px;">
@@ -143,14 +188,14 @@ export function bookingConfirmationHtml({ studentName, coachName, coachCredentia
         <!-- Confirmation Banner -->
         <tr>
           <td style="background:#f0fdf4;border-bottom:1px solid #d1fae5;padding:20px 36px;">
-            <p style="margin:0;font-size:13px;font-weight:600;color:#059669;letter-spacing:0.05em;text-transform:uppercase;">✓ Booking Confirmed</p>
+            <p style="margin:0;font-size:13px;font-weight:600;color:#059669;letter-spacing:0.05em;text-transform:uppercase;">Booking Confirmed</p>
           </td>
         </tr>
 
         <!-- Body -->
         <tr>
           <td style="padding:36px;color:#111;">
-            <p style="font-size:16px;line-height:1.5;margin:0 0 8px;">Hey ${studentName || 'there'} 👋</p>
+            <p style="font-size:16px;line-height:1.5;margin:0 0 8px;">Hey ${studentName || 'there'}</p>
             <p style="font-size:15px;line-height:1.6;color:#444;margin:0 0 28px;">
               Your ${isIntro ? 'free intro call' : sessionType} with <strong>${coachName}</strong> is confirmed.
             </p>
@@ -197,7 +242,7 @@ export function bookingConfirmationHtml({ studentName, coachName, coachCredentia
                 <td align="center">
                   <a href="${meetingLink}"
                      style="display:inline-block;background:#111111;color:#ffffff;text-decoration:none;padding:14px 32px;border-radius:8px;font-size:14px;font-weight:600;">
-                    Join the call →
+                    Join the call
                   </a>
                 </td>
               </tr>
@@ -228,127 +273,36 @@ export function bookingConfirmationHtml({ studentName, coachName, coachCredentia
 `;
 }
 
-export const BOOKING_CONFIRMATION_SUBJECT = (coachName) => `Your session with ${coachName} is confirmed ✓`;
+export const BOOKING_CONFIRMATION_SUBJECT = (coachName) => `Your session with ${coachName} is confirmed`;
 
-// ── Helpers ──
-
-function loadSentEmails() {
-  try {
-    return JSON.parse(fs.readFileSync(SENT_LOG_PATH, 'utf-8'));
-  } catch {
-    return [];
-  }
-}
-
-function saveSentEmails(emails) {
-  fs.writeFileSync(SENT_LOG_PATH, JSON.stringify(emails, null, 2));
-}
-
-function extractEmails(text) {
-  if (!text) return [];
-  // Match email patterns, including common obfuscation like "name [at] domain [dot] com"
-  const cleaned = text
-    .replace(/\s*\[at\]\s*/gi, '@')
-    .replace(/\s*\(at\)\s*/gi, '@')
-    .replace(/\s*\[dot\]\s*/gi, '.')
-    .replace(/\s*\(dot\)\s*/gi, '.');
-
-  const regex = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
-  return [...new Set(cleaned.match(regex) || [])].map(e => e.toLowerCase());
-}
-
-// ── Apify: Scrape LinkedIn post comments ──
-
-async function scrapeComments(postUrl) {
-  console.log('📡 Scraping LinkedIn comments via Apify...');
-
-  // apimaestro actor: free, 350k+ runs, 4.9 stars — no rental required
-  const actorId = 'apimaestro~linkedin-post-comments-replies-engagements-scraper-no-cookies';
-
-  // Extract the numeric post ID from the LinkedIn URL
-  // e.g. activity-7439383011457953792-by3I → 7439383011457953792 or activity:744149...
-  const postIdMatch = postUrl.match(/activity[-:](\d+)/);
-  if (!postIdMatch) {
-    throw new Error(`Could not extract post ID from URL: ${postUrl}`);
-  }
-  const postId = postIdMatch[1];
-  console.log(`  Post ID: ${postId}`);
-
-  const runUrl = `https://api.apify.com/v2/acts/${actorId}/run-sync-get-dataset-items?token=${APIFY_TOKEN}&timeout=600`;
-
-  const response = await fetch(runUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      postIds: [postId],
-      maxComments: 5000,
-      includeReplies: true,
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Apify request failed (${response.status}): ${errorText}`);
-  }
-
-  const data = await response.json();
-  console.log(`  ✅ Found ${data.length} item(s) from Apify`);
-  return data;
-}
-
-// ── Resend: Send email ──
-
-async function sendEmail(toEmail) {
-  const response = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${RESEND_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from: FROM_EMAIL,
-      to: [toEmail],
-      subject: EMAIL_SUBJECT,
-      html: EMAIL_HTML,
-    }),
-  });
-
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(`Resend error for ${toEmail}: ${JSON.stringify(result)}`);
-  }
-  return result;
-}
-
-// ── Main ──
+// Main
 
 async function main() {
-  console.log('\n🚀 LinkedIn Comment → Email Automation\n');
+  console.log('\nLinkedIn Comment -> Loops Automation\n');
 
   // Validate config
   if (!APIFY_TOKEN) {
-    console.error('❌ Missing APIFY_API_TOKEN. Set it in .env.local');
+    console.error('Missing APIFY_API_TOKEN. Set it in .env.local');
     process.exit(1);
   }
-  if (!RESEND_KEY) {
-    console.error('❌ Missing RESEND_API_KEY. Set it in .env.local');
+  if (!LOOPS_API_KEY) {
+    console.error('Missing LOOPS_API_KEY. Set it in .env.local');
     process.exit(1);
   }
   if (!POST_URL) {
-    console.error('❌ Missing LINKEDIN_POST_URL. Set it in .env.local');
+    console.error('Missing LINKEDIN_POST_URL. Set it in .env.local for the specific post you are processing.');
     process.exit(1);
   }
 
-  console.log(`📋 Post: ${POST_URL}`);
-  console.log(`📨 From: ${FROM_EMAIL}\n`);
+  console.log(`Post: ${POST_URL}\n`);
 
   // Step 1: Scrape comments
   let comments;
   try {
     comments = await scrapeComments(POST_URL);
   } catch (err) {
-    console.error('❌ Failed to scrape comments:', err.message);
-    console.log('\n💡 Tip: Make sure your Apify API token is valid.');
+    console.error('Failed to scrape comments:', err.message);
+    console.log('\nTip: Make sure your Apify API token is valid.');
     console.log('   Get one at: https://console.apify.com/account/integrations');
     console.log('   You may also need to try a different LinkedIn comment scraper actor.');
     process.exit(1);
@@ -363,56 +317,56 @@ async function main() {
     found.forEach(e => allEmails.add(e));
   }
 
-  console.log(`\n📧 Found ${allEmails.size} unique email(s) in comments`);
+  console.log(`Found ${allEmails.size} unique email(s) in comments`);
 
   if (allEmails.size === 0) {
     console.log('   No emails found. People may not have commented their emails yet.');
     return;
   }
 
-  // Step 3: Filter out already-sent
+  // Step 3: Filter out already-processed
   const sentEmails = loadSentEmails();
   const sentSet = new Set(sentEmails);
   const newEmails = [...allEmails].filter(e => !sentSet.has(e));
 
-  console.log(`   Already sent: ${sentEmails.length}`);
-  console.log(`   New to send:  ${newEmails.length}\n`);
+  console.log(`   Already processed: ${sentEmails.length}`);
+  console.log(`   New to process:    ${newEmails.length}\n`);
 
   if (newEmails.length === 0) {
-    console.log('✅ All caught up! No new emails to send.');
+    console.log('All caught up! No new emails to process.');
     return;
   }
 
-  // Step 4: Send emails via Resend
-  let sent = 0;
+  // Step 4: Create Loops contact + fire slides_requested event
+  let processed = 0;
   let failed = 0;
 
   for (const email of newEmails) {
     try {
-      await sendEmail(email);
+      await processEmail(email);
       sentEmails.push(email);
-      sent++;
-      console.log(`   ✅ Sent to ${email}`);
+      processed++;
+      console.log(`   Processed: ${email}`);
 
-      // Small delay to avoid rate limits
-      await new Promise(r => setTimeout(r, 500));
+      // Small delay to respect Loops rate limits
+      await new Promise(r => setTimeout(r, 300));
     } catch (err) {
       failed++;
-      console.log(`   ❌ Failed: ${email} — ${err.message}`);
+      console.log(`   Failed: ${email} - ${err.message}`);
     }
   }
 
-  // Save updated sent list
+  // Save updated log
   saveSentEmails(sentEmails);
 
-  console.log(`\n📊 Results:`);
-  console.log(`   Sent:   ${sent}`);
-  console.log(`   Failed: ${failed}`);
-  console.log(`   Total sent all-time: ${sentEmails.length}`);
-  console.log(`\n✅ Done! Run again later to catch new comments.\n`);
+  console.log(`\nResults:`);
+  console.log(`   Processed: ${processed}`);
+  console.log(`   Failed:    ${failed}`);
+  console.log(`   Total processed all-time: ${sentEmails.length}`);
+  console.log(`\nDone! Run again later to catch new comments.\n`);
 }
 
 main().catch(err => {
-  console.error('💥 Unexpected error:', err);
+  console.error('Unexpected error:', err);
   process.exit(1);
 });

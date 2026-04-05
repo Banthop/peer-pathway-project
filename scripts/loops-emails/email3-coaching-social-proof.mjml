@@ -1,0 +1,28 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif" />
+      <mj-text font-size="15px" line-height="27px" color="#222222" />
+      <mj-button background-color="#111111" color="#ffffff" border-radius="8px" font-size="14px" font-weight="600" inner-padding="13px 28px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ffffff">
+    <mj-section>
+      <mj-column>
+        <mj-text>Hey,</mj-text>
+        <mj-text>A couple of things students said after working directly with Uthman:</mj-text>
+        <mj-text padding-left="16px" border-left="3px solid #111111" font-style="italic">"Fixed my subject lines and got 3 replies in the first week."<br/><span style="font-size:13px;color:#888888;font-style:normal;">Priya, LSE</span></mj-text>
+        <mj-text padding-left="16px" border-left="3px solid #111111" font-style="italic">"Had my call on Monday, fixed my templates the same day."<br/><span style="font-size:13px;color:#888888;font-style:normal;">Jake, Warwick</span></mj-text>
+        <mj-text>You can book a 1-on-1 session with Uthman directly: 30 minutes for 35, or 60 minutes for 59. He'll look at your actual emails, your target list, your reply handling, and tell you exactly what to change.</mj-text>
+        <mj-button href="https://cal.com/uthm4n">Book a session with Uthman</mj-button>
+        <mj-text>Dylan</mj-text>
+        <mj-text font-size="13px" color="#999999"><span style="font-weight:300">Early</span><span style="font-weight:700">Edge</span></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="11px" color="#aaaaaa" align="center"><a href="{unsubscribe_link}" style="color:#aaaaaa;text-decoration:underline;">Unsubscribe</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

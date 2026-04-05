@@ -1,0 +1,27 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif" />
+      <mj-text font-size="15px" line-height="27px" color="#222222" />
+      <mj-button background-color="#111111" color="#ffffff" border-radius="8px" font-size="14px" font-weight="600" inner-padding="13px 28px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ffffff">
+    <mj-section>
+      <mj-column>
+        <mj-text>Hey,</mj-text>
+        <mj-text>The slides show you <em>what</em> Uthman did. But they can't show you <em>why</em> it works, how he handled the replies, or what he actually said to turn a "tell me more" into an offer.</mj-text>
+        <mj-text>That's in the recording. 90 minutes, live walkthrough, nothing held back.</mj-text>
+        <mj-text>It's 10 pounds if you want it.</mj-text>
+        <mj-button href="https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d">Get the recording</mj-button>
+        <mj-text>Dylan</mj-text>
+        <mj-text font-size="13px" color="#999999"><span style="font-weight:300">Early</span><span style="font-weight:700">Edge</span></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="11px" color="#aaaaaa" align="center"><a href="{unsubscribe_link}" style="color:#aaaaaa;text-decoration:underline;">Unsubscribe</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

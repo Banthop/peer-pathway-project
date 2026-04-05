@@ -1,0 +1,29 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif" />
+      <mj-text font-size="15px" line-height="27px" color="#222222" />
+      <mj-button background-color="#111111" color="#ffffff" border-radius="8px" font-size="14px" font-weight="600" inner-padding="13px 28px" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#ffffff">
+    <mj-section>
+      <mj-column>
+        <mj-text>Hey,</mj-text>
+        <mj-text>Last one, I promise.</mj-text>
+        <mj-text>Internship season is moving fast. The students who get offers aren't necessarily the best on paper, they're the ones who started earlier and followed up more.</mj-text>
+        <mj-text>If you want the full recording and guide together, it's 29 for both. If you want Uthman to look at your specific emails and fix them with you, that's at the link below.</mj-text>
+        <mj-text>Either way, the slides are yours. Hope they're useful.</mj-text>
+        <mj-button href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e">Get recording + guide</mj-button>
+        <mj-text><a href="https://cal.com/uthm4n" style="font-size:14px;color:#555555;text-decoration:underline;">Or book 1-on-1 coaching with Uthman</a></mj-text>
+        <mj-text>Dylan</mj-text>
+        <mj-text font-size="13px" color="#999999"><span style="font-weight:300">Early</span><span style="font-weight:700">Edge</span></mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text font-size="11px" color="#aaaaaa" align="center"><a href="{unsubscribe_link}" style="color:#aaaaaa;text-decoration:underline;">Unsubscribe</a></mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

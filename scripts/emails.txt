@@ -1,0 +1,3 @@
+# Paste emails from LinkedIn comments here, one per line
+# Lines starting with # are ignored
+# Run: node scripts/slides-email-sender.mjs

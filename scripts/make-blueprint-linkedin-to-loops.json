@@ -1,0 +1,144 @@
+{
+  "name": "LinkedIn Slides Giveaway: Comment Email to Loops",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": 0,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {
+          "parameters": {
+            "hook": { "label": "LinkedIn Comment Webhook" }
+          }
+        },
+        "expect": [
+          { "name": "email", "type": "text", "label": "Email from comment" },
+          { "name": "name", "type": "text", "label": "Commenter name" },
+          { "name": "comment", "type": "text", "label": "Full comment text" }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "regexp:Parser",
+      "version": 1,
+      "parameters": {
+        "pattern": "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}",
+        "global": false,
+        "sensitive": false,
+        "multiline": false,
+        "singleline": false
+      },
+      "mapper": {
+        "text": "{{1.comment}}"
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 },
+        "restore": {},
+        "expect": [
+          { "name": "text", "type": "text", "label": "Comment text to parse" }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "builtin:BasicFilter",
+      "version": 1,
+      "parameters": {
+        "condition": "{{2.`0`}}",
+        "operator": "exist"
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": { "x": 500, "y": 0 },
+        "restore": {}
+      }
+    },
+    {
+      "id": 4,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {
+        "handleErrors": true,
+        "useNewZLibDeCompress": true
+      },
+      "mapper": {
+        "url": "https://app.loops.so/api/v1/contacts/create",
+        "serializeUrl": false,
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer PASTE_YOUR_LOOPS_API_KEY_HERE"
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "qs": [],
+        "body": "{\"email\": \"{{2.`0`}}\", \"source\": \"linkedin_slides_post\", \"userGroup\": \"linkedin_slides_lead\"}",
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "parseResponse": true,
+        "timeout": 30,
+        "shareCookies": false,
+        "ca": "",
+        "rejectUnauthorized": true,
+        "followRedirect": true,
+        "useQuerystring": false,
+        "followAllRedirects": false
+      },
+      "metadata": {
+        "designer": { "x": 700, "y": 0 },
+        "restore": {}
+      }
+    },
+    {
+      "id": 5,
+      "module": "http:ActionSendData",
+      "version": 3,
+      "parameters": {
+        "handleErrors": true,
+        "useNewZLibDeCompress": true
+      },
+      "mapper": {
+        "url": "https://app.loops.so/api/v1/events/send",
+        "serializeUrl": false,
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer PASTE_YOUR_LOOPS_API_KEY_HERE"
+          },
+          {
+            "name": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "qs": [],
+        "body": "{\"email\": \"{{2.`0`}}\", \"eventName\": \"slides_requested\"}",
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "parseResponse": true,
+        "timeout": 30,
+        "shareCookies": false,
+        "ca": "",
+        "rejectUnauthorized": true,
+        "followRedirect": true,
+        "useQuerystring": false,
+        "followAllRedirects": false
+      },
+      "metadata": {
+        "designer": { "x": 1000, "y": 0 },
+        "restore": {}
+      }
+    }
+  ]
+}

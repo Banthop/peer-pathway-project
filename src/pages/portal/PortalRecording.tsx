@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check } from "lucide-react";
+import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check, Lock, ShieldCheck } from "lucide-react";
+
+const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
+const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
 
 /* ─── Chapter data ─── */
 interface Chapter {
@@ -51,6 +54,128 @@ function loadProgress(): WatchProgress {
 
 function saveProgress(progress: WatchProgress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...progress, lastUpdated: new Date().toISOString() }));
+}
+
+/* ─── Paywall overlay shown to non-buyers ─── */
+function PaywallOverlay() {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-4 py-6">
+      {/* Social proof bar */}
+      <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-5 text-center">
+        <p className="text-[11px] text-white/90 font-semibold tracking-wide">
+          150+ students have watched this. LSE, Warwick, UCL, Bristol, Imperial.
+        </p>
+      </div>
+
+      {/* Main paywall card */}
+      <div className="w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/50">
+        <h2 className="text-[17px] font-bold text-[#111] text-center mb-1 leading-tight">
+          This recording is locked
+        </h2>
+        <p className="text-[12px] text-[#666] text-center mb-5 leading-relaxed">
+          Unlock the full system Uthman used to land internships at lean firms nobody else applies to.
+        </p>
+
+        {/* Curiosity-gap chapter preview */}
+        <div className="bg-[#F8F8F8] border border-[#E8E8E8] rounded-xl p-3 mb-5">
+          <p className="text-[10px] font-bold text-[#999] uppercase tracking-widest mb-2">What you unlock</p>
+          <ul className="space-y-1.5">
+            {[
+              "The 5-part template that gets replies",
+              "Step-by-step Mail Merge setup and the 9:03 AM rule",
+              "What to do when someone actually replies",
+              "How to find verified emails for MDs and CEOs",
+              "The follow-up sequence that doubles your hit rate",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2">
+                <Check className="w-3 h-3 text-emerald-500 flex-shrink-0 mt-0.5" strokeWidth={3} />
+                <span className="text-[11px] text-[#444] leading-snug">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Loss aversion + anchor */}
+        <p className="text-[11px] text-[#555] text-center leading-relaxed mb-1">
+          Every week you wait is a week of internship applications going to someone else.
+        </p>
+        <p className="text-[11px] text-[#888] text-center leading-relaxed mb-4">
+          Professional career coaching costs £150-300/hr. This entire system is <span className="font-bold text-[#111]">£10</span>.
+        </p>
+
+        {/* CTAs */}
+        <a
+          href={STRIPE_RECORDING_URL}
+          className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3 rounded-xl mb-2 hover:bg-[#333] transition-colors shadow-md"
+        >
+          Unlock the Full Recording - £10
+        </a>
+        <a
+          href={STRIPE_BUNDLE_URL}
+          className="block w-full border border-[#CCC] text-[#111] text-center text-[13px] font-semibold py-3 rounded-xl hover:bg-[#F5F5F5] transition-colors"
+        >
+          Get Recording + Cold Email Guide - £29
+        </a>
+
+        {/* Guarantee */}
+        <div className="flex items-center justify-center gap-1.5 mt-3">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+          <p className="text-[10px] text-[#999]">
+            Not useful? Email us within 24 hours for a full refund.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Locked chapter row for non-buyers ─── */
+interface LockedChapterRowProps {
+  chapter: Chapter;
+  idx: number;
+  isFirst: boolean;
+}
+
+function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
+  return (
+    <div
+      className={`w-full text-left p-3 mb-1 rounded-xl ${
+        isFirst ? "bg-emerald-50 ring-1 ring-emerald-200" : "opacity-50"
+      }`}
+    >
+      <div className="flex items-start gap-3">
+        <div className="mt-1 flex-shrink-0">
+          {isFirst ? (
+            <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-white">
+              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full" />
+            </div>
+          ) : (
+            <div className="w-6 h-6 rounded-full border border-[#D0D0D0] flex items-center justify-center bg-[#F0F0F0]">
+              <Lock className="w-3 h-3 text-[#AAA]" />
+            </div>
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className={`text-[13px] font-bold truncate ${isFirst ? "text-emerald-900" : "text-[#555]"}`}>
+            {chapter.title}
+          </p>
+          <p className={`text-[11px] mt-0.5 leading-snug ${isFirst ? "text-emerald-700/80" : "text-[#888]"}`}>
+            {chapter.description}
+          </p>
+          {isFirst && (
+            <div className="inline-flex items-center gap-1.5 mt-2 bg-emerald-100/50 text-emerald-700 border border-emerald-200/50 px-2 py-0.5 rounded-full">
+              <span className="text-[9px] font-bold uppercase tracking-wider">FREE PREVIEW</span>
+            </div>
+          )}
+        </div>
+        {!isFirst && (
+          <div className="text-[10px] text-[#BBB] font-mono font-medium pt-1 flex-shrink-0">
+            {chapter.duration}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export default function PortalRecording() {
@@ -133,6 +258,10 @@ export default function PortalRecording() {
     setResumed(true);
   }, [progress.lastTime, seekTo]);
 
+  const isBuyer = buyerStatus?.isBuyer ?? false;
+  // While buyerStatus is null (loading), treat as not-yet-known - show nothing extra
+  const isLoading = buyerStatus === null;
+
   const vimeoUrl = `https://player.vimeo.com/video/${VIMEO_VIDEO_ID}?api=1&player_id=vimeo-player&title=0&byline=0&portrait=0&texttrack=en&color=10b981`;
   const completedCount = progress.chaptersWatched.length;
   const progressPercent = Math.round((completedCount / CHAPTERS.length) * 100);
@@ -186,8 +315,8 @@ export default function PortalRecording() {
         </div>
       </div>
 
-      {/* Resume banner */}
-      {progress.lastTime > 30 && !resumed && (
+      {/* Resume banner - buyers only */}
+      {isBuyer && progress.lastTime > 30 && !resumed && (
         <div className="px-6 md:px-10 lg:px-12 mt-6">
           <button
             onClick={handleResume}
@@ -231,20 +360,39 @@ export default function PortalRecording() {
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   allowFullScreen
                 />
+
+                {/* Non-buyer gate: gradient blur overlay + paywall card */}
+                {!isLoading && !isBuyer && (
+                  <div className="absolute inset-0 z-10 pointer-events-auto">
+                    {/* Gradient blur: clear at top, fully blurred by ~30% down */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backdropFilter: "blur(12px)",
+                        WebkitBackdropFilter: "blur(12px)",
+                        maskImage: "linear-gradient(to bottom, transparent 0%, black 28%)",
+                        WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 28%)",
+                        background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 30%)",
+                      }}
+                    />
+                    <PaywallOverlay />
+                  </div>
+                )}
               </div>
               
-              <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4 px-2 mb-2">
-                <div>
-                  <h3 className="text-white font-semibold text-lg flex items-center gap-2">
-                    {isPlaying && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
-                    {CHAPTERS.find((c) => c.id === activeChapter)?.title || "Loading..."}
-                  </h3>
-                  <p className="text-[#888] text-sm mt-0.5">
-                    {CHAPTERS.find((c) => c.id === activeChapter)?.description}
-                  </p>
+              {isBuyer && (
+                <div className="mt-4 flex flex-col md:flex-row md:items-center justify-between gap-4 px-2 mb-2">
+                  <div>
+                    <h3 className="text-white font-semibold text-lg flex items-center gap-2">
+                      {isPlaying && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />}
+                      {CHAPTERS.find((c) => c.id === activeChapter)?.title || "Loading..."}
+                    </h3>
+                    <p className="text-[#888] text-sm mt-0.5">
+                      {CHAPTERS.find((c) => c.id === activeChapter)?.description}
+                    </p>
+                  </div>
                 </div>
-                
-              </div>
+              )}
             </div>
 
             {/* ════════ THE "STUCK?" UPSELL LOOP ════════ */}
@@ -282,79 +430,117 @@ export default function PortalRecording() {
                     Steps
                   </h2>
                   <p className="text-[11px] text-[#AAA] mt-0.5 font-light">
-                    Finish modules to unlock your blueprint
+                    {isBuyer ? "Finish modules to unlock your blueprint" : "Unlock to access all modules"}
                   </p>
                 </div>
-                <div className="bg-white/10 text-emerald-400 text-[11px] font-bold px-2 py-1.5 rounded-md shadow-inner">
-                  {completedCount}/{CHAPTERS.length} Done
-                </div>
+                {isBuyer ? (
+                  <div className="bg-white/10 text-emerald-400 text-[11px] font-bold px-2 py-1.5 rounded-md shadow-inner">
+                    {completedCount}/{CHAPTERS.length} Done
+                  </div>
+                ) : (
+                  <div className="bg-white/10 text-[#AAA] text-[11px] font-bold px-2 py-1.5 rounded-md shadow-inner flex items-center gap-1">
+                    <Lock className="w-3 h-3" />
+                    Locked
+                  </div>
+                )}
               </div>
 
               <div className="max-h-[600px] overflow-y-auto overflow-x-hidden bg-white p-2">
-                {CHAPTERS.map((chapter, idx) => {
-                  const isActive = activeChapter === chapter.id;
-                  const isWatched = progress.chaptersWatched.includes(chapter.id);
-
-                  return (
-                    <button
+                {!isBuyer ? (
+                  /* Non-buyer: show first chapter unlocked, rest locked */
+                  CHAPTERS.map((chapter, idx) => (
+                    <LockedChapterRow
                       key={chapter.id}
-                      onClick={() => seekTo(chapter.startSeconds)}
-                      className={`w-full text-left p-3 mb-1 rounded-xl transition-all ${
-                        isActive 
-                          ? "bg-emerald-50 ring-1 ring-emerald-200 pointer-events-none" 
-                          : "hover:bg-[#F8F8F8] cursor-pointer"
-                      }`}
-                    >
-                      <div className="flex items-start gap-3">
-                        {/* Status Icon Indicator */}
-                        <div className="mt-1 flex-shrink-0">
-                          {isWatched ? (
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">
-                              <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
-                            </div>
-                          ) : isActive ? (
-                            <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-white shadow-inner">
-                              <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
-                            </div>
-                          ) : (
-                            <div className="w-6 h-6 rounded-full border border-[#E0E0E0] flex items-center justify-center bg-[#F5F5F5]">
-                              <span className="text-[10px] font-bold text-[#999]">{idx + 1}</span>
-                            </div>
-                          )}
-                        </div>
+                      chapter={chapter}
+                      idx={idx}
+                      isFirst={idx === 0}
+                    />
+                  ))
+                ) : (
+                  /* Buyer: full interactive chapter list */
+                  CHAPTERS.map((chapter, idx) => {
+                    const isActive = activeChapter === chapter.id;
+                    const isWatched = progress.chaptersWatched.includes(chapter.id);
 
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-[13px] font-bold truncate ${
-                            isActive ? "text-emerald-900" : isWatched ? "text-[#111]" : "text-[#555]"
-                          }`}>
-                            {chapter.title}
-                          </p>
-                          <p className={`text-[11px] mt-0.5 leading-snug ${
-                            isActive ? "text-emerald-700/80" : "text-[#888]"
-                          }`}>
-                            {chapter.description}
-                          </p>
-                          {isActive && (
-                            <div className="inline-flex items-center gap-1.5 mt-2 bg-emerald-100/50 text-emerald-700 border border-emerald-200/50 px-2 py-0.5 rounded-full">
-                              <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
-                              <span className="text-[9px] font-bold uppercase tracking-wider">IN PROGRESS</span>
+                    return (
+                      <button
+                        key={chapter.id}
+                        onClick={() => seekTo(chapter.startSeconds)}
+                        className={`w-full text-left p-3 mb-1 rounded-xl transition-all ${
+                          isActive
+                            ? "bg-emerald-50 ring-1 ring-emerald-200 pointer-events-none"
+                            : "hover:bg-[#F8F8F8] cursor-pointer"
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Status Icon Indicator */}
+                          <div className="mt-1 flex-shrink-0">
+                            {isWatched ? (
+                              <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center shadow-sm">
+                                <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />
+                              </div>
+                            ) : isActive ? (
+                              <div className="w-6 h-6 rounded-full border-2 border-emerald-500 flex items-center justify-center bg-white shadow-inner">
+                                <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
+                              </div>
+                            ) : (
+                              <div className="w-6 h-6 rounded-full border border-[#E0E0E0] flex items-center justify-center bg-[#F5F5F5]">
+                                <span className="text-[10px] font-bold text-[#999]">{idx + 1}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-[13px] font-bold truncate ${
+                              isActive ? "text-emerald-900" : isWatched ? "text-[#111]" : "text-[#555]"
+                            }`}>
+                              {chapter.title}
+                            </p>
+                            <p className={`text-[11px] mt-0.5 leading-snug ${
+                              isActive ? "text-emerald-700/80" : "text-[#888]"
+                            }`}>
+                              {chapter.description}
+                            </p>
+                            {isActive && (
+                              <div className="inline-flex items-center gap-1.5 mt-2 bg-emerald-100/50 text-emerald-700 border border-emerald-200/50 px-2 py-0.5 rounded-full">
+                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" />
+                                <span className="text-[9px] font-bold uppercase tracking-wider">IN PROGRESS</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {!isActive && (
+                            <div className="text-[10px] text-[#BBB] font-mono font-medium pt-1 flex-shrink-0">
+                              {chapter.duration}
                             </div>
                           )}
                         </div>
-                        
-                        {!isActive && (
-                          <div className="text-[10px] text-[#BBB] font-mono font-medium pt-1 flex-shrink-0">
-                            {chapter.duration}
-                          </div>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })
+                )}
               </div>
+
+              {/* Non-buyer sticky CTA at panel bottom */}
+              {!isBuyer && !isLoading && (
+                <div className="border-t border-[#E8E8E8] p-4 bg-[#FAFAFA]">
+                  <a
+                    href={STRIPE_RECORDING_URL}
+                    className="block w-full bg-[#111] text-white text-center text-[12px] font-bold py-2.5 rounded-xl mb-2 hover:bg-[#333] transition-colors"
+                  >
+                    Unlock All Modules - £10
+                  </a>
+                  <a
+                    href={STRIPE_BUNDLE_URL}
+                    className="block w-full border border-[#CCC] text-[#333] text-center text-[11px] font-semibold py-2 rounded-xl hover:bg-[#F0F0F0] transition-colors"
+                  >
+                    Bundle + Guide - £29
+                  </a>
+                </div>
+              )}
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>

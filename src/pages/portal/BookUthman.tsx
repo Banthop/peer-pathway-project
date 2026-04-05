@@ -7,21 +7,49 @@ import {
   CheckCircle2,
   Users,
   Trophy,
-  MessageSquare,
   ChevronDown,
   ArrowRight,
-  Sparkles,
   X as XIcon,
   Zap,
   Target,
-  AlertCircle,
 } from "lucide-react";
 
 /* ═══════════════════════════════════════════════════════════════
- *  CAL.COM SETUP - see original for instructions
+ *  CAL.COM EMBED SETUP
+ *  Uses Cal.com's vanilla JS embed (no npm package required).
+ *  Loads embed.js once, then opens modal via Cal("modal", ...).
  * ═══════════════════════════════════════════════════════════════ */
 
 const CAL_USERNAME = "uthm4n";
+
+// Extend Window so TypeScript is happy with the Cal global
+declare global {
+  interface Window {
+    Cal?: (...args: unknown[]) => void;
+  }
+}
+
+function loadCalEmbed(): void {
+  if (typeof window === "undefined" || window.Cal) return;
+
+  // Inline loader shim (mirrors Cal.com's official snippet)
+  (function (C: Window, A: string, L: string) {
+    const p = function (...args: unknown[]) { p.q.push(args); };
+    (p as unknown as { q: unknown[][] }).q = [];
+    (C as unknown as Record<string, unknown>)[A] = p;
+    const s = document.createElement("script");
+    s.src = L;
+    s.async = true;
+    document.head.appendChild(s);
+  })(window, "Cal", "https://app.cal.com/embed/embed.js");
+
+  window.Cal!("init", { origin: "https://app.cal.com" });
+  window.Cal!("ui", {
+    theme: "light",
+    hideEventTypeDetails: false,
+    layout: "month_view",
+  });
+}
 
 /* ─── Session types ─── */
 
@@ -38,7 +66,6 @@ interface SessionType {
   isGroup?: boolean;
   maxParticipants?: number;
   testimonial?: { text: string; name: string; uni: string };
-  nextAvailable?: string;
 }
 
 const SESSION_TYPES: SessionType[] = [
@@ -61,7 +88,6 @@ const SESSION_TYPES: SessionType[] = [
       name: "Priya M.",
       uni: "LSE",
     },
-    nextAvailable: "Tue 1 Apr",
   },
   {
     id: "deep-dive",
@@ -85,7 +111,6 @@ const SESSION_TYPES: SessionType[] = [
       name: "Jake L.",
       uni: "Warwick",
     },
-    nextAvailable: "Mon 31 Mar",
   },
   {
     id: "group-workshop",
@@ -109,7 +134,6 @@ const SESSION_TYPES: SessionType[] = [
       name: "Amina R.",
       uni: "UCL",
     },
-    nextAvailable: "Sat 5 Apr",
   },
 ];
 
@@ -202,17 +226,27 @@ export default function BookUthman() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleExternalBookClick = (calSlug: string) => {
-    const baseUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?overlayCalendar=true`;
-    
-    const params = new URLSearchParams();
-    if (user?.email) params.set("email", user.email);
+  // Load Cal.com embed script once on mount
+  useEffect(() => {
+    loadCalEmbed();
+  }, []);
+
+  const handleBookClick = (calSlug: string) => {
+    if (!window.Cal) return;
+
+    const calLink = `${CAL_USERNAME}/${calSlug}`;
+    const prefill: Record<string, string> = {};
+    if (user?.email) prefill["email"] = user.email;
     const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
-    if (name) params.set("name", name);
-    
-    // Determine the connector (either & or ?) since overlayCalendar=true is already present
-    const finalUrl = params.toString() ? `${baseUrl}&${params.toString()}` : baseUrl;
-    window.open(finalUrl, "_blank");
+    if (name) prefill["name"] = name;
+
+    window.Cal("modal", {
+      calLink,
+      config: {
+        layout: "month_view",
+        ...prefill,
+      },
+    });
   };
 
   return (
@@ -348,11 +382,7 @@ export default function BookUthman() {
                           Max {session.maxParticipants}
                         </span>
                       )}
-                      {session.nextAvailable && (
-                        <span className="flex items-center gap-1 text-[11px] text-[#888] font-medium">
-                          Next: <span className="text-[#111]">{session.nextAvailable}</span>
-                        </span>
-                      )}
+
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
@@ -396,7 +426,7 @@ export default function BookUthman() {
                 )}
 
                 <button
-                  onClick={() => handleExternalBookClick(session.calSlug)}
+                  onClick={() => handleBookClick(session.calSlug)}
                   className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
                     session.popular
                       ? "bg-[#111] text-white hover:bg-[#222] shadow-sm hover:-translate-y-0.5"
@@ -443,7 +473,7 @@ export default function BookUthman() {
           </div>
 
           <button
-            onClick={() => handleExternalBookClick(PACKAGE.calSlug)}
+            onClick={() => handleBookClick(PACKAGE.calSlug)}
             className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-md hover:-translate-y-0.5"
           >
             <CalendarIcon className="w-4 h-4" />

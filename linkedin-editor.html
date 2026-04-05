@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LinkedIn Image Editor - EarlyEdge</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ---- SIDEBAR ---- */
+  .sidebar {
+    width: 280px;
+    background: #1a1a1a;
+    border-right: 1px solid #333;
+    padding: 20px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+  }
+  .sidebar h2 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+  .sidebar h3 {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 16px 0 8px;
+  }
+  .control-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .control-row label {
+    font-size: 11px;
+    color: #aaa;
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .control-row input[type="range"] {
+    flex: 1;
+    accent-color: #4ADE80;
+  }
+  .control-row .val {
+    font-size: 10px;
+    color: #666;
+    width: 30px;
+    text-align: right;
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: 0.15s;
+  }
+  .btn-green { background: #4ADE80; color: #000; }
+  .btn-green:hover { background: #22c55e; }
+  .btn-red { background: #333; color: #EF4444; border: 1px solid #EF4444; }
+  .btn-red:hover { background: #EF4444; color: #fff; }
+  .btn-ghost { background: #222; color: #aaa; }
+  .btn-ghost:hover { background: #333; color: #fff; }
+
+  .logo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .logo-list-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    color: #ccc;
+    transition: 0.15s;
+  }
+  .logo-list-item:hover { background: #222; }
+  .logo-list-item.selected { background: #1e3a2a; color: #4ADE80; }
+  .logo-list-item .thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .logo-list-item .thumb img {
+    max-width: 22px;
+    max-height: 22px;
+    object-fit: contain;
+  }
+  .logo-list-item .no-img {
+    font-size: 8px;
+    color: #555;
+  }
+
+  .selected-controls {
+    background: #1a2a1a;
+    border: 1px solid #2a3a2a;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+  }
+  .selected-controls h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #4ADE80;
+    margin-bottom: 10px;
+  }
+
+  /* ---- CANVAS AREA ---- */
+  .canvas-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    overflow: auto;
+  }
+
+  /* ---- THE CARD ---- */
+  .card {
+    width: 1080px;
+    height: 1080px;
+    background: #0A0A0A;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    border: 1px solid #222;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+    background-size: 54px 54px;
+    z-index: 0;
+  }
+
+  .rejected-section {
+    position: relative;
+    z-index: 1;
+    padding: 40px 44px 24px;
+  }
+  .rejected-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #EF4444;
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rejected-label::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: #EF4444;
+    border-radius: 50%;
+  }
+
+  .logos-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+  }
+  .logo-cell {
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: 0.15s;
+    overflow: visible;
+  }
+  .logo-cell:hover {
+    background: rgba(255,255,255,0.06);
+    outline: 2px solid #4ADE80;
+  }
+  .logo-cell.active-cell {
+    outline: 2px solid #4ADE80;
+  }
+  .logo-cell img {
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .logo-cell .strike {
+    display: none;
+  }
+  .logo-cell .placeholder-text {
+    font-size: 9px;
+    color: #444;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .divider {
+    margin: 0 44px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    position: relative;
+    z-index: 1;
+  }
+  .pivot-section {
+    position: relative;
+    z-index: 1;
+    padding: 16px 44px 4px;
+  }
+  .pivot-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #4ADE80;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pivot-label::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background: #4ADE80;
+    border-radius: 50%;
+  }
+
+  .stats-section {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 12px 44px 0;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 48px;
+    margin-bottom: 24px;
+  }
+  .stat-number {
+    font-size: 68px;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1;
+    letter-spacing: -3px;
+  }
+  .stat-number.green { color: #4ADE80; }
+  .stat-label {
+    font-size: 15px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .tagline {
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+  }
+  .tagline strong { color: #FFFFFF; font-weight: 600; }
+
+  .bottom-bar {
+    position: relative;
+    z-index: 1;
+    padding: 20px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .brand-text {
+    font-size: 22px;
+    color: #FFFFFF;
+  }
+  .brand-text span:first-child { font-weight: 300; }
+  .brand-text span:last-child { font-weight: 700; }
+  .bottom-cta {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Hidden file input */
+  #fileInput { display: none; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h2>LinkedIn Image Editor</h2>
+
+  <button class="btn btn-green" onclick="downloadImage()">Download as PNG</button>
+  <button class="btn btn-ghost" onclick="addLogoSlot()">+ Add Logo Slot</button>
+  <div style="display:flex;gap:4px;margin-bottom:8px;">
+    <input type="number" id="allSizeInput" value="70" min="16" max="200" style="flex:1;background:#222;border:1px solid #333;color:#fff;padding:6px 8px;border-radius:6px;font-size:11px;text-align:center;">
+    <button class="btn btn-ghost" style="width:auto;flex:1;margin:0;" onclick="setAllSizes()">Set all sizes</button>
+  </div>
+
+  <h3>Logos (click card to select, then upload)</h3>
+  <div id="logoList" class="logo-list"></div>
+
+  <div id="selectedControls" class="selected-controls" style="display:none;">
+    <h4 id="selectedName">Selected</h4>
+
+    <button class="btn btn-green" onclick="uploadForSelected()">Upload PNG</button>
+
+    <div class="control-row">
+      <label>Logo size</label>
+      <input type="range" id="sizeSlider" min="16" max="200" value="70" oninput="updateSize(this.value);document.getElementById('sizeNum').value=this.value;">
+      <input type="number" id="sizeNum" min="16" max="200" value="70" style="width:48px;background:#222;border:1px solid #333;color:#fff;padding:2px 4px;border-radius:4px;font-size:11px;text-align:center;" oninput="updateSize(this.value);document.getElementById('sizeSlider').value=this.value;">
+    </div>
+
+    <div class="control-row">
+      <label>Cell opacity</label>
+      <input type="range" id="opacitySlider" min="10" max="100" value="80" oninput="updateOpacity(this.value)">
+      <span class="val" id="opacityVal">80</span>
+    </div>
+
+    <div class="control-row">
+      <label>Name</label>
+      <input type="text" id="nameInput" style="flex:1;background:#222;border:1px solid #333;color:#fff;padding:4px 8px;border-radius:4px;font-size:11px;" oninput="updateName(this.value)">
+    </div>
+
+    <button class="btn btn-red" onclick="removeSelected()" style="margin-top:8px;">Remove</button>
+  </div>
+
+  <h3 style="margin-top:20px;">Quick Tips</h3>
+  <p style="font-size:10px;color:#666;line-height:1.5;">
+    1. Click a logo cell to select it<br>
+    2. Double-click to upload a PNG<br>
+    3. Or just copy an image and Cmd+V to paste<br>
+    4. Drag and drop also works<br>
+    5. Adjust size with the slider<br>
+    6. Download when done
+  </p>
+</div>
+
+<!-- CANVAS -->
+<div class="canvas-area">
+  <div class="card" id="card">
+
+    <div class="rejected-section">
+      <div class="rejected-label">Rejected by</div>
+      <div class="logos-grid" id="logosGrid"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="pivot-section">
+      <div class="pivot-label">Then he sent cold emails</div>
+    </div>
+
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div><div class="stat-number">1,062</div><div class="stat-label">emails sent</div></div>
+        <div><div class="stat-number">223</div><div class="stat-label">responses</div></div>
+        <div><div class="stat-number green">21%</div><div class="stat-label">response rate</div></div>
+        <div><div class="stat-number green">20</div><div class="stat-label">internship offers</div></div>
+      </div>
+      <div class="tagline">
+        <strong>3 weeks. No connections. No referrals.</strong><br>
+        Just cold emails and a system that works.
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <div class="brand-text"><span>Early</span><span>Edge</span></div>
+      <div class="bottom-cta">Free slides in comments</div>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept="image/*">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const INITIAL_LOGOS = [
+  "JPMorgan", "Goldman Sachs", "Google", "McKinsey", "Meta", "Morgan Stanley",
+  "Jane Street", "Citadel", "Deloitte", "Barclays", "Clifford Chance", "Linklaters",
+  "HSBC", "Citi", "Deutsche Bank", "BlackRock", "PwC", "EY",
+  "UBS", "BCG", "Bain", "Lazard", "Rothschild", "Bank of America"
+];
+
+const DOMAIN_MAP = {
+  "JPMorgan": "jpmorgan.com",
+  "Goldman Sachs": "goldmansachs.com",
+  "Google": "google.com",
+  "McKinsey": "mckinsey.com",
+  "Meta": "meta.com",
+  "Morgan Stanley": "morganstanley.com",
+  "Jane Street": "janestreet.com",
+  "Citadel": "citadel.com",
+  "Deloitte": "deloitte.com",
+  "Barclays": "barclays.com",
+  "Clifford Chance": "cliffordchance.com",
+  "Linklaters": "linklaters.com",
+  "HSBC": "hsbc.com",
+  "Citi": "citi.com",
+  "Deutsche Bank": "db.com",
+  "BlackRock": "blackrock.com",
+  "PwC": "pwc.com",
+  "EY": "ey.com",
+  "UBS": "ubs.com",
+  "BCG": "bcg.com",
+  "Bain": "bain.com",
+  "Lazard": "lazard.com",
+  "Rothschild": "rothschildandco.com",
+  "Bank of America": "bankofamerica.com"
+};
+
+const TOKEN = "pk_Z3IZl0C_TzO4RqLGSGD5LQ";
+
+let logos = INITIAL_LOGOS.map(name => ({
+  name,
+  src: DOMAIN_MAP[name]
+    ? `https://img.logo.dev/${DOMAIN_MAP[name]}?token=${TOKEN}`
+    : null,
+  size: 70,
+  opacity: 100,
+  customSrc: null
+}));
+
+let selectedIdx = null;
+
+function render() {
+  const grid = document.getElementById("logosGrid");
+  const list = document.getElementById("logoList");
+
+  grid.innerHTML = logos.map((logo, i) => {
+    const imgSrc = logo.customSrc || logo.src;
+    const isSelected = i === selectedIdx;
+    return `
+      <div class="logo-cell ${isSelected ? 'active-cell' : ''}" onclick="selectLogo(${i})" ondblclick="cellClickUpload(${i})">
+        ${imgSrc
+          ? `<img src="${imgSrc}" style="height:${logo.size}px;opacity:${logo.opacity/100};" alt="${logo.name}">`
+          : `<span class="placeholder-text">Click to<br>upload</span>`
+        }
+        <div class="strike"></div>
+      </div>
+    `;
+  }).join("");
+
+  list.innerHTML = logos.map((logo, i) => {
+    const imgSrc = logo.customSrc || logo.src;
+    const isSelected = i === selectedIdx;
+    return `
+      <div class="logo-list-item ${isSelected ? 'selected' : ''}" onclick="selectLogo(${i})">
+        <div class="thumb">
+          ${imgSrc ? `<img src="${imgSrc}">` : `<span class="no-img">--</span>`}
+        </div>
+        ${logo.name}
+      </div>
+    `;
+  }).join("");
+
+  const ctrl = document.getElementById("selectedControls");
+  if (selectedIdx !== null && logos[selectedIdx]) {
+    const logo = logos[selectedIdx];
+    ctrl.style.display = "block";
+    document.getElementById("selectedName").textContent = logo.name;
+    document.getElementById("sizeSlider").value = logo.size;
+    document.getElementById("sizeNum").value = logo.size;
+    document.getElementById("opacitySlider").value = logo.opacity;
+    document.getElementById("opacityVal").textContent = logo.opacity;
+    document.getElementById("nameInput").value = logo.name;
+  } else {
+    ctrl.style.display = "none";
+  }
+}
+
+function selectLogo(i) {
+  selectedIdx = i;
+  render();
+}
+
+function uploadForSelected() {
+  if (selectedIdx === null) return;
+  const input = document.getElementById("fileInput");
+  // Reset and re-bind each time to avoid stale closure
+  input.value = "";
+  input.onchange = function(e) {
+    if (!e.target.files[0] || selectedIdx === null) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      logos[selectedIdx].customSrc = ev.target.result;
+      render();
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  };
+  input.click();
+}
+
+// Also allow clicking directly on a logo cell to upload
+function cellClickUpload(i) {
+  selectedIdx = i;
+  render();
+  uploadForSelected();
+}
+
+// PASTE support: Cmd+V / Ctrl+V pastes image into selected logo
+document.addEventListener("paste", function(e) {
+  if (selectedIdx === null) return;
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf("image") !== -1) {
+      e.preventDefault();
+      const blob = items[i].getAsFile();
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        logos[selectedIdx].customSrc = ev.target.result;
+        render();
+      };
+      reader.readAsDataURL(blob);
+      return;
+    }
+  }
+});
+
+// DRAG AND DROP on logo cells
+document.addEventListener("dragover", function(e) { e.preventDefault(); });
+document.addEventListener("drop", function(e) {
+  e.preventDefault();
+  if (selectedIdx === null) return;
+  const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith("image/")) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    logos[selectedIdx].customSrc = ev.target.result;
+    render();
+  };
+  reader.readAsDataURL(file);
+});
+
+function updateSize(val) {
+  if (selectedIdx === null) return;
+  logos[selectedIdx].size = parseInt(val);
+  document.getElementById("sizeVal").textContent = val;
+  render();
+}
+
+function updateOpacity(val) {
+  if (selectedIdx === null) return;
+  logos[selectedIdx].opacity = parseInt(val);
+  document.getElementById("opacityVal").textContent = val;
+  render();
+}
+
+function updateName(val) {
+  if (selectedIdx === null) return;
+  logos[selectedIdx].name = val;
+  render();
+}
+
+function removeSelected() {
+  if (selectedIdx === null) return;
+  logos.splice(selectedIdx, 1);
+  selectedIdx = null;
+  render();
+}
+
+function addLogoSlot() {
+  logos.push({ name: "New Firm", src: null, size: 70, opacity: 100, customSrc: null });
+  selectedIdx = logos.length - 1;
+  render();
+}
+
+function setAllSizes() {
+  const val = parseInt(document.getElementById("allSizeInput").value) || 70;
+  logos.forEach(l => l.size = val);
+  render();
+}
+
+function downloadImage() {
+  // Remove selection outline for screenshot
+  const prev = selectedIdx;
+  selectedIdx = null;
+  render();
+
+  const card = document.getElementById("card");
+  html2canvas(card, {
+    scale: 1,
+    backgroundColor: "#0A0A0A",
+    useCORS: true,
+    allowTaint: true
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "earlyedge-linkedin.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+    selectedIdx = prev;
+    render();
+  });
+}
+
+// Initial render
+render();
+</script>
+
+</body>
+</html>
