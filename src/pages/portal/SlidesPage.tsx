@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "@/components/Logo";
 import {
   Play,
@@ -724,6 +726,73 @@ function ValueLadderSidebar() {
 
 export default function SlidesPage() {
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const { user, loading } = useAuth();
+
+  /* ─── Signup gate: show teaser then require free account ─── */
+  if (!loading && !user) {
+    return (
+      <div
+        className="min-h-screen bg-[#FAFAFA] flex flex-col"
+        style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" }}
+      >
+        <div className="bg-white border-b border-[#E8E8E8] px-5 py-3.5 flex items-center justify-between">
+          <Logo to="/" className="text-lg" />
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-4 py-16">
+          <div className="max-w-md w-full text-center space-y-6">
+            <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 text-[13px] font-semibold px-4 py-1.5 rounded-full">
+              <Presentation className="w-4 h-4" /> FREE ACCESS
+            </div>
+
+            <h1 className="text-3xl font-bold text-[#111] tracking-tight leading-tight">
+              Uthman's Cold Email Slides
+            </h1>
+
+            <p className="text-[15px] text-[#555] leading-relaxed">
+              1,062 cold emails. 223 responses. 20 offers in 3 weeks. Get the exact slides from the live webinar that 150+ students attended.
+            </p>
+
+            <div className="grid grid-cols-3 gap-3 py-2">
+              <div className="bg-white border border-[#E8E8E8] rounded-xl p-3">
+                <div className="text-xl font-bold text-[#111]">107</div>
+                <div className="text-[11px] text-[#888]">Students attended</div>
+              </div>
+              <div className="bg-white border border-[#E8E8E8] rounded-xl p-3">
+                <div className="text-xl font-bold text-[#111]">23</div>
+                <div className="text-[11px] text-[#888]">Sent cold emails</div>
+              </div>
+              <div className="bg-white border border-[#E8E8E8] rounded-xl p-3">
+                <div className="text-xl font-bold text-[#111]">8</div>
+                <div className="text-[11px] text-[#888]">Got responses</div>
+              </div>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Link
+                to="/signup?redirect=/portal/slides"
+                className="block w-full bg-[#111] text-white text-[14px] font-semibold py-3.5 rounded-xl hover:bg-[#222] transition-colors"
+              >
+                Create free account to access
+              </Link>
+              <Link
+                to="/login?redirect=/portal/slides"
+                className="block text-[13px] text-[#888] hover:text-[#555] transition-colors"
+              >
+                Already have an account? Log in
+              </Link>
+            </div>
+
+            <div className="flex items-center justify-center gap-4 pt-4 text-[12px] text-[#999]">
+              <span className="flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" /> 100% free</span>
+              <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> No card required</span>
+              <span className="flex items-center gap-1"><Zap className="w-3.5 h-3.5" /> Instant access</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
