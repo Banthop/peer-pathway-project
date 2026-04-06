@@ -180,11 +180,6 @@ function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
 
 export default function PortalRecording() {
   const { buyerStatus } = useBuyerAuth();
-
-  // Free-tier users see the locked preview
-  if (buyerStatus && !buyerStatus.hasRecording) {
-    return <LockedRecordingView />;
-  }
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
   const [activeChapter, setActiveChapter] = useState<string>(CHAPTERS[0].id);

@@ -1,4 +1,4 @@
-import { NavLink, Outlet, Navigate, useSearchParams, Link } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
