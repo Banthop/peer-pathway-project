@@ -257,7 +257,7 @@ export default function PortalResources() {
                               to="/portal/upgrade"
                               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-900 to-red-600 text-white text-[13px] font-bold hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300"
                             >
-                              Upgrade to Full Bundle - £29
+                              Upgrade Access
                               <ArrowRight className="w-4 h-4" />
                             </Link>
                           </div>
@@ -363,7 +363,7 @@ export default function PortalResources() {
                     to="/portal/upgrade"
                     className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-xl text-[14px] font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   >
-                    Unlock the Full Bundle - £29
+                    Upgrade Access
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
                 </div>
@@ -431,7 +431,7 @@ export default function PortalResources() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <p className="text-[11px] text-emerald-700/60 text-center">
-                  Strategy Call from £35 - Deep Dive from £59
+                  Book a session with Uthman
                 </p>
               </div>
             </div>

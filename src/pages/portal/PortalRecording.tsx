@@ -99,22 +99,19 @@ function PaywallOverlay() {
         <p className="text-[11px] text-[#555] text-center leading-relaxed mb-1">
           Every week you wait is a week of internship applications going to someone else.
         </p>
-        <p className="text-[11px] text-[#888] text-center leading-relaxed mb-4">
-          Professional career coaching costs £150-300/hr. This entire system is <span className="font-bold text-[#111]">£10</span>.
-        </p>
 
         {/* CTAs */}
         <Link
           to="/portal/upgrade"
           className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3 rounded-xl mb-2 hover:bg-[#333] transition-colors shadow-md"
         >
-          Unlock the Full Recording - £10
+          Upgrade Access
         </Link>
         <Link
           to="/portal/upgrade"
           className="block w-full border border-[#CCC] text-[#111] text-center text-[13px] font-semibold py-3 rounded-xl hover:bg-[#F5F5F5] transition-colors"
         >
-          Get Recording + Cold Email Guide - £29
+          See What's Included
         </Link>
 
         {/* Guarantee */}
@@ -593,13 +590,13 @@ export default function PortalRecording() {
                     to="/portal/upgrade"
                     className="block w-full bg-[#111] text-white text-center text-[12px] font-bold py-2.5 rounded-xl mb-2 hover:bg-[#333] transition-colors"
                   >
-                    Unlock All Modules - £10
+                    Upgrade Access
                   </Link>
                   <Link
                     to="/portal/upgrade"
                     className="block w-full border border-[#CCC] text-[#333] text-center text-[11px] font-semibold py-2 rounded-xl hover:bg-[#F0F0F0] transition-colors"
                   >
-                    Bundle + Guide - £29
+                    See What's Included
                   </Link>
                 </div>
               )}
