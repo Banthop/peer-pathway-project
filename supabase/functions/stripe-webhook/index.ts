@@ -15,9 +15,6 @@ const ATTIO_API_KEY = Deno.env.get("ATTIO_API_KEY") || "";
 const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
 const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
 
-// Spring Week Webinar product ID mapping.
-// Confirm these IDs against the Stripe dashboard before deploying.
-// Maps Stripe product IDs to their product type and relevant tags.
 const SPRING_WEEK_PRODUCTS: Record<string, { productType: string; tags: string[] }> = {
     "prod_UFrcUWCwGdzNqo": {
         productType: "spring_week_part1",
@@ -37,6 +34,22 @@ const SPRING_WEEK_PRODUCTS: Record<string, { productType: string; tags: string[]
     },
 };
 
+const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] }> = {
+    "prod_UF1i9ZFvzOLBKJ": {
+        productType: "webinar_only",
+        tags: ["stripe_customer", "recording_access"],
+    },
+    "prod_UF1mRfmmwcrKnT": {
+        productType: "bundle",
+        tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
+    },
+    // Guide-only upgrade for existing recording buyers
+    "prod_UHHe5C5FqRLsjK": {
+        productType: "guide_upgrade",
+        tags: ["stripe_customer", "recording_access", "bundle"],
+    },
+};
+
 // Tags representing lower spring-week tiers that should be removed when a
 // customer upgrades to bundle or premium.
 const SPRING_WEEK_TIER_UPGRADE_MAP: Record<string, string[]> = {
@@ -46,9 +59,9 @@ const SPRING_WEEK_TIER_UPGRADE_MAP: Record<string, string[]> = {
 
 /**
  * Resolve product info from Stripe line items.
- * Checks line_items for Spring Week product IDs and returns matching config.
+ * Checks line_items for known Product IDs and returns matching config and realm.
  */
-async function resolveSpringWeekProduct(session: any): Promise<{ productType: string; tags: string[] } | null> {
+async function resolveProductFromLineItems(session: any): Promise<{ productType: string; tags: string[], realm: string } | null> {
     try {
         const expanded = await stripe.checkout.sessions.retrieve(session.id, {
             expand: ["line_items.data.price.product"],
@@ -58,12 +71,13 @@ async function resolveSpringWeekProduct(session: any): Promise<{ productType: st
             const productId = typeof item.price?.product === "string"
                 ? item.price.product
                 : (item.price?.product as any)?.id;
-            if (productId && SPRING_WEEK_PRODUCTS[productId]) {
-                return SPRING_WEEK_PRODUCTS[productId];
+            if (productId) {
+                if (SPRING_WEEK_PRODUCTS[productId]) return { ...SPRING_WEEK_PRODUCTS[productId], realm: "spring_week" };
+                if (COLD_EMAIL_PRODUCTS[productId]) return { ...COLD_EMAIL_PRODUCTS[productId], realm: "cold_email" };
             }
         }
     } catch (e: any) {
-        console.error("Error resolving Spring Week product:", e.message);
+        console.error("Error resolving product:", e.message);
     }
     return null;
 }
@@ -382,20 +396,23 @@ Deno.serve(async (req) => {
 
             const stripeProductType = session.metadata?.product_type || "";
 
-            // Resolve Spring Week product via Stripe line item expansion
-            const swProduct = await resolveSpringWeekProduct(session);
+            // Resolve product via Stripe line item expansion
+            const resolvedProduct = await resolveProductFromLineItems(session);
 
             let productType = "webinar_only";
+            let realm = "cold_email";
 
-            if (swProduct) {
-                productType = swProduct.productType;
-                for (const tag of swProduct.tags) updatedTags.add(tag);
-                console.log(`Spring Week product detected: ${productType}`);
+            if (resolvedProduct) {
+                productType = resolvedProduct.productType;
+                realm = resolvedProduct.realm;
+                for (const tag of resolvedProduct.tags) updatedTags.add(tag);
+                console.log(`Product detected: ${productType} (${realm})`);
             } else if (stripeProductType) {
                 productType = stripeProductType;
             } else if (ticketHint && ["part1", "part2", "bundle", "premium"].includes(ticketHint)) {
                 // Fallback: use ticket hint from client_reference_id
                 productType = `spring_week_${ticketHint}`;
+                realm = "spring_week";
                 const fallbackKey = Object.keys(SPRING_WEEK_PRODUCTS).find(
                     k => SPRING_WEEK_PRODUCTS[k].productType === productType
                 );
@@ -403,8 +420,6 @@ Deno.serve(async (req) => {
                     for (const tag of SPRING_WEEK_PRODUCTS[fallbackKey].tags) updatedTags.add(tag);
                 }
                 console.log(`Spring Week product resolved via ticket hint: ${productType}`);
-            } else if (spend >= 20 || spend === 12) {
-                productType = "bundle";
             }
 
             // Remove lesser-tier spring-week tags on upgrade (e.g. part1 when
@@ -445,7 +460,7 @@ Deno.serve(async (req) => {
                 updatedMetadata.recording_package = productType;
                 updatedMetadata.recording_purchased_at = new Date().toISOString();
             }
-            if (swProduct) {
+            if (realm === "spring_week") {
                 updatedMetadata.spring_week_product = productType;
                 updatedMetadata.spring_week_purchased_at = new Date().toISOString();
                 updatedMetadata.webinar_type = "spring_week";
@@ -477,6 +492,37 @@ Deno.serve(async (req) => {
                 console.error("Supabase upsert error:", error.message);
             } else {
                 console.log(`Upserted ${email} as converted stripe_customer (${productType}) lifetimeSpend=${lifetimeSpend}`);
+            }
+
+            // -- PROVISION AUTH ACCOUNT --
+            try {
+                // Generate a secure temp password
+                const tempPassword = crypto.randomUUID();
+
+                // 1. Force attempt payload creation
+                const { error: authErr } = await supabase.auth.admin.createUser({
+                    email: email,
+                    password: tempPassword,
+                    email_confirm: true,
+                    user_metadata: {
+                        name: `${firstName} ${lastName}`.trim() || email.split("@")[0],
+                    }
+                });
+
+                if (authErr && !authErr.message.includes("already registered") && !authErr.message.includes("already belongs to a user")) {
+                    console.error(`Failed to create Auth account for ${email}:`, authErr.message);
+                } else {
+                    if (!authErr) console.log(`Created new Auth account for ${email}`);
+                    
+                    const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email);
+                    if (resetErr) {
+                        console.error(`Failed to dispatch password creation loop to ${email}:`, resetErr.message);
+                    } else {
+                        console.log(`Dispatched password creation sequence to ${email}`);
+                    }
+                }
+            } catch (err: any) {
+                console.error("Auth Provisioning Error:", err.message);
             }
 
             // Fire integrations regardless of the Supabase result so a DB hiccup

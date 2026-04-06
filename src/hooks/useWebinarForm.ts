@@ -10,6 +10,8 @@ export interface WebinarFormData {
   yearOfStudy: string;
   industry: string;
   industryDetail: string;
+  springWeekFirms: string;
+  biggestConcern: string;
   referralSource: string;
   coachingInterest: string;
   selectedTicket: string;
@@ -57,6 +59,8 @@ export function useWebinarForm() {
     yearOfStudy: "",
     industry: "",
     industryDetail: "",
+    springWeekFirms: "",
+    biggestConcern: "",
     referralSource: "",
     coachingInterest: "",
     selectedTicket: "bundle",

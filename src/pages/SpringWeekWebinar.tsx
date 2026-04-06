@@ -4,16 +4,17 @@ import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
 import { useWebinarForm } from "@/hooks/useWebinarForm";
 import { useToast } from "@/hooks/use-toast";
-import { SPRING_WEEK_TICKETS } from "@/data/springWeekData";
-import type { SpringWeekTicketId } from "@/data/springWeekData";
+import { SPRING_WEEK_COMBOS } from "@/data/springWeekData";
+import type { NightComboKey } from "@/data/springWeekData";
 import { WebinarFormStep } from "@/components/webinar/WebinarFormStep";
 import { SpringWeekWelcome } from "@/components/spring-week/SpringWeekWelcome";
 import { NameEmailStep } from "@/components/webinar/NameEmailStep";
 import { UniversityStep } from "@/components/webinar/UniversityStep";
 import { SpringWeekIndustry } from "@/components/spring-week/SpringWeekIndustry";
-import { SpringWeekTickets } from "@/components/spring-week/SpringWeekTickets";
+import { SpringWeekNightPicker } from "@/components/spring-week/SpringWeekNightPicker";
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
 import { saveCrmContact } from "@/utils/crmTracking";
+import { matchFirmsToNights } from "@/data/springWeekData";
 import {
   ChevronLeft,
   CheckCircle2,
@@ -22,9 +23,10 @@ import {
   Lock,
   Zap,
   BookOpen,
+  Check,
 } from "lucide-react";
 
-const BUNDLE_UPGRADE_LINK = SPRING_WEEK_TICKETS.bundle.stripeLink;
+const BUNDLE_UPGRADE_LINK = SPRING_WEEK_COMBOS["1,2,3"].stripeLink;
 
 function SuccessScreen({
   name,
@@ -33,9 +35,12 @@ function SuccessScreen({
   name: string;
   ticket: string;
 }) {
-  const isSinglePart = ticket === "part1" || ticket === "part2";
-  const partLabel = ticket === "part1" ? "Part 1" : ticket === "part2" ? "Part 2" : "";
+  const isSingleNight = ticket === "1" || ticket === "2" || ticket === "3";
+  const hasHandbook = ticket.includes("handbook");
+  const isAllNights = ticket.startsWith("1,2,3");
   const [showBundleDetails, setShowBundleDetails] = useState(false);
+
+  const nightCount = ticket === "handbook" ? 0 : ticket.split(",").filter((p) => ["1", "2", "3"].includes(p)).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 flex items-start justify-center px-4 py-12 md:py-20">
@@ -50,7 +55,7 @@ function SuccessScreen({
           </h1>
           <p className="text-muted-foreground font-sans font-light text-sm leading-relaxed max-w-sm mx-auto">
             Check your email for your ticket confirmation.
-            We'll send you the live session details closer to the date.
+            We'll send you the Zoom link(s) for your session(s) closer to the date.
           </p>
         </div>
 
@@ -61,102 +66,100 @@ function SuccessScreen({
             Your spot is secured
           </div>
           <p className="text-sm text-muted-foreground font-sans font-light leading-relaxed">
-            {isSinglePart
-              ? `You have access to ${partLabel} of the Spring Week Conversion Panel. Live dates will be confirmed via email.`
-              : ticket === "premium"
-                ? "You have Premium access: both panel sessions, The Spring Week Playbook, and a 1-on-1 coaching session. We'll be in touch to schedule your coaching."
-                : "You have the Bundle: both panel sessions and The Spring Week Playbook. Everything will be sent to your inbox."}
+            {ticket === "handbook"
+              ? "Your Spring Week Playbook will arrive in your inbox shortly."
+              : isAllNights && hasHandbook
+              ? "You have access to all 3 nights plus The Spring Week Playbook. Everything will be sent to your inbox."
+              : isAllNights
+              ? "You have access to all 3 nights of the Spring Week Conversion Panel. Zoom links will be sent closer to each date."
+              : isSingleNight
+              ? `You have access to Night ${ticket} of the Spring Week Conversion Panel. Your Zoom link will arrive by email.`
+              : `You have access to ${nightCount} nights of the Spring Week Conversion Panel${hasHandbook ? " plus The Spring Week Playbook" : ""}. Details will be sent to your inbox.`}
           </p>
         </div>
 
-        {isSinglePart ? (
-          <>
-            {/* UPSELL: single part buyers to bundle */}
-            <div className="relative bg-gradient-to-br from-blue-50/60 via-white to-emerald-50/40 border-2 border-emerald-600/40 rounded-2xl p-6 md:p-8 space-y-5 shadow-lg">
-              <div className="absolute -top-3 left-6">
-                <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full shadow-sm">
-                  <Zap className="h-3 w-3" />
-                  Upgrade Offer
-                </span>
-              </div>
-
-              <div className="space-y-2 pt-2">
-                <h2 className="text-xl font-sans font-semibold text-foreground">
-                  Don't miss the other half of the story
-                </h2>
-                <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
-                  Each part covers <strong>different firms and different speakers</strong>.
-                  The Bundle gives you both parts plus The Spring Week Playbook - the insider
-                  guide with write-ups from real spring weekers at top firms.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowBundleDetails(!showBundleDetails)}
-                className="flex items-center gap-1.5 text-xs font-sans font-semibold text-emerald-700 uppercase tracking-wider hover:text-emerald-800 transition-colors"
-              >
-                <BookOpen className="h-3.5 w-3.5" />
-                What's in the Bundle
-                {showBundleDetails ? (
-                  <ChevronLeft className="h-3.5 w-3.5 rotate-90" />
-                ) : (
-                  <ChevronLeft className="h-3.5 w-3.5 -rotate-90" />
-                )}
-              </button>
-
-              {showBundleDetails && (
-                <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {[
-                    "Both Part 1 and Part 2 live panel sessions",
-                    "Recordings of both sessions",
-                    "The Spring Week Playbook - insider write-ups from real spring weekers",
-                    "Firm-by-firm breakdown of what to expect",
-                    "How to convert your spring week into a return offer",
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-2">
-                      <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-600" />
-                      <span className="text-sm font-sans font-light text-foreground/80 leading-snug">
-                        {item}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <a
-                href={BUNDLE_UPGRADE_LINK}
-                className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-sans font-semibold text-base rounded-xl py-4 px-6 transition-all shadow-md hover:shadow-lg"
-              >
-                Upgrade to Bundle for £29
-                <ArrowRight className="h-4 w-4" />
-              </a>
-
-              <p className="text-center text-[11px] text-muted-foreground font-sans font-light flex items-center justify-center gap-1">
-                <Lock className="h-3 w-3" />
-                Secure checkout via Stripe
-              </p>
+        {/* Upsell - only for single-night buyers (not already bundle) */}
+        {isSingleNight && (
+          <div className="relative bg-gradient-to-br from-blue-50/60 via-white to-emerald-50/40 border-2 border-emerald-600/40 rounded-2xl p-6 md:p-8 space-y-5 shadow-lg">
+            <div className="absolute -top-3 left-6">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full shadow-sm">
+                <Zap className="h-3 w-3" />
+                Upgrade Offer
+              </span>
             </div>
-          </>
-        ) : (
-          <>
-            {/* Bundle/Premium buyer confirmation */}
-            <div className="bg-gradient-to-br from-emerald-50/60 to-white border border-emerald-200 rounded-2xl p-6 space-y-4">
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-emerald-700" />
-                <h2 className="text-lg font-sans font-semibold text-foreground">
-                  {ticket === "premium"
-                    ? "Your Premium package is confirmed"
-                    : "The Spring Week Playbook is on its way"}
-                </h2>
-              </div>
+
+            <div className="space-y-2 pt-2">
+              <h2 className="text-xl font-sans font-semibold text-foreground">
+                Get all 3 nights for £49.99
+              </h2>
               <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
-                {ticket === "premium"
-                  ? "You'll receive The Spring Week Playbook in your inbox shortly. We'll also reach out to schedule your 1-on-1 coaching session with one of our panellists."
-                  : "You'll receive The Spring Week Playbook in your inbox shortly. Use it to prepare before the live sessions."}
+                Each night features <strong>completely different speakers from different firms</strong>.
+                Students who attend all 3 nights go in with a much broader picture of what
+                different firms expect.
               </p>
             </div>
-          </>
+
+            <button
+              type="button"
+              onClick={() => setShowBundleDetails(!showBundleDetails)}
+              className="flex items-center gap-1.5 text-xs font-sans font-semibold text-emerald-700 uppercase tracking-wider hover:text-emerald-800 transition-colors"
+            >
+              <BookOpen className="h-3.5 w-3.5" />
+              What's included
+              {showBundleDetails ? (
+                <ChevronLeft className="h-3.5 w-3.5 rotate-90" />
+              ) : (
+                <ChevronLeft className="h-3.5 w-3.5 -rotate-90" />
+              )}
+            </button>
+
+            {showBundleDetails && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                {[
+                  "Night 1: Banking & Trading (Goldman, JPMorgan, Morgan Stanley, Barclays)",
+                  "Night 2: Consulting, Big 4 & Asset Management (McKinsey, Deloitte, PwC)",
+                  "Night 3: The Conversion Masterclass (assessment centres, follow-ups)",
+                  "Recordings of all 3 sessions included",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-600" />
+                    <span className="text-sm font-sans font-light text-foreground/80 leading-snug">
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <a
+              href={BUNDLE_UPGRADE_LINK}
+              className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-sans font-semibold text-base rounded-xl py-4 px-6 transition-all shadow-md hover:shadow-lg"
+            >
+              Upgrade to All 3 Nights for £49.99
+              <ArrowRight className="h-4 w-4" />
+            </a>
+
+            <p className="text-center text-[11px] text-muted-foreground font-sans font-light flex items-center justify-center gap-1">
+              <Lock className="h-3 w-3" />
+              Secure checkout via Stripe
+            </p>
+          </div>
+        )}
+
+        {/* Handbook confirmation for bundle buyers */}
+        {hasHandbook && (
+          <div className="bg-gradient-to-br from-amber-50/60 to-white border border-amber-200 rounded-2xl p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-amber-600" />
+              <h2 className="text-lg font-sans font-semibold text-foreground">
+                The Spring Week Playbook is on its way
+              </h2>
+            </div>
+            <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
+              You'll receive your Playbook download link in your inbox shortly.
+              Use it to prepare before each live session.
+            </p>
+          </div>
         )}
 
         <div className="text-center">
@@ -172,20 +175,70 @@ function SuccessScreen({
   );
 }
 
-/* ---- Transition screen between industry and checkout ---- */
-function PreparingCheckout({ firstName }: { firstName: string }) {
+/* ---- Personalised transition screen between industry and checkout ---- */
+function PreparingCheckout({
+  firstName,
+  springWeekFirms,
+  industry,
+}: {
+  firstName: string;
+  springWeekFirms: string;
+  industry: string;
+}) {
+  const firmMatches = matchFirmsToNights(springWeekFirms);
+  const [visibleLines, setVisibleLines] = useState(0);
+
+  // Build personalised lines
+  const lines: Array<{ text: string; done: boolean }> = [];
+  if (firmMatches.length > 0) {
+    const firstMatch = firmMatches[0];
+    lines.push({
+      text: `${firstMatch.firm} covered on ${firstMatch.nightLabel}`,
+      done: false,
+    });
+  }
+  if (industry) {
+    lines.push({ text: `Matching ${industry} content`, done: false });
+  }
+  lines.push({ text: "Building your personalised recommendation", done: false });
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    lines.forEach((_, i) => {
+      timers.push(setTimeout(() => setVisibleLines(i + 1), 500 * (i + 1)));
+    });
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="text-center space-y-5 animate-in fade-in duration-500">
+      <div className="text-center space-y-6 animate-in fade-in duration-500 max-w-md">
         <Loader2 className="h-8 w-8 mx-auto text-emerald-600 animate-spin" />
         <div className="space-y-2">
           <h2 className="text-xl font-sans font-light text-foreground">
-            Preparing your options{firstName ? `, ${firstName}` : ""}...
+            Tailoring your options{firstName ? `, ${firstName}` : ""}...
           </h2>
-          <p className="text-sm text-muted-foreground font-sans font-light">
-            Finding the best deal for you
-          </p>
         </div>
+        <div className="space-y-3 text-left">
+          {lines.map((line, i) => (
+            <div
+              key={i}
+              className={[
+                "flex items-center gap-2.5 text-sm font-sans transition-all duration-300",
+                i < visibleLines ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+              ].join(" ")}
+            >
+              <Check className="h-4 w-4 text-emerald-600 shrink-0" />
+              <span className="text-foreground/80 font-light">{line.text}</span>
+            </div>
+          ))}
+        </div>
+        {firmMatches.length > 0 && visibleLines >= lines.length && (
+          <p className="text-xs text-emerald-600 font-sans font-medium animate-in fade-in duration-300 pt-2">
+            We recommend the 3-night pass so you don't miss any relevant content.
+          </p>
+        )}
       </div>
     </div>
   );
@@ -293,6 +346,8 @@ export default function SpringWeekWebinar() {
         metadata: {
           form_step: 4,
           industry: form.formData.industry,
+          spring_week_firms: form.formData.springWeekFirms,
+          biggest_concern: form.formData.biggestConcern,
           product_type: "spring_week",
           webinar_type: "spring_week",
         },
@@ -304,21 +359,18 @@ export default function SpringWeekWebinar() {
         setTimeout(() => {
           setShowTransition(false);
         }, 400);
-      }, 1000);
+      }, 2500);
     }
 
     return null;
   };
 
-  const handleCheckout = () => {
-    const ticketId = form.formData.selectedTicket as SpringWeekTicketId;
-    const ticket =
-      ticketId in SPRING_WEEK_TICKETS
-        ? SPRING_WEEK_TICKETS[ticketId]
-        : SPRING_WEEK_TICKETS.bundle;
+  const handleCheckout = (comboKey: NightComboKey, stripeLink: string) => {
+    form.updateField("selectedTicket", comboKey);
 
     const signupData = JSON.stringify({
       ...form.formData,
+      selectedTicket: comboKey,
       productType: "spring_week",
       timestamp: new Date().toISOString(),
     });
@@ -328,9 +380,9 @@ export default function SpringWeekWebinar() {
 
     markLeadCheckout(form.formData.email);
 
-    const url = new URL(ticket.stripeLink);
+    const url = new URL(stripeLink);
     url.searchParams.set("prefilled_email", form.formData.email);
-    url.searchParams.set("client_reference_id", `${form.formData.email}|${ticketId}`);
+    url.searchParams.set("client_reference_id", `${form.formData.email}|${comboKey}`);
 
     window.open(url.toString(), "_blank");
   };
@@ -347,7 +399,11 @@ export default function SpringWeekWebinar() {
         <div className="absolute top-5 left-6 z-50">
           <Logo to="#" className="text-xl pointer-events-none" />
         </div>
-        <PreparingCheckout firstName={form.formData.firstName} />
+        <PreparingCheckout
+          firstName={form.formData.firstName}
+          springWeekFirms={form.formData.springWeekFirms}
+          industry={form.formData.industry}
+        />
       </div>
     );
   }
@@ -420,6 +476,8 @@ export default function SpringWeekWebinar() {
             <SpringWeekIndustry
               industry={form.formData.industry}
               industryDetail={form.formData.industryDetail}
+              springWeekFirms={form.formData.springWeekFirms}
+              biggestConcern={form.formData.biggestConcern}
               referralSource={form.formData.referralSource}
               onUpdate={form.updateField}
               onContinue={handleContinue}
@@ -427,11 +485,9 @@ export default function SpringWeekWebinar() {
           </WebinarFormStep>
 
           <WebinarFormStep isActive={form.step === 4} direction={form.direction}>
-            <SpringWeekTickets
-              selectedTicket={form.formData.selectedTicket as SpringWeekTicketId}
-              onSelect={(id) => form.updateField("selectedTicket", id)}
-              onCheckout={handleCheckout}
+            <SpringWeekNightPicker
               formData={form.formData}
+              onCheckout={handleCheckout}
             />
           </WebinarFormStep>
         </div>

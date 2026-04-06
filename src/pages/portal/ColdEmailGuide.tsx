@@ -1,34 +1,16 @@
 import { ArrowLeft, BookOpen, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 
 export default function ColdEmailGuide() {
   const { buyerStatus } = useBuyerAuth();
 
-  // Only bundle buyers can access
-  if (buyerStatus && !buyerStatus.isBundle) {
-    return (
-      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-        <div className="w-full max-w-md text-center space-y-6">
-          <div className="w-14 h-14 rounded-full bg-[#F5F5F5] flex items-center justify-center mx-auto">
-            <Lock className="w-7 h-7 text-[#999]" />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold text-[#111]">Bundle Access Required</h1>
-            <p className="text-sm text-[#888] font-light mt-2 leading-relaxed">
-              The Cold Email System guide is only available to bundle purchasers.
-              If you purchased the bundle with a different email, please sign in with that account.
-            </p>
-          </div>
-          <Link
-            to="/portal/resources"
-            className="inline-block w-full py-3 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-colors"
-          >
-            Back to Resources
-          </Link>
-        </div>
-      </div>
-    );
+  // Non-bundle users get redirected to the upgrade page
+  if (buyerStatus && !buyerStatus.hasGuide) {
+    const upgradeUrl = buyerStatus.tier === "recording"
+      ? "/portal/upgrade?from=guide&plan=guide-upgrade"
+      : "/portal/upgrade?from=guide&plan=bundle";
+    return <Navigate to={upgradeUrl} replace />;
   }
 
   return (

@@ -54,6 +54,7 @@ import GeneralRecording from "./pages/portal/GeneralRecording";
 import GeneralResources from "./pages/portal/GeneralResources";
 import BookAndrew from "./pages/portal/BookAndrew";
 import BookMohammad from "./pages/portal/BookMohammad";
+import Upgrade from "./pages/portal/Upgrade";
 import DaWebinar from "./pages/DaWebinar";
 import SpringWeekWebinar from "./pages/SpringWeekWebinar";
 import SlidesPage from "./pages/portal/SlidesPage";
@@ -157,6 +158,7 @@ const AppRoutes = () => {
           <Route path="resources" element={<PortalResources />} />
           <Route path="book-uthman" element={<BookUthman />} />
           <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
+          <Route path="upgrade" element={<Upgrade />} />
         </Route>
         <Route path="/general-portal" element={<GeneralPortalLayout />}>
           <Route index element={<GeneralRecording />} />
@@ -213,7 +215,8 @@ const AppRoutes = () => {
         <Route index element={<PortalRecording />} />
         <Route path="resources" element={<PortalResources />} />
         <Route path="book-uthman" element={<BookUthman />} />
-          <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
+        <Route path="cold-email-guide" element={<PortalColdEmailGuide />} />
+        <Route path="upgrade" element={<Upgrade />} />
       </Route>
       <Route path="/general-portal" element={<GeneralPortalLayout />}>
         <Route index element={<GeneralRecording />} />

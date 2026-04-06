@@ -180,6 +180,11 @@ function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
 
 export default function PortalRecording() {
   const { buyerStatus } = useBuyerAuth();
+
+  // Free-tier users see the locked preview
+  if (buyerStatus && !buyerStatus.hasRecording) {
+    return <LockedRecordingView />;
+  }
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
   const [activeChapter, setActiveChapter] = useState<string>(CHAPTERS[0].id);
@@ -286,6 +291,18 @@ export default function PortalRecording() {
               Master the Cold Email system. Watch the modules, then use the resources to execute.
             </p>
           </div>
+
+          {/* Free resource banner - only for free accounts */}
+          {buyerStatus && buyerStatus.tier === "free" && (
+            <Link
+              to="/portal/resources"
+              className="hidden md:inline-flex items-center gap-2.5 bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 rounded-xl px-5 py-3.5 transition-colors group flex-shrink-0 self-center shadow-sm hover:shadow-md"
+            >
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <span className="text-[13px] font-semibold text-blue-700">Access Your Free Cold-Email Webinar Slides Here</span>
+              <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          )}
 
           {/* Gamified Progress Bar */}
           <div className="w-full xl:w-[380px] bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl p-4 flex-shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">

@@ -2,9 +2,14 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
+type AccessTier = "free" | "recording" | "bundle";
+
 interface BuyerStatus {
+  tier: AccessTier;
   isBuyer: boolean;
   isBundle: boolean;
+  hasRecording: boolean;
+  hasGuide: boolean;
   tags: string[];
   accessCount: number;
 }
@@ -59,7 +64,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
 
     // --- Supabase CRM lookup (single source of truth) ---
     if (!supabase) {
-      setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
+      setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: [], accessCount: 0 });
       setLoading(false);
       return;
     }
@@ -72,8 +77,19 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
         .limit(1);
 
       if (!data || data.length === 0) {
-        // Email not in CRM - no access
-        setBuyerStatus({ isBuyer: false, isBundle: false, tags: [], accessCount: 0 });
+        // No CRM row yet - auto-create one for free-tier tracking
+        try {
+          await supabase.from("crm_contacts").insert({
+            email: emailKey,
+            source: "other",
+            tags: ["portal_signup"],
+            status: "new",
+            first_name: user.user_metadata?.name?.split(" ")[0] || "",
+            last_name: user.user_metadata?.name?.split(" ").slice(1).join(" ") || "",
+            last_activity_at: new Date().toISOString(),
+          });
+        } catch {}
+        setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: ["portal_signup"], accessCount: 0 });
         setLoading(false);
         return;
       }
@@ -82,26 +98,30 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       const tags = (contact.tags as string[]) || [];
       const isBuyer = tags.includes("stripe_customer");
       const isBundle = tags.includes("bundle");
+      const hasRecording = tags.includes("recording_access") || isBundle;
+      const hasGuide = isBundle;
 
-      setBuyerStatus({ isBuyer, isBundle, tags, accessCount: 0 });
+      let tier: AccessTier = "free";
+      if (isBundle) tier = "bundle";
+      else if (hasRecording) tier = "recording";
 
-      if (isBuyer) {
-        logAccess(user.email);
+      setBuyerStatus({ tier, isBuyer, isBundle, hasRecording, hasGuide, tags, accessCount: 0 });
 
-        const portalTag = "portal_access";
-        const newTags = [...new Set([...tags, portalTag])];
-        await supabase
-          .from("crm_contacts")
-          .update({
-            tags: newTags,
-            last_activity_at: new Date().toISOString(),
-            metadata: {
-              last_portal_access: new Date().toISOString(),
-              portal_device: navigator.userAgent.substring(0, 100),
-            },
-          })
-          .eq("id", contact.id);
-      }
+      // Track portal access for any logged-in user
+      logAccess(user.email);
+      const portalTag = "portal_access";
+      const newTags = [...new Set([...tags, portalTag])];
+      await supabase
+        .from("crm_contacts")
+        .update({
+          tags: newTags,
+          last_activity_at: new Date().toISOString(),
+          metadata: {
+            last_portal_access: new Date().toISOString(),
+            portal_device: navigator.userAgent.substring(0, 100),
+          },
+        })
+        .eq("id", contact.id);
     } catch {
       setBuyerStatus(null);
     }
