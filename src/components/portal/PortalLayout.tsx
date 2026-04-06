@@ -2,7 +2,7 @@ import { NavLink, Outlet, Navigate, useSearchParams, Link } from "react-router-d
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
-import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation } from "lucide-react";
+import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation, Zap } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -15,7 +15,7 @@ const freeNavItems = [
   { to: "/portal/slides", icon: Presentation, label: "Slides", end: true },
 ];
 
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+function SidebarContent({ onClose, tier = "free" }: { onClose?: () => void; tier?: string }) {
   const { user, signOut } = useAuth();
   const name = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
   const showUpgrade = tier !== "bundle";
