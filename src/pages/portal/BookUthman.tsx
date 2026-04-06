@@ -232,7 +232,11 @@ export default function BookUthman() {
   }, []);
 
   const handleBookClick = (calSlug: string) => {
-    if (!window.Cal) return;
+    // Fallback: if Cal embed hasn't loaded, open in new tab
+    if (!window.Cal) {
+      window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}`, "_blank");
+      return;
+    }
 
     const calLink = `${CAL_USERNAME}/${calSlug}`;
     const prefill: Record<string, string> = {};
@@ -240,13 +244,18 @@ export default function BookUthman() {
     const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
     if (name) prefill["name"] = name;
 
-    window.Cal("modal", {
-      calLink,
-      config: {
-        layout: "month_view",
-        ...prefill,
-      },
-    });
+    try {
+      window.Cal("modal", {
+        calLink,
+        config: {
+          layout: "month_view",
+          ...prefill,
+        },
+      });
+    } catch {
+      // If embed fails, fall back to direct link
+      window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}`, "_blank");
+    }
   };
 
   return (
