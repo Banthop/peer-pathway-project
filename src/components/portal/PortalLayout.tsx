@@ -2,13 +2,17 @@ import { NavLink, Outlet, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
-import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock } from "lucide-react";
+import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { to: "/portal", icon: Play, label: "Recording", end: true },
   { to: "/portal/resources", icon: BookOpen, label: "Resources" },
   { to: "/portal/book-uthman", icon: UserCheck, label: "Book Uthman" },
+];
+
+const freeNavItems = [
+  { to: "/portal/slides", icon: Presentation, label: "Slides", end: true },
 ];
 
 function SidebarContent({ onClose }: { onClose?: () => void }) {
@@ -95,34 +99,75 @@ function NotABuyer() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
+  const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
+  const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
+
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-      <div className="w-full max-w-md text-center space-y-6">
-        <div className="w-14 h-14 rounded-full bg-[#F5F5F5] flex items-center justify-center mx-auto">
-          <Lock className="w-7 h-7 text-[#999]" />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold text-[#111]">Content not available</h1>
-          <p className="text-sm text-[#888] font-light mt-2 leading-relaxed">
-            This portal is only available to customers who have purchased access.
-            If you've purchased with a different email, please sign in with that account.
+    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md space-y-5">
+        {/* Slides nudge */}
+        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 text-center shadow-sm">
+          <div className="w-12 h-12 rounded-full bg-violet-50 flex items-center justify-center mx-auto mb-3">
+            <Presentation className="w-6 h-6 text-violet-600" />
+          </div>
+          <p className="text-[13px] font-semibold text-[#111] mb-1">
+            Start with the free slides
           </p>
-        </div>
-        <div className="space-y-3">
+          <p className="text-[12px] text-[#888] font-light leading-relaxed mb-3">
+            The full slide deck from the 90-minute webinar is free to view.
+            No purchase needed.
+          </p>
           <button
-            onClick={() => navigate("/webinar")}
-            className="w-full py-3 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-colors"
+            onClick={() => navigate("/portal/slides")}
+            className="w-full py-2.5 rounded-xl bg-violet-600 text-white text-[13px] font-semibold hover:bg-violet-700 transition-colors"
           >
-            Get Access
-          </button>
-          <button
-            onClick={signOut}
-            className="w-full py-3 rounded-xl bg-[#F5F5F5] text-[#666] text-sm font-medium hover:bg-[#EBEBEB] transition-colors"
-          >
-            Sign in with a different account
+            View the Slides (Free)
           </button>
         </div>
-        <p className="text-xs text-[#BBB] font-light">
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-px bg-[#E8E8E8]" />
+          <span className="text-[11px] text-[#BBB] font-medium uppercase tracking-wider">or unlock the full system</span>
+          <div className="flex-1 h-px bg-[#E8E8E8]" />
+        </div>
+
+        {/* Purchase options */}
+        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm space-y-3">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#F5F5F5] flex items-center justify-center flex-shrink-0">
+              <Lock className="w-5 h-5 text-[#999]" />
+            </div>
+            <div>
+              <p className="text-[14px] font-semibold text-[#111]">Recording access required</p>
+              <p className="text-[12px] text-[#888] font-light mt-0.5 leading-relaxed">
+                This portal is only available to customers who have purchased access.
+                If you purchased with a different email, sign in with that account.
+              </p>
+            </div>
+          </div>
+          <a
+            href={STRIPE_RECORDING_URL}
+            className="block w-full py-3 rounded-xl bg-[#111] text-white text-[13px] font-bold text-center hover:bg-[#222] transition-colors"
+          >
+            Get the Recording - £10
+          </a>
+          <a
+            href={STRIPE_BUNDLE_URL}
+            className="block w-full py-3 rounded-xl border border-[#CCC] text-[#111] text-[13px] font-semibold text-center hover:bg-[#F5F5F5] transition-colors"
+          >
+            Recording + Guide + Tracker - £29
+          </a>
+        </div>
+
+        <button
+          onClick={signOut}
+          className="w-full py-2.5 rounded-xl bg-[#F5F5F5] text-[#666] text-[13px] font-medium hover:bg-[#EBEBEB] transition-colors"
+        >
+          Sign in with a different account
+        </button>
+
+        <p className="text-[11px] text-[#BBB] font-light text-center">
           Having trouble? Email{" "}
           <a href="mailto:d.awotwi@lse.ac.uk" className="text-[#888] underline underline-offset-2">
             d.awotwi@lse.ac.uk

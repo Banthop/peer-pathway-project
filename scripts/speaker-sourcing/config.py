@@ -106,11 +106,15 @@ DARK_HORSE_UNIS = ["Exeter", "Bath", "St Andrews", "Leeds", "Sheffield", "Cardif
                    "Durham", "Lancaster", "York"]
 
 # === SCORING WEIGHTS ===
+# Heavily weighted toward: (1) filling gap firms, (2) confirmed 2025 conversion,
+# (3) covering MULTIPLE gap firms per speaker (fewer speakers, more coverage)
 WEIGHTS = {
-    "fills_gap_firm": 30,
-    "confirmed_conversion": 25,
-    "gender_diversity": 15,
-    "university_diversity": 10,
+    "fills_gap_firm": 35,          # per gap firm covered
+    "multi_gap_bonus": 20,         # bonus if covers 3+ gap firms
+    "confirmed_conversion": 30,    # confirmed spring > summer conversion
+    "recent_2025_2026": 15,        # did spring week in 2025, incoming 2026
+    "gender_diversity": 10,
+    "university_diversity": 5,
     "dark_horse_bonus": 10,
     "sector_gap": 5,
     "follower_1k": 3,
@@ -119,55 +123,50 @@ WEIGHTS = {
 }
 
 # === LINKEDIN SEARCH QUERIES ===
+# TARGETING: 2nd/3rd year students who did spring weeks in 2025 and converted
+# to summer 2026 internships. Look for "incoming summer analyst 2026" in headlines.
+# NOT: people who did spring weeks 3+ years ago and are now full-time analysts.
 SEARCH_QUERIES = [
-    # Multi-spring-week converters (highest priority, fewer speakers, more firms)
-    "incoming summer analyst spring week 2025",
-    "spring week return offer incoming summer intern",
-    "multiple spring weeks investment banking",
-    # Gap firm searches
-    "Goldman Sachs spring week",
-    "JPMorgan spring week",
-    "Deutsche Bank spring week",
-    "Jane Street internship UK",
-    "BlackRock spring week",
-    "KPMG spring week",
-    "Rothschild spring insight",
-    "Lazard spring week",
-    "Evercore spring week",
-    "BNP Paribas spring week",
-    # Conversion-focused
-    "spring week summer internship return offer",
-    "spring week converted investment banking",
-    # Non-target uni dark horses
-    "spring week investment banking Exeter OR Bath OR Durham",
-    "spring week investment banking Birmingham OR Nottingham OR Bristol",
-    # Sector gaps - IB
-    "vacation scheme Freshfields OR Clifford Chance OR Linklaters",
-    # === LAW - Target 2025 vac scheme grads who CONVERTED to training contracts ===
-    "training contract offer 2025 vacation scheme",
-    "vacation scheme converted training contract offer 2025",
-    "training contract offer Linklaters OR Clifford Chance OR Allen Overy 2025",
-    "training contract offer Latham Watkins OR White Case OR Herbert Smith 2025",
-    "training contract offer Kirkland Ellis OR Skadden OR Baker McKenzie 2025",
-    "vacation scheme magic circle training contract 2025",
-    "future trainee 2027 vacation scheme 2025",
-    "vacation scheme Macfarlanes OR Weil OR Paul Weiss training contract",
-    # === CONSULTING - Insight programme speakers ===
-    "BCG insight programme London 2025 2026",
-    "McKinsey discover UK spring insight",
-    "Bain spring insight programme UK",
-    "Oliver Wyman insight day London",
-    "Deloitte spring into programme",
-    # === ASSET MANAGEMENT / PE ===
-    "BlackRock spring insight London",
-    "Blackstone spring insight EMEA",
-    "Fidelity spring insight programme London",
-    # === CROSS-INDUSTRY converters ===
-    "spring week converted return offer 2025",
-    "insight programme summer internship offer UK",
-    # === Diversity & dark horse - LAW ===
-    "vacation scheme training contract Exeter OR Bath OR Durham OR Nottingham",
-    "vacation scheme female training contract 2025 2026",
+    # === HIGHEST PRIORITY: Multi-firm converters (2025 > 2026) ===
+    "incoming summer analyst 2026 spring week",
+    "incoming summer intern 2026 spring insight",
+    "returning summer analyst 2026 spring week",
+    # === GAP FIRM SEARCHES - Rothschild (CRITICAL, zero coverage) ===
+    "Rothschild incoming summer 2026",
+    "Rothschild spring insight 2025 incoming",
+    "Rothschild spring week returning",
+    # === GAP FIRM - BlackRock (CRITICAL, zero coverage) ===
+    "BlackRock incoming summer 2026 spring",
+    "BlackRock spring insight 2025 incoming analyst",
+    # === GAP FIRM - BCG / Bain (zero MBB consulting coverage) ===
+    "BCG insight programme 2025 incoming summer",
+    "Bain insight programme 2025 incoming",
+    "BCG spring insight London incoming 2026",
+    # === GAP FIRM - BNP Paribas ===
+    "BNP Paribas incoming summer analyst 2026",
+    "BNP Paribas spring insight 2025",
+    # === GAP FIRM - KPMG ===
+    "KPMG spring into 2025 incoming summer",
+    "KPMG insight 2025 returning 2026",
+    # === BANKING converters (2025 spring > 2026 summer) ===
+    "Goldman Sachs incoming summer analyst 2026 spring",
+    "JPMorgan incoming summer analyst 2026 spring",
+    "Barclays discovery 2025 incoming summer 2026",
+    "Deutsche Bank spring into banking incoming summer 2026",
+    "Lazard spring insight 2025 incoming summer",
+    "Evercore spring week 2025 incoming summer",
+    # === TRADING / QUANT converters ===
+    "Jane Street incoming 2026 spring",
+    "Citadel discover incoming 2026",
+    "Optiver spring 2025 incoming summer",
+    # === AM / PE converters ===
+    "Fidelity spring insight 2025 incoming summer",
+    "Schroders spring insight 2025 incoming",
+    # === DARK HORSE unis with conversions ===
+    "incoming summer analyst 2026 spring week Exeter OR Bath OR Durham OR Bristol OR Nottingham OR Birmingham",
+    # === CROSS-INDUSTRY 2025 converters ===
+    "spring week 2025 converted summer internship 2026 UK",
+    "spring insight 2025 return offer summer 2026",
 ]
 
 # === DM TEMPLATES ===

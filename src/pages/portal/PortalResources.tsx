@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
-import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Presentation } from "lucide-react";
+import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Presentation, Star, Zap } from "lucide-react";
 
 const GUIDE_LINK = "/portal/cold-email-guide";
 const CHECKLIST_LINK = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
@@ -206,10 +206,10 @@ export default function PortalResources() {
 
                           <div className="mt-8">
                             <a
-                              href="https://buy.stripe.com/3cI14m1Uw11n4mC4WE2400c"
+                              href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
                               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-900 to-red-600 text-white text-[13px] font-bold hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300"
                             >
-                              Upgrade to Unlock Blueprint
+                              Upgrade to Full Bundle - £29
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           </div>
@@ -279,12 +279,12 @@ export default function PortalResources() {
           ))}
         </div>
 
-        {/* Global Bundle upgrade prompt for webinar-only buyers at the bottom */}
+        {/* Bundle upgrade prompt for recording-only buyers */}
         {!isBundle && (
           <div className="mt-16 bg-gradient-to-br from-zinc-900 to-black rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-2xl border border-white/10">
             {/* Background design elements */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-600/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-            
+
             <div className="relative flex flex-col md:flex-row items-center justify-between gap-10 z-10">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-full mb-4">
@@ -299,15 +299,15 @@ export default function PortalResources() {
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
                   <a
-                    href="https://buy.stripe.com/3cI14m1Uw11n4mC4WE2400c"
+                    href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
                     className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-xl text-[14px] font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   >
-                    Unlock the Master Guide for £12
+                    Unlock the Full Bundle - £29
                     <Lock className="w-4 h-4 ml-1" />
                   </a>
                 </div>
               </div>
-              
+
               <div className="hidden md:flex flex-col gap-3 flex-shrink-0 opacity-80 rotate-3">
                 <div className="bg-white/5 border border-white/10 p-4 rounded-xl backdrop-blur-sm w-64">
                   <div className="h-2 bg-white/20 rounded w-1/3 mb-4" />
@@ -322,6 +322,56 @@ export default function PortalResources() {
                   </div>
                   <div className="h-2 bg-white/10 rounded w-full" />
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Coaching upsell for bundle buyers - they have everything, next step is 1-on-1 */}
+        {isBundle && (
+          <div className="mt-16 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-3xl p-8 md:p-10 relative overflow-hidden shadow-sm">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-400 rounded-full blur-[80px] opacity-10 pointer-events-none" />
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-8 z-10">
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-full mb-4">
+                  <Zap className="w-4 h-4 text-emerald-600" />
+                  <span className="text-xs font-bold text-emerald-700 uppercase tracking-widest">Final Step</span>
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-emerald-900">
+                  You have the system. Now apply it with Uthman.
+                </h3>
+                <p className="text-[15px] text-emerald-800/70 font-light mt-3 leading-relaxed max-w-xl">
+                  The guide and templates give you everything to do it yourself. A 1-on-1 session with Uthman
+                  means he reviews YOUR specific emails, YOUR lead list, and YOUR target firms - and fixes
+                  them on the spot. Most students say this is where everything finally clicks.
+                </p>
+
+                {/* Inline testimonial */}
+                <div className="mt-5 bg-white/70 border border-emerald-100 rounded-xl p-4 max-w-lg">
+                  <div className="flex gap-0.5 mb-1.5">
+                    {[1,2,3,4,5].map(i => (
+                      <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-[13px] text-emerald-800 font-light italic leading-relaxed">
+                    "I had the guide and thought I knew what I was doing. One call with Uthman and he found 5
+                    things in my emails I was doing wrong. Got 4 replies the week after."
+                  </p>
+                  <p className="text-[12px] text-emerald-700 font-semibold mt-1.5">Priya M., LSE</p>
+                </div>
+              </div>
+
+              <div className="w-full md:w-auto flex flex-col gap-3 flex-shrink-0">
+                <Link
+                  to="/portal/book-uthman"
+                  className="w-full md:w-auto px-8 py-4 bg-emerald-600 text-white rounded-xl text-[14px] font-bold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                >
+                  Book a 1-on-1 Session
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <p className="text-[11px] text-emerald-700/60 text-center">
+                  Strategy Call from £35 - Deep Dive from £59
+                </p>
               </div>
             </div>
           </div>

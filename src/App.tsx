@@ -56,6 +56,7 @@ import BookAndrew from "./pages/portal/BookAndrew";
 import BookMohammad from "./pages/portal/BookMohammad";
 import DaWebinar from "./pages/DaWebinar";
 import SpringWeekWebinar from "./pages/SpringWeekWebinar";
+import SlidesPage from "./pages/portal/SlidesPage";
 
 const queryClient = new QueryClient();
 
@@ -147,6 +148,7 @@ const AppRoutes = () => {
         <Route path="/spring-week" element={<SpringWeekWebinar />} />
         <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
         <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
+        <Route path="/portal/slides" element={<SlidesPage />} />
         <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
         <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -177,6 +179,7 @@ const AppRoutes = () => {
       <Route path="/resources" element={<PublicResources />} />
       <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
       <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
+      <Route path="/portal/slides" element={<SlidesPage />} />
       <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
       <Route path="/signup" element={<GuestRoute><Signup /></GuestRoute>} />
       <Route path="/forgot-password" element={<ForgotPassword />} />

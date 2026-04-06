@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check, Lock, ShieldCheck } from "lucide-react";
+import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check, Lock, ShieldCheck, BookOpen } from "lucide-react";
 
 const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
 const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
@@ -259,6 +259,7 @@ export default function PortalRecording() {
   }, [progress.lastTime, seekTo]);
 
   const isBuyer = buyerStatus?.isBuyer ?? false;
+  const isBundle = buyerStatus?.isBundle ?? false;
   // While buyerStatus is null (loading), treat as not-yet-known - show nothing extra
   const isLoading = buyerStatus === null;
 
@@ -395,29 +396,81 @@ export default function PortalRecording() {
               )}
             </div>
 
-            {/* ════════ THE "STUCK?" UPSELL LOOP ════════ */}
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 relative overflow-hidden group mt-6 shadow-sm hover:shadow-md transition-shadow">
-              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400 rounded-full blur-[80px] opacity-10 transition-opacity" />
-              
-              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <h3 className="text-[16px] font-bold text-emerald-900 flex items-center gap-2">
-                    <Zap className="w-5 h-5 text-emerald-600" />
-                    Need these templates applied to YOUR specific situation?
-                  </h3>
-                  <p className="text-[13px] text-emerald-800 mt-1.5 max-w-xl leading-relaxed font-light">
-                    Watching the system is Step 1. Applying it flawlessly is Step 2. Get Uthman to personally write your templates, audit your lead list, and build your pipeline on a 1-on-1 Deep Dive.
-                  </p>
+            {/* ════════ CONTEXTUAL UPSELL - recording-only buyers see bundle CTA, bundle buyers see coaching CTA ════════ */}
+            {isBuyer && !isBundle && (
+              <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden mt-6 shadow-sm">
+                <div className="bg-gradient-to-r from-[#0A0A0A] to-[#1F1F1F] px-6 py-5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                      <BookOpen className="w-4.5 h-4.5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-1">Next Step</p>
+                      <h3 className="text-[16px] font-bold text-white leading-tight">
+                        The recording shows you what to do. The guide shows you exactly how.
+                      </h3>
+                    </div>
+                  </div>
                 </div>
-                <Link 
-                  to="/portal/book-uthman"
-                  className="w-full md:w-auto flex-shrink-0 bg-emerald-600 text-white px-6 py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
-                >
-                  Book 1-on-1 Coaching
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                <div className="p-6">
+                  <p className="text-[13px] text-[#666] font-light leading-relaxed mb-5">
+                    The Cold Email Guide includes the exact email templates, the 200-firm outreach list, the
+                    tracking spreadsheet, and the follow-up sequences. Everything you need to go from watching
+                    to actually sending.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 mb-5">
+                    {[
+                      "50-page written guide",
+                      "Copy-paste email templates",
+                      "200 UK firms to cold email",
+                      "Outreach tracker spreadsheet",
+                    ].map((item) => (
+                      <div key={item} className="flex items-center gap-2">
+                        <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" strokeWidth={3} />
+                        <span className="text-[12px] text-[#444]">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-3 mb-4 text-center">
+                    <p className="text-[11px] text-[#888] font-light">
+                      You've already paid £10 for the recording. Upgrade to the full bundle for just{" "}
+                      <strong className="text-[#111]">£19 more</strong> - the guide alone is worth £29.
+                    </p>
+                  </div>
+                  <a
+                    href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
+                    className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3.5 rounded-xl hover:bg-[#333] transition-colors shadow-md"
+                  >
+                    Upgrade to Recording + Guide - £29
+                  </a>
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* ════════ BUNDLE BUYERS: coaching CTA ════════ */}
+            {isBuyer && isBundle && (
+              <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 relative overflow-hidden group mt-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400 rounded-full blur-[80px] opacity-10 transition-opacity" />
+                <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div>
+                    <h3 className="text-[16px] font-bold text-emerald-900 flex items-center gap-2">
+                      <Zap className="w-5 h-5 text-emerald-600" />
+                      Need these templates applied to YOUR specific situation?
+                    </h3>
+                    <p className="text-[13px] text-emerald-800 mt-1.5 max-w-xl leading-relaxed font-light">
+                      Watching the system is Step 1. Applying it flawlessly is Step 2. Get Uthman to personally write your templates, audit your lead list, and build your pipeline on a 1-on-1 Deep Dive.
+                    </p>
+                  </div>
+                  <Link
+                    to="/portal/book-uthman"
+                    className="w-full md:w-auto flex-shrink-0 bg-emerald-600 text-white px-6 py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                  >
+                    Book 1-on-1 Coaching
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            )}
 
           </div>
 
