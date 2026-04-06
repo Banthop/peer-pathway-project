@@ -4,22 +4,30 @@ import { Input } from "@/components/ui/input";
 import {
   SPRING_WEEK_INDUSTRY_OPTIONS,
   SPRING_WEEK_INDUSTRY_REINFORCEMENT,
+  BIGGEST_CONCERN_OPTIONS,
   REFERRAL_OPTIONS,
 } from "@/data/springWeekData";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Target, AlertTriangle } from "lucide-react";
+import { ArrowRight, Target, AlertTriangle, Building2, ShieldAlert } from "lucide-react";
 
 interface SpringWeekIndustryProps {
   industry: string;
   industryDetail: string;
+  springWeekFirms: string;
+  biggestConcern: string;
   referralSource: string;
-  onUpdate: (field: "industry" | "industryDetail" | "referralSource", value: string) => void;
+  onUpdate: (
+    field: "industry" | "industryDetail" | "springWeekFirms" | "biggestConcern" | "referralSource",
+    value: string,
+  ) => void;
   onContinue: () => string | null;
 }
 
 export function SpringWeekIndustry({
   industry,
   industryDetail,
+  springWeekFirms,
+  biggestConcern,
   referralSource,
   onUpdate,
   onContinue,
@@ -47,12 +55,13 @@ export function SpringWeekIndustry({
         </p>
       </div>
 
+      {/* Section: Industry */}
       <div className="space-y-3">
         <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
-          Which area of finance are you targeting?
+          About your spring week
         </h2>
         <p className="text-sm text-muted-foreground font-sans font-light">
-          Pick the one closest to your spring week
+          What area are you targeting?
         </p>
       </div>
 
@@ -87,22 +96,58 @@ export function SpringWeekIndustry({
         </div>
       )}
 
-      {/* Detail field */}
+      {/* Section: Which spring weeks have you landed? */}
       {showDetail && industry && (
         <div
-          className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300"
+          className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300"
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
-          <label className="text-sm text-muted-foreground font-sans font-light">
-            Which firm(s) are you doing a spring week at? (optional)
-          </label>
-          <Input
-            type="text"
-            placeholder="e.g. Goldman Sachs, JPMorgan, Barclays"
-            value={industryDetail}
-            onChange={(e) => onUpdate("industryDetail", e.target.value)}
-            className="font-sans text-base h-12 border-border rounded-xl"
-          />
+          <div className="space-y-2">
+            <label className="flex items-center gap-2 text-sm font-sans font-medium text-foreground">
+              <Building2 className="h-4 w-4 text-muted-foreground" />
+              Which firm(s) have you got a spring week at?
+            </label>
+            <Input
+              type="text"
+              placeholder="e.g. Goldman Sachs, Barclays"
+              value={springWeekFirms}
+              onChange={(e) => onUpdate("springWeekFirms", e.target.value)}
+              className="font-sans text-base h-12 border-border rounded-xl"
+            />
+            <p className="text-[11px] text-muted-foreground font-sans font-light">
+              We'll tailor our recommendation to your specific firms
+            </p>
+          </div>
+
+          {/* Section: Biggest concern */}
+          <div className="space-y-3 pt-2">
+            <label className="flex items-center gap-2 text-sm font-sans font-medium text-foreground">
+              <ShieldAlert className="h-4 w-4 text-muted-foreground" />
+              What's your biggest concern about your spring week?
+            </label>
+            <div className="space-y-2">
+              {BIGGEST_CONCERN_OPTIONS.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => onUpdate("biggestConcern", option)}
+                  className={cn(
+                    "w-full text-left px-4 py-3 text-sm rounded-xl border font-sans font-light transition-all duration-200",
+                    biggestConcern === option
+                      ? "bg-foreground text-background border-foreground shadow-sm"
+                      : "bg-background text-foreground border-border hover:border-foreground/40",
+                  )}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Legacy detail field - hidden but still tracked */}
+          {industryDetail && (
+            <input type="hidden" value={industryDetail} />
+          )}
         </div>
       )}
 
@@ -134,7 +179,7 @@ export function SpringWeekIndustry({
         type="submit"
         className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
       >
-        Continue
+        Find My Best Option
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </form>

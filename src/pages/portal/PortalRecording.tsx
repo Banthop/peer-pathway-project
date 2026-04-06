@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check } from "lucide-react";
+import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check, Lock, BookOpen } from "lucide-react";
 
 /* ─── Chapter data ─── */
 interface Chapter {
@@ -53,8 +53,151 @@ function saveProgress(progress: WatchProgress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...progress, lastUpdated: new Date().toISOString() }));
 }
 
+function LockedRecordingView() {
+  return (
+    <div className="w-full bg-[#FAFAFA] min-h-screen">
+      {/* Header */}
+      <div className="bg-white border-b border-[#E8E8E8]">
+        <div className="px-6 py-6 md:px-10 lg:px-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 bg-amber-500 rounded-full" />
+              <p className="text-xs text-amber-700 font-bold uppercase tracking-wider">
+                Locked Content
+              </p>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#111]">
+              Cold Email Masterclass
+            </h1>
+            <p className="text-sm text-[#666] mt-1.5 font-light">
+              90 minutes of step-by-step cold email strategy, templates, and live Q&A.
+            </p>
+          </div>
+          {/* Free resource banner - right side, bigger */}
+          <Link
+            to="/portal/resources"
+            className="inline-flex items-center gap-2.5 bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 rounded-xl px-5 py-3.5 transition-colors group flex-shrink-0 shadow-sm hover:shadow-md"
+          >
+            <BookOpen className="w-5 h-5 text-blue-600" />
+            <span className="text-[13px] font-semibold text-blue-700">Access Your Free Cold-Email Webinar Slides Here</span>
+            <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+      </div>
+
+      <div className="px-6 md:px-10 lg:px-12 mt-6 pb-12">
+        <div className="flex flex-col xl:flex-row gap-8">
+          {/* Locked video preview */}
+          <div className="flex-1 w-full min-w-0">
+            <div className="bg-[#0A0A0A] p-2 md:p-4 rounded-2xl shadow-2xl ring-1 ring-black/5">
+              <div className="relative w-full bg-black rounded-xl overflow-hidden" style={{ paddingBottom: "56.25%" }}>
+                {/* Blurred dark overlay with play button */}
+                <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center z-10">
+                  <div className="w-20 h-20 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-5 backdrop-blur-sm">
+                    <Lock className="w-8 h-8 text-white/60" />
+                  </div>
+                  <p className="text-white/80 text-lg font-bold">This 90-minute masterclass is waiting for you</p>
+                  <p className="text-white/40 text-sm mt-2 font-light">Unlock the recording to start watching</p>
+                </div>
+              </div>
+
+              <div className="mt-4 px-2 mb-2 space-y-4">
+                <Link
+                  to="/portal/upgrade"
+                  className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white text-[14px] font-bold hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2"
+                >
+                  <Zap className="w-5 h-5" />
+                  Unlock the Recording - £10
+                </Link>
+                <p className="text-center text-[12px] text-[#888]">
+                  Or <Link to="/portal/upgrade?plan=bundle" className="text-emerald-600 font-semibold hover:underline">get everything for £29</Link>
+                </p>
+              </div>
+            </div>
+
+            {/* Coaching upsell still visible */}
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-6 relative overflow-hidden group mt-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-emerald-400 rounded-full blur-[80px] opacity-10 transition-opacity" />
+              <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <h3 className="text-[16px] font-bold text-emerald-900 flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-emerald-600" />
+                    Need personalised help with your cold emails?
+                  </h3>
+                  <p className="text-[13px] text-emerald-800 mt-1.5 max-w-xl leading-relaxed font-light">
+                    Book a 1-on-1 session with Uthman to get your templates written, your lead list audited, and your pipeline built.
+                  </p>
+                </div>
+                <Link
+                  to="/portal/book-uthman"
+                  className="w-full md:w-auto flex-shrink-0 bg-emerald-600 text-white px-6 py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg hover:bg-emerald-700 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+                >
+                  Book 1-on-1 Coaching
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Chapter list (visible but locked - Zeigarnik effect) */}
+          <div className="xl:w-[380px] flex-shrink-0 w-full mt-6 xl:mt-0">
+            <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden sticky top-6 shadow-sm">
+              <div className="bg-[#111] px-5 py-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-[14px] font-bold text-white tracking-wide uppercase">
+                    What You'll Learn
+                  </h2>
+                  <p className="text-[11px] text-[#AAA] mt-0.5 font-light">
+                    10 modules covering the full system
+                  </p>
+                </div>
+                <div className="bg-white/10 text-amber-400 text-[11px] font-bold px-2 py-1.5 rounded-md shadow-inner">
+                  <Lock className="w-3 h-3 inline mr-1" />Locked
+                </div>
+              </div>
+
+              <div className="max-h-[600px] overflow-y-auto bg-white p-2">
+                {CHAPTERS.map((chapter, idx) => (
+                  <div
+                    key={chapter.id}
+                    className="w-full text-left p-3 mb-1 rounded-xl opacity-70"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1 flex-shrink-0">
+                        <div className="w-6 h-6 rounded-full border border-[#E0E0E0] flex items-center justify-center bg-[#F5F5F5]">
+                          <span className="text-[10px] font-bold text-[#999]">{idx + 1}</span>
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] font-bold text-[#555] truncate">
+                          {chapter.title}
+                        </p>
+                        <p className="text-[11px] mt-0.5 leading-snug text-[#888]">
+                          {chapter.description}
+                        </p>
+                      </div>
+                      <div className="text-[10px] text-[#BBB] font-mono font-medium pt-1 flex-shrink-0">
+                        {chapter.duration}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function PortalRecording() {
   const { buyerStatus } = useBuyerAuth();
+
+  // Free-tier users see the locked preview
+  if (buyerStatus && !buyerStatus.hasRecording) {
+    return <LockedRecordingView />;
+  }
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
   const [activeChapter, setActiveChapter] = useState<string>(CHAPTERS[0].id);
@@ -156,6 +299,18 @@ export default function PortalRecording() {
               Master the Cold Email system. Watch the modules, then use the resources to execute.
             </p>
           </div>
+
+          {/* Free resource banner - only for free accounts */}
+          {buyerStatus && buyerStatus.tier === "free" && (
+            <Link
+              to="/portal/resources"
+              className="hidden md:inline-flex items-center gap-2.5 bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 rounded-xl px-5 py-3.5 transition-colors group flex-shrink-0 self-center shadow-sm hover:shadow-md"
+            >
+              <BookOpen className="w-5 h-5 text-blue-600" />
+              <span className="text-[13px] font-semibold text-blue-700">Access Your Free Cold-Email Webinar Slides Here</span>
+              <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          )}
 
           {/* Gamified Progress Bar */}
           <div className="w-full xl:w-[380px] bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl p-4 flex-shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">

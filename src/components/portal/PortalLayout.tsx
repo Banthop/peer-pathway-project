@@ -1,9 +1,10 @@
-import { NavLink, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, Navigate, useSearchParams, Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
-import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock } from "lucide-react";
-import { useState } from "react";
+import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Zap } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 const navItems = [
   { to: "/portal", icon: Play, label: "Recording", end: true },
@@ -11,9 +12,10 @@ const navItems = [
   { to: "/portal/book-uthman", icon: UserCheck, label: "Book Uthman" },
 ];
 
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+function SidebarContent({ onClose, tier }: { onClose?: () => void; tier?: string }) {
   const { user, signOut } = useAuth();
   const name = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+  const showUpgrade = tier !== "bundle";
 
   return (
     <div className="flex flex-col h-full">
@@ -50,6 +52,20 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             {item.label}
           </NavLink>
         ))}
+
+        {/* Upgrade CTA for non-bundle users */}
+        {showUpgrade && (
+          <div className="pt-3">
+            <Link
+              to="/portal/upgrade"
+              onClick={onClose}
+              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md"
+            >
+              <Zap className="w-4 h-4" />
+              Upgrade Access
+            </Link>
+          </div>
+        )}
       </nav>
 
       {/* Anti-sharing notice */}
@@ -90,53 +106,51 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   );
 }
 
-/* Not-a-buyer screen */
-function NotABuyer() {
-  const { signOut } = useAuth();
-  const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-      <div className="w-full max-w-md text-center space-y-6">
-        <div className="w-14 h-14 rounded-full bg-[#F5F5F5] flex items-center justify-center mx-auto">
-          <Lock className="w-7 h-7 text-[#999]" />
-        </div>
-        <div>
-          <h1 className="text-xl font-semibold text-[#111]">Content not available</h1>
-          <p className="text-sm text-[#888] font-light mt-2 leading-relaxed">
-            This portal is only available to customers who have purchased access.
-            If you've purchased with a different email, please sign in with that account.
-          </p>
-        </div>
-        <div className="space-y-3">
-          <button
-            onClick={() => navigate("/webinar")}
-            className="w-full py-3 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-colors"
-          >
-            Get Access
-          </button>
-          <button
-            onClick={signOut}
-            className="w-full py-3 rounded-xl bg-[#F5F5F5] text-[#666] text-sm font-medium hover:bg-[#EBEBEB] transition-colors"
-          >
-            Sign in with a different account
-          </button>
-        </div>
-        <p className="text-xs text-[#BBB] font-light">
-          Having trouble? Email{" "}
-          <a href="mailto:d.awotwi@lse.ac.uk" className="text-[#888] underline underline-offset-2">
-            d.awotwi@lse.ac.uk
-          </a>
-        </p>
-      </div>
-    </div>
-  );
-}
-
 export default function PortalLayout() {
   const { user, loading: authLoading } = useAuth();
-  const { buyerStatus, loading: buyerLoading } = useBuyerAuth();
+  const { buyerStatus, loading: buyerLoading, checkBuyerStatus } = useBuyerAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Handle ?upgraded=true - refresh buyer status and show success toast
+  useEffect(() => {
+    if (searchParams.get("upgraded") !== "true") return;
+
+    // Remove the query param immediately
+    searchParams.delete("upgraded");
+    setSearchParams(searchParams, { replace: true });
+
+    // Force refresh buyer status
+    checkBuyerStatus();
+
+    // If the webhook hasn't fired yet, poll for up to 60s
+    let attempts = 0;
+    pollRef.current = setInterval(async () => {
+      attempts++;
+      await checkBuyerStatus();
+      if (attempts >= 20) {
+        if (pollRef.current) clearInterval(pollRef.current);
+        toast.success("You're upgraded! Your new content is now unlocked.");
+      }
+    }, 3000);
+
+    toast.success("You're upgraded! Your new content is now unlocked.");
+
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
+
+  // Stop polling once tier upgrades past free
+  useEffect(() => {
+    if (buyerStatus && buyerStatus.tier !== "free" && pollRef.current) {
+      clearInterval(pollRef.current);
+      pollRef.current = null;
+    }
+  }, [buyerStatus?.tier]);
+
+  const tier = buyerStatus?.tier || "free";
 
   // Show loading while auth or buyer check is in progress
   if (authLoading || buyerLoading) {
@@ -150,14 +164,13 @@ export default function PortalLayout() {
   // Not logged in - redirect to the standard login page with return URL
   if (!user) return <Navigate to="/login?redirect=/portal" replace />;
 
-  // Logged in but not a buyer - show blocked screen
-  if (buyerStatus && !buyerStatus.isBuyer) return <NotABuyer />;
+  // No longer blocking free users - they get tiered access inside the portal
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-[220px] bg-white border-r border-[#E8E8E8] flex-col flex-shrink-0 fixed top-0 left-0 h-screen z-30">
-        <SidebarContent />
+        <SidebarContent tier={tier} />
       </aside>
 
       {/* Mobile header */}
@@ -182,7 +195,7 @@ export default function PortalLayout() {
             onClick={() => setMobileOpen(false)}
           />
           <aside className="md:hidden fixed top-0 right-0 w-[260px] h-screen bg-white z-50 shadow-xl animate-in slide-in-from-right duration-200">
-            <SidebarContent onClose={() => setMobileOpen(false)} />
+            <SidebarContent onClose={() => setMobileOpen(false)} tier={tier} />
           </aside>
         </>
       )}

@@ -75,7 +75,7 @@ const Signup = () => {
         </h1>
         {redirectTo === "/portal" && (
           <p className="text-sm font-sans text-muted-foreground mt-2">
-            Use the same email you used to buy your ticket
+            Create your free account to access cold email resources, webinar slides, and more.
           </p>
         )}
       </div>

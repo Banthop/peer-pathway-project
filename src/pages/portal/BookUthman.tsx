@@ -222,8 +222,12 @@ export default function BookUthman() {
       <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
         <div className="flex flex-col md:flex-row items-start gap-6">
           {/* Avatar */}
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#111] to-[#444] flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 ring-4 ring-white shadow-lg overflow-hidden">
-            UA
+          <div className="w-20 h-20 rounded-full flex-shrink-0 ring-4 ring-white shadow-lg overflow-hidden">
+            <img
+              src="/images/uthman-profile.jpg"
+              alt="Uthman"
+              className="w-full h-full object-cover"
+            />
           </div>
 
           <div className="flex-1">
@@ -256,7 +260,7 @@ export default function BookUthman() {
 
       <div className="px-6 md:px-10 lg:px-12 pb-10">
         {/* ════════ PAIN SECTION ════════ */}
-        <div className="bg-[#FFFBF5] border border-amber-200 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 border-l-[6px] border-l-amber-500 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden shadow-sm">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
           <h3 className="text-[15px] font-semibold text-[#111] mb-3 flex items-center gap-2 relative z-10">
             <Target className="w-4 h-4 text-amber-600" />
@@ -289,7 +293,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ COMPARISON ANCHOR ════════ */}
-        <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-5 mb-8 text-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-xl p-5 mb-8 text-center shadow-sm">
           <p className="text-[13px] text-[#888] font-light">
             Professional career coaching firms charge <strong className="text-[#111] font-semibold">£150-300/hr</strong>.
           </p>
@@ -310,10 +314,12 @@ export default function BookUthman() {
           {SESSION_TYPES.map((session) => (
             <div
               key={session.id}
-              className={`relative bg-white border rounded-xl overflow-hidden transition-all hover:shadow-lg ${
+              className={`relative bg-white border-2 rounded-xl overflow-hidden transition-all hover:shadow-lg ${
                 session.popular
-                  ? "border-emerald-400 shadow-md border-l-4 ring-1 ring-emerald-100"
-                  : "border-[#E8E8E8] hover:border-[#CCC]"
+                  ? "border-emerald-400 shadow-md border-l-[6px] border-l-emerald-500 ring-1 ring-emerald-100"
+                  : session.isGroup
+                    ? "border-blue-300 border-l-[6px] border-l-blue-500 hover:border-blue-400"
+                    : "border-[#DDD] border-l-[6px] border-l-slate-400 hover:border-[#BBB]"
               }`}
             >
               <div className="p-6">
@@ -413,7 +419,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ BUNDLE PACKAGE ════════ */}
-        <div className="relative bg-[#111] border border-[#222] rounded-xl p-6 text-white mt-6">
+        <div className="relative bg-gradient-to-br from-[#0a0a0a] to-[#1a1a2e] border-2 border-purple-500/40 rounded-xl p-6 text-white mt-6 shadow-[0_0_30px_rgba(168,85,247,0.15)]">
           <div className="flex items-start justify-between mb-3 pt-2">
             <div>
               <h4 className="text-[15px] font-semibold">{PACKAGE.name}</h4>
@@ -453,7 +459,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ TESTIMONIALS SECTION ════════ */}
-        <div className="mt-12 mb-8">
+        <div className="mt-12 mb-8 bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-6 md:p-8">
           <div className="text-center mb-6">
             <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-1">
               Real results from real students
@@ -489,7 +495,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ FAQ ════════ */}
-        <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden mt-8">
+        <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 border-2 border-slate-300 rounded-xl overflow-hidden mt-8">
           <div className="px-5 py-4 border-b border-[#E8E8E8]">
             <h3 className="text-[13px] font-semibold text-[#111]">
               Common Questions

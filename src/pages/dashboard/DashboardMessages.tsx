@@ -240,7 +240,7 @@ export default function DashboardMessages() {
             <p className="text-sm text-muted-foreground">Choose a conversation from the left to start messaging</p>
           </div>
         )}
-        {/* Chat: header + messages + input — only when a convo is active */}
+        {/* Chat: header + messages + input - only when a convo is active */}
         {activeConvo && (
           <>
             {/* Header */}

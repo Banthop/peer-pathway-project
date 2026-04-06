@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthLayout from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/input";
@@ -17,8 +17,15 @@ const Login = () => {
   const { signIn, signInWithGoogle } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect");
+
+  // Always ensure /login has ?redirect=/portal
+  useEffect(() => {
+    if (!redirectTo) {
+      setSearchParams({ redirect: "/portal" }, { replace: true });
+    }
+  }, [redirectTo, setSearchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,20 +66,17 @@ const Login = () => {
 
   return (
     <AuthLayout>
-      {/* First-time buyer banner when redirected from portal */}
+      {/* First-time visitor banner when redirected from portal */}
       {redirectTo === "/portal" && (
         <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-center">
           <p className="text-sm font-sans text-blue-900 font-medium mb-1">
-            First time here? Create an account first
-          </p>
-          <p className="text-xs font-sans text-blue-700 mb-3">
-            Use the same email you used to buy your ticket
+            New here? Create a free account to access resources.
           </p>
           <Link
             to="/signup?redirect=/portal"
-            className="inline-block rounded-md bg-[#111] text-white text-sm font-sans font-medium px-5 py-2 hover:bg-[#333] transition-colors"
+            className="inline-block rounded-md bg-[#111] text-white text-sm font-sans font-medium px-5 py-2 hover:bg-[#333] transition-colors mt-2"
           >
-            Create account
+            Create free account
           </Link>
         </div>
       )}
@@ -197,24 +201,11 @@ const Login = () => {
       </div>
 
       <div className="mt-6 text-center space-y-3">
-        <Link
-          to="/forgot-password"
-          className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline"
-        >
-          Forgot password?
-        </Link>
-
         <p className="text-sm font-sans text-muted-foreground">
           Don't have an account?{" "}
-          {!IS_WEBINAR_ONLY && role === "coach" ? (
-            <Link to="/coach/signup" className="text-foreground hover:underline">
-              Apply to coach
-            </Link>
-          ) : (
-            <Link to="/signup" className="text-foreground hover:underline">
-              Sign up
-            </Link>
-          )}
+          <Link to="/signup" className="text-foreground hover:underline">
+            Sign up
+          </Link>
         </p>
       </div>
     </AuthLayout>
