@@ -728,8 +728,17 @@ export default function SlidesPage() {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const { user, loading } = useAuth();
 
+  /* ─── Loading state ─── */
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center">
+        <div className="text-[#999] text-sm">Loading...</div>
+      </div>
+    );
+  }
+
   /* ─── Signup gate: show teaser then require free account ─── */
-  if (!loading && !user) {
+  if (!user) {
     return (
       <div
         className="min-h-screen bg-[#FAFAFA] flex flex-col"
