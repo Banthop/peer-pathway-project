@@ -3,7 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
 import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation, Zap } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
   { to: "/portal", icon: Play, label: "Recording", end: true },
@@ -196,6 +197,7 @@ function NotABuyer() {
 export default function PortalLayout() {
   const { user, loading: authLoading } = useAuth();
   const { buyerStatus, loading: buyerLoading, checkBuyerStatus } = useBuyerAuth();
+  const { toast } = useToast();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -218,11 +220,11 @@ export default function PortalLayout() {
       await checkBuyerStatus();
       if (attempts >= 20) {
         if (pollRef.current) clearInterval(pollRef.current);
-        toast.success("You're upgraded! Your new content is now unlocked.");
+        toast({ title: "You're upgraded! Your new content is now unlocked." });
       }
     }, 3000);
 
-    toast.success("You're upgraded! Your new content is now unlocked.");
+    toast({ title: "You're upgraded! Your new content is now unlocked." });
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
