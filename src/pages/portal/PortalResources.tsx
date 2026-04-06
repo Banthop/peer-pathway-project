@@ -9,6 +9,8 @@ const FIRMS_LIST_LINK = "https://earlyedge-1758913924.subpage.co/1581-2e5bf708";
 const INTERVIEW_QUESTIONS_LINK = "https://docs.google.com/document/d/1zt-sHu-iNZ7GuR9XwZPtECGoBTA6yhLoY7pFaMpJxf8/edit?tab=t.0";
 const WEBINAR_SLIDES_LINK = "https://drive.google.com/file/d/1GtHhkNGEQqKnE8NCzZn4hCcBvyBPDCYf/view?usp=sharing";
 
+type ResourceTier = "free" | "recording" | "bundle";
+
 const TIER_ORDER: Record<ResourceTier, number> = { free: 0, recording: 1, bundle: 2 };
 
 function isUnlocked(requiredTier: ResourceTier, userTier: ResourceTier): boolean {
@@ -108,7 +110,8 @@ const PHASES = [
 
 export default function PortalResources() {
   const { buyerStatus } = useBuyerAuth();
-  const tier = buyerStatus?.tier ?? "free";
+  const tier = (buyerStatus?.tier ?? "free") as ResourceTier;
+  const isBundle = tier === "bundle";
 
   // Count exactly how many resources are unlocked vs locked for gamification
   const totalResources = PHASES.reduce((acc, phase) => acc + phase.resources.length, 0);
