@@ -317,20 +317,20 @@ function LockedRecordingSection() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          <a
-            href={STRIPE_RECORDING_URL}
+          <Link
+            to="/portal/upgrade"
             className="flex-1 bg-[#111] text-white text-center text-[13px] font-bold py-3.5 rounded-xl hover:bg-[#333] transition-colors shadow-md flex items-center justify-center gap-2"
           >
             <Play className="w-4 h-4" />
             Get the Recording - £10
-          </a>
-          <a
-            href={STRIPE_BUNDLE_URL}
+          </Link>
+          <Link
+            to="/portal/upgrade"
             className="flex-1 border border-[#CCC] text-[#111] text-center text-[13px] font-semibold py-3.5 rounded-xl hover:bg-[#F5F5F5] transition-colors flex items-center justify-center gap-2"
           >
             <BookOpen className="w-4 h-4" />
             Recording + Guide - £29
-          </a>
+          </Link>
         </div>
 
         <div className="flex items-center justify-center gap-1.5 mt-3">
@@ -413,13 +413,13 @@ function LockedBlueprintSection() {
           ))}
         </div>
 
-        <a
-          href={STRIPE_BUNDLE_URL}
+        <Link
+          to="/portal/upgrade"
           className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3.5 rounded-xl hover:bg-[#333] transition-colors shadow-md flex items-center justify-center gap-2"
         >
           <BookOpen className="w-4 h-4" />
           Unlock Recording + Blueprint - £29
-        </a>
+        </Link>
         <p className="text-[11px] text-[#999] text-center mt-2 font-light">
           Includes the full recording and every template.
         </p>
@@ -570,13 +570,13 @@ function StickyUpgradeBar() {
           </p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <a
-            href={STRIPE_BUNDLE_URL}
+          <Link
+            to="/portal/upgrade"
             className="bg-white text-[#111] text-[12px] font-bold px-5 py-2.5 rounded-xl hover:bg-[#F0F0F0] transition-colors whitespace-nowrap flex items-center gap-1.5"
           >
             Get Full Access
             <ArrowRight className="w-3.5 h-3.5" />
-          </a>
+          </Link>
           <button
             onClick={() => setDismissed(true)}
             className="text-white/40 hover:text-white/70 text-[11px] font-medium transition-colors whitespace-nowrap px-1"
@@ -621,12 +621,12 @@ function ValueLadderSidebar() {
           ))}
         </div>
         <div className="px-4 pb-4">
-          <a
-            href={STRIPE_RECORDING_URL}
+          <Link
+            to="/portal/upgrade"
             className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3 rounded-xl hover:bg-[#333] transition-colors"
           >
             Watch the Recording - £10
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -687,18 +687,18 @@ function ValueLadderSidebar() {
         </div>
 
         <div className="mt-4 pt-4 border-t border-[#F0F0F0]">
-          <a
-            href={STRIPE_BUNDLE_URL}
+          <Link
+            to="/portal/upgrade"
             className="block w-full bg-[#111] text-white text-center text-[12px] font-bold py-2.5 rounded-xl hover:bg-[#333] transition-colors mb-2"
           >
             Get Recording + Guide - £29
-          </a>
-          <a
-            href={STRIPE_RECORDING_URL}
+          </Link>
+          <Link
+            to="/portal/upgrade"
             className="block w-full border border-[#DDD] text-[#555] text-center text-[12px] font-medium py-2.5 rounded-xl hover:bg-[#F5F5F5] transition-colors"
           >
             Just the Recording - £10
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -836,20 +836,20 @@ function SlidesPageInner() {
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <a
-            href={STRIPE_RECORDING_URL}
+          <Link
+            to="/portal/upgrade"
             className="hidden sm:flex items-center gap-1.5 text-[12px] font-semibold text-[#555] hover:text-[#111] transition-colors"
           >
             <Play className="w-3.5 h-3.5" />
             Recording - £10
-          </a>
-          <a
-            href={STRIPE_BUNDLE_URL}
+          </Link>
+          <Link
+            to="/portal/upgrade"
             className="bg-[#111] text-white text-[12px] font-bold px-4 py-2 rounded-lg hover:bg-[#333] transition-colors flex items-center gap-1.5"
           >
             Full Access - £29
             <ArrowRight className="w-3.5 h-3.5" />
-          </a>
+          </Link>
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
-import { BookOpen, CheckSquare, ExternalLink, Table, List, HelpCircle, X, ShieldAlert, Lock, ArrowRight, Sparkles, Presentation, Star, Zap } from "lucide-react";
+import { BookOpen, CheckSquare, Table, List, HelpCircle, Lock, ArrowRight, Sparkles, Presentation, Star, Zap } from "lucide-react";
 
 const GUIDE_LINK = "/portal/cold-email-guide";
 const CHECKLIST_LINK = "https://webinar.yourearlyedge.co.uk/resources/cold-email-checklist";
@@ -253,13 +253,13 @@ export default function PortalResources() {
                           </div>
 
                           <div className="mt-8">
-                            <a
-                              href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
+                            <Link
+                              to="/portal/upgrade"
                               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-red-900 to-red-600 text-white text-[13px] font-bold hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all flex items-center justify-center gap-2 group-hover:-translate-y-0.5 duration-300"
                             >
                               Upgrade to Full Bundle - £29
-                              <ExternalLink className="w-4 h-4" />
-                            </a>
+                              <ArrowRight className="w-4 h-4" />
+                            </Link>
                           </div>
                         </div>
                       </div>
@@ -359,13 +359,13 @@ export default function PortalResources() {
                     : "You have the recording. Add the Cold Email Guide to get the exact templates, follow-up sequences, and the 200+ firm outreach list."}
                 </p>
                 <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
-                  <a
-                    href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
+                  <Link
+                    to="/portal/upgrade"
                     className="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-xl text-[14px] font-bold hover:bg-gray-100 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                   >
                     Unlock the Full Bundle - £29
-                    <Lock className="w-4 h-4 ml-1" />
-                  </a>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
                 </div>
               </div>
 

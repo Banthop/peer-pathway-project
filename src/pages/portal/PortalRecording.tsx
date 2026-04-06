@@ -104,18 +104,18 @@ function PaywallOverlay() {
         </p>
 
         {/* CTAs */}
-        <a
-          href={STRIPE_RECORDING_URL}
+        <Link
+          to="/portal/upgrade"
           className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3 rounded-xl mb-2 hover:bg-[#333] transition-colors shadow-md"
         >
           Unlock the Full Recording - £10
-        </a>
-        <a
-          href={STRIPE_BUNDLE_URL}
+        </Link>
+        <Link
+          to="/portal/upgrade"
           className="block w-full border border-[#CCC] text-[#111] text-center text-[13px] font-semibold py-3 rounded-xl hover:bg-[#F5F5F5] transition-colors"
         >
           Get Recording + Cold Email Guide - £29
-        </a>
+        </Link>
 
         {/* Guarantee */}
         <div className="flex items-center justify-center gap-1.5 mt-3">
@@ -449,12 +449,12 @@ export default function PortalRecording() {
                       <strong className="text-[#111]">£19 more</strong> - the guide alone is worth £29.
                     </p>
                   </div>
-                  <a
-                    href="https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e"
+                  <Link
+                    to="/portal/upgrade"
                     className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3.5 rounded-xl hover:bg-[#333] transition-colors shadow-md"
                   >
                     Upgrade to Recording + Guide - £29
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}
@@ -589,18 +589,18 @@ export default function PortalRecording() {
               {/* Non-buyer sticky CTA at panel bottom */}
               {!isBuyer && !isLoading && (
                 <div className="border-t border-[#E8E8E8] p-4 bg-[#FAFAFA]">
-                  <a
-                    href={STRIPE_RECORDING_URL}
+                  <Link
+                    to="/portal/upgrade"
                     className="block w-full bg-[#111] text-white text-center text-[12px] font-bold py-2.5 rounded-xl mb-2 hover:bg-[#333] transition-colors"
                   >
                     Unlock All Modules - £10
-                  </a>
-                  <a
-                    href={STRIPE_BUNDLE_URL}
+                  </Link>
+                  <Link
+                    to="/portal/upgrade"
                     className="block w-full border border-[#CCC] text-[#333] text-center text-[11px] font-semibold py-2 rounded-xl hover:bg-[#F0F0F0] transition-colors"
                   >
                     Bundle + Guide - £29
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
