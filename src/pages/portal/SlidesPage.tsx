@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "@/components/Logo";
@@ -724,7 +724,26 @@ function ValueLadderSidebar() {
 
 /* ─── Main page ─── */
 
-export default function SlidesPage() {
+class SlidesErrorBoundary extends React.Component<{ children: React.ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+  static getDerivedStateFromError(error: Error) { return { error }; }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center p-8">
+          <div className="max-w-md text-center">
+            <h2 className="text-xl font-bold text-red-600 mb-2">Something went wrong</h2>
+            <pre className="text-xs text-left bg-red-50 p-4 rounded-lg overflow-auto max-h-60 text-red-800">{this.state.error.message}{'\n'}{this.state.error.stack}</pre>
+            <button onClick={() => window.location.reload()} className="mt-4 bg-[#111] text-white px-4 py-2 rounded-lg text-sm">Reload</button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+function SlidesPageInner() {
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const { user, loading } = useAuth();
 
@@ -938,5 +957,14 @@ export default function SlidesPage() {
       {/* Sticky upgrade bar */}
       <StickyUpgradeBar />
     </div>
+  );
+}
+
+
+export default function SlidesPage() {
+  return (
+    <SlidesErrorBoundary>
+      <SlidesPageInner />
+    </SlidesErrorBoundary>
   );
 }
