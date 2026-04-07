@@ -147,84 +147,46 @@ Deno.serve(async (req) => {
         });
     }
 
-    // ---- Search Stripe for recent completed checkout sessions ----
-    // The Stripe API does not support filtering by customer_details.email
-    // directly on the list endpoint in all SDK versions, so we list recent
-    // completed sessions and filter client-side.
+    // ---- Search Stripe for completed checkout sessions matching this email ----
 
     let matchedSession: Stripe.Checkout.Session | null = null;
     let matchedProduct: { productType: string; tags: string[] } | null = null;
 
     try {
-        // Look at the last 25 completed sessions (covers the last ~24 hours of
-        // normal traffic). We check multiple pages if needed, up to 50 sessions.
-        let hasMore = true;
-        let startingAfter: string | undefined;
-        let sessionsChecked = 0;
-        const maxSessions = 50;
-        const cutoff = Math.floor(Date.now() / 1000) - 24 * 60 * 60; // 24 hours ago
+        // Use Stripe's customer_details.email filter to find sessions for this
+        // email directly - no need to iterate all sessions.
+        const sessions = await stripe.checkout.sessions.list({
+            customer_details: { email },
+            status: "complete",
+            limit: 10,
+        });
 
-        while (hasMore && sessionsChecked < maxSessions) {
-            const params: Stripe.Checkout.SessionListParams = {
-                limit: 25,
-                status: "complete",
-            };
-            if (startingAfter) params.starting_after = startingAfter;
+        for (const session of sessions.data) {
+            // Expand line items to find product IDs.
+            try {
+                const expanded = await stripe.checkout.sessions.retrieve(session.id, {
+                    expand: ["line_items.data.price.product"],
+                });
+                const lineItems = expanded.line_items?.data || [];
 
-            const sessions = await stripe.checkout.sessions.list(params);
+                for (const item of lineItems) {
+                    const productId =
+                        typeof item.price?.product === "string"
+                            ? item.price.product
+                            : (item.price?.product as Record<string, unknown>)?.id as string | undefined;
 
-            for (const session of sessions.data) {
-                sessionsChecked++;
-
-                // Stop scanning if session is older than 24 hours.
-                if (session.created < cutoff) {
-                    hasMore = false;
-                    break;
-                }
-
-                const sessionEmail = (
-                    session.customer_details?.email ||
-                    session.customer_email ||
-                    ""
-                ).toLowerCase().trim();
-
-                if (sessionEmail !== email) continue;
-
-                // Expand line items to find product IDs.
-                try {
-                    const expanded = await stripe.checkout.sessions.retrieve(session.id, {
-                        expand: ["line_items.data.price.product"],
-                    });
-                    const lineItems = expanded.line_items?.data || [];
-
-                    for (const item of lineItems) {
-                        const productId =
-                            typeof item.price?.product === "string"
-                                ? item.price.product
-                                : (item.price?.product as Record<string, unknown>)?.id as string | undefined;
-
-                        if (productId && ALL_PRODUCTS[productId]) {
-                            matchedSession = session;
-                            matchedProduct = ALL_PRODUCTS[productId];
-                            break;
-                        }
+                    if (productId && ALL_PRODUCTS[productId]) {
+                        matchedSession = session;
+                        matchedProduct = ALL_PRODUCTS[productId];
+                        break;
                     }
-                } catch (e: unknown) {
-                    const errMsg = e instanceof Error ? e.message : String(e);
-                    console.error(`Error expanding line items for session ${session.id}:`, errMsg);
                 }
-
-                // If we found a match, stop scanning.
-                if (matchedProduct) break;
+            } catch (e: unknown) {
+                const errMsg = e instanceof Error ? e.message : String(e);
+                console.error(`Error expanding line items for session ${session.id}:`, errMsg);
             }
 
-            // If we found a match or exhausted sessions, stop.
-            if (matchedProduct || !sessions.has_more) {
-                hasMore = false;
-            } else {
-                const lastItem = sessions.data[sessions.data.length - 1];
-                startingAfter = lastItem?.id;
-            }
+            if (matchedProduct) break;
         }
     } catch (e: unknown) {
         const errMsg = e instanceof Error ? e.message : String(e);

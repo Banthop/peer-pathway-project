@@ -4,7 +4,7 @@ import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
 import { WelcomePopup } from "@/components/portal/WelcomePopup";
 import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation, Zap } from "lucide-react";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -217,24 +217,6 @@ export default function PortalLayout() {
   const [searchParams, setSearchParams] = useSearchParams();
   const verifyingRef = useRef(false);
 
-  // Call verify-purchase edge function to confirm payment with Stripe directly
-  const verifyPurchase = useCallback(async (email: string) => {
-    if (!supabase) return false;
-    try {
-      const { data, error } = await supabase.functions.invoke("verify-purchase", {
-        body: { email },
-      });
-      if (error) {
-        console.error("verify-purchase error:", error.message);
-        return false;
-      }
-      return data?.updated === true || data?.tier !== "free";
-    } catch (e: any) {
-      console.error("verify-purchase failed:", e.message);
-      return false;
-    }
-  }, []);
-
   // Handle ?upgraded=true - verify purchase with Stripe then refresh tier
   useEffect(() => {
     if (searchParams.get("upgraded") !== "true") return;
@@ -246,41 +228,34 @@ export default function PortalLayout() {
     setSearchParams(searchParams, { replace: true });
 
     const email = user?.email;
-    if (!email) return;
+    if (!email || !supabase) return;
 
-    // Call verify-purchase, then refresh buyer status
+    // Call verify-purchase edge function with the user's email.
+    // It searches Stripe for completed sessions matching this email,
+    // finds the product, and upserts crm_contacts with the right tags.
+    // Works even if there's no existing crm_contacts row.
     (async () => {
-      // First try: verify directly with Stripe (doesn't depend on webhook)
-      const verified = await verifyPurchase(email);
+      try {
+        const { data, error } = await supabase.functions.invoke("verify-purchase", {
+          body: { email },
+        });
 
-      // Refresh buyer status from DB (verify-purchase updated it if payment found)
-      await checkBuyerStatus();
+        if (error) console.error("verify-purchase error:", error.message);
 
-      if (verified) {
-        toast({ title: "You're upgraded! Your new content is now unlocked." });
-      } else {
-        // Webhook may not have fired yet - poll a few times
-        let attempts = 0;
-        const poll = setInterval(async () => {
-          attempts++;
-          await checkBuyerStatus();
-          const currentTier = buyerStatus?.tier ?? "free";
-          if (currentTier !== "free" || attempts >= 10) {
-            clearInterval(poll);
-            if (currentTier !== "free") {
-              toast({ title: "You're upgraded! Your new content is now unlocked." });
-            } else {
-              // Last resort: try verify-purchase one more time
-              const retryVerified = await verifyPurchase(email);
-              await checkBuyerStatus();
-              toast({
-                title: retryVerified
-                  ? "You're upgraded! Your new content is now unlocked."
-                  : "Payment received! Your content will unlock shortly.",
-              });
-            }
-          }
-        }, 3000);
+        // Refresh buyer status from DB (verify-purchase updated it)
+        await checkBuyerStatus();
+
+        const upgraded = data?.updated === true || data?.tier !== "free";
+        toast({
+          title: upgraded
+            ? "You're upgraded! Your new content is now unlocked."
+            : "Payment received! Your content will unlock shortly.",
+        });
+      } catch (e: any) {
+        console.error("verify-purchase failed:", e.message);
+        // Still refresh - webhook may have worked
+        await checkBuyerStatus();
+        toast({ title: "Payment received! Your content will unlock shortly." });
       }
     })();
   }, []);
