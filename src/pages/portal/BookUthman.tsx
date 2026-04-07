@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Star,
@@ -14,42 +14,7 @@ import {
   Target,
 } from "lucide-react";
 
-/* ═══════════════════════════════════════════════════════════════
- *  CAL.COM EMBED SETUP
- *  Uses Cal.com's vanilla JS embed (no npm package required).
- *  Loads embed.js once, then opens modal via Cal("modal", ...).
- * ═══════════════════════════════════════════════════════════════ */
-
 const CAL_USERNAME = "yourearlyedge";
-
-// Extend Window so TypeScript is happy with the Cal global
-declare global {
-  interface Window {
-    Cal?: (...args: unknown[]) => void;
-  }
-}
-
-function loadCalEmbed(): void {
-  if (typeof window === "undefined" || window.Cal) return;
-
-  // Inline loader shim (mirrors Cal.com's official snippet)
-  (function (C: Window, A: string, L: string) {
-    const p = function (...args: unknown[]) { p.q.push(args); };
-    (p as unknown as { q: unknown[][] }).q = [];
-    (C as unknown as Record<string, unknown>)[A] = p;
-    const s = document.createElement("script");
-    s.src = L;
-    s.async = true;
-    document.head.appendChild(s);
-  })(window, "Cal", "https://app.cal.com/embed/embed.js");
-
-  window.Cal!("init", { origin: "https://app.cal.com" });
-  window.Cal!("ui", {
-    theme: "light",
-    hideEventTypeDetails: false,
-    layout: "month_view",
-  });
-}
 
 /* ─── Session types ─── */
 
@@ -203,36 +168,11 @@ export default function BookUthman() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // Load Cal.com embed script once on mount
-  useEffect(() => {
-    loadCalEmbed();
-  }, []);
-
   const handleBookClick = (calSlug: string) => {
-    // Fallback: if Cal embed hasn't loaded, open in new tab
-    if (!window.Cal) {
-      window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}`, "_blank");
-      return;
-    }
-
-    const calLink = `${CAL_USERNAME}/${calSlug}`;
-    const prefill: Record<string, string> = {};
-    if (user?.email) prefill["email"] = user.email;
+    const email = user?.email ? `?email=${encodeURIComponent(user.email)}` : "";
     const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
-    if (name) prefill["name"] = name;
-
-    try {
-      window.Cal("modal", {
-        calLink,
-        config: {
-          layout: "month_view",
-          ...prefill,
-        },
-      });
-    } catch {
-      // If embed fails, fall back to direct link
-      window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}`, "_blank");
-    }
+    const nameParam = name ? `${email ? "&" : "?"}name=${encodeURIComponent(name)}` : "";
+    window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}${email}${nameParam}`, "_blank");
   };
 
   return (
