@@ -22,7 +22,7 @@ import {
 
 const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
 const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
-const CAL_LINK = "https://cal.com/uthm4n";
+const CAL_LINK = "https://cal.com/team/earlyedge";
 const SLIDES_EMBED_URL = "https://drive.google.com/file/d/1GtHhkNGEQqKnE8NCzZn4hCcBvyBPDCYf/preview";
 
 /* ─── Data ─── */
