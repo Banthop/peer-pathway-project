@@ -112,29 +112,6 @@ const SESSION_TYPES: SessionType[] = [
       uni: "Warwick",
     },
   },
-  {
-    id: "group-workshop",
-    name: "Group Cold Email Workshop",
-    duration: "90 min",
-    price: "£20",
-    priceLabel: "per person",
-    description:
-      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option and learn from others' questions.",
-    includes: [
-      "Full system walkthrough",
-      "Live template building",
-      "Group Q&A",
-      "Recording of the session",
-    ],
-    calSlug: "group-workshop",
-    isGroup: true,
-    maxParticipants: 8,
-    testimonial: {
-      text: "Brilliant workshop. Learned so much from other people's questions too",
-      name: "Amina R.",
-      uni: "UCL",
-    },
-  },
 ];
 
 /* ─── Package ─── */
