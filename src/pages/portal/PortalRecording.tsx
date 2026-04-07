@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
 import { Play, ChevronRight, Target, Zap, ArrowRight, Check, Lock, ShieldCheck, BookOpen, Presentation, Info, X as XIcon } from "lucide-react";
 
-const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
-const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
+const STRIPE_RECORDING_URL = "https://buy.stripe.com/8x29AS56I8tPaL09cU2400l";
+const STRIPE_BUNDLE_URL = "https://buy.stripe.com/eVqeVcbv6dO9bP4exe2400m";
 
 /* ─── Chapter data ─── */
 interface Chapter {

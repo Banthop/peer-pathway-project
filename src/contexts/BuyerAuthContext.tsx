@@ -14,6 +14,7 @@ interface BuyerStatus {
   accessCount: number;
   welcomePopupShown: boolean;
   crmId?: string;
+  metadata?: Record<string, any>;
 }
 
 interface BuyerAuthContextValue {
@@ -111,7 +112,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       const metadata = (contact as any).metadata;
       const welcomePopupShown = !!(metadata?.welcome_popup_shown);
 
-      setBuyerStatus({ tier, isBuyer, isBundle, hasRecording, hasGuide, tags, accessCount: 0, welcomePopupShown, crmId: contact.id });
+      setBuyerStatus({ tier, isBuyer, isBundle, hasRecording, hasGuide, tags, accessCount: 0, welcomePopupShown, crmId: contact.id, metadata: metadata || {} });
 
       // Track portal access for any logged-in user
       logAccess(user.email);
@@ -123,6 +124,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
           tags: newTags,
           last_activity_at: new Date().toISOString(),
           metadata: {
+            ...(metadata || {}),
             last_portal_access: new Date().toISOString(),
             portal_device: navigator.userAgent.substring(0, 100),
           },
@@ -137,7 +139,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
 
   const markWelcomeShown = useCallback(async () => {
     // Update local state immediately
-    setBuyerStatus((prev) => prev ? { ...prev, welcomePopupShown: true } : prev);
+    setBuyerStatus((prev) => prev ? { ...prev, welcomePopupShown: true, metadata: { ...(prev.metadata || {}), welcome_popup_shown: true } } : prev);
 
     // Persist to Supabase
     if (!supabase || !buyerStatus?.crmId) return;
@@ -146,13 +148,14 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
         .from("crm_contacts")
         .update({
           metadata: {
+            ...(buyerStatus.metadata || {}),
             welcome_popup_shown: true,
             welcome_popup_shown_at: new Date().toISOString(),
           },
         })
         .eq("id", buyerStatus.crmId);
     } catch {}
-  }, [buyerStatus?.crmId]);
+  }, [buyerStatus?.crmId, buyerStatus?.metadata]);
 
   useEffect(() => {
     if (user) {

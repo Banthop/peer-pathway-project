@@ -43,6 +43,16 @@ const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] 
         productType: "bundle",
         tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
     },
+    // Portal upgrade: free -> recording
+    "prod_UI9GnUfRmimKds": {
+        productType: "webinar_only",
+        tags: ["stripe_customer", "recording_access"],
+    },
+    // Portal upgrade: free -> bundle
+    "prod_UI9IbKsHRmFvhH": {
+        productType: "bundle",
+        tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
+    },
     // Guide-only upgrade for existing recording buyers
     "prod_UHHe5C5FqRLsjK": {
         productType: "guide_upgrade",

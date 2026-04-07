@@ -9,8 +9,8 @@ import {
   Play, Info, Lock,
 } from "lucide-react";
 
-const RECORDING_LINK = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
-const BUNDLE_LINK = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
+const RECORDING_LINK = "https://buy.stripe.com/8x29AS56I8tPaL09cU2400l";
+const BUNDLE_LINK = "https://buy.stripe.com/eVqeVcbv6dO9bP4exe2400m";
 const GUIDE_UPGRADE_LINK = "https://buy.stripe.com/6oU8wOfLmaBXdXc74M2400k";
 
 /* ---- Image Lightbox ---- */
@@ -176,7 +176,7 @@ export default function Upgrade() {
       : selectedPlan === "bundle"
         ? BUNDLE_LINK
         : RECORDING_LINK;
-    window.open(buildCheckoutUrl(link), "_blank");
+    window.location.href = buildCheckoutUrl(link);
   }
 
   const isRecordingSelected = selectedPlan === "recording";

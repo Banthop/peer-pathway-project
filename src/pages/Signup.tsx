@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import AuthLayout from "@/components/auth/AuthLayout";
+import { Logo } from "@/components/Logo";
+import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { WebinarFormStep } from "@/components/webinar/WebinarFormStep";
+import { PhoneInput } from "@/components/webinar/PhoneInput";
+import { UniversityStep } from "@/components/webinar/UniversityStep";
+import { IndustryStep } from "@/components/webinar/IndustryStep";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Check, X, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronLeft, ArrowRight, Shield, Check, X } from "lucide-react";
+
+const IS_WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
 
 const PASSWORD_RULES = [
   { label: "At least 8 characters", test: (pw: string) => pw.length >= 8 },
@@ -16,326 +22,257 @@ const PASSWORD_RULES = [
   { label: "Contains a number", test: (pw: string) => /\d/.test(pw) },
 ];
 
-const IS_WEBINAR_ONLY = import.meta.env.VITE_WEBINAR_ONLY === "true";
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// UK universities for the dropdown
-const UK_UNIVERSITIES = [
-  "University of Bath",
-  "University of Birmingham",
-  "University of Bristol",
-  "University of Cambridge",
-  "Durham University",
-  "University of Edinburgh",
-  "University of Exeter",
-  "Imperial College London",
-  "King's College London",
-  "London School of Economics",
-  "University of Manchester",
-  "University of Nottingham",
-  "University of Oxford",
-  "University of St Andrews",
-  "University College London",
-  "University of Warwick",
-  "Other",
-];
-
-const YEARS_OF_STUDY = [
-  "1st Year",
-  "2nd Year",
-  "3rd Year",
-  "Masters",
-  "Graduate",
-  "Other",
-];
-
-const INDUSTRIES = [
-  "Investment Banking",
-  "Consulting",
-  "Asset Management",
-  "Private Equity",
-  "Trading / Quant",
-  "Big 4",
-  "Tech",
-  "Law",
-  "Not Sure Yet",
-];
-
-const COLD_EMAIL_EXPERIENCE = [
-  "Haven't started yet",
-  "Sent a few but no replies",
-  "Getting some replies",
-  "Already landed interviews / offers",
-];
-
-const REFERRAL_SOURCES = [
-  "LinkedIn",
-  "WhatsApp group",
-  "Friend / word of mouth",
-  "Instagram",
-  "Other",
-];
-
-// Reusable pill toggle button
-function Pill({
-  label,
-  selected,
-  onClick,
-}: {
-  label: string;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`text-sm font-sans px-3.5 py-2 rounded-full border transition-all cursor-pointer select-none ${
-        selected
-          ? "bg-foreground text-background border-foreground"
-          : "bg-background text-foreground border-border hover:border-foreground/40"
-      }`}
-    >
-      {label}
-    </button>
-  );
+// ── Form data ──
+interface SignupFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneCode: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+  university: string;
+  yearOfStudy: string;
+  industry: string;
+  industryDetail: string;
+  referralSource: string;
 }
 
-// Progress bar shown across all 3 steps
-function ProgressBar({ step }: { step: number }) {
+// Steps: 0=Details+Password, 1=University, 2=Industry+Referral
+const TOTAL_STEPS = 3;
+
+function validateStep(step: number, data: SignupFormData): string | null {
+  switch (step) {
+    case 0: {
+      if (!data.firstName.trim()) return "Please enter your first name.";
+      if (!data.lastName.trim()) return "Please enter your last name.";
+      if (!EMAIL_RE.test(data.email)) return "Please enter a valid email.";
+      if (!PASSWORD_RULES.every((r) => r.test(data.password)))
+        return "Password doesn't meet requirements.";
+      if (data.password !== data.confirmPassword)
+        return "Passwords don't match.";
+      return null;
+    }
+    case 1:
+      if (!data.university.trim()) return "Please enter your university.";
+      if (!data.yearOfStudy) return "Please select your year of study.";
+      return null;
+    case 2:
+      if (!data.industry) return "Please pick an industry.";
+      if (!data.referralSource) return "Please select how you heard about us.";
+      return null;
+    default:
+      return null;
+  }
+}
+
+function useSignupForm() {
+  const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+  const [formData, setFormData] = useState<SignupFormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneCode: "gb:+44",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    university: "",
+    yearOfStudy: "",
+    industry: "",
+    industryDetail: "",
+    referralSource: "",
+  });
+
+  const updateField = useCallback(
+    <K extends keyof SignupFormData>(field: K, value: SignupFormData[K]) => {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    },
+    [],
+  );
+
+  const nextStep = useCallback((): string | null => {
+    const error = validateStep(step, formData);
+    if (error) return error;
+    if (step < TOTAL_STEPS - 1) {
+      setDirection("forward");
+      setStep((s) => s + 1);
+    }
+    return null;
+  }, [step, formData]);
+
+  const prevStep = useCallback(() => {
+    if (step > 0) {
+      setDirection("backward");
+      setStep((s) => s - 1);
+    }
+  }, [step]);
+
+  const progress = TOTAL_STEPS > 1 ? (step / (TOTAL_STEPS - 1)) * 100 : 0;
+
+  return { step, totalSteps: TOTAL_STEPS, formData, updateField, nextStep, prevStep, progress, direction };
+}
+
+// ── Step 1: Details + Password ──
+function DetailsStep({
+  formData,
+  onUpdate,
+  onContinue,
+}: {
+  formData: SignupFormData;
+  onUpdate: <K extends keyof SignupFormData>(field: K, value: SignupFormData[K]) => void;
+  onContinue: () => string | null;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => inputRef.current?.focus(), 500);
+    return () => clearTimeout(t);
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onContinue();
+  };
+
+  const allRulesPassed = PASSWORD_RULES.every((r) => r.test(formData.password));
+  const passwordsMatch =
+    formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
+
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-sans text-muted-foreground">
-          Step {step} of 3
-        </span>
-        <span className="text-xs font-sans text-muted-foreground">
-          {step === 1 ? "Account" : step === 2 ? "About you" : "Where you're at"}
-        </span>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Names row */}
+      <div className="space-y-3">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+          Create your account
+        </h2>
+        <p className="text-sm text-muted-foreground font-sans font-light">
+          This takes about 60 seconds
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder="First name"
+            value={formData.firstName}
+            onChange={(e) => onUpdate("firstName", e.target.value)}
+            className="font-sans text-base h-12 border-border rounded-xl"
+            autoComplete="given-name"
+          />
+          <Input
+            type="text"
+            placeholder="Last name"
+            value={formData.lastName}
+            onChange={(e) => onUpdate("lastName", e.target.value)}
+            className="font-sans text-base h-12 border-border rounded-xl"
+            autoComplete="family-name"
+          />
+        </div>
       </div>
-      <div className="h-1 w-full bg-border rounded-full overflow-hidden">
-        <div
-          className="h-full bg-foreground rounded-full transition-all duration-300"
-          style={{ width: `${(step / 3) * 100}%` }}
+
+      {/* Email */}
+      <div className="space-y-2">
+        <Input
+          type="email"
+          placeholder="Email address"
+          value={formData.email}
+          onChange={(e) => onUpdate("email", e.target.value)}
+          className="font-sans text-base h-12 border-border rounded-xl"
+          autoComplete="email"
         />
       </div>
-    </div>
-  );
-}
 
-// Step 1: account basics
-function StepAccount({
-  onSuccess,
-}: {
-  onSuccess: () => void;
-}) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { signUp, signInWithGoogle } = useAuth();
-  const { toast } = useToast();
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirect");
+      {/* Phone */}
+      <div className="space-y-2">
+        <PhoneInput
+          phoneCode={formData.phoneCode}
+          phone={formData.phone}
+          onCodeChange={(code) => onUpdate("phoneCode", code)}
+          onPhoneChange={(val) => onUpdate("phone", val)}
+        />
+        <p className="text-xs text-muted-foreground font-sans font-light">
+          Phone <span className="text-amber-600 font-medium">(optional)</span> - for reminders and last-minute updates only
+        </p>
+      </div>
 
-  const allRulesPassed = PASSWORD_RULES.every((r) => r.test(password));
-  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !email || !password || !confirmPassword) {
-      toast({ title: "Please fill in all fields", variant: "destructive" });
-      return;
-    }
-    if (!allRulesPassed) {
-      toast({
-        title: "Password doesn't meet requirements",
-        description: "Check the requirements below the password field.",
-        variant: "destructive",
-      });
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast({ title: "Passwords don't match", variant: "destructive" });
-      return;
-    }
-    setLoading(true);
-    const { error } = await signUp(email, password, name, "student");
-    setLoading(false);
-    if (error) {
-      toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
-    } else {
-      onSuccess();
-    }
-  };
-
-  const handleGoogle = async () => {
-    // Google OAuth goes straight to the portal - skip profiling steps
-    const googleRedirect = redirectTo
-      ? `${window.location.origin}${redirectTo}`
-      : IS_WEBINAR_ONLY
-      ? `${window.location.origin}/portal`
-      : undefined;
-    const { error } = await signInWithGoogle(googleRedirect);
-    if (error) {
-      toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
-    }
-  };
-
-  return (
-    <>
-      <div className="text-center mb-6">
-        <h1 className="text-2xl font-sans font-light text-foreground">Create your account</h1>
-        {redirectTo === "/portal" && (
-          <p className="text-sm font-sans text-muted-foreground mt-2">
-            Free access to cold email resources, webinar slides, and more.
-          </p>
+      {/* Password */}
+      <div className="space-y-2">
+        <Input
+          type="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={(e) => onUpdate("password", e.target.value)}
+          className="font-sans text-base h-12 border-border rounded-xl"
+          autoComplete="new-password"
+        />
+        {formData.password.length > 0 && (
+          <div className="pt-1 space-y-1">
+            {PASSWORD_RULES.map((rule) => {
+              const passed = rule.test(formData.password);
+              return (
+                <div key={rule.label} className="flex items-center gap-1.5">
+                  {passed ? (
+                    <Check className="w-3 h-3 text-emerald-500" />
+                  ) : (
+                    <X className="w-3 h-3 text-red-400" />
+                  )}
+                  <span className={`text-xs font-sans ${passed ? "text-emerald-600" : "text-muted-foreground"}`}>
+                    {rule.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name" className="font-sans font-light">Name</Label>
-          <Input
-            id="name"
-            type="text"
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="font-sans"
-            disabled={loading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email" className="font-sans font-light">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="font-sans"
-            disabled={loading}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="password" className="font-sans font-light">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="font-sans"
-            disabled={loading}
-          />
-          {password.length > 0 && (
-            <div className="pt-1 space-y-1">
-              {PASSWORD_RULES.map((rule) => {
-                const passed = rule.test(password);
-                return (
-                  <div key={rule.label} className="flex items-center gap-1.5">
-                    {passed ? (
-                      <Check className="w-3 h-3 text-emerald-500" />
-                    ) : (
-                      <X className="w-3 h-3 text-red-400" />
-                    )}
-                    <span
-                      className={`text-xs font-sans ${
-                        passed ? "text-emerald-600" : "text-muted-foreground"
-                      }`}
-                    >
-                      {rule.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword" className="font-sans font-light">
-            Confirm Password
-          </Label>
-          <Input
-            id="confirmPassword"
-            type="password"
-            placeholder="••••••••"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="font-sans"
-            disabled={loading}
-          />
-          {confirmPassword.length > 0 && (
-            <div className="flex items-center gap-1.5 pt-1">
-              {passwordsMatch ? (
-                <>
-                  <Check className="w-3 h-3 text-emerald-500" />
-                  <span className="text-xs font-sans text-emerald-600">Passwords match</span>
-                </>
-              ) : (
-                <>
-                  <X className="w-3 h-3 text-red-400" />
-                  <span className="text-xs font-sans text-red-500">Passwords don't match</span>
-                </>
-              )}
-            </div>
-          )}
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full bg-foreground text-background hover:bg-foreground/90 font-sans font-light"
-          disabled={loading || !allRulesPassed || !passwordsMatch}
-        >
-          {loading ? "Creating account..." : "Create account"}
-          {!loading && <ChevronRight className="ml-1 h-4 w-4" />}
-        </Button>
-      </form>
-
-      {/* Google OAuth */}
-      <div className="mt-4">
-        <div className="relative my-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-border" />
+      {/* Confirm password */}
+      <div className="space-y-2">
+        <Input
+          type="password"
+          placeholder="Confirm password"
+          value={formData.confirmPassword}
+          onChange={(e) => onUpdate("confirmPassword", e.target.value)}
+          className="font-sans text-base h-12 border-border rounded-xl"
+          autoComplete="new-password"
+        />
+        {formData.confirmPassword.length > 0 && (
+          <div className="flex items-center gap-1.5 pt-1">
+            {passwordsMatch ? (
+              <>
+                <Check className="w-3 h-3 text-emerald-500" />
+                <span className="text-xs font-sans text-emerald-600">Passwords match</span>
+              </>
+            ) : (
+              <>
+                <X className="w-3 h-3 text-red-400" />
+                <span className="text-xs font-sans text-red-500">Passwords don't match</span>
+              </>
+            )}
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground font-sans">or</span>
-          </div>
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full font-sans font-light"
-          onClick={handleGoogle}
-          disabled={loading}
-        >
-          <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-              fill="#4285F4"
-            />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              fill="#34A853"
-            />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-              fill="#FBBC05"
-            />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-              fill="#EA4335"
-            />
-          </svg>
-          Continue with Google
-        </Button>
+        )}
       </div>
 
-      <div className="mt-6 text-center">
+      {/* Continue */}
+      <div className="space-y-3">
+        <Button
+          type="submit"
+          className="bg-emerald-600 text-white hover:bg-emerald-700 font-sans font-medium px-8 py-3 text-sm rounded-xl w-full sm:w-auto"
+          disabled={!allRulesPassed || !passwordsMatch}
+        >
+          Continue
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+
+        <p className="flex items-center gap-1.5 text-[11px] text-emerald-700 font-sans font-light">
+          <Shield className="h-3.5 w-3.5" />
+          Your data is private and never shared
+        </p>
+      </div>
+
+      <div className="text-center">
         <p className="text-sm font-sans text-muted-foreground">
           Already have an account?{" "}
           <Link to="/login" className="text-foreground hover:underline">
@@ -343,295 +280,163 @@ function StepAccount({
           </Link>
         </p>
       </div>
-    </>
+    </form>
   );
 }
 
-// Step 2: about you
-function StepAboutYou({
-  onNext,
-  onSkip,
-}: {
-  onNext: (data: { university: string; otherUniversity: string; yearOfStudy: string; industries: string[] }) => void;
-  onSkip: () => void;
-}) {
-  const [university, setUniversity] = useState("");
-  const [otherUniversity, setOtherUniversity] = useState("");
-  const [yearOfStudy, setYearOfStudy] = useState("");
-  const [industries, setIndustries] = useState<string[]>([]);
-
-  const toggleIndustry = (industry: string) => {
-    setIndustries((prev) =>
-      prev.includes(industry) ? prev.filter((i) => i !== industry) : [...prev, industry]
-    );
-  };
-
-  const canContinue = university !== "" && yearOfStudy !== "" && industries.length > 0;
-
-  return (
-    <>
-      <div className="mb-6">
-        <h2 className="text-2xl font-sans font-light text-foreground">Tell us about yourself</h2>
-        <p className="text-sm font-sans text-muted-foreground mt-1">
-          Helps us personalise your experience. Takes 30 seconds.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {/* University */}
-        <div className="space-y-2">
-          <Label className="font-sans font-light">Which university are you at?</Label>
-          <select
-            value={university}
-            onChange={(e) => {
-              setUniversity(e.target.value);
-              if (e.target.value !== "Other") setOtherUniversity("");
-            }}
-            className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-sans ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            <option value="" disabled>Select your university</option>
-            {UK_UNIVERSITIES.map((uni) => (
-              <option key={uni} value={uni}>{uni}</option>
-            ))}
-          </select>
-          {university === "Other" && (
-            <Input
-              placeholder="Enter your university"
-              value={otherUniversity}
-              onChange={(e) => setOtherUniversity(e.target.value)}
-              className="font-sans mt-2"
-            />
-          )}
-        </div>
-
-        {/* Year of study */}
-        <div className="space-y-2">
-          <Label className="font-sans font-light">Year of study</Label>
-          <div className="flex flex-wrap gap-2">
-            {YEARS_OF_STUDY.map((year) => (
-              <Pill
-                key={year}
-                label={year}
-                selected={yearOfStudy === year}
-                onClick={() => setYearOfStudy(year)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Industries */}
-        <div className="space-y-2">
-          <Label className="font-sans font-light">What industry are you targeting?</Label>
-          <p className="text-xs font-sans text-muted-foreground">Select all that apply</p>
-          <div className="flex flex-wrap gap-2">
-            {INDUSTRIES.map((industry) => (
-              <Pill
-                key={industry}
-                label={industry}
-                selected={industries.includes(industry)}
-                onClick={() => toggleIndustry(industry)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 space-y-3">
-        <Button
-          type="button"
-          className="w-full bg-foreground text-background hover:bg-foreground/90 font-sans font-light"
-          disabled={!canContinue}
-          onClick={() => onNext({ university, otherUniversity, yearOfStudy, industries })}
-        >
-          Continue
-          <ChevronRight className="ml-1 h-4 w-4" />
-        </Button>
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={onSkip}
-            className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
-          >
-            Skip for now
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// Step 3: where you're at
-function StepWhereYouAreAt({
-  onFinish,
-  onSkip,
-}: {
-  onFinish: (data: { coldEmailExperience: string; referralSource: string }) => void;
-  onSkip: () => void;
-}) {
-  const [coldEmailExperience, setColdEmailExperience] = useState("");
-  const [referralSource, setReferralSource] = useState("");
-
-  const canFinish = coldEmailExperience !== "" && referralSource !== "";
-
-  return (
-    <>
-      <div className="mb-6">
-        <h2 className="text-2xl font-sans font-light text-foreground">Last step</h2>
-        <p className="text-sm font-sans text-muted-foreground mt-1">
-          Two quick questions so we can help you better.
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {/* Cold emailing experience */}
-        <div className="space-y-2">
-          <Label className="font-sans font-light">Where are you with cold emailing?</Label>
-          <div className="flex flex-col gap-2">
-            {COLD_EMAIL_EXPERIENCE.map((option) => (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setColdEmailExperience(option)}
-                className={`text-left text-sm font-sans px-4 py-3 rounded-xl border transition-all ${
-                  coldEmailExperience === option
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-background text-foreground border-border hover:border-foreground/40"
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Referral source */}
-        <div className="space-y-2">
-          <Label className="font-sans font-light">How did you hear about us?</Label>
-          <div className="flex flex-wrap gap-2">
-            {REFERRAL_SOURCES.map((source) => (
-              <Pill
-                key={source}
-                label={source}
-                selected={referralSource === source}
-                onClick={() => setReferralSource(source)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 space-y-3">
-        <Button
-          type="button"
-          className="w-full bg-foreground text-background hover:bg-foreground/90 font-sans font-light"
-          disabled={!canFinish}
-          onClick={() => onFinish({ coldEmailExperience, referralSource })}
-        >
-          Finish setup
-          <ChevronRight className="ml-1 h-4 w-4" />
-        </Button>
-        <div className="text-center">
-          <button
-            type="button"
-            onClick={onSkip}
-            className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
-          >
-            Skip for now
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// Root component
-
-type ProfileData = {
-  university?: string;
-  other_university?: string;
-  year_of_study?: string;
-  target_industries?: string[];
-  cold_email_experience?: string;
-  referral_source?: string;
-};
-
+// ── Root Signup Page ──
 const Signup = () => {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [profileData, setProfileData] = useState<ProfileData>({});
+  const form = useSignupForm();
+  const { toast } = useToast();
+  const { signUp } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirect");
-
   const destination = redirectTo || (IS_WEBINAR_ONLY ? "/portal" : "/dashboard");
+  const [submitting, setSubmitting] = useState(false);
 
-  // Update Supabase user_metadata with whatever profiling data we have collected
-  const saveProfile = async (extra: ProfileData) => {
-    const merged = { ...profileData, ...extra };
+  const handleContinue = (): string | null => {
+    const error = form.nextStep();
+    if (error) {
+      toast({ title: error, variant: "destructive" });
+      return error;
+    }
+    return null;
+  };
+
+  const handleFinalSubmit = async () => {
+    // Validate last step
+    const error = validateStep(form.step, form.formData);
+    if (error) {
+      toast({ title: error, variant: "destructive" });
+      return;
+    }
+
+    setSubmitting(true);
+    const d = form.formData;
+    const fullName = `${d.firstName} ${d.lastName}`.trim();
+
+    const { error: signUpError } = await signUp(d.email, d.password, fullName, "student");
+    if (signUpError) {
+      setSubmitting(false);
+      toast({ title: "Sign up failed", description: signUpError.message, variant: "destructive" });
+      return;
+    }
+
+    // Save profiling data to user_metadata
     if (supabase) {
       try {
-        await supabase.auth.updateUser({ data: merged });
+        const phoneStr = d.phoneCode && d.phone ? `+${d.phoneCode.split(":")[1]?.replace("+", "")}${d.phone}` : undefined;
+        await supabase.auth.updateUser({
+          data: {
+            first_name: d.firstName,
+            last_name: d.lastName,
+            phone: phoneStr,
+            university: d.university,
+            year_of_study: d.yearOfStudy,
+            target_industry: d.industry,
+            industry_detail: d.industryDetail || undefined,
+            referral_source: d.referralSource,
+          },
+        });
       } catch (_err) {
-        // Non-fatal - user is already created, just metadata missing
+        // Non-fatal
       }
     }
-  };
 
-  const handleAccountCreated = () => {
-    setStep(2);
-  };
-
-  const handleAboutYouNext = async (data: {
-    university: string;
-    otherUniversity: string;
-    yearOfStudy: string;
-    industries: string[];
-  }) => {
-    const update: ProfileData = {
-      university: data.university,
-      year_of_study: data.yearOfStudy,
-      target_industries: data.industries,
-    };
-    if (data.university === "Other" && data.otherUniversity) {
-      update.other_university = data.otherUniversity;
-    }
-    setProfileData((prev) => ({ ...prev, ...update }));
-    await saveProfile(update);
-    setStep(3);
-  };
-
-  const handleFinish = async (data: {
-    coldEmailExperience: string;
-    referralSource: string;
-  }) => {
-    const update: ProfileData = {
-      cold_email_experience: data.coldEmailExperience,
-      referral_source: data.referralSource,
-    };
-    await saveProfile(update);
+    setSubmitting(false);
     navigate(destination);
   };
 
-  const handleSkip = () => {
-    if (step === 2) {
-      setStep(3);
-    } else {
-      navigate(destination);
+  // The IndustryStep's onContinue triggers the final submit instead of advancing
+  const handleIndustryContinue = (): string | null => {
+    const error = validateStep(form.step, form.formData);
+    if (error) {
+      toast({ title: error, variant: "destructive" });
+      return error;
     }
+    handleFinalSubmit();
+    return null;
   };
 
   return (
-    <AuthLayout>
-      {/* Only show progress bar on steps 2 and 3 */}
-      {step > 1 && <ProgressBar step={step} />}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+      {/* Progress bar */}
+      <div className="fixed top-0 left-0 right-0 z-40">
+        <Progress
+          value={form.progress}
+          className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+        />
+      </div>
 
-      {step === 1 && <StepAccount onSuccess={handleAccountCreated} />}
-      {step === 2 && (
-        <StepAboutYou onNext={handleAboutYouNext} onSkip={handleSkip} />
+      {/* Logo */}
+      <div className="absolute top-5 left-6 z-50">
+        <Logo to="#" className="text-xl pointer-events-none" />
+      </div>
+
+      {/* Step counter */}
+      {form.step > 0 && (
+        <div className="absolute top-6 right-6 z-50">
+          <span className="text-xs text-muted-foreground font-sans font-light">
+            {form.step + 1} of {form.totalSteps}
+          </span>
+        </div>
       )}
-      {step === 3 && (
-        <StepWhereYouAreAt onFinish={handleFinish} onSkip={handleSkip} />
+
+      {/* Back button */}
+      {form.step > 0 && (
+        <button
+          type="button"
+          onClick={form.prevStep}
+          className="absolute top-14 left-6 z-50 text-sm text-muted-foreground hover:text-foreground transition-colors font-sans font-light flex items-center gap-1"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Back
+        </button>
       )}
-    </AuthLayout>
+
+      {/* Form steps */}
+      <main className="min-h-screen flex items-center justify-center px-4 py-24">
+        <div className="w-full max-w-xl mx-auto">
+          <WebinarFormStep isActive={form.step === 0} direction={form.direction}>
+            <DetailsStep
+              formData={form.formData}
+              onUpdate={form.updateField}
+              onContinue={handleContinue}
+            />
+          </WebinarFormStep>
+
+          <WebinarFormStep isActive={form.step === 1} direction={form.direction}>
+            <UniversityStep
+              university={form.formData.university}
+              yearOfStudy={form.formData.yearOfStudy}
+              onUpdate={form.updateField}
+              onContinue={handleContinue}
+            />
+          </WebinarFormStep>
+
+          <WebinarFormStep isActive={form.step === 2} direction={form.direction}>
+            <IndustryStep
+              industry={form.formData.industry}
+              industryDetail={form.formData.industryDetail}
+              referralSource={form.formData.referralSource}
+              onUpdate={form.updateField}
+              onContinue={handleIndustryContinue}
+            />
+          </WebinarFormStep>
+        </div>
+      </main>
+
+      {/* Loading overlay for final submit */}
+      {submitting && (
+        <div className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <div className="h-8 w-8 mx-auto border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+            <p className="text-sm text-muted-foreground font-sans font-light">Creating your account...</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
