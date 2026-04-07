@@ -4,8 +4,9 @@ import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
 import { WelcomePopup } from "@/components/portal/WelcomePopup";
 import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation, Zap } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const navItems = [
   { to: "/portal", icon: Play, label: "Recording", end: true },
@@ -214,60 +215,75 @@ export default function PortalLayout() {
   const { toast } = useToast();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const tierBeforeUpgrade = useRef<string | null>(null);
-  const toastShown = useRef(false);
+  const verifyingRef = useRef(false);
 
-  // Handle ?upgraded=true - refresh buyer status and poll until tier changes
+  // Call verify-purchase edge function to confirm payment with Stripe directly
+  const verifyPurchase = useCallback(async (email: string) => {
+    if (!supabase) return false;
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-purchase", {
+        body: { email },
+      });
+      if (error) {
+        console.error("verify-purchase error:", error.message);
+        return false;
+      }
+      return data?.updated === true || data?.tier !== "free";
+    } catch (e: any) {
+      console.error("verify-purchase failed:", e.message);
+      return false;
+    }
+  }, []);
+
+  // Handle ?upgraded=true - verify purchase with Stripe then refresh tier
   useEffect(() => {
     if (searchParams.get("upgraded") !== "true") return;
-
-    // Capture the tier BEFORE the upgrade so we know when it changes
-    tierBeforeUpgrade.current = buyerStatus?.tier ?? "free";
-    toastShown.current = false;
+    if (verifyingRef.current) return;
+    verifyingRef.current = true;
 
     // Remove the query param immediately
     searchParams.delete("upgraded");
     setSearchParams(searchParams, { replace: true });
 
-    // Force refresh buyer status
-    checkBuyerStatus();
+    const email = user?.email;
+    if (!email) return;
 
-    // Poll for up to 60s waiting for webhook to update the tier
-    let attempts = 0;
-    pollRef.current = setInterval(async () => {
-      attempts++;
+    // Call verify-purchase, then refresh buyer status
+    (async () => {
+      // First try: verify directly with Stripe (doesn't depend on webhook)
+      const verified = await verifyPurchase(email);
+
+      // Refresh buyer status from DB (verify-purchase updated it if payment found)
       await checkBuyerStatus();
-      if (attempts >= 20) {
-        // Timed out - show toast anyway (webhook may be slow)
-        if (pollRef.current) clearInterval(pollRef.current);
-        pollRef.current = null;
-        if (!toastShown.current) {
-          toastShown.current = true;
-          toast({ title: "Payment received! Your content will unlock shortly." });
-        }
-      }
-    }, 3000);
 
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, []);
-
-  // Stop polling once tier actually changes from the pre-upgrade value
-  useEffect(() => {
-    if (!tierBeforeUpgrade.current || !pollRef.current) return;
-    const currentTier = buyerStatus?.tier ?? "free";
-    if (currentTier !== tierBeforeUpgrade.current) {
-      clearInterval(pollRef.current);
-      pollRef.current = null;
-      tierBeforeUpgrade.current = null;
-      if (!toastShown.current) {
-        toastShown.current = true;
+      if (verified) {
         toast({ title: "You're upgraded! Your new content is now unlocked." });
+      } else {
+        // Webhook may not have fired yet - poll a few times
+        let attempts = 0;
+        const poll = setInterval(async () => {
+          attempts++;
+          await checkBuyerStatus();
+          const currentTier = buyerStatus?.tier ?? "free";
+          if (currentTier !== "free" || attempts >= 10) {
+            clearInterval(poll);
+            if (currentTier !== "free") {
+              toast({ title: "You're upgraded! Your new content is now unlocked." });
+            } else {
+              // Last resort: try verify-purchase one more time
+              const retryVerified = await verifyPurchase(email);
+              await checkBuyerStatus();
+              toast({
+                title: retryVerified
+                  ? "You're upgraded! Your new content is now unlocked."
+                  : "Payment received! Your content will unlock shortly.",
+              });
+            }
+          }
+        }, 3000);
       }
-    }
-  }, [buyerStatus?.tier]);
+    })();
+  }, []);
 
   const tier = buyerStatus?.tier || "free";
 
