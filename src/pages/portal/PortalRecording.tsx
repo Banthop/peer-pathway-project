@@ -556,7 +556,7 @@ export default function PortalRecording() {
                     style={{ background: "linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)" }}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2 text-white">
-                      Upgrade to Recording + Guide — £19
+                      Upgrade to Recording + Guide - £19
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                     </span>
                     {/* Animated shine */}
