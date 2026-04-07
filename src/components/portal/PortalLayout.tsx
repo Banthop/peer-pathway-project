@@ -215,10 +215,16 @@ export default function PortalLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tierBeforeUpgrade = useRef<string | null>(null);
+  const toastShown = useRef(false);
 
-  // Handle ?upgraded=true - refresh buyer status and show success toast
+  // Handle ?upgraded=true - refresh buyer status and poll until tier changes
   useEffect(() => {
     if (searchParams.get("upgraded") !== "true") return;
+
+    // Capture the tier BEFORE the upgrade so we know when it changes
+    tierBeforeUpgrade.current = buyerStatus?.tier ?? "free";
+    toastShown.current = false;
 
     // Remove the query param immediately
     searchParams.delete("upgraded");
@@ -227,29 +233,39 @@ export default function PortalLayout() {
     // Force refresh buyer status
     checkBuyerStatus();
 
-    // If the webhook hasn't fired yet, poll for up to 60s
+    // Poll for up to 60s waiting for webhook to update the tier
     let attempts = 0;
     pollRef.current = setInterval(async () => {
       attempts++;
       await checkBuyerStatus();
       if (attempts >= 20) {
+        // Timed out - show toast anyway (webhook may be slow)
         if (pollRef.current) clearInterval(pollRef.current);
-        toast({ title: "You're upgraded! Your new content is now unlocked." });
+        pollRef.current = null;
+        if (!toastShown.current) {
+          toastShown.current = true;
+          toast({ title: "Payment received! Your content will unlock shortly." });
+        }
       }
     }, 3000);
-
-    toast({ title: "You're upgraded! Your new content is now unlocked." });
 
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
   }, []);
 
-  // Stop polling once tier upgrades past free
+  // Stop polling once tier actually changes from the pre-upgrade value
   useEffect(() => {
-    if (buyerStatus && buyerStatus.tier !== "free" && pollRef.current) {
+    if (!tierBeforeUpgrade.current || !pollRef.current) return;
+    const currentTier = buyerStatus?.tier ?? "free";
+    if (currentTier !== tierBeforeUpgrade.current) {
       clearInterval(pollRef.current);
       pollRef.current = null;
+      tierBeforeUpgrade.current = null;
+      if (!toastShown.current) {
+        toastShown.current = true;
+        toast({ title: "You're upgraded! Your new content is now unlocked." });
+      }
     }
   }, [buyerStatus?.tier]);
 
