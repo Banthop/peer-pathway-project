@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
 import { Link } from "react-router-dom";
 import { useBuyerAuth, PROGRESS_KEY } from "@/contexts/BuyerAuthContext";
-import { Play, Clock, CheckCircle2, ChevronRight, RotateCcw, Target, Zap, ArrowRight, Check, Lock, ShieldCheck, BookOpen } from "lucide-react";
+import { Play, ChevronRight, Target, Zap, ArrowRight, Check, Lock, ShieldCheck, BookOpen, Presentation, Info, X as XIcon } from "lucide-react";
 
 const STRIPE_RECORDING_URL = "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
 const STRIPE_BUNDLE_URL = "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
@@ -56,10 +56,21 @@ function saveProgress(progress: WatchProgress) {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({ ...progress, lastUpdated: new Date().toISOString() }));
 }
 
+/* ─── Recording includes items (shared between paywall dropdown and upgrade page) ─── */
+const RECORDING_INCLUDES = [
+  "Watch the full cold email process done live - not just the theory, see it executed start to finish in real time",
+  "Live Apollo demo - watch us find real decision-maker emails at target firms on screen",
+  "Mail merge demo - see real cold emails get sent in real time (including the 9:03 AM send rule and why it works)",
+  "Live Q&A with real student questions - hear the edge-case questions other students asked",
+  "The commentary you can't get from slides - the reasoning behind every strategy, what to tweak",
+  "Follow-up sequences broken down - exactly what to send on Day 3, Day 7, and Day 14",
+  "Watch anytime on any device - lifetime access, rewatch as many times as you want",
+];
+
 /* ─── Paywall overlay shown to non-buyers ─── */
-function PaywallOverlay() {
+function PaywallOverlay({ showIncludes, setShowIncludes }: { showIncludes: boolean; setShowIncludes: (v: boolean) => void }) {
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-4 py-6">
+    <div className="absolute inset-0 flex flex-col items-center justify-start z-20 px-4 pt-4 pb-6 overflow-y-auto">
       {/* Social proof bar */}
       <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-5 text-center">
         <p className="text-[11px] text-white/90 font-semibold tracking-wide">
@@ -68,18 +79,18 @@ function PaywallOverlay() {
       </div>
 
       {/* Main paywall card */}
-      <div className="w-full max-w-sm bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/50">
-        <h2 className="text-[17px] font-bold text-[#111] text-center mb-1 leading-tight">
+      <div className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-10 border border-white/50">
+        <h2 className="text-xl md:text-2xl font-bold text-[#111] text-center mb-1 leading-tight">
           This recording is locked
         </h2>
-        <p className="text-[12px] text-[#666] text-center mb-5 leading-relaxed">
-          Unlock the full system Uthman used to land internships at lean firms nobody else applies to.
+        <p className="text-sm text-[#666] text-center mb-5 leading-relaxed">
+          Unlock the full system Uthman used to land internships at firms that nobody else applies to.
         </p>
 
         {/* Curiosity-gap chapter preview */}
-        <div className="bg-[#F8F8F8] border border-[#E8E8E8] rounded-xl p-3 mb-5">
+        <div className="bg-[#F8F8F8] border border-[#E8E8E8] rounded-xl p-4 md:p-5 mb-5">
           <p className="text-[10px] font-bold text-[#999] uppercase tracking-widest mb-2">What you unlock</p>
-          <ul className="space-y-1.5">
+          <ul className="space-y-2.5">
             {[
               "The 5-part template that gets replies",
               "Step-by-step Mail Merge setup and the 9:03 AM rule",
@@ -88,31 +99,33 @@ function PaywallOverlay() {
               "The follow-up sequence that doubles your hit rate",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2">
-                <Check className="w-3 h-3 text-emerald-500 flex-shrink-0 mt-0.5" strokeWidth={3} />
-                <span className="text-[11px] text-[#444] leading-snug">{item}</span>
+                <Check className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" strokeWidth={3} />
+                <span className="text-[13px] text-[#444] leading-snug">{item}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Loss aversion + anchor */}
-        <p className="text-[11px] text-[#555] text-center leading-relaxed mb-1">
-          Every week you wait is a week of internship applications going to someone else.
-        </p>
+
 
         {/* CTAs */}
         <Link
           to="/portal/upgrade"
-          className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3 rounded-xl mb-2 hover:bg-[#333] transition-colors shadow-md"
+          className="block w-full bg-[#111] text-white text-center text-base font-bold py-4 rounded-xl mb-2 hover:bg-[#333] transition-colors shadow-md"
         >
           Upgrade Access
         </Link>
-        <Link
-          to="/portal/upgrade"
-          className="block w-full border border-[#CCC] text-[#111] text-center text-[13px] font-semibold py-3 rounded-xl hover:bg-[#F5F5F5] transition-colors"
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowIncludes(true);
+          }}
+          className="w-full border-2 border-[#DDD] text-[#111] text-center text-base font-semibold py-4 rounded-xl hover:bg-[#F5F5F5] hover:border-[#BBB] transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           See What's Included
-        </Link>
+          <Info className="w-5 h-5 text-[#999]" />
+        </button>
 
         {/* Guarantee */}
         <div className="flex items-center justify-center gap-1.5 mt-3">
@@ -133,7 +146,7 @@ interface LockedChapterRowProps {
   isFirst: boolean;
 }
 
-function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
+const LockedChapterRow = memo(function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
   return (
     <div
       className={`w-full text-left p-3 mb-1 rounded-xl ${
@@ -173,6 +186,57 @@ function LockedChapterRow({ chapter, idx, isFirst }: LockedChapterRowProps) {
       </div>
     </div>
   );
+});
+
+/* ─── "See What's Included" modal (positioned over video container) ─── */
+function RecordingIncludesModal({ onClose }: { onClose: () => void }) {
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="absolute inset-0 z-[50] flex items-center justify-center bg-black/70 rounded-xl px-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-[#E8E8E8] p-8 animate-in fade-in zoom-in-95 duration-200 max-h-[90%] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <Info className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-bold text-[#111] uppercase tracking-wide">
+              What's Inside the Recording
+            </h3>
+          </div>
+          <button onClick={onClose} className="p-1 hover:bg-[#F5F5F5] rounded-lg transition-colors cursor-pointer">
+            <XIcon className="w-5 h-5 text-[#999]" />
+          </button>
+        </div>
+
+        <ul className="space-y-3">
+          {RECORDING_INCLUDES.map((item) => (
+            <li key={item} className="flex items-start gap-3">
+              <Check className="h-5 w-5 mt-0.5 shrink-0 text-blue-500" />
+              <span className="text-[15px] text-[#333] leading-relaxed">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-6 pt-5 border-t border-[#E8E8E8]">
+          <Link
+            to="/portal/upgrade"
+            className="block w-full bg-[#111] text-white text-center text-[15px] font-bold py-4 rounded-xl hover:bg-[#333] transition-colors shadow-md"
+          >
+            Upgrade Access
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function PortalRecording() {
@@ -181,10 +245,15 @@ export default function PortalRecording() {
   const playerRef = useRef<any>(null);
   const [activeChapter, setActiveChapter] = useState<string>(CHAPTERS[0].id);
   const [currentTime, setCurrentTime] = useState(0);
+  const currentTimeRef = useRef(0);
+  const activeChapterRef = useRef(CHAPTERS[0].id);
+  const lastRenderTickRef = useRef(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState<WatchProgress>(loadProgress);
   const [resumed, setResumed] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
+  const [showIncludes, setShowIncludes] = useState(false);
+  const videoRef = useRef<HTMLDivElement>(null);
 
   // Load Vimeo SDK
   useEffect(() => {
@@ -215,9 +284,17 @@ export default function PortalRecording() {
     playerRef.current = player;
 
     player.on("timeupdate", (data: any) => {
-      setCurrentTime(data.seconds);
+      currentTimeRef.current = data.seconds;
       const ch = [...CHAPTERS].reverse().find((c) => data.seconds >= c.startSeconds);
-      if (ch) setActiveChapter(ch.id);
+      if (ch) activeChapterRef.current = ch.id;
+
+      // Only update state (trigger re-render) at most once per second
+      const now = Date.now();
+      if (now - lastRenderTickRef.current > 1000) {
+        lastRenderTickRef.current = now;
+        setCurrentTime(data.seconds);
+        if (ch) setActiveChapter(ch.id);
+      }
     });
     player.on("play", () => setIsPlaying(true));
     player.on("pause", () => setIsPlaying(false));
@@ -226,18 +303,19 @@ export default function PortalRecording() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (currentTime > 0) {
-        const ch = [...CHAPTERS].reverse().find((c) => currentTime >= c.startSeconds);
+      const time = currentTimeRef.current;
+      if (time > 0) {
+        const ch = [...CHAPTERS].reverse().find((c) => time >= c.startSeconds);
         const newWatched = [...new Set([...progress.chaptersWatched, ...(ch ? [ch.id] : [])])];
-        if (newWatched.length !== progress.chaptersWatched.length || Math.abs(currentTime - progress.lastTime) > 5) {
-          const updated = { lastTime: currentTime, chaptersWatched: newWatched, lastUpdated: new Date().toISOString() };
+        if (newWatched.length !== progress.chaptersWatched.length || Math.abs(time - progress.lastTime) > 5) {
+          const updated = { lastTime: time, chaptersWatched: newWatched, lastUpdated: new Date().toISOString() };
           setProgress(updated);
           saveProgress(updated);
         }
       }
     }, 5000);
     return () => clearInterval(interval);
-  }, [currentTime, progress.chaptersWatched, progress.lastTime]);
+  }, [progress.chaptersWatched, progress.lastTime]);
 
   const seekTo = useCallback((seconds: number) => {
     const player = playerRef.current;
@@ -265,7 +343,7 @@ export default function PortalRecording() {
   const progressPercent = Math.round((completedCount / CHAPTERS.length) * 100);
 
   return (
-    <div className="w-full bg-[#FAFAFA] min-h-screen">
+    <div className="w-full bg-[#FAFAFA] min-h-screen" style={{ willChange: "transform" }}>
       {/* ════════ HEADER (Cold Email Masterclass) ════════ */}
       <div className="bg-white border-b border-[#E8E8E8]">
         <div className="px-6 py-6 md:px-10 lg:px-12 flex flex-col xl:flex-row xl:items-center justify-between gap-6">
@@ -284,44 +362,54 @@ export default function PortalRecording() {
             </p>
           </div>
 
-          {/* Free resource banner - only for free accounts */}
-          {buyerStatus && buyerStatus.tier === "free" && (
-            <Link
-              to="/portal/resources"
-              className="hidden md:inline-flex items-center gap-2.5 bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 rounded-xl px-5 py-3.5 transition-colors group flex-shrink-0 self-center shadow-sm hover:shadow-md"
-            >
-              <BookOpen className="w-5 h-5 text-blue-600" />
-              <span className="text-[13px] font-semibold text-blue-700">Access Your Free Cold-Email Webinar Slides Here</span>
-              <ArrowRight className="w-4 h-4 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+          {/* Gamified Progress Bar - buyers only */}
+          {isBuyer && (
+            <div className="w-full xl:w-[380px] bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl p-4 flex-shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[12px] font-semibold text-[#111] uppercase tracking-wide flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-emerald-600" />
+                  Progress
+                </p>
+                <p className="text-[14px] font-bold text-emerald-600">{progressPercent}%</p>
+              </div>
+
+              <div className="flex gap-1 h-3.5 mb-2">
+                {CHAPTERS.map((ch) => {
+                  const isWatched = progress.chaptersWatched.includes(ch.id);
+                  return (
+                    <div
+                      key={ch.id}
+                      className={`flex-1 rounded-sm transition-all duration-300 ${isWatched ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-[#E0E0E0]"}`}
+                    />
+                  )
+                })}
+              </div>
+              <p className="text-[11px] text-[#888] font-medium text-right">
+                {completedCount} of {CHAPTERS.length} steps completed
+              </p>
+            </div>
           )}
 
-          {/* Gamified Progress Bar */}
-          <div className="w-full xl:w-[380px] bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl p-4 flex-shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-[12px] font-semibold text-[#111] uppercase tracking-wide flex items-center gap-1.5">
-                <Target className="w-3.5 h-3.5 text-emerald-600" />
-                Progress
-              </p>
-              <p className="text-[14px] font-bold text-emerald-600">{progressPercent}%</p>
-            </div>
-            
-            {/* Segmented progress form */}
-            <div className="flex gap-1 h-3.5 mb-2">
-              {CHAPTERS.map((ch, idx) => {
-                const isWatched = progress.chaptersWatched.includes(ch.id);
-                return (
-                  <div 
-                    key={ch.id} 
-                    className={`flex-1 rounded-sm transition-all duration-300 ${isWatched ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" : "bg-[#E0E0E0]"}`}
-                  />
-                )
-              })}
-            </div>
-            <p className="text-[11px] text-[#888] font-medium text-right">
-              {completedCount} of {CHAPTERS.length} steps completed
-            </p>
-          </div>
+          {/* Free slides banner - replaces progress bar for free users */}
+          {!isBuyer && !isLoading && buyerStatus?.tier === "free" && (
+            <Link
+              to="/portal/resources"
+              className="w-full xl:w-[420px] bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl px-6 py-5 transition-all shadow-lg hover:shadow-xl group flex-shrink-0 block"
+            >
+              <div className="flex items-center gap-4">
+                <Presentation className="w-8 h-8 text-blue-200 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <span className="text-lg md:text-xl font-bold tracking-tight block">
+                    Access Your Free Cold-Email Webinar Slides Here
+                  </span>
+                  <p className="text-sm text-blue-200 font-light mt-1">
+                    The frameworks, templates, and sequences from the 90-min live webinar - yours for free.
+                  </p>
+                </div>
+                <ArrowRight className="w-6 h-6 text-blue-200 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+              </div>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -359,7 +447,7 @@ export default function PortalRecording() {
           <div className="flex-1 w-full min-w-0">
             
             {/* Cinematic Container */}
-            <div className="bg-[#0A0A0A] p-2 md:p-4 rounded-2xl shadow-2xl ring-1 ring-black/5">
+            <div ref={videoRef} className="relative bg-[#0A0A0A] p-2 md:p-4 rounded-2xl shadow-2xl ring-1 ring-black/5">
               <div className="relative w-full bg-black rounded-xl overflow-hidden shadow-inner" style={{ paddingBottom: "56.25%" }}>
                 <iframe
                   ref={iframeRef}
@@ -369,6 +457,7 @@ export default function PortalRecording() {
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   allowFullScreen
+                  loading="lazy"
                 />
 
                 {/* Non-buyer gate: gradient blur overlay + paywall card */}
@@ -378,14 +467,10 @@ export default function PortalRecording() {
                     <div
                       className="absolute inset-0"
                       style={{
-                        backdropFilter: "blur(12px)",
-                        WebkitBackdropFilter: "blur(12px)",
-                        maskImage: "linear-gradient(to bottom, transparent 0%, black 28%)",
-                        WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 28%)",
-                        background: "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 30%)",
+                        background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.92) 35%, rgba(0,0,0,0.98) 100%)",
                       }}
                     />
-                    <PaywallOverlay />
+                    <PaywallOverlay showIncludes={showIncludes} setShowIncludes={setShowIncludes} />
                   </div>
                 )}
               </div>
@@ -403,56 +488,100 @@ export default function PortalRecording() {
                   </div>
                 </div>
               )}
+
+              {/* "See What's Included" modal — positioned over the video container */}
+              {showIncludes && (
+                <RecordingIncludesModal onClose={() => setShowIncludes(false)} />
+              )}
             </div>
 
             {/* ════════ CONTEXTUAL UPSELL - recording-only buyers see bundle CTA, bundle buyers see coaching CTA ════════ */}
             {isBuyer && !isBundle && (
-              <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden mt-6 shadow-sm">
-                <div className="bg-gradient-to-r from-[#0A0A0A] to-[#1F1F1F] px-6 py-5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                      <BookOpen className="w-4.5 h-4.5 text-white" />
+              <div className="relative mt-6 rounded-2xl overflow-hidden shadow-lg border border-emerald-200/30" style={{ background: "linear-gradient(135deg, #0f1a12 0%, #122118 30%, #0d1f17 60%, #0a1a13 100%)" }}>
+                {/* Ambient glow */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-400/8 rounded-full blur-[60px] pointer-events-none" />
+
+                {/* Header */}
+                <div className="relative px-6 pt-6 pb-0">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-1.5 bg-emerald-500/15 border border-emerald-500/25 rounded-full px-3 py-1">
+                      <Zap className="w-3 h-3 text-emerald-400" />
+                      <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Next Step</span>
                     </div>
-                    <div>
-                      <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest mb-1">Next Step</p>
-                      <h3 className="text-[16px] font-bold text-white leading-tight">
-                        The recording shows you what to do. The guide shows you exactly how.
-                      </h3>
+                    <div className="bg-amber-500/15 border border-amber-500/25 rounded-full px-2.5 py-1">
+                      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider">Save £10</span>
                     </div>
                   </div>
-                </div>
-                <div className="p-6">
-                  <p className="text-[13px] text-[#666] font-light leading-relaxed mb-5">
-                    The Cold Email Guide includes the exact email templates, the 200-firm outreach list, the
-                    tracking spreadsheet, and the follow-up sequences. Everything you need to go from watching
-                    to actually sending.
+                  <h3 className="text-[18px] md:text-[20px] font-bold text-white leading-snug mb-1.5">
+                    The recording shows you <span className="text-emerald-400">what</span> to do.
+                    <br className="hidden sm:block" />{" "}
+                    The guide shows you exactly <span className="text-emerald-400">how</span>.
+                  </h3>
+                  <p className="text-[13px] text-white/50 font-light leading-relaxed max-w-lg">
+                    Go from watching to actually sending. The Cold Email Guide is the execution layer.
                   </p>
-                  <div className="grid grid-cols-2 gap-2 mb-5">
+                </div>
+
+                {/* Content */}
+                <div className="relative px-6 py-5">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-5">
                     {[
-                      "50-page written guide",
-                      "Copy-paste email templates",
-                      "200 UK firms to cold email",
-                      "Outreach tracker spreadsheet",
+                      { text: "50-page written guide", icon: BookOpen },
+                      { text: "Copy-paste email templates", icon: BookOpen },
+                      { text: "200 UK firms to cold email", icon: Target },
+                      { text: "Outreach tracker spreadsheet", icon: Target },
                     ].map((item) => (
-                      <div key={item} className="flex items-center gap-2">
-                        <Check className="w-3 h-3 text-emerald-500 flex-shrink-0" strokeWidth={3} />
-                        <span className="text-[12px] text-[#444]">{item}</span>
+                      <div key={item.text} className="flex items-center gap-2.5 bg-white/[0.04] border border-white/[0.06] rounded-lg px-3 py-2.5">
+                        <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" strokeWidth={2.5} />
+                        <span className="text-[12px] text-white/80 font-medium leading-tight">{item.text}</span>
                       </div>
                     ))}
                   </div>
-                  <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-3 mb-4 text-center">
-                    <p className="text-[11px] text-[#888] font-light">
-                      You've already paid £10 for the recording. Upgrade to the full bundle for just{" "}
-                      <strong className="text-[#111]">£19 more</strong> - the guide alone is worth £29.
+
+                  {/* Price anchor */}
+                  <div className="bg-white/[0.05] border border-white/[0.08] rounded-xl p-3.5 mb-4 text-center backdrop-blur-sm">
+                    <p className="text-[12px] text-white/60 font-light">
+                      You've already paid <span className="text-white/90 font-medium">£10</span> for the recording. Upgrade for just{" "}
+                      <span className="text-emerald-400 font-bold text-[14px]">£19 more</span>{" "}
+                      <span className="text-white/40">·</span>{" "}
+                      <span className="text-white/40 line-through">£29</span>
                     </p>
                   </div>
+
+                  {/* CTA button with shine animation */}
                   <Link
                     to="/portal/upgrade"
-                    className="block w-full bg-[#111] text-white text-center text-[13px] font-bold py-3.5 rounded-xl hover:bg-[#333] transition-colors shadow-md"
+                    className="group relative block w-full text-center text-[14px] font-bold py-4 rounded-xl transition-all duration-300 overflow-hidden shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] hover:-translate-y-0.5"
+                    style={{ background: "linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)" }}
                   >
-                    Upgrade to Recording + Guide - £29
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-white">
+                      Upgrade to Recording + Guide — £19
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                    {/* Animated shine */}
+                    <div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%)",
+                        animation: "shine 2s ease-in-out infinite",
+                      }}
+                    />
                   </Link>
+
+                  <p className="text-center mt-3 flex items-center justify-center gap-1.5">
+                    <ShieldCheck className="w-3 h-3 text-emerald-500/60" />
+                    <span className="text-[10px] text-white/30 font-light">Full refund within 24 hours if not useful</span>
+                  </p>
                 </div>
+
+                {/* CSS for shine animation */}
+                <style>{`
+                  @keyframes shine {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                  }
+                `}</style>
               </div>
             )}
 
@@ -592,12 +721,13 @@ export default function PortalRecording() {
                   >
                     Upgrade Access
                   </Link>
-                  <Link
-                    to="/portal/upgrade"
-                    className="block w-full border border-[#CCC] text-[#333] text-center text-[11px] font-semibold py-2 rounded-xl hover:bg-[#F0F0F0] transition-colors"
+                  <button
+                    type="button"
+                    onClick={() => setShowIncludes(true)}
+                    className="block w-full border border-[#CCC] text-[#333] text-center text-[11px] font-semibold py-2 rounded-xl hover:bg-[#F0F0F0] transition-colors cursor-pointer"
                   >
                     See What's Included
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>
@@ -605,6 +735,8 @@ export default function PortalRecording() {
 
         </div>
       </div>
+
+
     </div>
   );
 }

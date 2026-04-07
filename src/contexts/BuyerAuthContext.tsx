@@ -12,12 +12,15 @@ interface BuyerStatus {
   hasGuide: boolean;
   tags: string[];
   accessCount: number;
+  welcomePopupShown: boolean;
+  crmId?: string;
 }
 
 interface BuyerAuthContextValue {
   buyerStatus: BuyerStatus | null;
   loading: boolean;
   checkBuyerStatus: () => Promise<void>;
+  markWelcomeShown: () => Promise<void>;
 }
 
 const BuyerAuthContext = createContext<BuyerAuthContextValue | undefined>(undefined);
@@ -64,7 +67,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
 
     // --- Supabase CRM lookup (single source of truth) ---
     if (!supabase) {
-      setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: [], accessCount: 0 });
+      setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: [], accessCount: 0, welcomePopupShown: false });
       setLoading(false);
       return;
     }
@@ -72,7 +75,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data } = await supabase
         .from("crm_contacts")
-        .select("id, email, tags")
+        .select("id, email, tags, metadata")
         .eq("email", emailKey)
         .limit(1);
 
@@ -89,7 +92,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
             last_activity_at: new Date().toISOString(),
           });
         } catch {}
-        setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: ["portal_signup"], accessCount: 0 });
+        setBuyerStatus({ tier: "free", isBuyer: false, isBundle: false, hasRecording: false, hasGuide: false, tags: ["portal_signup"], accessCount: 0, welcomePopupShown: false });
         setLoading(false);
         return;
       }
@@ -105,7 +108,10 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       if (isBundle) tier = "bundle";
       else if (hasRecording) tier = "recording";
 
-      setBuyerStatus({ tier, isBuyer, isBundle, hasRecording, hasGuide, tags, accessCount: 0 });
+      const metadata = (contact as any).metadata;
+      const welcomePopupShown = !!(metadata?.welcome_popup_shown);
+
+      setBuyerStatus({ tier, isBuyer, isBundle, hasRecording, hasGuide, tags, accessCount: 0, welcomePopupShown, crmId: contact.id });
 
       // Track portal access for any logged-in user
       logAccess(user.email);
@@ -129,6 +135,25 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, [user?.email]);
 
+  const markWelcomeShown = useCallback(async () => {
+    // Update local state immediately
+    setBuyerStatus((prev) => prev ? { ...prev, welcomePopupShown: true } : prev);
+
+    // Persist to Supabase
+    if (!supabase || !buyerStatus?.crmId) return;
+    try {
+      await supabase
+        .from("crm_contacts")
+        .update({
+          metadata: {
+            welcome_popup_shown: true,
+            welcome_popup_shown_at: new Date().toISOString(),
+          },
+        })
+        .eq("id", buyerStatus.crmId);
+    } catch {}
+  }, [buyerStatus?.crmId]);
+
   useEffect(() => {
     if (user) {
       checkBuyerStatus();
@@ -139,7 +164,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, checkBuyerStatus]);
 
   return (
-    <BuyerAuthContext.Provider value={{ buyerStatus, loading, checkBuyerStatus }}>
+    <BuyerAuthContext.Provider value={{ buyerStatus, loading, checkBuyerStatus, markWelcomeShown }}>
       {children}
     </BuyerAuthContext.Provider>
   );

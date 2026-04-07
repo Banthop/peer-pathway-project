@@ -2,6 +2,7 @@ import { NavLink, Outlet, Navigate, useSearchParams, Link, useNavigate } from "r
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerAuth } from "@/contexts/BuyerAuthContext";
 import { Logo } from "@/components/Logo";
+import { WelcomePopup } from "@/components/portal/WelcomePopup";
 import { Play, BookOpen, UserCheck, LogOut, Menu, X, ShieldAlert, Lock, Presentation, Zap } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -60,14 +61,27 @@ function SidebarContent({ onClose, tier = "free" }: { onClose?: () => void; tier
         {/* Upgrade CTA for non-bundle users */}
         {showUpgrade && (
           <div className="pt-3">
-            <Link
+            <NavLink
               to="/portal/upgrade"
               onClick={onClose}
-              className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-700 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md"
+              className={({ isActive }) =>
+                `relative flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-gradient-to-r text-white transition-all ${
+                  isActive
+                    ? "from-emerald-700 to-emerald-600 ring-2 ring-emerald-300 ring-offset-2 shadow-lg"
+                    : "from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 shadow-sm hover:shadow-md"
+                }`
+              }
             >
-              <Zap className="w-4 h-4" />
-              Upgrade Access
-            </Link>
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-full" />
+                  )}
+                  <Zap className="w-4 h-4" />
+                  Upgrade Access
+                </>
+              )}
+            </NavLink>
           </div>
         )}
       </nav>
@@ -293,6 +307,9 @@ export default function PortalLayout() {
       <main className="flex-1 md:ml-[220px] pt-14 md:pt-0 min-h-screen">
         <Outlet />
       </main>
+
+      {/* Welcome popup for first-time free users */}
+      <WelcomePopup />
     </div>
   );
 }
