@@ -20,7 +20,7 @@ import {
  *  Loads embed.js once, then opens modal via Cal("modal", ...).
  * ═══════════════════════════════════════════════════════════════ */
 
-const CAL_USERNAME = "team/earlyedge";
+const CAL_USERNAME = "uthm4n";
 
 // Extend Window so TypeScript is happy with the Cal global
 declare global {
