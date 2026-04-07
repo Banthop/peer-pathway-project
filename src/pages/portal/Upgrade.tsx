@@ -51,20 +51,24 @@ function RecordingIncludes() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-xl border border-blue-100 bg-white overflow-hidden transition-all shadow-sm">
+    <div className="rounded-xl border-2 border-blue-400 bg-white overflow-hidden transition-all shadow-md">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between bg-blue-50/50 px-4 py-3.5 hover:bg-blue-50 transition-colors"
+        className="flex w-full items-center justify-between bg-blue-50 px-6 py-5 hover:bg-blue-100/80 transition-colors cursor-pointer"
       >
-        <div className="flex items-center gap-2 text-blue-700">
-          <Info className="h-4 w-4" />
-          <span className="text-sm font-sans font-medium">What's inside the recording?</span>
+        <div className="flex items-center gap-2.5 text-blue-700">
+          <Info className="h-5 w-5" />
+          <div className="flex items-center gap-2">
+            <span className="text-base md:text-lg font-sans font-semibold">What's inside the recording?</span>
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            <span className="text-xs text-blue-500 font-normal">(tap to expand)</span>
+          </div>
         </div>
         {open ? (
-          <ChevronUp className="h-4 w-4 text-blue-500" />
+          <ChevronUp className="h-6 w-6 text-blue-500" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-blue-500" />
+          <ChevronDown className="h-6 w-6 text-blue-500" />
         )}
       </button>
 
@@ -334,90 +338,8 @@ export default function Upgrade() {
               </span>
             </div>
 
-            {/* Desktop horizontal layout for bundle features + guide */}
-            <div className="hidden lg:grid lg:grid-cols-2 lg:gap-10 mt-6">
-              {/* Left column: Core features */}
-              <div>
-                <ul className="space-y-2.5">
-                  {["Full 90-min recording", "Watch anytime, anywhere", "Lifetime access", "24/7 Q&A access to Uthman regarding any cold-emailing queries"].map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm font-sans font-light text-foreground">
-                      <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
-                      {f}
-                    </li>
-                  ))}
-                  <li className="flex items-start gap-2.5 text-sm font-sans text-foreground">
-                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
-                    <span><strong>The Cold Email Guide</strong> - get access instantly, and apply the strategies while you watch</span>
-                  </li>
-                  <li className="flex items-start gap-2.5 text-sm font-sans text-foreground">
-                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-emerald-600" />
-                    <span><strong>EarlyEdge Cold Email Tracker</strong> included</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Right column: Guide showcase */}
-              <div className="bg-gradient-to-br from-slate-50 to-slate-100/80 border border-slate-200 rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen className="h-5 w-5 text-foreground" />
-                  <span className="text-sm font-sans font-bold text-foreground uppercase tracking-wide">
-                    The Cold Email Guide
-                  </span>
-                </div>
-                <p className="text-sm font-sans text-foreground/80 leading-relaxed mb-4">
-                  <strong>This is the exact guide Uthman personally used</strong> to land 20+ internship offers.
-                  A real system, step by step, that you can copy and <strong>start using today</strong>.
-                </p>
-                {/* Clickable email proof - large */}
-                <div
-                  className="relative rounded-lg overflow-hidden mb-4 border border-slate-200 cursor-pointer group"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLightboxOpen(true);
-                  }}
-                >
-                  <img
-                    src="/email-proof.png"
-                    alt="Real internship offer"
-                    className="w-full h-56 object-cover object-top transition-transform duration-200 group-hover:scale-[1.02]"
-                    width={500}
-                    height={224}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-100/80 via-transparent to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-                    <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-md">
-                      <Maximize2 className="h-4 w-4 text-foreground" />
-                      <span className="text-sm font-sans font-medium text-foreground">Click to expand</span>
-                    </div>
-                  </div>
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <p className="text-[11px] text-foreground/70 font-sans font-medium bg-white/80 backdrop-blur-sm rounded-full px-3 py-1 inline-flex items-center gap-1">
-                      <Maximize2 className="h-3 w-3" />
-                      Real offer email - tap to view full size
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    "200+ firms with contact details",
-                    "5 proven email templates",
-                    "Subject line psychology",
-                    "Lead tracking spreadsheet",
-                  ].map((item) => (
-                    <div key={item} className="flex items-start gap-1.5">
-                      <Check className="h-3.5 w-3.5 mt-0.5 shrink-0 text-foreground/60" />
-                      <span className="text-[12px] font-sans font-light text-foreground/80 leading-snug">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-3 text-xs text-muted-foreground font-sans italic">
-                  "This guide alone helped me land my summer in PE." - Birkaran P, LSE
-                </p>
-              </div>
-            </div>
-
-            {/* Mobile/Tablet vertical layout (unchanged) */}
-            <div className="lg:hidden">
+            {/* Features + Guide showcase (vertical layout) */}
+            <div>
             <ul className="mt-5 space-y-2">
               {["Full 90-min recording", "Watch anytime, anywhere", "Lifetime access", "24/7 Q&A access to Uthman regarding any cold-emailing queries"].map((f) => (
                 <li key={f} className="flex items-start gap-2.5 text-sm font-sans font-light text-foreground">
