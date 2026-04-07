@@ -20,7 +20,7 @@ import {
  *  Loads embed.js once, then opens modal via Cal("modal", ...).
  * ═══════════════════════════════════════════════════════════════ */
 
-const CAL_USERNAME = "uthm4n";
+const CAL_USERNAME = "yourearlyedge";
 
 // Extend Window so TypeScript is happy with the Cal global
 declare global {
@@ -125,7 +125,7 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "3xdeepdivebundle",
+  calSlug: "3x-deep-dive-bundle",
 };
 
 /* ─── Testimonials ─── */
