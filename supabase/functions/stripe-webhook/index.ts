@@ -53,6 +53,17 @@ const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] 
         productType: "bundle",
         tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
     },
+    // Portal upgrade: free → recording (£10)
+    "prod_UI9GnUfRmimKds": {
+        productType: "webinar_only",
+        tags: ["stripe_customer", "recording_access"],
+    },
+    // Portal upgrade: free → bundle (£29)
+    "prod_UI9IbKsHRmFvhH": {
+        productType: "bundle",
+        tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
+    },
+
     // Guide-only upgrade for existing recording buyers
     "prod_UHHe5C5FqRLsjK": {
         productType: "guide_upgrade",
@@ -63,7 +74,7 @@ const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] 
 // Tags representing lower spring-week tiers that should be removed when a
 // customer upgrades to bundle or premium.
 const SPRING_WEEK_TIER_UPGRADE_MAP: Record<string, string[]> = {
-    spring_week_bundle:  ["spring_week_part1", "spring_week_part2"],
+    spring_week_bundle: ["spring_week_part1", "spring_week_part2"],
     spring_week_premium: ["spring_week_part1", "spring_week_part2", "spring_week_bundle"],
 };
 
@@ -219,7 +230,7 @@ async function triggerLoopsEvents(
         const hasCoaching = productType === "spring_week_premium";
         const webinarPart = productType === "spring_week_part1" ? "1"
             : productType === "spring_week_part2" ? "2"
-            : "both";
+                : "both";
         const hasBothParts = productType === "spring_week_bundle" || productType === "spring_week_premium";
 
         try {
@@ -523,7 +534,7 @@ Deno.serve(async (req) => {
                     console.error(`Failed to create Auth account for ${email}:`, authErr.message);
                 } else {
                     if (!authErr) console.log(`Created new Auth account for ${email}`);
-                    
+
                     const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email);
                     if (resetErr) {
                         console.error(`Failed to dispatch password creation loop to ${email}:`, resetErr.message);

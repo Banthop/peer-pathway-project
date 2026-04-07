@@ -11,9 +11,9 @@ export const RECORDING_DURATION = "90 min";
 
 // -- Stripe Payment Links --
 export const STRIPE_WEBINAR_ONLY_LINK =
-  "https://buy.stripe.com/4gM7sK8iUcK55qGbl22400d";
+  "https://buy.stripe.com/8x29AS56I8tPaL09cU2400l";
 export const STRIPE_BUNDLE_LINK =
-  "https://buy.stripe.com/5kQcN49mYh0ldXcexe2400e";
+  "https://buy.stripe.com/eVqeVcbv6dO9bP4exe2400m";
 
 // -- Form option lists --
 export const INDUSTRY_OPTIONS = [
