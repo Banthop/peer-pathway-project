@@ -6,9 +6,9 @@ import {
   SW_EVENT_DATE,
   SW_EVENT_TIME,
   SW_EVENT_PLATFORM,
-  STRIPE_SW_WEBINAR,
-  STRIPE_SW_BUNDLE,
-  STRIPE_SW_PREMIUM,
+  STRIPE_SW_WATCH,
+  STRIPE_SW_PREPARE,
+  STRIPE_SW_CONVERT,
   SPRING_WEEK_NIGHTS,
 } from "@/data/springWeekData";
 
@@ -79,31 +79,32 @@ function PaywallBanner({ onUpgrade }: PaywallBannerProps) {
           <Lock className="w-5 h-5 text-[#666]" />
         </div>
         <div>
-          <p className="text-white font-bold text-[15px]">Recording requires webinar access</p>
+          <p className="text-white font-bold text-[15px]">Recording requires Watch, Prepare, or Convert</p>
           <p className="text-[#888] text-[13px] font-light mt-1 leading-relaxed">
-            Upgrade to any paid tier to watch the recording after the live event on {SW_EVENT_DATE}.
+            Students who converted at Goldman, JP Morgan, Barclays, Lazard, and more share exactly what they did differently.
+            Upgrade to access the full recording after {SW_EVENT_DATE}.
           </p>
         </div>
       </div>
 
       <div className="space-y-2.5">
         <a
-          href={STRIPE_SW_WEBINAR}
+          href={STRIPE_SW_WATCH}
           className="block w-full py-3 rounded-xl border border-[#333] text-[#CCC] text-[13px] font-semibold text-center hover:bg-[#1A1A1A] transition-colors"
         >
-          Webinar only - £17
+          Watch - £19 (see how they converted)
         </a>
         <a
-          href={STRIPE_SW_BUNDLE}
+          href={STRIPE_SW_PREPARE}
           className="block w-full py-3 rounded-xl bg-white text-[#111] text-[13px] font-bold text-center hover:bg-[#F5F5F5] transition-colors"
         >
-          Bundle (Webinar + Handbook) - £39
+          Prepare - £39 (recording + firm intel)
         </a>
         <a
-          href={STRIPE_SW_PREMIUM}
+          href={STRIPE_SW_CONVERT}
           className="block w-full py-3 rounded-xl border border-emerald-500 text-emerald-400 text-[13px] font-semibold text-center hover:bg-emerald-500/10 transition-colors"
         >
-          Premium (Bundle + 1 free match) - £64
+          Convert - £69 (includes free prep call)
         </a>
         <button
           onClick={onUpgrade}
@@ -154,14 +155,14 @@ function PreEventView({ hasAccess }: { hasAccess: boolean }) {
           )}
 
           <p className="text-[12px] text-[#AAA] font-light">
-            {SW_EVENT_PLATFORM} - your link will be emailed 24 hours before
+            {SW_EVENT_PLATFORM} - your link will be emailed 1 hour before the session
           </p>
         </div>
       </div>
 
       {/* Session breakdown */}
       <div className="space-y-3">
-        <h2 className="text-[14px] font-semibold text-[#111]">What's happening on the day</h2>
+        <h2 className="text-[14px] font-semibold text-[#111]">What you'll hear on April 12</h2>
         <div className="space-y-3">
           {SPRING_WEEK_NIGHTS.map((session) => (
             <div key={session.id} className="bg-white border border-[#E8E8E8] rounded-2xl px-5 py-4 shadow-sm">
@@ -196,8 +197,8 @@ function PreEventView({ hasAccess }: { hasAccess: boolean }) {
       <div className="bg-[#F8F8F8] border border-[#E8E8E8] rounded-2xl px-5 py-4 flex items-start gap-3">
         <Play className="w-4 h-4 text-[#AAA] flex-shrink-0 mt-0.5" />
         <p className="text-[12px] text-[#888] font-light leading-relaxed">
-          The recording will be available here within 24 hours of the live session.
-          You'll receive an email notification when it's ready.
+          Can't make the live session? The full recording will appear here within 24 hours of April 12.
+          You'll get an email the moment it's ready.
         </p>
       </div>
 
@@ -321,12 +322,12 @@ export default function SpringWeekRecording() {
             </p>
           </div>
           <h1 className="text-2xl font-bold text-[#111]">
-            {RECORDING_LIVE ? "Webinar Recording" : "Live Webinar - April 12"}
+            {RECORDING_LIVE ? "Panel Recording" : "Live Panel - April 12"}
           </h1>
           <p className="text-[14px] text-[#666] mt-1.5 font-light">
             {RECORDING_LIVE
-              ? "Full recording from the live session. Watch at your own pace."
-              : `${SW_EVENT_DATE} - ${SW_EVENT_TIME} on ${SW_EVENT_PLATFORM}`
+              ? "Students who converted at Goldman, JP Morgan, Barclays, Lazard, and more share exactly what they did differently. Watch at your own pace."
+              : `The live panel is on April 12. Students who converted at Goldman, JP Morgan, Barclays, Lazard, and more will share exactly what they did differently. ${SW_EVENT_DATE} - ${SW_EVENT_TIME} on ${SW_EVENT_PLATFORM}.`
             }
           </p>
 

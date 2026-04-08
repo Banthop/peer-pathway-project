@@ -10,24 +10,30 @@ export const SW_EVENT_TIME = "2:00 PM - 5:00 PM BST";
 export const SW_EVENT_PLATFORM = "Zoom";
 
 // -- Tier system --
-export type SwTierId = "webinar" | "bundle" | "premium";
+export type SwTierId = "watch" | "prepare" | "convert";
 
 export const SW_TIER_TAGS: Record<SwTierId, string> = {
-  webinar: "spring_week_webinar",
-  bundle: "spring_week_bundle",
-  premium: "spring_week_premium",
+  watch: "spring_week_watch",
+  prepare: "spring_week_prepare",
+  convert: "spring_week_convert",
 };
 
 // -- Stripe links - placeholders until products are created --
-export const STRIPE_SW_WEBINAR = "https://buy.stripe.com/TODO_SW_WEBINAR";
-export const STRIPE_SW_BUNDLE = "https://buy.stripe.com/TODO_SW_BUNDLE";
-export const STRIPE_SW_PREMIUM = "https://buy.stripe.com/TODO_SW_PREMIUM";
+export const STRIPE_SW_WATCH = "https://buy.stripe.com/TODO_SW_WEBINAR";
+export const STRIPE_SW_PREPARE = "https://buy.stripe.com/TODO_SW_BUNDLE";
+export const STRIPE_SW_CONVERT = "https://buy.stripe.com/TODO_SW_PREMIUM";
 export const STRIPE_SW_HANDBOOK = "https://buy.stripe.com/TODO_SW_HANDBOOK";
 export const STRIPE_SW_MATCH = "https://buy.stripe.com/TODO_SW_MATCH";
+
+// -- Backward-compat aliases (used by legacy components) --
+export const STRIPE_SW_WEBINAR = STRIPE_SW_WATCH;
+export const STRIPE_SW_BUNDLE = STRIPE_SW_PREPARE;
+export const STRIPE_SW_PREMIUM = STRIPE_SW_CONVERT;
 
 export interface SwTicket {
   id: SwTierId;
   name: string;
+  tagline: string;
   price: number;
   originalPrice?: number;
   description: string;
@@ -38,51 +44,55 @@ export interface SwTicket {
 }
 
 export const SW_TICKETS: Record<SwTierId, SwTicket> = {
-  webinar: {
-    id: "webinar",
-    name: "Webinar",
-    price: 17,
-    description: "Live session on April 12 + recording after",
+  watch: {
+    id: "watch",
+    name: "Watch",
+    tagline: "See how they did it",
+    price: 19,
+    description: "Live panel on April 12 + full recording",
     features: [
-      "Live Zoom session, April 12",
-      "Full recording access after the event",
-      "Speaker directory",
-      "Matchmaking form access (pay per match)",
+      "Live panel: students who converted share exactly what they did differently",
+      "Hear the mistakes that cost other students their offers",
+      "Direct Q&A: ask about YOUR specific firm",
+      "Full recording if you can't make it live",
     ],
-    stripeLink: STRIPE_SW_WEBINAR,
+    stripeLink: STRIPE_SW_WATCH,
   },
-  bundle: {
-    id: "bundle",
-    name: "Bundle",
+  prepare: {
+    id: "prepare",
+    name: "Prepare",
+    tagline: "Know what to expect at YOUR firm",
     price: 39,
-    description: "Webinar + Spring Week Handbook (45+ firms)",
+    description: "Everything in Watch, plus firm-specific intel for 45+ firms",
     features: [
-      "Everything in Webinar",
-      "Spring Week Handbook, 6-phase checklist",
-      "Firm-specific intel for 45+ firms",
-      "Permanent digital access",
+      "Everything in Watch",
+      "Spring Week Handbook: 45+ firms, phase-by-phase",
+      "Firm-specific intel: what the AC looks like, what questions they ask, how many convert",
+      "Networking scripts and follow-up templates that actually work",
+      "Division-specific technical prep guides",
     ],
-    badge: "BEST VALUE",
+    badge: "MOST CHOSEN",
     recommended: true,
-    stripeLink: STRIPE_SW_BUNDLE,
+    stripeLink: STRIPE_SW_PREPARE,
   },
-  premium: {
-    id: "premium",
-    name: "Premium",
-    price: 64,
-    description: "Bundle + 1 free insider access session + coaching discount",
+  convert: {
+    id: "convert",
+    name: "Convert",
+    tagline: "Walk in ready to get the offer",
+    price: 69,
+    description: "Everything in Prepare, plus a free prep call with a converter at your firm",
     features: [
-      "Everything in Bundle",
-      "1 free insider access session (worth £50)",
-      "Priority coaching booking",
-      "Discounted coaching rates",
+      "Everything in Prepare",
+      "1 free prep call with someone who converted at your firm (worth £50)",
+      "They'll tell you what the week is really like, what caught them off guard, and what got them the offer",
+      "Priority booking for additional prep calls",
     ],
-    badge: "LIMITED SPOTS",
-    stripeLink: STRIPE_SW_PREMIUM,
+    badge: "HIGHEST CONVERSION",
+    stripeLink: STRIPE_SW_CONVERT,
   },
 };
 
-// -- Matchmaking firm list --
+// -- Prep call firm list --
 export const MATCHMAKING_FIRMS = [
   "Goldman Sachs", "JPMorgan", "Morgan Stanley", "Barclays", "Citi",
   "HSBC", "Deutsche Bank", "Nomura", "Jefferies", "Lazard", "Rothschild",
@@ -96,7 +106,7 @@ export const MATCHMAKING_FIRMS = [
   "Other",
 ] as const;
 
-// -- Matchmaking division list --
+// -- Prep call division list --
 export const MATCHMAKING_DIVISIONS = [
   "Investment Banking",
   "Sales & Trading",
@@ -239,7 +249,7 @@ export const SPRING_WEEK_TICKETS: Record<SpringWeekTicketId, SpringWeekTicket> =
       "Recording access after the event",
       "Networking tips from real spring weekers",
     ],
-    stripeLink: STRIPE_SW_WEBINAR,
+    stripeLink: STRIPE_SW_WATCH,
   },
   part2: {
     id: "part2",
@@ -253,44 +263,43 @@ export const SPRING_WEEK_TICKETS: Record<SpringWeekTicketId, SpringWeekTicket> =
       "Recording access after the event",
       "Conversion strategies from different firms",
     ],
-    stripeLink: STRIPE_SW_WEBINAR,
+    stripeLink: STRIPE_SW_WATCH,
   },
   bundle: {
     id: "bundle",
-    name: "Bundle",
+    name: "Prepare",
     price: 39,
     pricePence: 3900,
-    description: "Webinar + Spring Week Handbook (45+ firms)",
+    description: "Everything in Watch, plus firm-specific intel for 45+ firms",
     features: [
-      "Everything in Webinar",
-      "Spring Week Handbook, 6-phase checklist",
-      "Firm-specific intel for 45+ firms",
-      "Permanent digital access",
+      "Everything in Watch",
+      "Spring Week Handbook: 45+ firms, phase-by-phase",
+      "Firm-specific intel: what the AC looks like, how many convert",
+      "Networking scripts and follow-up templates",
     ],
-    badge: "BEST VALUE",
+    badge: "MOST CHOSEN",
     recommended: true,
-    stripeLink: STRIPE_SW_BUNDLE,
+    stripeLink: STRIPE_SW_PREPARE,
   },
   premium: {
     id: "premium",
-    name: "Premium",
-    price: 64,
-    pricePence: 6400,
-    description: "Bundle + 1 free match + coaching discount",
+    name: "Convert",
+    price: 69,
+    pricePence: 6900,
+    description: "Everything in Prepare, plus a free prep call with a converter at your firm",
     features: [
-      "Everything in Bundle",
-      "1 free insider access session (worth £50)",
-      "Priority coaching booking",
-      "Discounted coaching rates",
+      "Everything in Prepare",
+      "1 free prep call with someone who converted at your firm (worth £50)",
+      "Priority booking for additional prep calls",
     ],
-    badge: "LIMITED SPOTS",
-    stripeLink: STRIPE_SW_PREMIUM,
+    badge: "HIGHEST CONVERSION",
+    stripeLink: STRIPE_SW_CONVERT,
   },
 };
 
 export const SPRING_WEEK_HANDBOOK = {
   title: "The Spring Week Handbook",
-  subtitle: "Insider guide written by students who converted",
+  subtitle: "Written by students who converted at 45+ firms",
   standalonePrice: 30,
   features: [
     "Firm-by-firm breakdown of what to expect",
@@ -363,14 +372,14 @@ export interface SpringWeekCombo {
 }
 
 export const SPRING_WEEK_COMBOS: Record<NightComboKey, SpringWeekCombo> = {
-  "1":               { key: "1",              price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "2":               { key: "2",              price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "3":               { key: "3",              price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "1,2":             { key: "1,2",            price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "1,3":             { key: "1,3",            price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "2,3":             { key: "2,3",            price: 17,   stripeLink: STRIPE_SW_WEBINAR },
-  "1,2,3":           { key: "1,2,3",          price: 17,   stripeLink: STRIPE_SW_WEBINAR, badge: "WEBINAR" },
-  "1,2,3+handbook":  { key: "1,2,3+handbook", price: 39,   stripeLink: STRIPE_SW_BUNDLE,  badge: "BUNDLE" },
+  "1":               { key: "1",              price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "2":               { key: "2",              price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "3":               { key: "3",              price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "1,2":             { key: "1,2",            price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "1,3":             { key: "1,3",            price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "2,3":             { key: "2,3",            price: 19,   stripeLink: STRIPE_SW_WATCH },
+  "1,2,3":           { key: "1,2,3",          price: 19,   stripeLink: STRIPE_SW_WATCH, badge: "WATCH" },
+  "1,2,3+handbook":  { key: "1,2,3+handbook", price: 39,   stripeLink: STRIPE_SW_PREPARE,  badge: "PREPARE" },
   "handbook":        { key: "handbook",        price: 30,   stripeLink: STRIPE_SW_HANDBOOK },
 };
 
@@ -385,7 +394,7 @@ export function getComboKey(
   return sorted as NightComboKey;
 }
 
-export const NIGHT_INDIVIDUAL_PRICE = 17;
+export const NIGHT_INDIVIDUAL_PRICE = 19;
 
 export const FIRM_NIGHT_MAP: Record<string, "1" | "2" | "3"> = {
   "goldman sachs": "1", "goldman": "1", "gs": "1",
@@ -425,7 +434,7 @@ export function matchFirmsToNights(
   });
 }
 
-// -- Network firms for Insider Access page --
+// -- Network firms for Prep Call page --
 
 export interface NetworkFirm {
   name: string;

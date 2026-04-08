@@ -10,7 +10,7 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { useSwAccess } from "@/components/spring-week-portal/SpringWeekPortalLayout";
-import { STRIPE_SW_BUNDLE, STRIPE_SW_PREMIUM } from "@/data/springWeekData";
+import { STRIPE_SW_PREPARE, STRIPE_SW_CONVERT } from "@/data/springWeekData";
 
 // --------------- Data ---------------
 
@@ -380,8 +380,8 @@ function HandbookPaywall() {
   const navigate = useNavigate();
 
   const PREVIEW_ITEMS = [
-    "Email your recruiter to confirm logistics: dress code, start time, building access",
-    "Research the 2-3 seniors you know will be on your desk",
+    "Most students skip this: research 2-3 seniors on your desk before you arrive",
+    "Email your recruiter to confirm logistics - dress code, start time, building access",
   ];
 
   return (
@@ -395,7 +395,8 @@ function HandbookPaywall() {
           </div>
           <h1 className="text-2xl font-bold text-[#111]">Spring Week Handbook</h1>
           <p className="text-[14px] text-[#666] mt-1.5 font-light">
-            Your complete guide to converting your spring week into a return offer.
+            Barclays converts 70% of spring weekers. JP Morgan converts 10%. Blackstone converts 3%.
+            The handbook tells you exactly why, and what to do about it at your firm.
           </p>
         </div>
       </div>
@@ -454,7 +455,7 @@ function HandbookPaywall() {
           <div className="px-6 pb-6 pt-2 text-center space-y-1">
             <div className="flex items-center justify-center gap-1.5">
               <Lock className="w-3.5 h-3.5 text-[#AAA]" />
-              <p className="text-[12px] text-[#888]">The full handbook is locked to Bundle and Premium</p>
+              <p className="text-[12px] text-[#888]">The full handbook is locked to Prepare and Convert</p>
             </div>
           </div>
         </div>
@@ -464,8 +465,8 @@ function HandbookPaywall() {
           <div>
             <p className="text-white font-bold text-lg leading-tight">Unlock the full handbook</p>
             <p className="text-[#888] text-[13px] mt-1.5 font-light leading-relaxed">
-              4 Phases, 60+ Action Items, 6 Division Guides, 45+ firm-specific intel. Everything you
-              need to convert your spring week into a return offer.
+              45+ firms. Firm-specific conversion rates. The exact AC format for your firm.
+              Barclays converts 70% of spring weekers. JP Morgan converts 10%. Know what makes the difference.
             </p>
           </div>
 
@@ -487,16 +488,16 @@ function HandbookPaywall() {
 
           <div className="space-y-2.5 pt-2">
             <a
-              href={STRIPE_SW_BUNDLE}
+              href={STRIPE_SW_PREPARE}
               className="block w-full py-3 rounded-xl bg-white text-[#111] text-[13px] font-bold text-center hover:bg-[#F5F5F5] transition-colors"
             >
-              Upgrade to Bundle - £39
+              Upgrade to Prepare - £39
             </a>
             <a
-              href={STRIPE_SW_PREMIUM}
+              href={STRIPE_SW_CONVERT}
               className="block w-full py-3 rounded-xl border border-emerald-500 text-emerald-400 text-[13px] font-semibold text-center hover:bg-emerald-500/10 transition-colors"
             >
-              Premium (Bundle + 1 free match) - £64
+              Convert (Prepare + free prep call) - £69
             </a>
             <button
               onClick={() => navigate("/spring-week-portal/upgrade")}

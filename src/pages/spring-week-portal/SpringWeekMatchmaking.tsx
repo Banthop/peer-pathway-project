@@ -49,21 +49,21 @@ const STATUS_COLORS: Record<StatusKey, string> = {
 const STEPS = [
   {
     number: "1",
-    title: "Tell us your firm, division, and what you want to know",
+    title: "Tell us your firm and what you want to know",
     description:
-      "Fill in the form below with your target firm, division, and the specific questions you most want answered.",
+      "Fill in the form below with your target firm, division, spring week dates, and what you're most worried about.",
   },
   {
     number: "2",
-    title: "We source the perfect match from our network of converters",
+    title: "We find someone from our network who converted there",
     description:
-      "We pair you with someone who converted at your exact firm. You receive their contact details by email within 48 hours.",
+      "We pair you with someone who did your exact spring week and came out with the offer. You hear from us within 48 hours.",
   },
   {
     number: "3",
-    title: "Get on a 30-min Zoom call and get firm-specific insider knowledge",
+    title: "30 minutes on Zoom to ask them anything",
     description:
-      "Get your questions answered by someone with real, first-hand experience at your firm. No generic advice.",
+      "What the week is really like. What caught them off guard. What got them the offer. No scripts, no generic advice.",
   },
 ];
 
@@ -105,14 +105,14 @@ function FirmNetworkDisplay() {
         <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <Users className="w-4 h-4 text-indigo-600" />
-            <h3 className="text-[14px] font-semibold text-[#111]">Firms we cover</h3>
+            <h3 className="text-[14px] font-semibold text-[#111]">We source from a network of converters across 80+ spring week programmes</h3>
           </div>
           <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
             {totalFirms}+ firms across 4 sectors
           </span>
         </div>
         <p className="text-[12px] text-[#888] font-light mt-2">
-          Our network of converters spans every major firm. We source your match from the right person for your exact firm and division.
+          Tell us your firm and division. We'll find someone who converted there and arrange the call within 48 hours.
         </p>
       </div>
 
@@ -273,20 +273,20 @@ export default function SpringWeekMatchmaking() {
         <div className="px-6 py-8 md:px-10 max-w-3xl">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-            <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">Insider Access</p>
+            <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">1-on-1 Prep Call</p>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#111] leading-tight">
             Talk to someone who already converted at your firm
           </h1>
           <p className="text-[15px] text-[#666] mt-3 font-light leading-relaxed max-w-xl">
-            We source from an extensive network of spring week converters across 80+ firms. Tell us your firm and division, and we'll connect you 1-on-1 with someone who's been through it and came out with an offer.
+            30 minutes with a student who did your exact spring week and came out with the offer. They'll tell you what the week is really like, what caught them off guard, and exactly what got them the return offer.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 bg-[#F5F5F5] border border-[#E0E0E0] rounded-full px-4 py-1.5">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
             <span className="text-[12px] text-[#555] font-medium">
-              £50 per session
+              £50 per call
               {access.hasFreeMatch && (
-                <span className="text-emerald-700 font-bold ml-2">- FREE with your Premium tier</span>
+                <span className="text-emerald-700 font-bold ml-2">- FREE with your Convert tier</span>
               )}
             </span>
           </div>
@@ -332,10 +332,10 @@ export default function SpringWeekMatchmaking() {
             <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-[13px] font-semibold text-emerald-800">
-                You have 1 free insider access session included with Premium
+                You have 1 free prep call included with Convert
               </p>
               <p className="text-[12px] text-emerald-700 font-light mt-0.5">
-                Your session is free of charge. Fill in the form below and we'll arrange it within 48 hours.
+                Your call is free of charge. Fill in the form below and we'll arrange it within 48 hours.
               </p>
             </div>
           </div>
@@ -364,7 +364,7 @@ export default function SpringWeekMatchmaking() {
             <div className="px-6 py-5 border-b border-[#F0F0F0]">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#555]" />
-                <p className="text-[14px] font-semibold text-[#111]">Request an insider access session</p>
+                <p className="text-[14px] font-semibold text-[#111]">Request a prep call</p>
               </div>
               {!user?.email && (
                 <p className="text-[12px] text-[#888] mt-1 font-light">
@@ -430,7 +430,7 @@ export default function SpringWeekMatchmaking() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <label className="text-[12px] font-semibold text-[#555] uppercase tracking-wider">
-                    What do you most want to know?
+                    What do you most want to know? (What are you most worried about?)
                   </label>
                   <span className={`text-[11px] font-light ${charCount > 500 ? "text-red-500" : "text-[#BBB]"}`}>
                     {charCount}/500
@@ -465,7 +465,7 @@ export default function SpringWeekMatchmaking() {
                     </span>
                   ) : access.hasFreeMatch ? (
                     <>
-                      Use your free insider access session
+                      Book your free prep call
                       <ArrowRight className="w-4 h-4" />
                     </>
                   ) : (
@@ -498,17 +498,17 @@ export default function SpringWeekMatchmaking() {
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="text-[13px] font-semibold text-indigo-900">
-                Premium includes 1 free insider access session (worth £50)
+                Convert tier includes 1 free prep call (worth £50)
               </p>
               <p className="text-[12px] text-indigo-700 font-light mt-0.5">
-                Upgrade to Premium for the handbook, free insider access, and priority coaching.
+                Upgrade to Convert for the handbook, a free prep call with a converter at your firm, and priority support.
               </p>
             </div>
             <button
               onClick={() => navigate("/spring-week-portal/upgrade")}
               className="flex-shrink-0 px-4 py-2 rounded-xl bg-indigo-600 text-white text-[13px] font-semibold hover:bg-indigo-700 transition-colors whitespace-nowrap"
             >
-              Upgrade to Premium
+              Upgrade to Convert
             </button>
           </div>
         )}
@@ -516,7 +516,7 @@ export default function SpringWeekMatchmaking() {
         {/* ---- Existing matches ---- */}
         {user?.email && (
           <div className="space-y-3">
-            <h2 className="text-[14px] font-semibold text-[#111]">Your insider access requests</h2>
+            <h2 className="text-[14px] font-semibold text-[#111]">Your prep call requests</h2>
             {matchesLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="w-6 h-6 border-2 border-[#111]/10 border-t-[#111] rounded-full animate-spin" />

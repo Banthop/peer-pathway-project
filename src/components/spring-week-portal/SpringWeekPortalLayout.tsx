@@ -22,11 +22,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { STRIPE_SW_WEBINAR, STRIPE_SW_BUNDLE, STRIPE_SW_PREMIUM } from "@/data/springWeekData";
+import { STRIPE_SW_WATCH, STRIPE_SW_PREPARE, STRIPE_SW_CONVERT } from "@/data/springWeekData";
 
 // -- Tier types --
 
-export type SwPortalTier = "free" | "webinar" | "bundle" | "premium";
+export type SwPortalTier = "free" | "watch" | "prepare" | "convert";
 
 // Backward-compat alias used by legacy SpringWeekPortal.tsx
 export type SpringWeekTier = "part1" | "part2" | "bundle" | "premium" | null;
@@ -87,20 +87,33 @@ export function useSpringWeekAccess(): SwAccess {
           ? ((data[0].tags as string[]) || [])
           : [];
 
-        // Tier resolution - only spring week tags, no fallback for cold email buyers
+        // Tier resolution - new tags take priority, old tags kept for backward compat
         let tier: SwPortalTier = "free";
-        if (tags.includes("spring_week_premium")) tier = "premium";
-        else if (tags.includes("spring_week_bundle")) tier = "bundle";
-        else if (tags.includes("spring_week_webinar")) tier = "webinar";
+        if (
+          tags.includes("spring_week_convert") ||
+          tags.includes("spring_week_premium")
+        ) {
+          tier = "convert";
+        } else if (
+          tags.includes("spring_week_prepare") ||
+          tags.includes("spring_week_bundle")
+        ) {
+          tier = "prepare";
+        } else if (
+          tags.includes("spring_week_watch") ||
+          tags.includes("spring_week_webinar")
+        ) {
+          tier = "watch";
+        }
 
-        const handbookAccess = tier === "bundle" || tier === "premium";
+        const handbookAccess = tier === "prepare" || tier === "convert";
 
         setAccess({
           tier,
           hasWebinar: tier !== "free",
           hasHandbook: handbookAccess,
           hasPlaybook: handbookAccess,
-          hasFreeMatch: tier === "premium",
+          hasFreeMatch: tier === "convert",
           hasCoachingDiscount: handbookAccess,
           loading: false,
           tags,
@@ -135,7 +148,7 @@ const navItems = [
   { to: "/spring-week-portal", icon: LayoutDashboard, label: "Dashboard", end: true },
   { to: "/spring-week-portal/recording", icon: Play, label: "Recording" },
   { to: "/spring-week-portal/handbook", icon: BookOpen, label: "Handbook" },
-  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Insider Access" },
+  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Prep Calls" },
   { to: "/spring-week-portal/coaching", icon: CalendarCheck, label: "Book Coaching" },
 ];
 
@@ -154,7 +167,7 @@ function SidebarContent({
     user?.email?.split("@")[0] ||
     "Student";
 
-  const showUpgrade = access.tier !== "premium";
+  const showUpgrade = access.tier !== "convert";
 
   return (
     <div className="flex flex-col h-full">
@@ -274,34 +287,33 @@ function FreeTierWelcome() {
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-5">
-        {/* Welcome header */}
+        {/* Header */}
         <div className="text-center space-y-2">
           <div className="w-14 h-14 rounded-full bg-[#F0F0F0] flex items-center justify-center mx-auto">
             <ArrowUpCircle className="w-7 h-7 text-[#666]" />
           </div>
           <h1 className="text-xl font-semibold text-[#111]">
-            You're in - unlock your content
+            You're in. Don't leave empty-handed.
           </h1>
           <p className="text-sm text-[#888] font-light leading-relaxed">
-            You have a free account. Choose a tier below to access the webinar,
-            handbook, and matchmaking.
+            You have a free account. Spring weeks start in days. Every student
+            who doesn't prepare is one more person taking the offer you came for.
           </p>
         </div>
 
-        {/* Checklist preview */}
-        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
-          <p className="text-[13px] font-semibold text-[#111] mb-3">
-            What's inside the portal:
+        {/* Loss aversion framing */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+          <p className="text-[12px] font-semibold text-amber-800 mb-2">
+            What unprepared students get wrong:
           </p>
-          <ul className="space-y-2">
+          <ul className="space-y-1.5">
             {[
-              "Live Zoom session + full recording",
-              "Spring Week Handbook (45+ firms)",
-              "1-to-1 insider access with spring weekers",
-              "Priority coaching booking",
+              "Not knowing the AC format before they walk in",
+              "Missing the 24-hour follow-up window after meeting seniors",
+              "Treating the spring week like a job shadow, not an audition",
             ].map((item) => (
-              <li key={item} className="flex items-start gap-2 text-[13px] text-[#555]">
-                <span className="mt-0.5 text-[#BBB]">-</span>
+              <li key={item} className="flex items-start gap-2 text-[12px] text-amber-900">
+                <span className="mt-0.5 text-amber-500 font-bold">x</span>
                 {item}
               </li>
             ))}
@@ -311,22 +323,22 @@ function FreeTierWelcome() {
         {/* Upgrade options */}
         <div className="space-y-3">
           <a
-            href={STRIPE_SW_WEBINAR}
+            href={STRIPE_SW_WATCH}
             className="block w-full py-3 rounded-xl border border-[#CCC] text-[#111] text-[13px] font-semibold text-center hover:bg-[#F5F5F5] transition-colors"
           >
-            Webinar only - £17
+            Watch - £19 (see how they converted)
           </a>
           <a
-            href={STRIPE_SW_BUNDLE}
+            href={STRIPE_SW_PREPARE}
             className="block w-full py-3 rounded-xl bg-[#111] text-white text-[13px] font-bold text-center hover:bg-[#222] transition-colors"
           >
-            Bundle (Webinar + Handbook) - £39
+            Prepare - £39 (most students choose this)
           </a>
           <a
-            href={STRIPE_SW_PREMIUM}
+            href={STRIPE_SW_CONVERT}
             className="block w-full py-3 rounded-xl border border-emerald-400 text-emerald-700 text-[13px] font-semibold text-center hover:bg-emerald-50 transition-colors"
           >
-            Premium (Bundle + 1 free match) - £64
+            Convert - £69 (includes free prep call)
           </a>
         </div>
 
@@ -334,7 +346,7 @@ function FreeTierWelcome() {
           onClick={() => navigate("/spring-week-portal/upgrade")}
           className="w-full py-2.5 rounded-xl bg-[#F5F5F5] text-[#666] text-[13px] font-medium hover:bg-[#EBEBEB] transition-colors"
         >
-          Compare tiers
+          Compare all tiers
         </button>
 
         <button

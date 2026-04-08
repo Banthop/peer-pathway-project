@@ -186,7 +186,7 @@ function DiscountBanner() {
             You get discounted coaching rates
           </p>
           <p className="text-[12px] text-[#888] font-light mt-1 leading-relaxed">
-            As a Bundle or Premium member, your prices are shown above at the member rate.
+            As a Prepare or Convert member, your prices are shown above at the member rate.
             Book anytime - slots fill up as we get closer to spring week dates.
           </p>
         </div>
