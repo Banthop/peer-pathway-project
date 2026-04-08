@@ -314,19 +314,19 @@ function FreeTierWelcome() {
             href={STRIPE_SW_WEBINAR}
             className="block w-full py-3 rounded-xl border border-[#CCC] text-[#111] text-[13px] font-semibold text-center hover:bg-[#F5F5F5] transition-colors"
           >
-            Webinar only - 17
+            Webinar only - £17
           </a>
           <a
             href={STRIPE_SW_BUNDLE}
             className="block w-full py-3 rounded-xl bg-[#111] text-white text-[13px] font-bold text-center hover:bg-[#222] transition-colors"
           >
-            Bundle (Webinar + Handbook) - 39
+            Bundle (Webinar + Handbook) - £39
           </a>
           <a
             href={STRIPE_SW_PREMIUM}
             className="block w-full py-3 rounded-xl border border-emerald-400 text-emerald-700 text-[13px] font-semibold text-center hover:bg-emerald-50 transition-colors"
           >
-            Premium (Bundle + 1 free match) - 64
+            Premium (Bundle + 1 free match) - £64
           </a>
         </div>
 

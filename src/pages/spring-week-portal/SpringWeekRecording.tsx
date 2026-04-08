@@ -91,19 +91,19 @@ function PaywallBanner({ onUpgrade }: PaywallBannerProps) {
           href={STRIPE_SW_WEBINAR}
           className="block w-full py-3 rounded-xl border border-[#333] text-[#CCC] text-[13px] font-semibold text-center hover:bg-[#1A1A1A] transition-colors"
         >
-          Webinar only - 17
+          Webinar only - £17
         </a>
         <a
           href={STRIPE_SW_BUNDLE}
           className="block w-full py-3 rounded-xl bg-white text-[#111] text-[13px] font-bold text-center hover:bg-[#F5F5F5] transition-colors"
         >
-          Bundle (Webinar + Handbook) - 39
+          Bundle (Webinar + Handbook) - £39
         </a>
         <a
           href={STRIPE_SW_PREMIUM}
           className="block w-full py-3 rounded-xl border border-emerald-500 text-emerald-400 text-[13px] font-semibold text-center hover:bg-emerald-500/10 transition-colors"
         >
-          Premium (Bundle + 1 free match) - 64
+          Premium (Bundle + 1 free match) - £64
         </a>
         <button
           onClick={onUpgrade}

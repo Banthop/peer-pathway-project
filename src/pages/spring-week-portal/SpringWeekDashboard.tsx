@@ -5,9 +5,8 @@ import {
   SW_EVENT_DATE,
   SW_EVENT_TIME,
   SW_EVENT_PLATFORM,
-  STRIPE_SW_BUNDLE,
-  STRIPE_SW_PREMIUM,
 } from "@/data/springWeekData";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Play,
   BookOpen,
@@ -82,12 +81,12 @@ function WebinarCard({ hasAccess }: { hasAccess: boolean }) {
             <p className="text-[12px] text-[#888] font-light">
               Upgrade to Webinar, Bundle, or Premium to watch live and get the recording.
             </p>
-            <a
-              href={STRIPE_SW_BUNDLE}
+            <Link
+              to="/spring-week-portal/upgrade"
               className="inline-block px-5 py-2 rounded-xl bg-[#111] text-white text-[12px] font-semibold hover:bg-[#222] transition-colors"
             >
-              Upgrade now
-            </a>
+              See upgrade options
+            </Link>
           </div>
         </div>
         {/* Blurred background content */}
@@ -202,13 +201,13 @@ function HandbookCard({ hasAccess }: { hasAccess: boolean }) {
           Firm-by-firm breakdown of what to expect, 6-phase conversion checklist,
           networking scripts, and insider tactics for every major firm.
         </p>
-        <a
-          href={STRIPE_SW_BUNDLE}
+        <Link
+          to="/spring-week-portal/upgrade"
           className="flex items-center justify-between w-full bg-[#F5F5F5] text-[#111] rounded-xl px-4 py-2.5 text-[12px] font-semibold hover:bg-[#EBEBEB] transition-colors border border-[#E0E0E0]"
         >
-          <span>Upgrade to Bundle to unlock</span>
+          <span>Upgrade to Bundle to unlock - from £39</span>
           <ArrowRight className="w-3.5 h-3.5" />
-        </a>
+        </Link>
       </div>
     );
   }
@@ -347,19 +346,19 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
           </div>
           <div className="flex-1">
             <p className="text-[13px] font-semibold text-[#111]">
-              Add Premium for 1 free matchmaking session
+              Add Premium for 1 free matchmaking session (worth £22)
             </p>
             <p className="text-[12px] text-[#888] font-light mt-1 leading-relaxed">
-              Premium includes a 1-to-1 match with a converter from your target firm,
-              plus priority coaching booking and discounted rates.
+              Premium gives you a 1-to-1 conversation with someone who converted at your exact firm.
+              Also includes priority coaching booking and discounted session rates.
             </p>
-            <a
-              href={STRIPE_SW_PREMIUM}
+            <Link
+              to="/spring-week-portal/upgrade"
               className="inline-flex items-center gap-1.5 mt-3 text-[12px] font-semibold text-emerald-700 hover:text-emerald-800 transition-colors"
             >
-              Upgrade to Premium
+              Upgrade to Premium - £64
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -374,29 +373,81 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
         </div>
         <div className="flex-1">
           <p className="text-[13px] font-semibold text-[#111]">
-            Unlock the full bundle
+            Unlock the handbook and matchmaking
           </p>
           <p className="text-[12px] text-[#888] font-light mt-1 leading-relaxed">
-            Add the Spring Week Handbook (45+ firms) and 1-to-1 matchmaking.
-            Upgrade to Bundle or Premium.
+            The Spring Week Handbook covers 45+ firms with a 6-phase conversion checklist.
+            Bundle includes the handbook. Premium adds a free 1-to-1 match with a converter.
           </p>
           <div className="flex items-center gap-3 mt-3">
-            <a
-              href={STRIPE_SW_BUNDLE}
+            <Link
+              to="/spring-week-portal/upgrade"
               className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-blue-700 hover:text-blue-800 transition-colors"
             >
               Bundle - £39
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            </Link>
             <span className="text-[#DDD]">|</span>
-            <a
-              href={STRIPE_SW_PREMIUM}
+            <Link
+              to="/spring-week-portal/upgrade"
               className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-indigo-700 hover:text-indigo-800 transition-colors"
             >
               Premium - £64
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            </Link>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---- What is this intro for free users ---- */
+
+function PortalIntro({ firstName }: { firstName: string }) {
+  return (
+    <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
+      <div className="flex items-start gap-3">
+        <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+          <Zap className="w-4 h-4 text-blue-600" />
+        </div>
+        <div className="flex-1">
+          <p className="text-[14px] font-semibold text-[#111] mb-1">
+            Welcome{firstName ? `, ${firstName}` : ""}. Here's what the Spring Week Portal is.
+          </p>
+          <p className="text-[13px] text-[#666] font-light leading-relaxed mb-3">
+            This portal gives you everything you need to convert your spring week into a return offer.
+            You currently have a free account - you can browse the portal and access the free checklist
+            preview below. Upgrade to unlock the full webinar, handbook, and matchmaking.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+            {[
+              { label: "Live webinar + recording", tier: "Webinar from £17", locked: true },
+              { label: "Spring Week Handbook (45+ firms)", tier: "Bundle from £39", locked: true },
+              { label: "1-to-1 matchmaking with converters", tier: "Premium, £64", locked: true },
+              { label: "Free checklist preview", tier: "Free", locked: false },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2">
+                <span className={`w-3.5 h-3.5 rounded-full flex-shrink-0 flex items-center justify-center ${item.locked ? "bg-[#F0F0F0]" : "bg-emerald-100"}`}>
+                  {item.locked
+                    ? <Lock className="w-2 h-2 text-[#BBB]" />
+                    : <CheckCircle2 className="w-2.5 h-2.5 text-emerald-600" />
+                  }
+                </span>
+                <span className="text-[12px] text-[#555]">{item.label}</span>
+                <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ml-auto flex-shrink-0 ${item.locked ? "bg-[#F5F5F5] text-[#AAA]" : "bg-emerald-50 text-emerald-700"}`}>
+                  {item.tier}
+                </span>
+              </div>
+            ))}
+          </div>
+          <Link
+            to="/spring-week-portal/upgrade"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-blue-700 hover:text-blue-800 transition-colors"
+          >
+            View all upgrade options
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </div>
@@ -407,11 +458,12 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
 
 export default function SpringWeekDashboard() {
   const access = useSwAccess();
+  const { user } = useAuth();
 
   const firstName =
-    typeof window !== "undefined"
-      ? undefined
-      : undefined; // resolved via auth context if needed
+    user?.user_metadata?.name?.split(" ")[0] ||
+    user?.user_metadata?.full_name?.split(" ")[0] ||
+    "";
 
   return (
     <div className="w-full bg-[#FAFAFA] min-h-screen pb-16">
@@ -431,6 +483,9 @@ export default function SpringWeekDashboard() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 md:px-8 py-6 space-y-4">
+        {/* What is this - intro for free users */}
+        {access.tier === "free" && <PortalIntro firstName={firstName} />}
+
         {/* Access summary row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[

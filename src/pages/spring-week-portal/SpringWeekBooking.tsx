@@ -33,8 +33,8 @@ const SESSIONS: CoachingSession[] = [
     id: "strategy-call",
     name: "Strategy Call",
     duration: "30 min",
-    price: "35",
-    discountedPrice: "28",
+    price: "£35",
+    discountedPrice: "£28",
     description:
       "Focused session to review your spring week strategy, get feedback on your networking approach, or ask anything about converting to a return offer.",
     includes: [
@@ -48,8 +48,8 @@ const SESSIONS: CoachingSession[] = [
     id: "deep-dive",
     name: "Deep Dive Session",
     duration: "60 min",
-    price: "59",
-    discountedPrice: "49",
+    price: "£59",
+    discountedPrice: "£49",
     description:
       "Full session covering your complete conversion strategy. Walk away with a firm-specific plan, networking targets, and assessment preparation.",
     includes: [
@@ -98,8 +98,8 @@ function SessionCard({ session, hasDiscount, onBook }: SessionCardProps) {
     <div
       className={`relative bg-white rounded-2xl overflow-hidden transition-all hover:shadow-lg ${
         session.popular
-          ? "border-2 border-[#111] shadow-md border-l-[5px] border-l-[#111]"
-          : "border border-[#E8E8E8] border-l-[5px] border-l-slate-300"
+          ? "border-2 border-emerald-400 shadow-md border-l-[6px] border-l-emerald-500 ring-1 ring-emerald-100"
+          : "border border-[#DDD] border-l-[6px] border-l-slate-400 hover:border-[#BBB]"
       }`}
     >
       {session.popular && (
@@ -157,7 +157,7 @@ function SessionCard({ session, hasDiscount, onBook }: SessionCardProps) {
         <button
           type="button"
           onClick={() => onBook(session.calSlug)}
-          className={`w-full py-3 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 ${
+          className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all hover:-translate-y-0.5 ${
             session.popular
               ? "bg-[#111] text-white hover:bg-[#222] shadow-sm"
               : "bg-[#F5F5F5] text-[#111] hover:bg-[#EBEBEB] border border-[#E0E0E0]"

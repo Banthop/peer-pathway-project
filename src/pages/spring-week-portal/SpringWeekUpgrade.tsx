@@ -89,7 +89,7 @@ function TierCard({ id, isCurrent, email }: TierCardProps) {
       <div className="mb-5">
         <div className="flex items-end gap-1">
           <span className="text-4xl font-bold text-[#111]">
-            {ticket.price}
+            £{ticket.price}
           </span>
           <span className="text-[13px] text-[#888] mb-1">one-time</span>
         </div>
@@ -190,7 +190,7 @@ function ComparisonTable() {
               <td className="px-5 py-3 text-[12px] font-semibold text-[#111]">Price</td>
               {TIER_ORDER.map((tier) => (
                 <td key={tier} className="text-center px-3 py-3 text-[13px] font-bold text-[#111]">
-                  {SW_TICKETS[tier].price}
+                  £{SW_TICKETS[tier].price}
                 </td>
               ))}
             </tr>

@@ -73,7 +73,7 @@ export const SW_TICKETS: Record<SwTierId, SwTicket> = {
     description: "Bundle + 1 free match + coaching discount",
     features: [
       "Everything in Bundle",
-      "1 free matchmaking session (worth 22)",
+      "1 free matchmaking session (worth £22)",
       "Priority coaching booking",
       "Discounted coaching rates",
     ],
@@ -279,7 +279,7 @@ export const SPRING_WEEK_TICKETS: Record<SpringWeekTicketId, SpringWeekTicket> =
     description: "Bundle + 1 free match + coaching discount",
     features: [
       "Everything in Bundle",
-      "1 free matchmaking session (worth 22)",
+      "1 free matchmaking session (worth £22)",
       "Priority coaching booking",
       "Discounted coaching rates",
     ],

@@ -8,6 +8,7 @@ import {
   MATCHMAKING_FIRMS,
   MATCHMAKING_DIVISIONS,
   STRIPE_SW_MATCH,
+  SPEAKERS,
 } from "@/data/springWeekData";
 
 // --------------- Types ---------------
@@ -186,7 +187,7 @@ export default function SpringWeekMatchmaking() {
           <div className="mt-4 inline-flex items-center gap-2 bg-[#F5F5F5] border border-[#E0E0E0] rounded-full px-4 py-1.5">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
             <span className="text-[12px] text-[#555] font-medium">
-              22 per match
+              £22 per match
               {access.hasFreeMatch && (
                 <span className="text-emerald-700 font-bold ml-2">- FREE with your Premium tier</span>
               )}
@@ -223,6 +224,42 @@ export default function SpringWeekMatchmaking() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* ---- Available matches preview ---- */}
+        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <Users className="w-4 h-4 text-[#888]" />
+            <h3 className="text-[14px] font-semibold text-[#111]">Who you can be matched with</h3>
+          </div>
+          <p className="text-[12px] text-[#888] font-light mb-4">
+            Our speakers have done spring weeks at these firms. When you submit a request,
+            we match you to whoever has the most relevant experience for your target firm.
+          </p>
+          <div className="space-y-2.5">
+            {SPEAKERS.map((speaker) => (
+              <div key={speaker.name} className="flex items-start gap-3 bg-[#FAFAFA] rounded-xl p-3 border border-[#F0F0F0]">
+                <div className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center text-[11px] font-semibold text-white flex-shrink-0">
+                  {speaker.name[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-semibold text-[#111]">
+                    {speaker.name}
+                    {speaker.university && (
+                      <span className="text-[11px] text-[#AAA] font-normal ml-1.5">{speaker.university}</span>
+                    )}
+                  </p>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {speaker.firms.map((firm) => (
+                      <span key={firm} className="text-[10px] bg-white border border-[#E8E8E8] text-[#555] px-2 py-0.5 rounded-full font-medium">
+                        {firm}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* ---- Free match badge ---- */}
@@ -370,7 +407,7 @@ export default function SpringWeekMatchmaking() {
                     </>
                   ) : (
                     <>
-                      Submit and pay 22
+                      Submit and pay £22
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -398,7 +435,7 @@ export default function SpringWeekMatchmaking() {
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="text-[13px] font-semibold text-indigo-900">
-                Premium includes 1 free match (worth 22)
+                Premium includes 1 free match (worth £22)
               </p>
               <p className="text-[12px] text-indigo-700 font-light mt-0.5">
                 Upgrade to Premium for the handbook, free matchmaking, and priority coaching.

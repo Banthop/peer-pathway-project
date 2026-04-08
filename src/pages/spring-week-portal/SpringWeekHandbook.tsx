@@ -490,13 +490,13 @@ function HandbookPaywall() {
               href={STRIPE_SW_BUNDLE}
               className="block w-full py-3 rounded-xl bg-white text-[#111] text-[13px] font-bold text-center hover:bg-[#F5F5F5] transition-colors"
             >
-              Upgrade to Bundle - 39
+              Upgrade to Bundle - £39
             </a>
             <a
               href={STRIPE_SW_PREMIUM}
               className="block w-full py-3 rounded-xl border border-emerald-500 text-emerald-400 text-[13px] font-semibold text-center hover:bg-emerald-500/10 transition-colors"
             >
-              Premium (Bundle + 1 free match) - 64
+              Premium (Bundle + 1 free match) - £64
             </a>
             <button
               onClick={() => navigate("/spring-week-portal/upgrade")}
