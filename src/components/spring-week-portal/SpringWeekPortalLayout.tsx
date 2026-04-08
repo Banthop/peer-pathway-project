@@ -1,48 +1,74 @@
-import { NavLink, Outlet, Navigate, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  Outlet,
+  Navigate,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Logo } from "@/components/Logo";
 import {
   LayoutDashboard,
+  Play,
+  BookOpen,
+  Users,
+  CalendarCheck,
+  ArrowUpCircle,
   LogOut,
   Menu,
   X,
   ShieldAlert,
-  Lock,
+  Zap,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { STRIPE_SW_WEBINAR, STRIPE_SW_BUNDLE, STRIPE_SW_PREMIUM } from "@/data/springWeekData";
 
+// -- Tier types --
+
+export type SwPortalTier = "free" | "webinar" | "bundle" | "premium";
+
+// Backward-compat alias used by legacy SpringWeekPortal.tsx
 export type SpringWeekTier = "part1" | "part2" | "bundle" | "premium" | null;
 
-interface SpringWeekAccess {
-  tier: SpringWeekTier;
-  hasPart1: boolean;
-  hasPart2: boolean;
+export interface SwAccess {
+  tier: SwPortalTier;
+  hasWebinar: boolean;
+  hasHandbook: boolean;
+  /** Alias for hasHandbook - used by legacy SpringWeekPlaybook.tsx */
   hasPlaybook: boolean;
-  hasCoaching: boolean;
+  hasFreeMatch: boolean;
+  hasCoachingDiscount: boolean;
   loading: boolean;
+  tags: string[];
 }
 
-export function useSpringWeekAccess(): SpringWeekAccess {
+// -- Access hook --
+
+export function useSpringWeekAccess(): SwAccess {
   const { user } = useAuth();
-  const [access, setAccess] = useState<SpringWeekAccess>({
-    tier: null,
-    hasPart1: false,
-    hasPart2: false,
+  const [access, setAccess] = useState<SwAccess>({
+    tier: "free",
+    hasWebinar: false,
+    hasHandbook: false,
     hasPlaybook: false,
-    hasCoaching: false,
+    hasFreeMatch: false,
+    hasCoachingDiscount: false,
     loading: true,
+    tags: [],
   });
 
   useEffect(() => {
     if (!user?.email) {
       setAccess({
-        tier: null,
-        hasPart1: false,
-        hasPart2: false,
+        tier: "free",
+        hasWebinar: false,
+        hasHandbook: false,
         hasPlaybook: false,
-        hasCoaching: false,
+        hasFreeMatch: false,
+        hasCoachingDiscount: false,
         loading: false,
+        tags: [],
       });
       return;
     }
@@ -57,66 +83,38 @@ export function useSpringWeekAccess(): SpringWeekAccess {
           .eq("email", emailKey)
           .limit(1);
 
-        if (!data || data.length === 0) {
-          setAccess({
-            tier: null,
-            hasPart1: false,
-            hasPart2: false,
-            hasPlaybook: false,
-            hasCoaching: false,
-            loading: false,
-          });
-          return;
-        }
+        const tags: string[] = data && data.length > 0
+          ? ((data[0].tags as string[]) || [])
+          : [];
 
-        const tags: string[] = (data[0].tags as string[]) || [];
-
-        // Determine highest tier
-        let tier: SpringWeekTier = null;
+        // Tier resolution - only spring week tags, no fallback for cold email buyers
+        let tier: SwPortalTier = "free";
         if (tags.includes("spring_week_premium")) tier = "premium";
         else if (tags.includes("spring_week_bundle")) tier = "bundle";
-        else if (tags.includes("spring_week_part2")) tier = "part2";
-        else if (tags.includes("spring_week_part1")) tier = "part1";
+        else if (tags.includes("spring_week_webinar")) tier = "webinar";
 
-        // Also accept generic spring week buyer tag
-        const isSpringWeekBuyer =
-          tier !== null ||
-          tags.includes("spring_week_buyer") ||
-          tags.includes("stripe_customer");
-
-        if (!isSpringWeekBuyer) {
-          setAccess({
-            tier: null,
-            hasPart1: false,
-            hasPart2: false,
-            hasPlaybook: false,
-            hasCoaching: false,
-            loading: false,
-          });
-          return;
-        }
-
-        // Fallback: if they're a stripe_customer with no specific tier, grant bundle access
-        if (tier === null && tags.includes("stripe_customer")) {
-          tier = "bundle";
-        }
+        const handbookAccess = tier === "bundle" || tier === "premium";
 
         setAccess({
           tier,
-          hasPart1: tier === "premium" || tier === "bundle" || tier === "part1",
-          hasPart2: tier === "premium" || tier === "bundle" || tier === "part2",
-          hasPlaybook: tier === "premium" || tier === "bundle",
-          hasCoaching: tier === "premium",
+          hasWebinar: tier !== "free",
+          hasHandbook: handbookAccess,
+          hasPlaybook: handbookAccess,
+          hasFreeMatch: tier === "premium",
+          hasCoachingDiscount: handbookAccess,
           loading: false,
+          tags,
         });
       } catch {
         setAccess({
-          tier: null,
-          hasPart1: false,
-          hasPart2: false,
+          tier: "free",
+          hasWebinar: false,
+          hasHandbook: false,
           hasPlaybook: false,
-          hasCoaching: false,
+          hasFreeMatch: false,
+          hasCoachingDiscount: false,
           loading: false,
+          tags: [],
         });
       }
     })();
@@ -125,16 +123,38 @@ export function useSpringWeekAccess(): SpringWeekAccess {
   return access;
 }
 
+// -- Convenience hook for child routes --
+
+export function useSwAccess(): SwAccess {
+  return useOutletContext<{ access: SwAccess }>().access;
+}
+
+// -- Nav items --
+
 const navItems = [
   { to: "/spring-week-portal", icon: LayoutDashboard, label: "Dashboard", end: true },
+  { to: "/spring-week-portal/recording", icon: Play, label: "Recording" },
+  { to: "/spring-week-portal/handbook", icon: BookOpen, label: "Handbook" },
+  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Matchmaking" },
+  { to: "/spring-week-portal/coaching", icon: CalendarCheck, label: "Book Coaching" },
 ];
 
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+// -- Sidebar --
+
+function SidebarContent({
+  onClose,
+  access,
+}: {
+  onClose?: () => void;
+  access: SwAccess;
+}) {
   const { user, signOut } = useAuth();
   const name =
     user?.user_metadata?.name ||
     user?.email?.split("@")[0] ||
     "Student";
+
+  const showUpgrade = access.tier !== "premium";
 
   return (
     <div className="flex flex-col h-full">
@@ -179,6 +199,33 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             {item.label}
           </NavLink>
         ))}
+
+        {/* Upgrade CTA */}
+        {showUpgrade && (
+          <div className="pt-3">
+            <NavLink
+              to="/spring-week-portal/upgrade"
+              onClick={onClose}
+              className={({ isActive }) =>
+                `relative flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-bold bg-gradient-to-r text-white transition-all ${
+                  isActive
+                    ? "from-emerald-700 to-emerald-600 ring-2 ring-emerald-300 ring-offset-2 shadow-lg"
+                    : "from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 shadow-sm hover:shadow-md"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && (
+                    <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1 h-5 bg-white rounded-full" />
+                  )}
+                  <Zap className="w-4 h-4" />
+                  Upgrade Access
+                </>
+              )}
+            </NavLink>
+          </div>
+        )}
       </nav>
 
       {/* Anti-sharing notice */}
@@ -218,53 +265,100 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
   );
 }
 
-function NotABuyer() {
+// -- Free tier welcome screen (replaces hard block) --
+
+function FreeTierWelcome() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-      <div className="w-full max-w-md text-center space-y-6">
-        <div className="w-14 h-14 rounded-full bg-[#F5F5F5] flex items-center justify-center mx-auto">
-          <Lock className="w-7 h-7 text-[#999]" />
-        </div>
-        <div>
+    <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md space-y-5">
+        {/* Welcome header */}
+        <div className="text-center space-y-2">
+          <div className="w-14 h-14 rounded-full bg-[#F0F0F0] flex items-center justify-center mx-auto">
+            <ArrowUpCircle className="w-7 h-7 text-[#666]" />
+          </div>
           <h1 className="text-xl font-semibold text-[#111]">
-            Purchase required
+            You're in - unlock your content
           </h1>
-          <p className="text-sm text-[#888] font-light mt-2 leading-relaxed">
-            This portal is only available to Spring Week Conversion Panel
-            ticket holders. If you purchased with a different email, please
-            sign in with that account.
+          <p className="text-sm text-[#888] font-light leading-relaxed">
+            You have a free account. Choose a tier below to access the webinar,
+            handbook, and matchmaking.
           </p>
         </div>
-        <div className="space-y-3">
-          <button
-            onClick={() => navigate("/spring-week")}
-            className="w-full py-3 rounded-xl bg-[#111] text-white text-sm font-semibold hover:bg-[#222] transition-colors"
-          >
-            Get a Ticket
-          </button>
-          <button
-            onClick={signOut}
-            className="w-full py-3 rounded-xl bg-[#F5F5F5] text-[#666] text-sm font-medium hover:bg-[#EBEBEB] transition-colors"
-          >
-            Sign in with a different account
-          </button>
+
+        {/* Checklist preview */}
+        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
+          <p className="text-[13px] font-semibold text-[#111] mb-3">
+            What's inside the portal:
+          </p>
+          <ul className="space-y-2">
+            {[
+              "Live Zoom session + full recording",
+              "Spring Week Handbook (45+ firms)",
+              "1-to-1 matchmaking with spring weekers",
+              "Priority coaching booking",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2 text-[13px] text-[#555]">
+                <span className="mt-0.5 text-[#BBB]">-</span>
+                {item}
+              </li>
+            ))}
+          </ul>
         </div>
-        <p className="text-xs text-[#BBB] font-light">
-          Having trouble? Email{" "}
+
+        {/* Upgrade options */}
+        <div className="space-y-3">
+          <a
+            href={STRIPE_SW_WEBINAR}
+            className="block w-full py-3 rounded-xl border border-[#CCC] text-[#111] text-[13px] font-semibold text-center hover:bg-[#F5F5F5] transition-colors"
+          >
+            Webinar only - 17
+          </a>
+          <a
+            href={STRIPE_SW_BUNDLE}
+            className="block w-full py-3 rounded-xl bg-[#111] text-white text-[13px] font-bold text-center hover:bg-[#222] transition-colors"
+          >
+            Bundle (Webinar + Handbook) - 39
+          </a>
+          <a
+            href={STRIPE_SW_PREMIUM}
+            className="block w-full py-3 rounded-xl border border-emerald-400 text-emerald-700 text-[13px] font-semibold text-center hover:bg-emerald-50 transition-colors"
+          >
+            Premium (Bundle + 1 free match) - 64
+          </a>
+        </div>
+
+        <button
+          onClick={() => navigate("/spring-week-portal/upgrade")}
+          className="w-full py-2.5 rounded-xl bg-[#F5F5F5] text-[#666] text-[13px] font-medium hover:bg-[#EBEBEB] transition-colors"
+        >
+          Compare tiers
+        </button>
+
+        <button
+          onClick={signOut}
+          className="w-full py-2 text-[12px] text-[#BBB] hover:text-[#888] transition-colors"
+        >
+          Sign in with a different account
+        </button>
+
+        <p className="text-[11px] text-[#BBB] font-light text-center">
+          Already purchased with a different email?{" "}
           <a
             href="mailto:d.awotwi@lse.ac.uk"
             className="text-[#888] underline underline-offset-2"
           >
-            d.awotwi@lse.ac.uk
+            Contact us
           </a>
         </p>
       </div>
     </div>
   );
 }
+
+// -- Layout --
 
 export default function SpringWeekPortalLayout() {
   const { user, loading: authLoading } = useAuth();
@@ -283,15 +377,16 @@ export default function SpringWeekPortalLayout() {
     return <Navigate to="/login?redirect=/spring-week-portal" replace />;
   }
 
-  if (!access.tier) {
-    return <NotABuyer />;
+  // Free tier users see the upgrade/welcome screen instead of a hard block
+  if (access.tier === "free") {
+    return <FreeTierWelcome />;
   }
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex">
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-[220px] bg-white border-r border-[#E8E8E8] flex-col flex-shrink-0 fixed top-0 left-0 h-screen z-30">
-        <SidebarContent />
+        <SidebarContent access={access} />
       </aside>
 
       {/* Mobile header */}
@@ -321,7 +416,10 @@ export default function SpringWeekPortalLayout() {
             onClick={() => setMobileOpen(false)}
           />
           <aside className="md:hidden fixed top-0 right-0 w-[260px] h-screen bg-white z-50 shadow-xl animate-in slide-in-from-right duration-200">
-            <SidebarContent onClose={() => setMobileOpen(false)} />
+            <SidebarContent
+              onClose={() => setMobileOpen(false)}
+              access={access}
+            />
           </aside>
         </>
       )}

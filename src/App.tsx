@@ -58,6 +58,13 @@ import Upgrade from "./pages/portal/Upgrade";
 import DaWebinar from "./pages/DaWebinar";
 import SpringWeekWebinar from "./pages/SpringWeekWebinar";
 import SlidesPage from "./pages/portal/SlidesPage";
+import SpringWeekPortalLayout from "./components/spring-week-portal/SpringWeekPortalLayout";
+import SpringWeekDashboard from "./pages/spring-week-portal/SpringWeekDashboard";
+import SpringWeekRecording from "./pages/spring-week-portal/SpringWeekRecording";
+import SpringWeekHandbook from "./pages/spring-week-portal/SpringWeekHandbook";
+import SpringWeekMatchmaking from "./pages/spring-week-portal/SpringWeekMatchmaking";
+import SpringWeekBooking from "./pages/spring-week-portal/SpringWeekBooking";
+import SpringWeekUpgrade from "./pages/spring-week-portal/SpringWeekUpgrade";
 
 const queryClient = new QueryClient();
 
@@ -166,6 +173,14 @@ const AppRoutes = () => {
           <Route path="book-andrew" element={<BookAndrew />} />
           <Route path="book-mohammad" element={<BookMohammad />} />
         </Route>
+        <Route path="/spring-week-portal" element={<SpringWeekPortalLayout />}>
+          <Route index element={<SpringWeekDashboard />} />
+          <Route path="recording" element={<SpringWeekRecording />} />
+          <Route path="handbook" element={<SpringWeekHandbook />} />
+          <Route path="matchmaking" element={<SpringWeekMatchmaking />} />
+          <Route path="coaching" element={<SpringWeekBooking />} />
+          <Route path="upgrade" element={<SpringWeekUpgrade />} />
+        </Route>
         <Route path="*" element={<Navigate to="/portal" replace />} />
       </Routes>
     );
@@ -230,6 +245,14 @@ const AppRoutes = () => {
         <Route path="outreach" element={<AdminOutreach />} />
         <Route path="linkedin" element={<AdminLinkedIn />} />
         <Route path="crm" element={<AdminCRM />} />
+      </Route>
+      <Route path="/spring-week-portal" element={<SpringWeekPortalLayout />}>
+        <Route index element={<SpringWeekDashboard />} />
+        <Route path="recording" element={<SpringWeekRecording />} />
+        <Route path="handbook" element={<SpringWeekHandbook />} />
+        <Route path="matchmaking" element={<SpringWeekMatchmaking />} />
+        <Route path="coaching" element={<SpringWeekBooking />} />
+        <Route path="upgrade" element={<SpringWeekUpgrade />} />
       </Route>
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
