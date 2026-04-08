@@ -18,12 +18,57 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    // Raise warning threshold - 500KB is fine for a gzipped app chunk
+    chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          supabase: ['@supabase/supabase-js'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-select', '@radix-ui/react-slot', '@radix-ui/react-toast', '@radix-ui/react-tooltip', 'lucide-react'],
+        manualChunks(id: string) {
+          // Core React runtime - loads on every page, tiny, cached aggressively
+          if (id.includes("node_modules/react/") ||
+              id.includes("node_modules/react-dom/") ||
+              id.includes("node_modules/react-router-dom/") ||
+              id.includes("node_modules/react-router/")) {
+            return "vendor";
+          }
+
+          // Supabase client - large, infrequently changes
+          if (id.includes("node_modules/@supabase/")) {
+            return "supabase";
+          }
+
+          // TanStack Query - separate from React core
+          if (id.includes("node_modules/@tanstack/")) {
+            return "query";
+          }
+
+          // Radix UI primitives - separate chunk so portal/webinar pages
+          // don't pull in the full UI library
+          if (id.includes("node_modules/@radix-ui/")) {
+            return "radix";
+          }
+
+          // Icons - lucide is large (~300KB untreated), keep separate
+          if (id.includes("node_modules/lucide-react/")) {
+            return "icons";
+          }
+
+          // Other UI utilities (class-variance-authority, clsx, tailwind-merge, etc.)
+          if (id.includes("node_modules/class-variance-authority/") ||
+              id.includes("node_modules/clsx/") ||
+              id.includes("node_modules/tailwind-merge/") ||
+              id.includes("node_modules/cmdk/") ||
+              id.includes("node_modules/sonner/") ||
+              id.includes("node_modules/vaul/")) {
+            return "ui-utils";
+          }
+
+          // Date/form utilities
+          if (id.includes("node_modules/date-fns/") ||
+              id.includes("node_modules/react-hook-form/") ||
+              id.includes("node_modules/@hookform/") ||
+              id.includes("node_modules/zod/")) {
+            return "form-utils";
+          }
         },
       },
     },
