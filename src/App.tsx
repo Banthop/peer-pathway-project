@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import CoachProfile from "./pages/CoachProfile";
@@ -119,9 +119,11 @@ function CoachRoute({ children }: { children: React.ReactNode }) {
  */
 function GuestRoute({ children }: { children: React.ReactNode }) {
   const { user, userType, loading } = useAuth();
+  const [params] = useSearchParams();
   if (loading) return <AuthLoading />;
   if (user) {
-    return <Navigate to="/portal" replace />;
+    const redirect = params.get("redirect") || "/portal";
+    return <Navigate to={redirect} replace />;
   }
   return <>{children}</>;
 }
