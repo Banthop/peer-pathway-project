@@ -117,7 +117,7 @@ function FirmNetworkDisplay() {
       </div>
 
       {/* Category tabs */}
-      <div className="flex overflow-x-auto border-b border-[#F0F0F0] px-4 gap-1 pt-3 pb-0 scrollbar-none">
+      <div className="flex flex-wrap border-b border-[#F0F0F0] px-4 gap-1 pt-3 pb-0">
         {CATEGORY_ORDER.map((cat) => (
           <button
             key={cat}
@@ -147,19 +147,9 @@ function FirmNetworkDisplay() {
               className="group relative inline-flex items-center gap-1 bg-[#F5F5F5] border border-[#E8E8E8] rounded-full px-2.5 py-1 text-[11px] font-medium text-[#444] hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800 transition-all cursor-default"
             >
               {firm.name}
-              {firm.conversionRate && (
-                <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1 py-0.5 rounded-full ml-0.5">
-                  {firm.conversionRate}
-                </span>
-              )}
             </div>
           ))}
         </div>
-        {firmsByCategory[activeCategory].some((f) => f.conversionRate) && (
-          <p className="text-[10px] text-[#BBB] mt-3 font-light">
-            Conversion rates shown where available from public data.
-          </p>
-        )}
       </div>
     </div>
   );
