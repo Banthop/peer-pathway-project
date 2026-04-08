@@ -255,21 +255,20 @@ function MatchmakingCard({
           <Users className="w-4 h-4 text-indigo-600" />
         </div>
         <div>
-          <p className="text-[13px] font-semibold text-[#111]">Matchmaking</p>
+          <p className="text-[13px] font-semibold text-[#111]">Insider Access</p>
           <p className="text-[11px] text-[#888] font-light mt-0.5">
-            Get matched with a speaker from your target firm
+            {hasFreeMatch ? "1 free session included" : "£50 per session"}
           </p>
         </div>
       </div>
       <p className="text-[12px] text-[#888] font-light leading-relaxed mb-3">
-        We pair you 1-to-1 with a spring weeker who converted at your target firm.
-        They know the exact culture, format, and what the assessors looked for.
+        Talk 1-on-1 with someone who already converted at your target firm. We source from a network of 80+ firms.
       </p>
       {hasFreeMatch && (
         <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-3 py-2 mb-3 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
           <p className="text-[12px] text-emerald-800 font-medium">
-            You have 1 free match included with Premium
+            You have 1 free insider access session included with Premium
           </p>
         </div>
       )}
@@ -277,7 +276,7 @@ function MatchmakingCard({
         to="/spring-week-portal/matchmaking"
         className="flex items-center justify-between w-full bg-indigo-600 text-white rounded-xl px-4 py-2.5 text-[12px] font-semibold hover:bg-indigo-700 transition-colors"
       >
-        <span>Find your match</span>
+        <span>Get insider access</span>
         <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </div>
@@ -313,7 +312,7 @@ function SpeakerDirectory() {
               </div>
             </div>
             <div className="flex flex-wrap gap-1">
-              {speaker.firms.slice(0, 3).map((firm) => (
+              {speaker.firms.map((firm) => (
                 <span
                   key={firm}
                   className="text-[10px] bg-white border border-[#E8E8E8] text-[#555] px-2 py-0.5 rounded-full font-medium"
@@ -321,11 +320,6 @@ function SpeakerDirectory() {
                   {firm}
                 </span>
               ))}
-              {speaker.firms.length > 3 && (
-                <span className="text-[10px] text-[#BBB] px-1 py-0.5 font-light">
-                  +{speaker.firms.length - 3} more
-                </span>
-              )}
             </div>
           </div>
         ))}
@@ -346,7 +340,7 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
           </div>
           <div className="flex-1">
             <p className="text-[13px] font-semibold text-[#111]">
-              Add Premium for 1 free matchmaking session (worth £22)
+              Add Premium for 1 free insider access session (worth £50)
             </p>
             <p className="text-[12px] text-[#888] font-light mt-1 leading-relaxed">
               Premium gives you a 1-to-1 conversation with someone who converted at your exact firm.
@@ -373,11 +367,11 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
         </div>
         <div className="flex-1">
           <p className="text-[13px] font-semibold text-[#111]">
-            Unlock the handbook and matchmaking
+            Unlock the handbook and insider access
           </p>
           <p className="text-[12px] text-[#888] font-light mt-1 leading-relaxed">
             The Spring Week Handbook covers 45+ firms with a 6-phase conversion checklist.
-            Bundle includes the handbook. Premium adds a free 1-to-1 match with a converter.
+            Bundle includes the handbook. Premium adds a free 1-to-1 insider access session with a converter.
           </p>
           <div className="flex items-center gap-3 mt-3">
             <Link
@@ -418,13 +412,13 @@ function PortalIntro({ firstName }: { firstName: string }) {
           <p className="text-[13px] text-[#666] font-light leading-relaxed mb-3">
             This portal gives you everything you need to convert your spring week into a return offer.
             You currently have a free account - you can browse the portal and access the free checklist
-            preview below. Upgrade to unlock the full webinar, handbook, and matchmaking.
+            preview below. Upgrade to unlock the full webinar, handbook, and insider access sessions.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
             {[
               { label: "Live webinar + recording", tier: "Webinar from £17", locked: true },
               { label: "Spring Week Handbook (45+ firms)", tier: "Bundle from £39", locked: true },
-              { label: "1-to-1 matchmaking with converters", tier: "Premium, £64", locked: true },
+              { label: "1-to-1 insider access with converters", tier: "Premium, £64", locked: true },
               { label: "Free checklist preview", tier: "Free", locked: false },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-2">

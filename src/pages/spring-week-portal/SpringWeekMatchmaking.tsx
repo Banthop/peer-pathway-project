@@ -8,7 +8,8 @@ import {
   MATCHMAKING_FIRMS,
   MATCHMAKING_DIVISIONS,
   STRIPE_SW_MATCH,
-  SPEAKERS,
+  NETWORK_FIRMS,
+  type NetworkFirm,
 } from "@/data/springWeekData";
 
 // --------------- Types ---------------
@@ -48,23 +49,121 @@ const STATUS_COLORS: Record<StatusKey, string> = {
 const STEPS = [
   {
     number: "1",
-    title: "Tell us your firm and what you want to know",
+    title: "Tell us your firm, division, and what you want to know",
     description:
-      "Fill in the form below with your target firm, division, and the questions you most want answered.",
+      "Fill in the form below with your target firm, division, and the specific questions you most want answered.",
   },
   {
     number: "2",
-    title: "We match you within 48 hours",
+    title: "We source the perfect match from our network of converters",
     description:
-      "We pair you with a speaker who has done the spring week at your exact firm. You receive their contact details by email.",
+      "We pair you with someone who converted at your exact firm. You receive their contact details by email within 48 hours.",
   },
   {
     number: "3",
-    title: "30-minute Zoom call with your match",
+    title: "Get on a 30-min Zoom call and get firm-specific insider knowledge",
     description:
       "Get your questions answered by someone with real, first-hand experience at your firm. No generic advice.",
   },
 ];
+
+// --------------- Firm network tabs ---------------
+
+type NetworkCategory = NetworkFirm["category"];
+
+const CATEGORY_ORDER: NetworkCategory[] = [
+  "Investment Banking",
+  "Trading & Quant",
+  "Asset Management & PE",
+  "Consulting & Big 4",
+];
+
+function FirmNetworkDisplay() {
+  const [activeCategory, setActiveCategory] = useState<NetworkCategory>("Investment Banking");
+
+  const firmsByCategory = CATEGORY_ORDER.reduce<Record<NetworkCategory, NetworkFirm[]>>(
+    (acc, cat) => {
+      acc[cat] = NETWORK_FIRMS.filter((f) => f.category === cat);
+      return acc;
+    },
+    {} as Record<NetworkCategory, NetworkFirm[]>
+  );
+
+  const totalFirms = NETWORK_FIRMS.length;
+
+  const SHORT_LABELS: Record<NetworkCategory, string> = {
+    "Investment Banking": "Investment Banking",
+    "Trading & Quant": "Trading & Quant",
+    "Asset Management & PE": "Asset Management & PE",
+    "Consulting & Big 4": "Consulting & Big 4",
+    "Other": "Other",
+  };
+
+  return (
+    <div className="bg-white border border-[#E8E8E8] rounded-2xl shadow-sm overflow-hidden">
+      <div className="px-6 py-5 border-b border-[#F0F0F0]">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-indigo-600" />
+            <h3 className="text-[14px] font-semibold text-[#111]">Firms we cover</h3>
+          </div>
+          <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
+            {totalFirms}+ firms across 4 sectors
+          </span>
+        </div>
+        <p className="text-[12px] text-[#888] font-light mt-2">
+          Our network of converters spans every major firm. We source your match from the right person for your exact firm and division.
+        </p>
+      </div>
+
+      {/* Category tabs */}
+      <div className="flex overflow-x-auto border-b border-[#F0F0F0] px-4 gap-1 pt-3 pb-0 scrollbar-none">
+        {CATEGORY_ORDER.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`flex-shrink-0 px-3 py-2 text-[12px] font-semibold rounded-t-lg transition-all whitespace-nowrap border-b-2 -mb-px ${
+              activeCategory === cat
+                ? "text-indigo-700 border-indigo-600 bg-indigo-50"
+                : "text-[#888] border-transparent hover:text-[#444] hover:bg-[#FAFAFA]"
+            }`}
+          >
+            {SHORT_LABELS[cat]}
+            <span className={`ml-1.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+              activeCategory === cat ? "bg-indigo-100 text-indigo-700" : "bg-[#F0F0F0] text-[#999]"
+            }`}>
+              {firmsByCategory[cat].length}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Firms grid */}
+      <div className="px-5 py-4">
+        <div className="flex flex-wrap gap-1.5">
+          {firmsByCategory[activeCategory].map((firm) => (
+            <div
+              key={firm.name}
+              className="group relative inline-flex items-center gap-1 bg-[#F5F5F5] border border-[#E8E8E8] rounded-full px-2.5 py-1 text-[11px] font-medium text-[#444] hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800 transition-all cursor-default"
+            >
+              {firm.name}
+              {firm.conversionRate && (
+                <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1 py-0.5 rounded-full ml-0.5">
+                  {firm.conversionRate}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+        {firmsByCategory[activeCategory].some((f) => f.conversionRate) && (
+          <p className="text-[10px] text-[#BBB] mt-3 font-light">
+            Conversion rates shown where available from public data.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // --------------- Main component ---------------
 
@@ -174,20 +273,18 @@ export default function SpringWeekMatchmaking() {
         <div className="px-6 py-8 md:px-10 max-w-3xl">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-            <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">Matchmaking</p>
+            <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">Insider Access</p>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#111] leading-tight">
-            Get matched with someone who did YOUR spring week
+            Talk to someone who already converted at your firm
           </h1>
           <p className="text-[15px] text-[#666] mt-3 font-light leading-relaxed max-w-xl">
-            We connect you 1-on-1 with a student who's already done the spring week at your
-            firm. They'll answer your questions, share insider tips, and help you prepare to
-            convert.
+            We source from an extensive network of spring week converters across 80+ firms. Tell us your firm and division, and we'll connect you 1-on-1 with someone who's been through it and came out with an offer.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 bg-[#F5F5F5] border border-[#E0E0E0] rounded-full px-4 py-1.5">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
             <span className="text-[12px] text-[#555] font-medium">
-              £22 per match
+              £50 per session
               {access.hasFreeMatch && (
                 <span className="text-emerald-700 font-bold ml-2">- FREE with your Premium tier</span>
               )}
@@ -197,6 +294,9 @@ export default function SpringWeekMatchmaking() {
       </div>
 
       <div className="px-6 md:px-10 max-w-3xl mx-auto mt-8 space-y-8">
+
+        {/* ---- Firms we cover ---- */}
+        <FirmNetworkDisplay />
 
         {/* ---- How it works ---- */}
         <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden shadow-sm">
@@ -226,52 +326,16 @@ export default function SpringWeekMatchmaking() {
           )}
         </div>
 
-        {/* ---- Available matches preview ---- */}
-        <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center gap-2 mb-3">
-            <Users className="w-4 h-4 text-[#888]" />
-            <h3 className="text-[14px] font-semibold text-[#111]">Who you can be matched with</h3>
-          </div>
-          <p className="text-[12px] text-[#888] font-light mb-4">
-            Our speakers have done spring weeks at these firms. When you submit a request,
-            we match you to whoever has the most relevant experience for your target firm.
-          </p>
-          <div className="space-y-2.5">
-            {SPEAKERS.map((speaker) => (
-              <div key={speaker.name} className="flex items-start gap-3 bg-[#FAFAFA] rounded-xl p-3 border border-[#F0F0F0]">
-                <div className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center text-[11px] font-semibold text-white flex-shrink-0">
-                  {speaker.name[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[13px] font-semibold text-[#111]">
-                    {speaker.name}
-                    {speaker.university && (
-                      <span className="text-[11px] text-[#AAA] font-normal ml-1.5">{speaker.university}</span>
-                    )}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mt-1">
-                    {speaker.firms.map((firm) => (
-                      <span key={firm} className="text-[10px] bg-white border border-[#E8E8E8] text-[#555] px-2 py-0.5 rounded-full font-medium">
-                        {firm}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* ---- Free match badge ---- */}
         {access.hasFreeMatch && (
           <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 flex items-start gap-3">
             <CheckCircle className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-[13px] font-semibold text-emerald-800">
-                You have 1 free match included with Premium
+                You have 1 free insider access session included with Premium
               </p>
               <p className="text-[12px] text-emerald-700 font-light mt-0.5">
-                Your match is free of charge. Fill in the form below and we'll arrange it within 48 hours.
+                Your session is free of charge. Fill in the form below and we'll arrange it within 48 hours.
               </p>
             </div>
           </div>
@@ -285,8 +349,7 @@ export default function SpringWeekMatchmaking() {
             </div>
             <h2 className="text-lg font-semibold text-[#111]">Request received</h2>
             <p className="text-[13px] text-[#666] font-light leading-relaxed max-w-sm mx-auto">
-              We've received your request. We'll match you with a speaker within 48 hours and
-              send you the Zoom link by email.
+              We've received your request. We'll source your match from the network and send you the Zoom details within 48 hours.
             </p>
             <button
               onClick={() => { setSubmitted(false); setSelectedFirm(""); setSelectedDivision(""); setSpringWeekDate(""); setWantToKnow(""); }}
@@ -301,11 +364,11 @@ export default function SpringWeekMatchmaking() {
             <div className="px-6 py-5 border-b border-[#F0F0F0]">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#555]" />
-                <p className="text-[14px] font-semibold text-[#111]">Request a match</p>
+                <p className="text-[14px] font-semibold text-[#111]">Request an insider access session</p>
               </div>
               {!user?.email && (
                 <p className="text-[12px] text-[#888] mt-1 font-light">
-                  You need to be signed in to submit a match request.
+                  You need to be signed in to submit a request.
                 </p>
               )}
             </div>
@@ -315,7 +378,7 @@ export default function SpringWeekMatchmaking() {
               {/* Firm */}
               <div className="space-y-1.5">
                 <label className="text-[12px] font-semibold text-[#555] uppercase tracking-wider">
-                  Target firm
+                  Which firm is your spring week at?
                 </label>
                 <select
                   value={selectedFirm}
@@ -333,7 +396,7 @@ export default function SpringWeekMatchmaking() {
               {/* Division */}
               <div className="space-y-1.5">
                 <label className="text-[12px] font-semibold text-[#555] uppercase tracking-wider">
-                  Division
+                  Which division?
                 </label>
                 <select
                   value={selectedDivision}
@@ -351,7 +414,7 @@ export default function SpringWeekMatchmaking() {
               {/* Spring week dates */}
               <div className="space-y-1.5">
                 <label className="text-[12px] font-semibold text-[#555] uppercase tracking-wider">
-                  When is your spring week?
+                  When does your spring week start?
                 </label>
                 <input
                   type="text"
@@ -367,7 +430,7 @@ export default function SpringWeekMatchmaking() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <label className="text-[12px] font-semibold text-[#555] uppercase tracking-wider">
-                    What do you want to know?
+                    What do you most want to know?
                   </label>
                   <span className={`text-[11px] font-light ${charCount > 500 ? "text-red-500" : "text-[#BBB]"}`}>
                     {charCount}/500
@@ -402,12 +465,12 @@ export default function SpringWeekMatchmaking() {
                     </span>
                   ) : access.hasFreeMatch ? (
                     <>
-                      Use your free match
+                      Use your free insider access session
                       <ArrowRight className="w-4 h-4" />
                     </>
                   ) : (
                     <>
-                      Submit and pay £22
+                      Submit and pay £50
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -435,10 +498,10 @@ export default function SpringWeekMatchmaking() {
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="text-[13px] font-semibold text-indigo-900">
-                Premium includes 1 free match (worth £22)
+                Premium includes 1 free insider access session (worth £50)
               </p>
               <p className="text-[12px] text-indigo-700 font-light mt-0.5">
-                Upgrade to Premium for the handbook, free matchmaking, and priority coaching.
+                Upgrade to Premium for the handbook, free insider access, and priority coaching.
               </p>
             </div>
             <button
@@ -453,14 +516,14 @@ export default function SpringWeekMatchmaking() {
         {/* ---- Existing matches ---- */}
         {user?.email && (
           <div className="space-y-3">
-            <h2 className="text-[14px] font-semibold text-[#111]">Your match requests</h2>
+            <h2 className="text-[14px] font-semibold text-[#111]">Your insider access requests</h2>
             {matchesLoading ? (
               <div className="flex items-center justify-center py-8">
                 <div className="w-6 h-6 border-2 border-[#111]/10 border-t-[#111] rounded-full animate-spin" />
               </div>
             ) : matches.length === 0 ? (
               <div className="bg-white border border-[#E8E8E8] rounded-2xl p-6 text-center">
-                <p className="text-[13px] text-[#888] font-light">No match requests yet.</p>
+                <p className="text-[13px] text-[#888] font-light">No requests yet.</p>
               </div>
             ) : (
               <div className="space-y-3">

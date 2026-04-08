@@ -70,10 +70,10 @@ export const SW_TICKETS: Record<SwTierId, SwTicket> = {
     id: "premium",
     name: "Premium",
     price: 64,
-    description: "Bundle + 1 free match + coaching discount",
+    description: "Bundle + 1 free insider access session + coaching discount",
     features: [
       "Everything in Bundle",
-      "1 free matchmaking session (worth £22)",
+      "1 free insider access session (worth £50)",
       "Priority coaching booking",
       "Discounted coaching rates",
     ],
@@ -279,7 +279,7 @@ export const SPRING_WEEK_TICKETS: Record<SpringWeekTicketId, SpringWeekTicket> =
     description: "Bundle + 1 free match + coaching discount",
     features: [
       "Everything in Bundle",
-      "1 free matchmaking session (worth £22)",
+      "1 free insider access session (worth £50)",
       "Priority coaching booking",
       "Discounted coaching rates",
     ],
@@ -424,3 +424,93 @@ export function matchFirmsToNights(
     return true;
   });
 }
+
+// -- Network firms for Insider Access page --
+
+export interface NetworkFirm {
+  name: string;
+  category: "Investment Banking" | "Trading & Quant" | "Asset Management & PE" | "Consulting & Big 4" | "Other";
+  hasSpringWeek: boolean;
+  conversionRate?: string;
+}
+
+export const NETWORK_FIRMS: NetworkFirm[] = [
+  // Investment Banking
+  { name: "Goldman Sachs", category: "Investment Banking", hasSpringWeek: true },
+  { name: "J.P. Morgan", category: "Investment Banking", hasSpringWeek: true, conversionRate: "10% offer" },
+  { name: "Morgan Stanley", category: "Investment Banking", hasSpringWeek: true, conversionRate: "25% offer" },
+  { name: "Barclays", category: "Investment Banking", hasSpringWeek: true, conversionRate: "70% offer" },
+  { name: "Citi", category: "Investment Banking", hasSpringWeek: true, conversionRate: "50% offer" },
+  { name: "HSBC", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Deutsche Bank", category: "Investment Banking", hasSpringWeek: true, conversionRate: "30% offer" },
+  { name: "UBS", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Bank of America", category: "Investment Banking", hasSpringWeek: true, conversionRate: "20% offer" },
+  { name: "BNP Paribas", category: "Investment Banking", hasSpringWeek: true, conversionRate: "30% offer" },
+  { name: "Nomura", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Jefferies", category: "Investment Banking", hasSpringWeek: true, conversionRate: "80%" },
+  { name: "Rothschild & Co", category: "Investment Banking", hasSpringWeek: true, conversionRate: "35% offer" },
+  { name: "Lazard", category: "Investment Banking", hasSpringWeek: true, conversionRate: "40% offer" },
+  { name: "Evercore", category: "Investment Banking", hasSpringWeek: true, conversionRate: "15% offer" },
+  { name: "PJT Partners", category: "Investment Banking", hasSpringWeek: true, conversionRate: "30% offer" },
+  { name: "Houlihan Lokey", category: "Investment Banking", hasSpringWeek: true, conversionRate: "40% offer" },
+  { name: "Piper Sandler", category: "Investment Banking", hasSpringWeek: true, conversionRate: "72% offer" },
+  { name: "Perella Weinberg", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Macquarie", category: "Investment Banking", hasSpringWeek: true, conversionRate: "35% offer" },
+  { name: "Wells Fargo", category: "Investment Banking", hasSpringWeek: true },
+  { name: "RBC Capital Markets", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Standard Chartered", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Santander", category: "Investment Banking", hasSpringWeek: true },
+  { name: "NatWest Markets", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Rede Partners", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Ardea Partners", category: "Investment Banking", hasSpringWeek: true },
+  { name: "TD Securities", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Scotiabank", category: "Investment Banking", hasSpringWeek: true },
+  { name: "Credit Agricole", category: "Investment Banking", hasSpringWeek: true },
+
+  // Trading & Quant
+  { name: "Jane Street", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Citadel", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Optiver", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "D.E. Shaw", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Millennium", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "DRW", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Hudson River Trading", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "G-Research", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Maven Securities", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Glencore", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "IMC Trading", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Dare", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Susquehanna (SIG)", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Marshall Wace", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Point72", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Capula", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Brevan Howard", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "GSA Capital", category: "Trading & Quant", hasSpringWeek: true },
+  { name: "Da Vinci", category: "Trading & Quant", hasSpringWeek: true },
+
+  // Asset Management & PE
+  { name: "BlackRock", category: "Asset Management & PE", hasSpringWeek: true, conversionRate: "30%" },
+  { name: "Schroders", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "Fidelity International", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "Blackstone", category: "Asset Management & PE", hasSpringWeek: true, conversionRate: "~3%" },
+  { name: "Ares Management", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "CD&R", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "Barings", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "PIMCO", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "GIC", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "Bain Capital", category: "Asset Management & PE", hasSpringWeek: true },
+  { name: "Legal & General", category: "Asset Management & PE", hasSpringWeek: true },
+
+  // Consulting & Big 4
+  { name: "McKinsey", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "BCG", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "Deloitte", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "EY", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "PwC", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "KPMG", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "Oliver Wyman", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "PA Consulting", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "Compass Lexecon", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "BDO", category: "Consulting & Big 4", hasSpringWeek: true },
+  { name: "Marsh McLennan", category: "Consulting & Big 4", hasSpringWeek: true },
+];

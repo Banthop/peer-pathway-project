@@ -135,7 +135,7 @@ const navItems = [
   { to: "/spring-week-portal", icon: LayoutDashboard, label: "Dashboard", end: true },
   { to: "/spring-week-portal/recording", icon: Play, label: "Recording" },
   { to: "/spring-week-portal/handbook", icon: BookOpen, label: "Handbook" },
-  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Matchmaking" },
+  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Insider Access" },
   { to: "/spring-week-portal/coaching", icon: CalendarCheck, label: "Book Coaching" },
 ];
 
@@ -297,7 +297,7 @@ function FreeTierWelcome() {
             {[
               "Live Zoom session + full recording",
               "Spring Week Handbook (45+ firms)",
-              "1-to-1 matchmaking with spring weekers",
+              "1-to-1 insider access with spring weekers",
               "Priority coaching booking",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-[13px] text-[#555]">
