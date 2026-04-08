@@ -377,11 +377,6 @@ export default function SpringWeekPortalLayout() {
     return <Navigate to="/login?redirect=/spring-week-portal" replace />;
   }
 
-  // Free tier users see the upgrade/welcome screen instead of a hard block
-  if (access.tier === "free") {
-    return <FreeTierWelcome />;
-  }
-
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex">
       {/* Desktop sidebar */}

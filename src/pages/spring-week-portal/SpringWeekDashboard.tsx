@@ -385,7 +385,7 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
               href={STRIPE_SW_BUNDLE}
               className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-blue-700 hover:text-blue-800 transition-colors"
             >
-              Bundle - 39
+              Bundle - £39
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
             <span className="text-[#DDD]">|</span>
@@ -393,7 +393,7 @@ function UpgradeBanner({ tier }: { tier: "webinar" | "bundle" }) {
               href={STRIPE_SW_PREMIUM}
               className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-indigo-700 hover:text-indigo-800 transition-colors"
             >
-              Premium - 64
+              Premium - £64
               <ArrowRight className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -463,6 +463,43 @@ export default function SpringWeekDashboard() {
           ))}
         </div>
 
+        {/* Free checklist preview for free/webinar users */}
+        {(access.tier === "free" || access.tier === "webinar") && (
+          <div className="bg-white border border-emerald-200 rounded-2xl p-5 shadow-sm">
+            <div className="flex items-start gap-2.5 mb-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <p className="text-[13px] font-semibold text-[#111]">Free: Spring Week Conversion Checklist</p>
+                <p className="text-[11px] text-emerald-600 font-medium mt-0.5">4 Phases, 60+ Action Items</p>
+              </div>
+            </div>
+            <div className="space-y-2 mb-4">
+              {[
+                "Find 2-3 people who did your exact spring week last year",
+                "Learn technicals to summer internship level, not spring week level",
+                "Prepare 2-3 tailored questions per team you'll meet",
+                "Follow up every meaningful conversation within 24 hours",
+                "Have a compelling personal story ready for senior interviews",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 mt-0.5 flex-shrink-0" />
+                  <p className="text-[12px] text-[#555] font-light leading-relaxed">{item}</p>
+                </div>
+              ))}
+              <p className="text-[11px] text-[#BBB] italic pl-5">...and 55+ more action items in the full handbook</p>
+            </div>
+            <Link
+              to="/spring-week-portal/handbook"
+              className="flex items-center justify-between w-full bg-emerald-600 text-white rounded-xl px-4 py-2.5 text-[12px] font-semibold hover:bg-emerald-700 transition-colors"
+            >
+              <span>View the checklist preview</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Webinar card */}
         <WebinarCard hasAccess={access.hasWebinar} />
 
@@ -476,6 +513,7 @@ export default function SpringWeekDashboard() {
         <SpeakerDirectory />
 
         {/* Upgrade banner for non-premium */}
+        {access.tier === "free" && <UpgradeBanner tier="webinar" />}
         {access.tier === "webinar" && <UpgradeBanner tier="webinar" />}
         {access.tier === "bundle" && <UpgradeBanner tier="bundle" />}
 
