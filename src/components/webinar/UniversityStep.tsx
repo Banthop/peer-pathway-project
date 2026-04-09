@@ -79,7 +79,7 @@ export function UniversityStep({
             />
           </div>
 
-          {showDropdown && universities.length > 0 && (
+          {showDropdown && universities.length > 0 && !(universities.length === 1 && universities[0] === university) && (
             <div
               ref={dropdownRef}
               className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/15 rounded-xl shadow-2xl overflow-hidden max-h-[240px] overflow-y-auto"

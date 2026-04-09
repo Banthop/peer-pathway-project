@@ -245,7 +245,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       </div>
 
       {/* Tier Cards */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {TIERS.map((t) => {
           const isSelected = selectedTier === t.id;
           const accentColor = t.id === "watch" ? "#6366F1" : t.id === "prepare" ? "#10B981" : "#F59E0B";
@@ -256,48 +256,48 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
               type="button"
               onClick={() => setSelectedTier(t.id)}
               className={[
-                "w-full text-left rounded-xl border-2 p-5 transition-all duration-200 relative overflow-hidden cursor-pointer",
+                "w-full text-left rounded-2xl border-2 p-6 md:p-7 transition-all duration-200 relative overflow-hidden cursor-pointer",
                 isSelected
-                  ? "border-white/20 bg-white/[0.03]"
+                  ? "border-white/20 bg-white/[0.04]"
                   : "border-white/[0.06] bg-transparent hover:border-white/12",
               ].join(" ")}
             >
               {/* Accent strip */}
               <div
-                className="absolute left-0 top-0 bottom-0 w-1 rounded-l-xl transition-opacity duration-200"
-                style={{ backgroundColor: accentColor, opacity: isSelected ? 1 : 0.2 }}
+                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-opacity duration-200"
+                style={{ backgroundColor: accentColor, opacity: isSelected ? 1 : 0.25 }}
               />
 
-              <div className="pl-3 flex items-start gap-3">
+              <div className="pl-4 flex items-start gap-4">
                 {/* Radio */}
                 <div
                   className={[
-                    "mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200",
+                    "mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200",
                     isSelected ? "bg-emerald-500 border-emerald-500" : "border-white/20",
                   ].join(" ")}
                 >
-                  {isSelected && <Check className="w-3 h-3 text-black" strokeWidth={3} />}
+                  {isSelected && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-bold text-white">{t.name}</span>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="text-base md:text-lg font-bold text-white">{t.name}</span>
                     {t.badge && (
                       <span
-                        className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                        className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
                         style={{ backgroundColor: `${accentColor}18`, color: accentColor }}
                       >
                         {t.badge}
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 text-xs text-white/50">{t.tagline}</p>
-                  <div className="mt-2 space-y-1">
+                  <p className="mt-1 text-sm text-white/50">{t.tagline}</p>
+                  <div className="mt-3 space-y-1.5">
                     {t.features.map((f) => (
-                      <div key={f} className="flex items-start gap-1.5">
-                        <Check className="w-3 h-3 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-                        <span className="text-[11px] text-white/50 leading-tight">{f}</span>
+                      <div key={f} className="flex items-start gap-2">
+                        <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
+                        <span className="text-xs md:text-sm text-white/50 leading-snug">{f}</span>
                       </div>
                     ))}
                   </div>
@@ -305,7 +305,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
 
                 {/* Price */}
                 <div className="text-right shrink-0">
-                  <p className="text-lg font-bold text-white">£{t.price}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white">£{t.price}</p>
                 </div>
               </div>
             </button>

@@ -132,9 +132,17 @@ export function useUniversitySearch(query: string) {
   const universities = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q || q.length < 2) return [];
-    return UK_UNIVERSITIES.filter((name) =>
+    const matches = UK_UNIVERSITIES.filter((name) =>
       name.toLowerCase().includes(q),
-    ).slice(0, 8);
+    );
+    // Sort: names starting with query first, then alphabetical
+    matches.sort((a, b) => {
+      const aStarts = a.toLowerCase().startsWith(q) ? 0 : 1;
+      const bStarts = b.toLowerCase().startsWith(q) ? 0 : 1;
+      if (aStarts !== bStarts) return aStarts - bStarts;
+      return a.localeCompare(b);
+    });
+    return matches.slice(0, 8);
   }, [query]);
 
   return { universities, loading: false };
