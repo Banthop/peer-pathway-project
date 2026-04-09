@@ -40,73 +40,49 @@ function SuccessScreen({
     ? "convert"
     : "watch";
 
-  const hasHandbook = tier === "prepare" || tier === "convert";
-  const hasPrepCall = tier === "convert";
-  const isWatch = tier === "watch";
+  const tierLabel = tier === "convert" ? "Convert" : tier === "prepare" ? "Prepare" : "Watch";
+
+  const tierDescription: Record<string, string> = {
+    watch: "You've secured your spot for the live panel + recording. We'll be in touch within 24 hours with your Zoom link and everything you need.",
+    prepare: "You've secured the live panel, recording, and your Spring Week Handbook. We'll be in touch within 24 hours with your access details and next steps.",
+    convert: "You've secured the full package: live panel, recording, handbook, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
+  };
 
   return (
     <div className="funnel-dark flex items-start justify-center px-4 py-12 md:py-20">
       <div className="w-full max-w-lg space-y-8">
-        {/* Confirmation header */}
+        {/* Confirmation */}
         <div className="text-center space-y-4">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10">
             <CheckCircle2 className="h-7 w-7 text-emerald-400" />
           </div>
           <h1 className="text-2xl md:text-3xl font-light text-white">
-            You're all set{name ? `, ${name}` : ""}!
+            You're in{name ? `, ${name}` : ""}!
           </h1>
-          <p className="text-white/50 font-light text-sm leading-relaxed max-w-sm mx-auto">
-            Check your email for your confirmation.
-            We'll send you the Zoom link before Sunday April 12.
+        </div>
+
+        <div className="funnel-card rounded-2xl p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full">
+              {tierLabel} tier
+            </span>
+          </div>
+          <p className="text-sm font-light text-white/60 leading-relaxed">
+            {tierDescription[tier]}
+          </p>
+          <p className="text-sm font-light text-white/40 leading-relaxed">
+            Keep an eye on your inbox. If you don't see anything within 24 hours, drop us a message.
           </p>
         </div>
 
-        {/* What you're getting */}
-        <div className="funnel-card rounded-2xl p-5 space-y-4">
-          <div className="flex items-center gap-2 text-sm font-semibold text-white">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            Here's what's coming your way
-          </div>
-          <div className="space-y-2.5">
-            <div className="flex items-start gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
-              <span className="text-sm font-light text-white/60">
-                Live panel on Sunday April 12, 2-5pm BST (Zoom link by email)
-              </span>
-            </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
-              <span className="text-sm font-light text-white/60">
-                Full recording after the event
-              </span>
-            </div>
-            {hasHandbook && (
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400" />
-                <span className="text-sm font-light text-white/60">
-                  Spring Week Handbook (45+ firms) - being finalized by the speakers, landing in your inbox before April 12
-                </span>
-              </div>
-            )}
-            {hasPrepCall && (
-              <div className="flex items-start gap-2">
-                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-violet-400" />
-                <span className="text-sm font-light text-white/60">
-                  1x free prep call with a converter at your firm - we'll email you to match you with the right speaker
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Free checklist for everyone */}
+        {/* Checklist download */}
         <div className="funnel-card rounded-2xl p-5 space-y-3" style={{ borderColor: "rgba(52,211,153,0.15)" }}>
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-emerald-400" />
-            <span className="text-sm font-semibold text-white">Free bonus: Spring Week Conversion Checklist</span>
+            <span className="text-sm font-semibold text-white">In the meantime: your free checklist</span>
           </div>
           <p className="text-sm font-light text-white/50">
-            Your step-by-step checklist for before, during, and after your spring week.
+            Start prepping right now with the Spring Week Conversion Checklist.
           </p>
           <a
             href="/spring-week-conversion-checklist.pdf"
@@ -118,49 +94,6 @@ function SuccessScreen({
             <ArrowRight className="h-4 w-4" />
           </a>
         </div>
-
-        {/* Upsell for Watch buyers */}
-        {isWatch && (
-          <div className="relative funnel-card rounded-2xl p-6 md:p-8 space-y-5" style={{ borderColor: "rgba(52,211,153,0.2)" }}>
-            <div className="absolute -top-3 left-6">
-              <span className="inline-flex items-center gap-1.5 bg-emerald-500 text-black text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full">
-                <Zap className="h-3 w-3" />
-                Upgrade
-              </span>
-            </div>
-
-            <div className="space-y-2 pt-2">
-              <h2 className="text-xl font-semibold text-white">
-                Want the full picture?
-              </h2>
-              <p className="text-sm font-light text-white/60 leading-relaxed">
-                Upgrade to <strong className="font-semibold text-white/80">Prepare</strong> for firm-specific intel on 45+ firms,
-                or <strong className="font-semibold text-white/80">Convert</strong> for a 1-on-1 prep call with someone who converted at your firm.
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <a
-                href={STRIPE_SW_PREPARE}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="funnel-cta no-underline"
-              >
-                Upgrade to Prepare - £39
-                <ArrowRight className="h-4 w-4" />
-              </a>
-              <a
-                href={STRIPE_SW_CONVERT}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-white/60 border border-white/10 hover:border-white/20 transition-colors no-underline"
-              >
-                Upgrade to Convert - £79
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-          </div>
-        )}
 
         <div className="text-center">
           <a
