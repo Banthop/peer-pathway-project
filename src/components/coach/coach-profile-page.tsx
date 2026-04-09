@@ -32,7 +32,7 @@ const services = [
 ];
 
 const experience = [
-  { role: "Software Engineer", company: "Meta", logo: "⬡", period: "2023 – Present", desc: "Full-stack development on Meta's core platforms, London office.", tags: ["React", "Python", "GraphQL", "Distributed Systems"] },
+  { role: "Software Engineer", company: "Meta", logo: "⬡", period: "2023 - Present", desc: "Full-stack development on Meta's core platforms, London office.", tags: ["React", "Python", "GraphQL", "Distributed Systems"] },
   { role: "Software Engineering Intern", company: "Meta", logo: "⬡", period: "Summer 2022", desc: "Interned on the Instagram team working on feed ranking." },
 ];
 

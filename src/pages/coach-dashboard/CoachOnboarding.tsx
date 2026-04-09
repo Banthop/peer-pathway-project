@@ -225,7 +225,7 @@ export default function CoachOnboarding() {
                     <label className="text-xs font-semibold text-foreground/70 mb-1.5 block tracking-wide uppercase">Tagline</label>
                     <input
                         value={form.tagline} onChange={(e) => update("tagline", e.target.value)}
-                        placeholder="e.g. Goldman Sachs Spring Week Alum – Helped 15+ Students Get Offers"
+                        placeholder="e.g. Goldman Sachs Spring Week Alum - Helped 15+ Students Get Offers"
                         className="w-full px-4 py-3 rounded-xl border border-border bg-background text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-foreground/10 focus:border-foreground/30 transition-all"
                     />
                     <p className="text-xs text-muted-foreground mt-1.5">
@@ -269,7 +269,7 @@ export default function CoachOnboarding() {
         /* STEP 2 - Pricing & Services */
         <div key={2}>
             <h2 className="text-2xl font-light text-foreground mb-2">Set your pricing & services</h2>
-            <p className="text-sm text-muted-foreground mb-8">Most coaches charge £30–50/hour. You can change this anytime.</p>
+            <p className="text-sm text-muted-foreground mb-8">Most coaches charge £30-50/hour. You can change this anytime.</p>
 
             <div className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

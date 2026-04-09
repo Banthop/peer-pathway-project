@@ -465,7 +465,7 @@ export default function AdminCoaches() {
                                 <Field label="University Name" value={form.uniName} onChange={(v) => update("uniName", v)} placeholder="University of Oxford" />
                                 <Field label="University Logo URL" value={form.uniLogo} onChange={(v) => update("uniLogo", v)} placeholder="https://..." />
                                 <Field label="Degree" value={form.uniDegree} onChange={(v) => update("uniDegree", v)} placeholder="BA Economics" />
-                                <Field label="Years" value={form.uniYears} onChange={(v) => update("uniYears", v)} placeholder="2021 – 2024" />
+                                <Field label="Years" value={form.uniYears} onChange={(v) => update("uniYears", v)} placeholder="2021 - 2024" />
                             </div>
                             <div className="border-t border-border/50 mt-5 pt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Field label="Company Name" value={form.companyName} onChange={(v) => update("companyName", v)} placeholder="Goldman Sachs" />
@@ -563,7 +563,7 @@ export default function AdminCoaches() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <Field label="Institution" value={item.institution} onChange={(v) => onItemUpdate(i, "institution", v)} placeholder="University of Oxford" />
                                         <Field label="Degree" value={item.degree} onChange={(v) => onItemUpdate(i, "degree", v)} placeholder="BA Economics" />
-                                        <Field label="Years" value={item.years} onChange={(v) => onItemUpdate(i, "years", v)} placeholder="2021 – 2024" />
+                                        <Field label="Years" value={item.years} onChange={(v) => onItemUpdate(i, "years", v)} placeholder="2021 - 2024" />
                                         <Field label="Achievement" value={item.achievement} onChange={(v) => onItemUpdate(i, "achievement", v)} placeholder="First Class Honours" />
                                         <Field label="Logo URL" value={item.logo} onChange={(v) => onItemUpdate(i, "logo", v)} placeholder="https://..." className="sm:col-span-2" />
                                     </div>

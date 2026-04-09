@@ -160,7 +160,7 @@ export default function StripeConnect() {
                         </div>
                         <div className="flex items-center justify-between py-2 border-b border-border/50">
                             <div>
-                                <p className="text-sm font-medium text-foreground">Months 4–12</p>
+                                <p className="text-sm font-medium text-foreground">Months 4-12</p>
                                 <p className="text-xs text-muted-foreground">Growth rate</p>
                             </div>
                             <span className="text-lg font-bold text-foreground">20%</span>

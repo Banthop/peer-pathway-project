@@ -92,7 +92,7 @@ const LANDING_FAQS = [
   },
   {
     q: "I haven't secured a spring week yet. Is this still relevant for me?",
-    a: "While this webinar focuses predominantly on converting existing spring weeks into return offers, it provides unparalleled transparency into what recruiting teams actively evaluate—making it an exceptional resource for future applicants.",
+    a: "While this webinar focuses predominantly on converting existing spring weeks into return offers, it provides unparalleled transparency into what recruiting teams actively evaluate-making it an exceptional resource for future applicants.",
   },
   {
     q: "What is your refund policy?",

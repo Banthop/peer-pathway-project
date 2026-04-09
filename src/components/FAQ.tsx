@@ -15,12 +15,12 @@ const studentFAQs: FAQItem[] = [
     {
         question: "How is this different from a normal tutor or career coach?",
         answer:
-            "Traditional coaches charge £150+/hour and often did the thing years ago. Our coaches are students and recent grads who achieved what you're aiming for within the last 1–2 years. They remember the exact questions, the current process, and what actually worked - at a fraction of the price.",
+            "Traditional coaches charge £150+/hour and often did the thing years ago. Our coaches are students and recent grads who achieved what you're aiming for within the last 1-2 years. They remember the exact questions, the current process, and what actually worked - at a fraction of the price.",
     },
     {
         question: "How much does it cost?",
         answer:
-            "Sessions start from £25/hour. Most coaches charge between £30–50. You can also book packages (bundles of sessions) at a discount. Every coach offers a free 10-minute intro call so you can see if they're the right fit before paying anything.",
+            "Sessions start from £25/hour. Most coaches charge between £30-50. You can also book packages (bundles of sessions) at a discount. Every coach offers a free 10-minute intro call so you can see if they're the right fit before paying anything.",
     },
     {
         question: "What's a free intro call?",
@@ -48,12 +48,12 @@ const coachFAQs: FAQItem[] = [
     {
         question: "Who can become a coach?",
         answer:
-            "Anyone who recently achieved something competitive. That could be landing a Spring Week, getting into Oxbridge, scoring in the top percentiles on UCAT, securing a training contract, or getting a tech internship. If you did it within the last 2–3 years and can help someone do the same, you can coach on EarlyEdge.",
+            "Anyone who recently achieved something competitive. That could be landing a Spring Week, getting into Oxbridge, scoring in the top percentiles on UCAT, securing a training contract, or getting a tech internship. If you did it within the last 2-3 years and can help someone do the same, you can coach on EarlyEdge.",
     },
     {
         question: "How much can I earn?",
         answer:
-            "You set your own prices and availability. Most coaches charge £30–50/hour. If you coach 5 hours a week at £40/hour, that's £200/week. Founding coaches keep 100% of their earnings for the first 3 months (normally we take 20%).",
+            "You set your own prices and availability. Most coaches charge £30-50/hour. If you coach 5 hours a week at £40/hour, that's £200/week. Founding coaches keep 100% of their earnings for the first 3 months (normally we take 20%).",
     },
     {
         question: "How do I get paid?",

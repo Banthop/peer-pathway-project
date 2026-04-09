@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   Coach Dashboard – Mock Data
+   Coach Dashboard - Mock Data
    ═══════════════════════════════════════════════════════════════ */
 
 export interface CoachSession {

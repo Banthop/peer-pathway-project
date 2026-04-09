@@ -14,7 +14,7 @@ import logoJaneStreet from "@/assets/logo-jane-street.png";
 import logoGoogle from "@/assets/logo-google.png";
 import logoCambridge from "@/assets/logo-cambridge.png";
 
-// Reordered for current seasonal relevance (Feb–Apr 2026)
+// Reordered for current seasonal relevance (Feb-Apr 2026)
 const popularCategories = [
   "Law",
   "Assessment Centre Prep",

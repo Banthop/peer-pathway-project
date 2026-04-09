@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // ---- Auth state listener ----
     useEffect(() => {
         if (!supabaseAvailable || !supabase) {
-            // Demo mode – no real auth
+            // Demo mode - no real auth
             setState((s) => ({ ...s, loading: false }));
             return;
         }

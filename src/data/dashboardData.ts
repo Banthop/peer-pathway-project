@@ -513,7 +513,7 @@ export const deadlines: Deadline[] = [
     {
         id: 2,
         title: "Law vac scheme deadlines",
-        timeLeft: "Feb – Apr",
+        timeLeft: "Feb - Apr",
         category: "Law",
         urgency: "upcoming",
         color: "#3B82F6",

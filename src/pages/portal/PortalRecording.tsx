@@ -489,7 +489,7 @@ export default function PortalRecording() {
                 </div>
               )}
 
-              {/* "See What's Included" modal — positioned over the video container */}
+              {/* "See What's Included" modal - positioned over the video container */}
               {showIncludes && (
                 <RecordingIncludesModal onClose={() => setShowIncludes(false)} />
               )}

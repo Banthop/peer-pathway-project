@@ -51,7 +51,7 @@ const benefits = [
   {
     icon: PoundSterling,
     title: "Earn on your schedule",
-    description: "Set your own rate (most charge £30–50/hr). Coach 2 hours a week or 20, your call.",
+    description: "Set your own rate (most charge £30-50/hr). Coach 2 hours a week or 20, your call.",
   },
   {
     icon: Clock,

@@ -28,10 +28,10 @@ interface ProfileForm {
 }
 
 const defaultForm: ProfileForm = {
-    name: "Sarah K.", tagline: "Goldman Sachs Incoming Analyst – Spring Week Expert",
+    name: "Sarah K.", tagline: "Goldman Sachs Incoming Analyst - Spring Week Expert",
     photo: "", hourlyRate: "50", category: "Investment Banking",
     uniName: "University of Oxford", uniLogo: "", uniDegree: "BA Philosophy, Politics & Economics",
-    uniYears: "2021 – 2024",
+    uniYears: "2021 - 2024",
     companyName: "Goldman Sachs", companyLogo: "", companyRole: "Incoming Analyst",
     bio: "I'm a final-year PPE student at Oxford, joining Goldman Sachs as an Analyst in 2025. I secured Spring Weeks at Goldman, Citi, and Barclays in 2024. and I've since helped 15+ friends successfully land their own Spring Week offers.",
     skills: "Investment Banking, Spring Week, CV Review, Cover Letters, Interview Prep",
@@ -48,7 +48,7 @@ const defaultForm: ProfileForm = {
         { role: "Spring Week Intern", company: "Citi", dates: "Mar 2024", description: "Markets division rotational programme", logo: "" },
     ],
     education: [
-        { institution: "University of Oxford", degree: "BA Philosophy, Politics & Economics", years: "2021 – 2024", achievement: "First Class Honours", logo: "" },
+        { institution: "University of Oxford", degree: "BA Philosophy, Politics & Economics", years: "2021 - 2024", achievement: "First Class Honours", logo: "" },
     ],
     enableSlots: true,
     slots: [

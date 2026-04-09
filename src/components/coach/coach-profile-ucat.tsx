@@ -9,7 +9,7 @@ const coach = {
   uni: "University of Cambridge",
   uniLogo: "🟥",
   degree: "Medicine (Clinical), Year 2",
-  gradYear: "2024 – present",
+  gradYear: "2024 - present",
   rate: 40,
   sessions: 38,
   followers: 64,
@@ -33,8 +33,8 @@ const services = [
 ];
 
 const experience = [
-  { role: "Medical Student", company: "University of Cambridge", logo: "🟥", period: "2024 – Present", desc: "Year 2 Medicine. Active in student mentoring and outreach programmes.", tags: ["Medicine", "Mentoring"] },
-  { role: "UCAT Tutor", company: "Self-employed", logo: "📚", period: "2024 – Present", desc: "Coached 30+ students on UCAT prep. Average student improvement of 400+ points.", tags: ["UCAT", "Tutoring"] },
+  { role: "Medical Student", company: "University of Cambridge", logo: "🟥", period: "2024 - Present", desc: "Year 2 Medicine. Active in student mentoring and outreach programmes.", tags: ["Medicine", "Mentoring"] },
+  { role: "UCAT Tutor", company: "Self-employed", logo: "📚", period: "2024 - Present", desc: "Coached 30+ students on UCAT prep. Average student improvement of 400+ points.", tags: ["UCAT", "Tutoring"] },
 ];
 
 const reviews = [
