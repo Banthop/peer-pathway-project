@@ -78,15 +78,15 @@ export const SW_TICKETS: Record<SwTierId, SwTicket> = {
     id: "convert",
     name: "Convert",
     tagline: "Walk in ready to get the offer",
-    price: 69,
+    price: 79,
     description: "Everything in Prepare, plus a free prep call with a converter at your firm",
     features: [
       "Everything in Prepare",
-      "1 free prep call with someone who converted at your firm (worth £60)",
+      "1 free prep call with someone who converted at your firm (worth £50)",
       "They'll tell you what the week is really like, what caught them off guard, and what got them the offer",
       "Priority booking for additional prep calls",
     ],
-    badge: "HIGHEST CONVERSION",
+    badge: "BEST VALUE",
     stripeLink: STRIPE_SW_CONVERT,
   },
 };
@@ -283,15 +283,15 @@ export const SPRING_WEEK_TICKETS: Record<SpringWeekTicketId, SpringWeekTicket> =
   premium: {
     id: "premium",
     name: "Convert",
-    price: 69,
-    pricePence: 6900,
+    price: 79,
+    pricePence: 7900,
     description: "Everything in Prepare, plus a free prep call with a converter at your firm",
     features: [
       "Everything in Prepare",
-      "1 free prep call with someone who converted at your firm (worth £60)",
+      "1 free prep call with someone who converted at your firm (worth £50)",
       "Priority booking for additional prep calls",
     ],
-    badge: "HIGHEST CONVERSION",
+    badge: "BEST VALUE",
     stripeLink: STRIPE_SW_CONVERT,
   },
 };
