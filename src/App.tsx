@@ -28,6 +28,7 @@ const ColdEmailChecklist = lazy(() => import("./pages/ColdEmailChecklist"));
 const Webinar = lazy(() => import("./pages/Webinar"));
 const DaWebinar = lazy(() => import("./pages/DaWebinar"));
 const SpringWeekWebinar = lazy(() => import("./pages/SpringWeekWebinar"));
+const SpringWeekPrep = lazy(() => import("./pages/SpringWeekPrep"));
 
 // Admin section - separate chunk, rarely visited
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout"));
@@ -185,6 +186,7 @@ const AppRoutes = () => {
           <Route path="/webinar" element={<Webinar />} />
           <Route path="/da-webinar" element={<DaWebinar />} />
           <Route path="/spring-week" element={<SpringWeekWebinar />} />
+          <Route path="/spring-week-prep" element={<SpringWeekPrep />} />
           <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
           <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
           <Route path="/portal/slides" element={<SlidesPage />} />
@@ -259,6 +261,7 @@ const AppRoutes = () => {
         <Route path="/webinar" element={<Webinar />} />
         <Route path="/da-webinar" element={<DaWebinar />} />
         <Route path="/spring-week" element={<SpringWeekWebinar />} />
+        <Route path="/spring-week-prep" element={<SpringWeekPrep />} />
         <Route path="/portal" element={<PortalLayout />}>
           <Route index element={<PortalRecording />} />
           <Route path="resources" element={<PortalResources />} />
