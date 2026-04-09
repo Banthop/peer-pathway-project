@@ -47,10 +47,10 @@ export function SpringWeekIndustry({
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Pain-point stat */}
-      <div className="flex items-start gap-3 bg-amber-50/80 border border-amber-200/60 rounded-xl px-4 py-3">
-        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-600" />
-        <p className="text-sm font-sans font-light text-amber-800 leading-snug">
-          Most spring weekers <strong className="font-semibold">never hear back</strong> after their programme ends.
+      <div className="flex items-start gap-3 bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.05)] rounded-xl px-4 py-3">
+        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
+        <p className="text-sm font-sans font-light text-amber-100/90 leading-snug">
+          Most spring weekers <strong className="font-medium text-amber-400">never hear back</strong> after their programme ends.
           Our panellists did - and they'll show you how.
         </p>
       </div>
@@ -74,8 +74,8 @@ export function SpringWeekIndustry({
             className={cn(
               "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
               industry === option
-                ? "bg-foreground text-background border-foreground shadow-sm"
-                : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
+                ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02] z-10 relative"
+                : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
             )}
           >
             {option}
@@ -86,10 +86,10 @@ export function SpringWeekIndustry({
       {/* Micro-reinforcement based on industry */}
       {industry && SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry] && (
         <div
-          className="flex items-start gap-2.5 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
+          className="flex items-start gap-2.5 text-sm text-emerald-100/90 bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)] rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
-          <Target className="h-4 w-4 mt-0.5 shrink-0" />
+          <Target className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400" />
           <span className="font-sans font-light leading-snug">
             {SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry]}
           </span>
@@ -97,11 +97,9 @@ export function SpringWeekIndustry({
       )}
 
       {/* Section: Which spring weeks have you landed? */}
-      {showDetail && industry && (
-        <div
-          className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300"
-          style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
-        >
+      <div className={cn("grid transition-all duration-500 ease-in-out", showDetail && industry ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none")}>
+        <div className="overflow-hidden">
+          <div className="space-y-6 pt-2 pb-2">
           <div className="space-y-2">
             <label className="flex items-center gap-2 text-sm font-sans font-medium text-white">
               <Building2 className="h-4 w-4 text-white/50" />
@@ -134,13 +132,37 @@ export function SpringWeekIndustry({
                   className={cn(
                     "w-full text-left px-4 py-3 text-sm rounded-xl border font-sans font-light transition-all duration-200",
                     biggestConcern === option
-                      ? "bg-foreground text-background border-foreground shadow-sm"
-                      : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
+                      ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.01] z-10 relative"
+                      : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
                   )}
                 >
                   {option}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={() => onUpdate("biggestConcern", "Other")}
+                className={cn(
+                  "w-full text-left px-4 py-3 text-sm rounded-xl border font-sans font-light transition-all duration-200",
+                  biggestConcern.startsWith("Other")
+                    ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.01] z-10 relative"
+                    : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
+                )}
+              >
+                Other (please specify)
+              </button>
+              {biggestConcern.startsWith("Other") && (
+                <div className="pt-2 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <Input
+                    type="text"
+                    placeholder="Type your biggest concern here..."
+                    value={biggestConcern.startsWith("Other: ") ? biggestConcern.replace("Other: ", "") : ""}
+                    onChange={(e) => onUpdate("biggestConcern", e.target.value ? `Other: ${e.target.value}` : "Other")}
+                    className="font-sans text-base h-12 border-border rounded-xl w-full"
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
           </div>
 
@@ -148,8 +170,9 @@ export function SpringWeekIndustry({
           {industryDetail && (
             <input type="hidden" value={industryDetail} />
           )}
+          </div>
         </div>
-      )}
+      </div>
 
       {/* REFERRAL SOURCE */}
       <div className="space-y-3 pt-2 border-t border-white/[0.08]">
@@ -165,8 +188,8 @@ export function SpringWeekIndustry({
               className={cn(
                 "px-4 py-2 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 referralSource === option
-                  ? "bg-foreground text-background border-foreground shadow-sm"
-                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
+                  ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02] z-10 relative"
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
               )}
             >
               {option}
