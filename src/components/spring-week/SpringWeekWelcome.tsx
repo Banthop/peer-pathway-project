@@ -75,28 +75,28 @@ function ChecklistCard() {
 /* ---- FAQ accordion ---- */
 const LANDING_FAQS = [
   {
-    q: "How long is the session?",
-    a: "About 3 hours. Two speaker sessions plus an open Q&A at the end where you can ask about your specific firm.",
+    q: "How long does the session last?",
+    a: "The session runs for approximately 3 hours. This includes two speaker presentations, followed by a dedicated Q&A segment where you can ask specific questions about your target firm.",
   },
   {
-    q: "Will there be recordings?",
-    a: "Yes - recordings are included with every ticket. If you can't make it live, you won't miss out.",
+    q: "Will the session be recorded?",
+    a: "Yes, full recordings are included with every ticket type. If you are unable to attend the live event, you can still catch up on all the material at your own pace.",
   },
   {
-    q: "What if my firm isn't listed?",
-    a: "The conversion strategies our panellists share work across every firm and every area of finance. The frameworks are universal.",
+    q: "What if my target firm isn't listed?",
+    a: "The conversion strategies and frameworks shared by our panellists are fundamentally universal. They have proven highly effective across every major firm and all sub-sectors of the finance industry.",
   },
   {
-    q: "What's in The Handbook?",
-    a: "11 chapters of real insights from real spring weekers. Day-by-day walkthroughs, networking scripts, firm-by-firm breakdowns, and conversion tactics. Written in their own words.",
+    q: "What is included inside The Handbook?",
+    a: "The Handbook features 11 chapters of actionable insights directly from successful spring week participants. It covers day-by-day walkthroughs, proven networking scripts, detailed firm-by-firm breakdowns, and step-by-step conversion tactics.",
   },
   {
-    q: "I haven't done a spring week yet. Is this for me?",
-    a: "This webinar is specifically about converting spring weeks into return offers. If you haven't secured one yet, this will still give you incredible insight into what firms look for.",
+    q: "I haven't secured a spring week yet. Is this still relevant for me?",
+    a: "While this webinar focuses predominantly on converting existing spring weeks into return offers, it provides unparalleled transparency into what recruiting teams actively evaluate—making it an exceptional resource for future applicants.",
   },
   {
-    q: "Can I get a refund?",
-    a: "Full refund available. We're confident you'll find it valuable.",
+    q: "What is your refund policy?",
+    a: "We will happily provide a full refund if the session does not meet your expectations. We are entirely confident in the practical value of the insights you will receive.",
   },
 ];
 
