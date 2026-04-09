@@ -20,8 +20,8 @@ const RECORDING_LIVE = false;
 // Replace with real Vimeo ID once uploaded
 const VIMEO_VIDEO_ID = "000000000";
 
-// Event target - April 12 2026 at 14:00 BST (UTC+1)
-const EVENT_TARGET_MS = new Date("2026-04-12T13:00:00Z").getTime();
+// Event target - April 12 2026 at 19:00 BST (UTC+1 = 18:00 UTC)
+const EVENT_TARGET_MS = new Date("2026-04-12T18:00:00Z").getTime();
 
 // --------------- Countdown hook ---------------
 

@@ -96,7 +96,7 @@ function AnimatedPrice({ value }: { value: number }) {
 const FAQ_ITEMS = [
   {
     q: "How long is the panel?",
-    a: "About 3 hours. 7+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.",
+    a: "About 3 hours. 10+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.",
   },
   {
     q: "Will there be a recording?",
@@ -386,7 +386,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
         <div>
           <p className="text-sm font-medium text-white/70">
-            The live panel is Sunday April 12 at 2pm BST.
+            The live panel is Sunday April 12 at 7pm BST.
           </p>
           <p className="text-xs font-light text-white/40 mt-0.5">
             Spring weeks begin Monday April 13. This is your last chance to prepare with people who converted.

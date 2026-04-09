@@ -84,8 +84,8 @@ export function SpringWeekPrepConversion({
           <p className="text-sm font-light text-muted-foreground">See how they did it, live</p>
           <ul className="space-y-2.5">
             {[
-              "Live panel this Sunday, April 12, 2-5pm BST",
-              "7+ speakers from Morgan Stanley, JP Morgan, Jane Street, and more",
+              "Live panel this Sunday, April 12, 7pm BST",
+              "10+ speakers from Morgan Stanley, JP Morgan, Jane Street, and more",
               "Direct Q&A - ask about YOUR specific firm",
               "Full recording if you can't make it live",
             ].map((f) => (

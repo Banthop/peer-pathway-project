@@ -2,11 +2,11 @@
 export const WEBINAR_TITLE =
   "How Students Converted Their Spring Weeks Into Return Offers";
 export const WEBINAR_SUBTITLE =
-  "One evening. 7+ speakers. Every firm covered. April 12, 2:00 PM - 5:00 PM BST.";
+  "One evening. 10+ speakers. Every firm covered. April 12, 7:00 PM BST.";
 
 // -- Single-day event info --
 export const SW_EVENT_DATE = "April 12, 2026";
-export const SW_EVENT_TIME = "2:00 PM - 5:00 PM BST";
+export const SW_EVENT_TIME = "7:00 PM - 8:30 PM BST";
 export const SW_EVENT_PLATFORM = "Zoom";
 
 // -- Tier system --
@@ -168,7 +168,7 @@ export const SPEAKERS: Speaker[] = [
   { name: "Palak", firms: ["Barclays", "D.E. Shaw", "Citadel"] },
 ];
 
-export const SPEAKER_COUNT_LABEL = "7+ speakers";
+export const SPEAKER_COUNT_LABEL = "10+ speakers";
 
 // -- Target firms for display --
 export const TARGET_FIRMS = [
@@ -327,11 +327,11 @@ export const SPRING_WEEK_NIGHTS: SpringWeekNight[] = [
   {
     id: "1",
     label: "Live Panel",
-    date: "Sun 12 Apr, 2:00 - 5:00 PM BST",
-    dateISO: "2026-04-12T14:00:00+01:00",
+    date: "Sun 12 Apr, 7:00 - 8:30 PM BST",
+    dateISO: "2026-04-12T19:00:00+01:00",
     theme: "How Students Converted Their Spring Weeks",
     speakers: ["Morgan Stanley", "JP Morgan", "Jane Street", "Barclays", "Macquarie", "Lazard", "Citadel"],
-    tagline: "One evening. 7+ speakers. Every firm covered.",
+    tagline: "One evening. 10+ speakers. Every firm covered.",
     accent: "#6366F1",
   },
 ];

@@ -28,7 +28,7 @@ interface SpringWeekPrepWelcomeProps {
 const PREP_FAQS = [
   {
     q: "What exactly is in the checklist?",
-    a: "A distilled set of notes from 7+ students who converted their spring weeks at top banks, trading firms, and consultancies. Covers what they did each day, how they networked, what the assessments looked like, and the mistakes they saw others make.",
+    a: "A distilled set of notes from 10+ students who converted their spring weeks at top banks, trading firms, and consultancies. Covers what they did each day, how they networked, what the assessments looked like, and the mistakes they saw others make.",
   },
   {
     q: "Is this actually free?",
@@ -40,7 +40,7 @@ const PREP_FAQS = [
   },
   {
     q: "What's the live panel?",
-    a: "After downloading, you'll see the option to join a live panel this Sunday (April 12, 2-5pm BST) where the speakers discuss conversion strategies live and answer your questions. Optional and separate from the free checklist.",
+    a: "After downloading, you'll see the option to join a live panel this Sunday (April 12, 7pm BST) where the speakers discuss conversion strategies live and answer your questions. Optional and separate from the free checklist.",
   },
   {
     q: "Will you spam me?",
@@ -89,7 +89,7 @@ function PrepFAQ() {
 
 /* ---- Main SpringWeekPrepWelcome ---- */
 export function SpringWeekPrepWelcome({ onContinue }: SpringWeekPrepWelcomeProps) {
-  const countdown = useCountdown("2026-04-12T14:00:00+01:00");
+  const countdown = useCountdown("2026-04-12T19:00:00+01:00");
 
   return (
     <div className="flex flex-col items-center text-center space-y-0 -mt-16 md:-mt-20">

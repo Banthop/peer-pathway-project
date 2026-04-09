@@ -20,8 +20,8 @@ import {
   Shield,
 } from "lucide-react";
 
-// April 12, 2026 at 2pm BST = UTC 1pm
-const EVENT_ISO = "2026-04-12T13:00:00Z";
+// April 12, 2026 at 7pm BST = UTC 6pm
+const EVENT_ISO = "2026-04-12T18:00:00Z";
 
 function isPostEvent(): boolean {
   return Date.now() > new Date(EVENT_ISO).getTime();
@@ -109,7 +109,7 @@ function LivePanelCardContent({ postEvent }: { postEvent: boolean }) {
           <div>
             <p className="text-[14px] font-semibold text-[#111] tracking-tight">Live Panel</p>
             <p className="text-[11px] text-[#999] font-light mt-0.5">
-              {postEvent ? "Recording now available" : "April 12, 2026 at 2:00 PM BST"}
+              {postEvent ? "Recording now available" : "April 12, 2026 at 7:00 PM BST"}
             </p>
           </div>
         </div>
@@ -149,7 +149,7 @@ function LivePanelCardContent({ postEvent }: { postEvent: boolean }) {
           <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl px-5 py-3.5">
             <div className="flex items-center gap-2 mb-1.5">
               <Calendar className="w-3.5 h-3.5 text-blue-600" />
-              <p className="text-[12px] text-blue-800 font-semibold">{SW_EVENT_DATE}, 2:00 PM BST on Zoom</p>
+              <p className="text-[12px] text-blue-800 font-semibold">{SW_EVENT_DATE}, 7:00 PM BST on Zoom</p>
             </div>
             <p className="text-[11px] text-blue-600/80 font-light">
               Zoom link sent to your email 1 hour before. Check your inbox.

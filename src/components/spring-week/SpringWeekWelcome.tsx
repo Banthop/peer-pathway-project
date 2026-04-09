@@ -183,14 +183,14 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
 
             {/* Subtitle */}
             <p className="funnel-sub mt-4 text-sm md:text-[15px] max-w-md">
-              {SPEAKERS.length} speakers. 17+ firms. Every conversion strategy they used, shared in one afternoon.
+              10+ speakers. 25+ firms. Every conversion strategy they used, shared in one evening.
             </p>
 
             {/* Date + Platform row */}
             <div className="flex flex-wrap items-center gap-4 mt-5 text-[13px] text-white/60 font-light">
               <span className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
                 <Clock className="w-3.5 h-3.5 text-white/80" />
-                Sun April 12 - 2-5pm BST
+                Sun April 12 - 7pm BST
               </span>
               <span className="hidden sm:inline text-white/15">|</span>
               <span>Live on Zoom - recording included</span>
