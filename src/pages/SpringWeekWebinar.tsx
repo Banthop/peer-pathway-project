@@ -444,8 +444,8 @@ export default function SpringWeekWebinar() {
       )}
 
       {/* Form steps */}
-      <main className="min-h-screen flex items-center justify-center px-4 py-24">
-        <div className="w-full max-w-xl mx-auto">
+      <main className={`min-h-screen flex ${form.step === 0 ? 'items-start pt-28 md:pt-32' : 'items-center'} justify-center px-4 py-8`}>
+        <div className={`w-full mx-auto ${form.step === 0 ? 'max-w-2xl' : 'max-w-xl'}`}>
           <WebinarFormStep isActive={form.step === 0} direction={form.direction}>
             <SpringWeekWelcome onContinue={handleContinue} />
           </WebinarFormStep>

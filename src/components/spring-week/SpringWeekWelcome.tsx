@@ -12,46 +12,20 @@ import {
   Check,
 } from "lucide-react";
 
-// Firm logos we have
-import logoGoldman from "@/assets/logo-goldman-sachs.png";
-import logoJPMorgan from "@/assets/logo-jpmorgan-new.png";
-import logoJaneStreet from "@/assets/logo-jane-street.png";
-import logoCitadel from "@/assets/logo-citadel.png";
-import logoMcKinsey from "@/assets/logo-mckinsey-new.png";
-
 interface SpringWeekWelcomeProps {
   onContinue: () => void;
 }
 
-/* ---- Firm grid data ---- */
-const FIRM_GRID: Array<{ name: string; logo?: string }> = [
-  { name: "Barclays" },
-  { name: "Rothschild & Co" },
-  { name: "Morgan Stanley" },
-  { name: "Goldman Sachs", logo: logoGoldman },
-  { name: "Lazard" },
-  { name: "Houlihan Lokey" },
-  { name: "JP Morgan", logo: logoJPMorgan },
-  { name: "Macquarie" },
-  { name: "Evercore" },
-  { name: "Deloitte" },
-  { name: "Citadel", logo: logoCitadel },
-  { name: "Jane Street", logo: logoJaneStreet },
-  { name: "EY" },
-  { name: "BNP Paribas" },
-  { name: "HSBC" },
+/* ---- Firm names (text only, no logos) ---- */
+const FIRM_NAMES = [
+  "Morgan Stanley", "Evercore", "HSBC", "Deutsche Bank",
+  "Houlihan Lokey", "Barclays", "Nomura", "RBC",
+  "JP Morgan", "D.E. Shaw", "Macquarie", "Lazard",
+  "BNP Paribas", "Jane Street", "Bank of America", "EY",
 ];
 
 /* ---- Checklist card component ---- */
 function ChecklistCard() {
-  const items = [
-    "Know your firm's conversion rate",
-    "Prepare for the assessment day",
-    "Learn the networking playbook",
-    "Hear from students who converted",
-    "Get firm-specific insider intel",
-  ];
-
   return (
     <div className="checklist-card">
       <div className="flex items-center gap-2 mb-1">
@@ -69,17 +43,15 @@ function ChecklistCard() {
         <br />
         Checklist
       </h3>
-      <p className="text-xs text-white/40 mt-2 mb-4">
+      <p className="text-xs text-white/60 mt-2 mb-4">
         Your step-by-step guide to standing out
       </p>
       <div className="space-y-2.5">
-        {items.map((item, i) => (
-          <div key={item} className="flex items-center gap-2.5">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex items-center gap-2.5">
             <div
-              className={`w-4.5 h-4.5 rounded flex items-center justify-center shrink-0 ${
-                i < 2
-                  ? "bg-emerald-500"
-                  : "border border-white/15 bg-transparent"
+              className={`rounded flex items-center justify-center shrink-0 ${
+                i < 2 ? "bg-emerald-500" : "border border-white/15 bg-transparent"
               }`}
               style={{ width: 18, height: 18 }}
             >
@@ -87,15 +59,13 @@ function ChecklistCard() {
             </div>
             <div
               className={`h-2 rounded-full flex-1 ${
-                i < 2
-                  ? "bg-emerald-500/30"
-                  : "bg-white/[0.06]"
+                i < 2 ? "bg-emerald-500/30" : "bg-white/[0.06]"
               }`}
             />
           </div>
         ))}
       </div>
-      <p className="text-xs text-white/30 mt-4 font-medium">
+      <p className="text-xs text-white/50 mt-4 font-medium">
         Early<span className="text-white/60 font-bold">Edge</span>
       </p>
     </div>
@@ -136,8 +106,8 @@ function LandingFAQ() {
   return (
     <div className="w-full space-y-2">
       <div className="flex items-center gap-2 mb-4">
-        <HelpCircle className="h-4 w-4 text-white/30" />
-        <span className="text-[10px] uppercase tracking-wider text-white/30 font-semibold">
+        <HelpCircle className="h-4 w-4 text-white/50" />
+        <span className="text-[10px] uppercase tracking-wider text-white/50 font-semibold">
           Common Questions
         </span>
       </div>
@@ -153,13 +123,13 @@ function LandingFAQ() {
               {faq.q}
             </span>
             {open === i ? (
-              <ChevronUp className="h-4 w-4 text-white/30 shrink-0" />
+              <ChevronUp className="h-4 w-4 text-white/50 shrink-0" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-white/30 shrink-0" />
+              <ChevronDown className="h-4 w-4 text-white/50 shrink-0" />
             )}
           </div>
           {open === i && (
-            <p className="mt-2.5 text-sm font-light text-white/50 leading-relaxed">
+            <p className="mt-2.5 text-sm font-light text-white/60 leading-relaxed">
               {faq.a}
             </p>
           )}
@@ -174,22 +144,22 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
   const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
 
   return (
-    <div className="flex flex-col items-center text-left space-y-0 -mt-16 md:-mt-20 w-full">
+    <div className="flex flex-col items-center w-full">
 
       {/* ---- HERO SECTION ---- */}
-      <div className="w-full max-w-3xl px-1 dark-fade-1">
+      <div className="w-full max-w-2xl">
         {/* Top row: Checklist card + Headline */}
-        <div className="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-10 items-start">
 
-          {/* Checklist card - hidden on mobile, shown on md+ */}
-          <div className="hidden md:block w-[260px] shrink-0">
+          {/* Checklist card - hidden on mobile */}
+          <div className="hidden md:block w-[240px] shrink-0">
             <ChecklistCard />
           </div>
 
           {/* Right: headline area */}
-          <div className="flex-1 pt-2">
-            {/* Date pill */}
-            <div className="mb-6">
+          <div className="flex-1">
+            {/* Date pill + free note */}
+            <div className="flex items-center gap-3 mb-8">
               <span className="funnel-pill">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -197,7 +167,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
                 </span>
                 Sunday April 12
               </span>
-              <span className="ml-3 text-xs font-medium text-white/40">
+              <span className="text-xs font-medium text-white/60">
                 Free checklist included
               </span>
             </div>
@@ -205,20 +175,19 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             {/* Headline */}
             <h1
               className="funnel-heading"
-              style={{ fontSize: "clamp(32px, 6vw, 56px)" }}
+              style={{ fontSize: "clamp(28px, 5vw, 48px)" }}
             >
               How students{" "}
-              <span className="text-emerald-400">converted</span>{" "}
-              their spring weeks into return offers
+              <span className="text-emerald-400">converted</span> their spring weeks into return offers
             </h1>
 
             {/* Subtitle */}
-            <p className="funnel-sub mt-5 text-sm md:text-base max-w-lg">
+            <p className="funnel-sub mt-4 text-sm md:text-[15px] max-w-md">
               {SPEAKERS.length} speakers. 17+ firms. Every conversion strategy they used, shared in one afternoon.
             </p>
 
             {/* Date + Platform row */}
-            <div className="flex flex-wrap items-center gap-4 mt-6 text-sm text-white/40 font-light">
+            <div className="flex flex-wrap items-center gap-4 mt-5 text-[13px] text-white/60 font-light">
               <span className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-white/25" />
                 Sun April 12 - 2-5pm BST
@@ -230,18 +199,18 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         </div>
 
         {/* Checklist card - mobile only */}
-        <div className="md:hidden mt-6">
+        <div className="md:hidden mt-8">
           <ChecklistCard />
         </div>
       </div>
 
       {/* ---- COUNTDOWN BAR ---- */}
-      <div className="w-full max-w-3xl mt-8 dark-fade-2">
+      <div className="w-full max-w-2xl mt-10">
         <div className="flex items-center justify-between funnel-card rounded-xl px-4 py-3">
-          <span className="text-xs text-white/40 font-light">
+          <span className="text-xs text-white/60 font-light">
             Spring weeks start Monday. This is the weekend to get ready.
           </span>
-          <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 shrink-0">
+          <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 shrink-0 ml-3">
             <Clock className="h-3 w-3" />
             {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
             {String(countdown.minutes).padStart(2, "0")}m
@@ -250,44 +219,39 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       </div>
 
       {/* ---- CTA ---- */}
-      <div className="w-full max-w-3xl mt-6 dark-fade-3">
-        <button
-          type="button"
-          onClick={onContinue}
-          className="funnel-cta"
-        >
+      <div className="w-full max-w-2xl mt-6">
+        <button type="button" onClick={onContinue} className="funnel-cta">
           Secure Your Spot - From £19
           <ArrowRight className="h-4 w-4" />
         </button>
-        <p className="text-center text-[11px] text-white/30 mt-3 font-light">
+        <p className="text-center text-[11px] text-white/50 mt-3 font-light">
           Join 150+ students already registered. Full refund if it's not for you.
         </p>
       </div>
 
       {/* ---- SPEAKERS WHO CONVERTED AT ---- */}
-      <div className="w-full max-w-3xl mt-12 dark-fade-4">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/40 mb-5">
+      <div className="w-full max-w-2xl mt-14">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4">
           Speakers who converted at
         </h2>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
-          {FIRM_GRID.map((firm) => (
-            <div key={firm.name} className="firm-card">
-              {firm.logo ? (
-                <img src={firm.logo} alt={firm.name} loading="lazy" />
-              ) : (
-                <span className="firm-card-text">{firm.name}</span>
-              )}
-            </div>
+        <div className="flex flex-wrap gap-2">
+          {FIRM_NAMES.map((firm) => (
+            <span
+              key={firm}
+              className="text-[13px] font-semibold text-white/80 bg-white/[0.06] border border-white/[0.10] rounded-lg px-3.5 py-2"
+            >
+              {firm}
+            </span>
           ))}
         </div>
       </div>
 
       {/* ---- WHAT YOU'LL WALK AWAY WITH ---- */}
-      <div className="w-full max-w-3xl mt-12 dark-fade-5">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/40 mb-5">
+      <div className="w-full max-w-2xl mt-14">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4">
           What you will walk away with
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-2">
           {[
             "What to expect during your spring week - day by day, firm by firm",
             "How to network without being awkward (scripts from people who did it)",
@@ -296,9 +260,9 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             "Direct Q&A with speakers about your specific firm",
             "Recordings of all sessions if you can't make one live",
           ].map((text) => (
-            <div key={text} className="flex items-start gap-3 funnel-card rounded-xl p-4">
-              <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400" />
-              <span className="text-sm text-white/70 font-light leading-snug">
+            <div key={text} className="flex items-start gap-3 py-2">
+              <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400/80" />
+              <span className="text-[14px] text-white/60 font-light leading-snug">
                 {text}
               </span>
             </div>
@@ -307,26 +271,26 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       </div>
 
       {/* ---- WHY THIS WEEKEND ---- */}
-      <div className="w-full max-w-3xl mt-10 dark-fade-5">
+      <div className="w-full max-w-2xl mt-12">
         <div className="funnel-card rounded-xl px-5 py-5" style={{ borderColor: "rgba(52,211,153,0.12)" }}>
           <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">
             Why this weekend?
           </p>
-          <p className="text-sm font-light text-white/60 leading-relaxed">
+          <p className="text-[14px] font-light text-white/70 leading-relaxed">
             Spring weeks start <strong className="font-semibold text-white/80">Monday April 13</strong>.
             Most firms run the assessment centre on the{" "}
             <strong className="font-semibold text-white/80">final day</strong>,
             so the students who convert are the ones who showed up ready from day one.
           </p>
-          <p className="text-sm font-light text-white/50 mt-2 leading-relaxed">
+          <p className="text-[14px] font-light text-white/60 mt-2 leading-relaxed">
             This is the last weekend to prepare with students who already converted.
           </p>
         </div>
       </div>
 
       {/* ---- PRICING PREVIEW ---- */}
-      <div className="w-full max-w-3xl mt-10 dark-fade-6">
-        <div className="flex flex-col sm:flex-row gap-3">
+      <div className="w-full max-w-2xl mt-12">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {[
             { name: "Watch", price: "£19", desc: "Live panel + recording" },
             { name: "Prepare", price: "£39", desc: "Panel + Handbook (45+ firms)", highlight: true },
@@ -334,15 +298,15 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           ].map((tier) => (
             <div
               key={tier.name}
-              className={`flex-1 funnel-card rounded-xl p-4 text-center ${
+              className={`funnel-card rounded-xl px-3 py-4 sm:p-5 text-center ${
                 tier.highlight ? "border-emerald-500/30 bg-emerald-500/[0.04]" : ""
               }`}
             >
-              <p className="text-xs font-bold uppercase tracking-wider text-white/40 mb-1">
+              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white/60 mb-1">
                 {tier.name}
               </p>
-              <p className="text-2xl font-bold text-white">{tier.price}</p>
-              <p className="text-xs text-white/40 font-light mt-1">{tier.desc}</p>
+              <p className="text-xl sm:text-2xl font-bold text-white">{tier.price}</p>
+              <p className="text-[10px] sm:text-xs text-white/55 font-light mt-1 leading-tight">{tier.desc}</p>
               {tier.highlight && (
                 <span className="inline-block mt-2 text-[9px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
                   Most chosen
@@ -354,40 +318,34 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       </div>
 
       {/* ---- BOTTOM CTA ---- */}
-      <div className="w-full max-w-3xl mt-8 dark-fade-6">
-        <button
-          type="button"
-          onClick={onContinue}
-          className="funnel-cta"
-        >
+      <div className="w-full max-w-2xl mt-8">
+        <button type="button" onClick={onContinue} className="funnel-cta">
           I Want to Be Prepared
           <ArrowRight className="h-4 w-4" />
         </button>
-        <div className="flex items-center justify-center gap-1.5 mt-3 text-[11px] text-white/30 font-light">
+        <div className="flex items-center justify-center gap-1.5 mt-3 text-[11px] text-white/50 font-light">
           <Shield className="h-3 w-3" />
           <span>Full refund, no questions asked. Secure Stripe checkout.</span>
         </div>
       </div>
 
       {/* ---- DIVIDER ---- */}
-      <div className="w-full max-w-3xl funnel-divider mt-10 mb-8" />
+      <div className="w-full max-w-2xl funnel-divider mt-12 mb-10" />
 
       {/* ---- FAQ ---- */}
-      <div className="w-full max-w-3xl mb-8">
+      <div className="w-full max-w-2xl mb-10">
         <LandingFAQ />
       </div>
 
       {/* ---- FOOTER ---- */}
-      <div className="w-full max-w-3xl flex items-center justify-between pb-8">
+      <div className="w-full max-w-2xl flex items-center justify-between pb-10">
         <p className="text-xs text-white/20 font-light">
-          Early<span className="font-bold text-white/40">Edge</span>
+          Early<span className="font-bold text-white/60">Edge</span>
         </p>
         <p className="text-xs text-white/20 font-light">
           yourearlyedge.co.uk
         </p>
       </div>
-
-      <div className="h-4" />
     </div>
   );
 }

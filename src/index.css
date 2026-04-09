@@ -604,14 +604,14 @@
 
 .funnel-heading {
   font-family: 'Inter', sans-serif;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.05;
-  color: #ffffff;
+  line-height: 1.08;
+  color: #f0f0f0;
 }
 
 .funnel-sub {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.65);
   font-weight: 300;
   line-height: 1.6;
 }
@@ -647,7 +647,7 @@
   font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 13px;
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.85);
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
