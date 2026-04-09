@@ -262,19 +262,19 @@ export default function SpringWeekMatchmaking() {
       <div className="bg-white border-b border-[#E8E8E8]">
         <div className="px-6 py-8 md:px-10 max-w-3xl">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-            <p className="text-xs text-indigo-700 font-bold uppercase tracking-wider">1-on-1 Prep Call</p>
+            <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+            <p className="text-xs text-indigo-600 font-bold uppercase tracking-[0.08em]">Matchmaking</p>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-[#111] leading-tight">
+          <h1 className="text-[22px] md:text-[28px] font-bold text-[#111] leading-tight tracking-tight">
             Talk to someone who already converted at your firm
           </h1>
-          <p className="text-[15px] text-[#666] mt-3 font-light leading-relaxed max-w-xl">
-            30 minutes with a student who did your exact spring week and came out with the offer. They'll tell you what the week is really like, what caught them off guard, and exactly what got them the return offer.
+          <p className="text-[14px] text-[#777] mt-3 font-light leading-relaxed max-w-xl">
+            30 minutes with a student who did your exact spring week and came out with the offer. They'll tell you what the week is really like, what caught them off guard, and what got them the return offer.
           </p>
           <div className="mt-4 inline-flex items-center gap-2 bg-[#F5F5F5] border border-[#E0E0E0] rounded-full px-4 py-1.5">
             <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
             <span className="text-[12px] text-[#555] font-medium">
-              £50 per call
+              £60 per call
               {access.hasFreeMatch && (
                 <span className="text-emerald-700 font-bold ml-2">- FREE with your Convert tier</span>
               )}
@@ -460,7 +460,7 @@ export default function SpringWeekMatchmaking() {
                     </>
                   ) : (
                     <>
-                      Submit and pay £50
+                      Submit and pay £60
                       <ArrowRight className="w-4 h-4" />
                     </>
                   )}
@@ -488,7 +488,7 @@ export default function SpringWeekMatchmaking() {
           <div className="bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <p className="text-[13px] font-semibold text-indigo-900">
-                Convert tier includes 1 free prep call (worth £50)
+                Convert tier includes 1 free prep call (worth £60)
               </p>
               <p className="text-[12px] text-indigo-700 font-light mt-0.5">
                 Upgrade to Convert for the handbook, a free prep call with a converter at your firm, and priority support.

@@ -81,8 +81,8 @@ export default function BuyerLogin() {
 
         <p className="text-center text-xs text-[#BBB] font-light">
           Having trouble? Email{" "}
-          <a href="mailto:d.awotwi@lse.ac.uk" className="text-[#888] underline underline-offset-2">
-            d.awotwi@lse.ac.uk
+          <a href="mailto:support@yourearlyedge.co.uk" className="text-[#888] underline underline-offset-2">
+            support@yourearlyedge.co.uk
           </a>
         </p>
       </div>

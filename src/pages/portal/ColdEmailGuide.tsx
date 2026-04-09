@@ -409,7 +409,7 @@ export default function ColdEmailGuide() {
 
         <h3 className="text-[24px] font-[700] text-[#222] mt-12 mb-5 leading-[1.3]">Need Help or Want Feedback?</h3>
         <p className="text-[18px] leading-[1.8] text-[#333] mb-9">If you get stuck at any point, whether that's cleaning your list, writing first lines, or in Mail Merge, feel free to reach out. By the time you're reading this, the Early Edge Cold Email Community should be live. We share results and learn together.</p>
-        <p className="text-[18px] leading-[1.8] text-[#333] mb-9">Or, email Don directly at 📩 <strong className="font-[700]">d.awotwi@lse.ac.uk</strong>. He will personally help you troubleshoot or refine your outreach.</p>
+        <p className="text-[18px] leading-[1.8] text-[#333] mb-9">Or, email Don directly at 📩 <strong className="font-[700]">support@yourearlyedge.co.uk</strong>. He will personally help you troubleshoot or refine your outreach.</p>
 
         <h3 className="text-[24px] font-[700] text-[#222] mt-12 mb-5 leading-[1.3]">What Happens Next</h3>
         <p className="text-[18px] leading-[1.8] text-[#333] mb-9">If you stick with this and send consistently, you will start getting replies. Those replies will lead to calls. And those calls will turn into opportunities. It won't happen overnight, but it will happen if you keep going.</p>

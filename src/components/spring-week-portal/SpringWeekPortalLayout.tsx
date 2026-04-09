@@ -101,7 +101,9 @@ export function useSpringWeekAccess(): SwAccess {
           tier = "prepare";
         } else if (
           tags.includes("spring_week_watch") ||
-          tags.includes("spring_week_webinar")
+          tags.includes("spring_week_webinar") ||
+          tags.includes("spring_week_part1") ||
+          tags.includes("spring_week_part2")
         ) {
           tier = "watch";
         }
@@ -148,8 +150,8 @@ const navItems = [
   { to: "/spring-week-portal", icon: LayoutDashboard, label: "Dashboard", end: true },
   { to: "/spring-week-portal/recording", icon: Play, label: "Recording" },
   { to: "/spring-week-portal/handbook", icon: BookOpen, label: "Handbook" },
-  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Prep Calls" },
-  { to: "/spring-week-portal/coaching", icon: CalendarCheck, label: "Book Coaching" },
+  { to: "/spring-week-portal/matchmaking", icon: Users, label: "Matchmaking" },
+  { to: "/spring-week-portal/coaching", icon: CalendarCheck, label: "1-on-1 Sessions" },
 ];
 
 // -- Sidebar --
@@ -359,7 +361,7 @@ function FreeTierWelcome() {
         <p className="text-[11px] text-[#BBB] font-light text-center">
           Already purchased with a different email?{" "}
           <a
-            href="mailto:d.awotwi@lse.ac.uk"
+            href="mailto:support@yourearlyedge.co.uk"
             className="text-[#888] underline underline-offset-2"
           >
             Contact us

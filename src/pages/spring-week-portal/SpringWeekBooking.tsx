@@ -31,32 +31,32 @@ interface CoachingSession {
 const SESSIONS: CoachingSession[] = [
   {
     id: "strategy-call",
-    name: "Strategy Call",
+    name: "Quick Fire",
     duration: "30 min",
-    price: "£35",
-    discountedPrice: "£28",
+    price: "£45",
+    discountedPrice: "£39",
     description:
-      "Focused session to review your spring week strategy, get feedback on your networking approach, or ask anything about converting to a return offer.",
+      "Focused 30-minute session to review your spring week strategy, get answers to your biggest concerns, or talk through your approach for a specific firm.",
     includes: [
-      "Personalised strategy review",
-      "Networking script feedback",
+      "Personalised strategy review for your firm",
+      "Answers to your biggest questions",
       "Clear action plan for your week",
     ],
     calSlug: "sw-strategy-call",
   },
   {
     id: "deep-dive",
-    name: "Deep Dive Session",
+    name: "Full Gameplan",
     duration: "60 min",
-    price: "£59",
-    discountedPrice: "£49",
+    price: "£75",
+    discountedPrice: "£59",
     description:
-      "Full session covering your complete conversion strategy. Walk away with a firm-specific plan, networking targets, and assessment preparation.",
+      "The full session. Walk away with a firm-specific conversion plan, know exactly what to expect each day, and have your assessment centre strategy locked in.",
     includes: [
-      "Full conversion audit for your firm",
-      "Networking and assessment prep",
-      "Firm-specific tactics and insider knowledge",
-      "7-day email support after the session",
+      "Complete conversion plan for your firm",
+      "Day-by-day breakdown of what to expect",
+      "Assessment centre strategy and prep",
+      "7-day follow-up support after the session",
     ],
     calSlug: "sw-deep-dive",
     popular: true,
@@ -96,14 +96,14 @@ function SessionCard({ session, hasDiscount, onBook }: SessionCardProps) {
 
   return (
     <div
-      className={`relative bg-white rounded-2xl overflow-hidden transition-all hover:shadow-lg ${
+      className={`relative bg-white rounded-2xl overflow-hidden transition-all ${
         session.popular
-          ? "border-2 border-emerald-400 shadow-md border-l-[6px] border-l-emerald-500 ring-1 ring-emerald-100"
-          : "border border-[#DDD] border-l-[6px] border-l-slate-400 hover:border-[#BBB]"
+          ? "border-2 border-emerald-400 shadow-[0_4px_20px_rgba(16,185,129,0.1)] ring-1 ring-emerald-50"
+          : "border border-[#E0E0E0] shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]"
       }`}
     >
       {session.popular && (
-        <span className="absolute top-3 right-3 bg-[#111] text-white text-[10px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
+        <span className="absolute top-3 right-3 bg-gradient-to-r from-[#111] to-[#333] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase shadow-sm">
           Most Popular
         </span>
       )}
@@ -202,11 +202,11 @@ function SpeakerCoachingDirectory() {
     <div className="bg-white border border-[#E8E8E8] rounded-2xl p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-1">
         <Users className="w-4 h-4 text-[#888]" />
-        <h3 className="text-[14px] font-semibold text-[#111]">Who you can book with</h3>
+        <h3 className="text-[14px] font-semibold text-[#111]">Your panel speakers</h3>
       </div>
       <p className="text-[12px] text-[#888] font-light mb-4">
-        Each speaker has real spring week experience at the firms listed.
-        When you book, you'll be matched to the most relevant speaker for your target firm.
+        These are the speakers from the live panel. When you book a session,
+        we match you with the speaker most relevant to your target firm.
       </p>
       <div className="space-y-3">
         {SPEAKERS.map((speaker) => (
@@ -305,13 +305,13 @@ export default function SpringWeekBooking() {
   return (
     <div className="w-full bg-[#FAFAFA] min-h-screen pb-16">
       {/* Header */}
-      <div className="bg-white border-b border-[#E8E8E8] px-6 md:px-8 py-6">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-xl md:text-2xl font-semibold text-[#111]">
-            Book Coaching
+      <div className="bg-white border-b border-[#E8E8E8]">
+        <div className="max-w-3xl mx-auto px-6 md:px-8 py-7">
+          <h1 className="text-[22px] md:text-[26px] font-bold text-[#111] tracking-tight">
+            1-on-1 Sessions
           </h1>
-          <p className="text-[13px] text-[#888] font-light mt-1">
-            1-to-1 sessions with students who converted their spring weeks into return offers.
+          <p className="text-[13px] text-[#999] font-light mt-1.5">
+            Book directly with the speakers from the panel. They've been where you are.
           </p>
         </div>
       </div>
@@ -343,7 +343,7 @@ export default function SpringWeekBooking() {
           <p className="text-[12px] text-[#888] font-light">
             Not satisfied after your session?{" "}
             <a
-              href="mailto:d.awotwi@lse.ac.uk"
+              href="mailto:support@yourearlyedge.co.uk"
               className="text-[#555] underline underline-offset-2"
             >
               Email us
@@ -357,10 +357,10 @@ export default function SpringWeekBooking() {
         <p className="text-[11px] text-[#CCC] text-center">
           Questions?{" "}
           <a
-            href="mailto:d.awotwi@lse.ac.uk"
+            href="mailto:support@yourearlyedge.co.uk"
             className="text-[#AAA] underline underline-offset-2"
           >
-            d.awotwi@lse.ac.uk
+            support@yourearlyedge.co.uk
           </a>
         </p>
       </div>

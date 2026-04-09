@@ -216,7 +216,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
           </span>
           <p className="text-xs font-sans font-medium text-amber-800">
-            Spring weeks start Monday April 13. This is your last chance to prepare.
+            Spring weeks start Monday April 13. This is the weekend to get ready.
           </p>
           <div className="flex items-center gap-1 font-mono text-xs font-bold text-amber-700 shrink-0">
             <Clock className="h-3 w-3" />
@@ -370,11 +370,11 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           </p>
           <p className="text-sm font-sans font-light text-amber-900 leading-relaxed">
             Spring weeks start <strong className="font-semibold">Monday April 13</strong>.
-            Assessment centres happen on the <strong className="font-semibold">last day</strong>.
-            That means you need conversion strategies <em>before</em> you walk in - not after.
+            Most firms run the assessment centre on the <strong className="font-semibold">final day</strong>,
+            so the students who convert are the ones who showed up ready from day one.
           </p>
           <p className="text-sm font-sans font-light text-amber-800 leading-relaxed">
-            This is the only weekend you can prepare with people who actually converted.
+            This is the last weekend to prepare with students who already converted.
           </p>
         </div>
       </div>

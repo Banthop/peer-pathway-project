@@ -284,7 +284,7 @@ function CoachingSection({ hasAccess }: { hasAccess: boolean }) {
               </p>
             </div>
             <a
-              href="mailto:d.awotwi@lse.ac.uk?subject=Spring%20Week%20Coaching%20-%20Premium%20Session"
+              href="mailto:support@yourearlyedge.co.uk?subject=Spring%20Week%20Coaching%20-%20Premium%20Session"
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-emerald-600 text-white text-[13px] font-semibold hover:bg-emerald-700 transition-colors"
             >
               Contact us to schedule

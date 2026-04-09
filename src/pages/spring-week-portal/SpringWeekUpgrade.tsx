@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useSwAccess } from "@/components/spring-week-portal/SpringWeekPortalLayout";
 import { SW_TICKETS, type SwTierId } from "@/data/springWeekData";
-import { Check, ArrowRight, Star, ShieldCheck, Lock, Phone, AlertTriangle } from "lucide-react";
+import { Check, CheckCircle2, ArrowRight, Star, ShieldCheck, Lock, Phone, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /* ---- Helpers ---- */
@@ -49,25 +49,25 @@ function TierCard({ id, isCurrent, email }: TierCardProps) {
   return (
     <div
       className={cn(
-        "relative bg-white rounded-2xl p-6 shadow-sm flex flex-col",
+        "relative bg-white rounded-2xl p-6 flex flex-col transition-all",
         isCurrent
-          ? "border-2 border-emerald-400 ring-1 ring-emerald-100"
+          ? "border-2 border-emerald-400 ring-1 ring-emerald-100 shadow-[0_4px_12px_rgba(16,185,129,0.08)]"
           : isPrepare
-          ? "border-2 border-[#111] shadow-md"
+          ? "border-2 border-[#111] shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
           : isConvert
-          ? "border-2 border-emerald-300"
-          : "border border-[#E8E8E8]",
+          ? "border-2 border-emerald-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(16,185,129,0.1)]"
+          : "border border-[#E0E0E0] shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)]",
       )}
     >
       {/* Badge */}
       {isCurrent && (
-        <span className="absolute -top-3 left-5 bg-emerald-600 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">
+        <span className="absolute -top-3 left-5 bg-emerald-600 text-white text-[10px] font-bold px-3.5 py-1 rounded-full tracking-wider uppercase shadow-sm">
           Current plan
         </span>
       )}
       {!isCurrent && ticket.badge && (
         <span className={cn(
-          "absolute -top-3 left-5 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase",
+          "absolute -top-3 left-5 text-white text-[10px] font-bold px-3.5 py-1 rounded-full tracking-wider uppercase shadow-sm",
           isPrepare ? "bg-[#111]" : "bg-emerald-600"
         )}>
           {ticket.badge}
@@ -75,42 +75,43 @@ function TierCard({ id, isCurrent, email }: TierCardProps) {
       )}
 
       {/* Header */}
-      <div className="mb-3">
-        <div className="flex items-center gap-2 mb-0.5">
-          <h3 className="text-[16px] font-bold text-[#111]">{ticket.name}</h3>
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-1">
+          <h3 className="text-[17px] font-bold text-[#111] tracking-tight">{ticket.name}</h3>
           {isConvert && !isCurrent && (
-            <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
               <Star className="w-3 h-3 fill-current" />
-              Best for conversion
+              Best value
             </span>
           )}
         </div>
-        <p className="text-[12px] text-indigo-700 font-semibold italic">{ticket.tagline}</p>
+        <p className="text-[12px] text-indigo-600 font-medium">{ticket.tagline}</p>
       </div>
 
       {/* Price */}
       <div className="mb-5">
-        <div className="flex items-end gap-1">
-          <span className="text-4xl font-black text-[#111]">
+        <div className="flex items-end gap-1.5">
+          <span className="text-[38px] font-black text-[#111] leading-none tracking-tight">
             £{ticket.price}
           </span>
-          <span className="text-[13px] text-[#888] mb-1">one-time</span>
+          <span className="text-[12px] text-[#AAA] mb-1.5 font-light">one-time</span>
         </div>
         {isConvert && (
-          <p className="text-[11px] text-emerald-700 font-medium mt-1">
-            Includes free prep call (worth £50)
+          <p className="text-[11px] text-emerald-700 font-semibold mt-1.5 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" />
+            Includes free matchmaking call (worth £60)
           </p>
         )}
       </div>
 
       {/* Features */}
-      <ul className="space-y-2.5 mb-6 flex-1">
+      <ul className="space-y-3 mb-6 flex-1">
         {ticket.features.map((f) => (
           <li key={f} className="flex items-start gap-2.5 text-[13px] text-[#555]">
             <Check
               className={cn(
                 "w-4 h-4 mt-0.5 shrink-0",
-                isPrepare ? "text-[#111]" : isConvert ? "text-emerald-600" : "text-[#AAA]",
+                isPrepare ? "text-[#111]" : isConvert ? "text-emerald-600" : "text-[#CCC]",
               )}
             />
             {f}
@@ -120,7 +121,7 @@ function TierCard({ id, isCurrent, email }: TierCardProps) {
 
       {/* CTA */}
       {isCurrent ? (
-        <div className="w-full py-3 rounded-xl bg-emerald-50 text-emerald-700 text-[13px] font-semibold text-center flex items-center justify-center gap-2">
+        <div className="w-full py-3.5 rounded-xl bg-emerald-50 text-emerald-700 text-[13px] font-semibold text-center flex items-center justify-center gap-2 border border-emerald-100">
           <Check className="w-4 h-4" />
           You have this plan
         </div>
@@ -128,11 +129,11 @@ function TierCard({ id, isCurrent, email }: TierCardProps) {
         <a
           href={checkoutUrl}
           className={cn(
-            "block w-full py-3 rounded-xl text-[13px] font-bold text-center transition-colors flex items-center justify-center gap-2",
+            "w-full py-3.5 rounded-xl text-[13px] font-bold text-center transition-all flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]",
             isPrepare
-              ? "bg-[#111] text-white hover:bg-[#222]"
+              ? "bg-[#111] text-white hover:bg-[#222] shadow-sm"
               : isConvert
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+              ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm"
               : "bg-[#F5F5F5] text-[#111] hover:bg-[#EBEBEB] border border-[#E0E0E0]",
           )}
         >
@@ -160,11 +161,10 @@ const ALL_FEATURES = [
   { label: "Full recording after the event", tiers: ["watch", "prepare", "convert"] },
   { label: "Speaker directory", tiers: ["watch", "prepare", "convert"] },
   { label: "Spring Week Handbook (45+ firms)", tiers: ["prepare", "convert"] },
-  { label: "Firm-specific conversion rates and AC formats", tiers: ["prepare", "convert"] },
-  { label: "Networking scripts and follow-up templates", tiers: ["prepare", "convert"] },
-  { label: "Division-specific technical prep guides", tiers: ["prepare", "convert"] },
-  { label: "1 free prep call with a converter (worth £50)", tiers: ["convert"] },
-  { label: "Priority booking for additional prep calls", tiers: ["convert"] },
+  { label: "Firm conversion rates and AC formats", tiers: ["prepare", "convert"] },
+  { label: "Day-by-day breakdown of what to expect", tiers: ["prepare", "convert"] },
+  { label: "1 free matchmaking call with a converter (worth £60)", tiers: ["convert"] },
+  { label: "Priority booking for additional calls", tiers: ["convert"] },
 ] as const;
 
 const TIER_LABELS: Record<SwTierId, string> = {
@@ -175,9 +175,9 @@ const TIER_LABELS: Record<SwTierId, string> = {
 
 function ComparisonTable() {
   return (
-    <div className="bg-white border border-[#E8E8E8] rounded-2xl overflow-hidden shadow-sm">
+    <div className="bg-white border border-[#E0E0E0] rounded-2xl overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       <div className="px-5 py-4 border-b border-[#E8E8E8]">
-        <h3 className="text-[13px] font-semibold text-[#111]">What's included at each tier</h3>
+        <h3 className="text-[14px] font-semibold text-[#111] tracking-tight">What's included at each tier</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[480px]">
@@ -284,8 +284,8 @@ export default function SpringWeekUpgrade() {
           <div className="flex items-start gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
             <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
             <p className="text-[12px] text-amber-900 font-medium">
-              Spring weeks start Monday April 13. Assessment centres happen on the last day.
-              There is no time to figure it out when you arrive.
+              Spring weeks start Monday April 13. Most firms run the assessment centre on the final day,
+              so you need to be ready from day one.
             </p>
           </div>
         )}
@@ -331,10 +331,10 @@ export default function SpringWeekUpgrade() {
         <p className="text-[11px] text-[#CCC] text-center">
           Questions?{" "}
           <a
-            href="mailto:d.awotwi@lse.ac.uk"
+            href="mailto:support@yourearlyedge.co.uk"
             className="text-[#AAA] underline underline-offset-2"
           >
-            d.awotwi@lse.ac.uk
+            support@yourearlyedge.co.uk
           </a>
         </p>
       </div>
