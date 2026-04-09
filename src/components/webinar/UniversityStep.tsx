@@ -82,7 +82,7 @@ export function UniversityStep({
           {showDropdown && universities.length > 0 && (
             <div
               ref={dropdownRef}
-              className="absolute z-50 w-full mt-1 bg-white/[0.04] border border-white/[0.08] rounded-xl shadow-lg overflow-hidden"
+              className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/15 rounded-xl shadow-2xl overflow-hidden max-h-[240px] overflow-y-auto"
             >
               {universities.map((name) => (
                 <button
@@ -91,7 +91,7 @@ export function UniversityStep({
                   onClick={() => handleSelect(name)}
                   className={cn(
                     "w-full text-left px-4 py-3 text-sm font-sans font-light transition-colors",
-                    "hover:bg-secondary focus:bg-secondary focus:outline-none",
+                    "hover:bg-white/10 focus:bg-white/10 focus:outline-none",
                     name === university
                       ? "bg-white/10 text-white"
                       : "text-white/70",
@@ -104,7 +104,7 @@ export function UniversityStep({
           )}
 
           {loading && university.length >= 2 && showDropdown && (
-            <div className="absolute z-50 w-full mt-1 bg-white/[0.04] border border-white/[0.08] rounded-xl shadow-lg px-4 py-3">
+            <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/15 rounded-xl shadow-2xl px-4 py-3">
               <p className="text-sm text-white/50 font-sans font-light">
                 Loading universities...
               </p>
