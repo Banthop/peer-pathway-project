@@ -9,6 +9,8 @@
     { "source": "/general-portal/:path*", "destination": "/index.html" },
     { "source": "/assets/:path*", "destination": "/assets/:path*" },
     { "source": "/email-proof.png", "destination": "/email-proof.png" },
+    { "source": "/spring-week-checklist", "destination": "/spring-week-checklist.html" },
+    { "source": "/spring-week-conversion-checklist.pdf", "destination": "/spring-week-conversion-checklist.pdf" },
     { "source": "/:path*", "destination": "/index.html" }
   ]
 }

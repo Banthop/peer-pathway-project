@@ -84,15 +84,25 @@ function SuccessScreen({
           <p className="text-sm font-light text-white/50">
             Start prepping right now with the Spring Week Conversion Checklist.
           </p>
-          <a
-            href="/spring-week-conversion-checklist.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors no-underline"
-          >
-            Download Checklist (PDF)
-            <ArrowRight className="h-4 w-4" />
-          </a>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <a
+              href="/spring-week-checklist.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors no-underline"
+            >
+              View Checklist
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="/spring-week-conversion-checklist.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white/[0.04] text-white/60 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-white/[0.08] transition-colors no-underline"
+            >
+              Download PDF
+            </a>
+          </div>
         </div>
 
         <div className="text-center">

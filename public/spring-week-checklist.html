@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Week Conversion Checklist - EarlyEdge</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap');
+
+  :root {
+    --green: #34D399;
+    --green-dark: #059669;
+    --green-light: #D1FAE5;
+    --green-bg: #ECFDF5;
+    --navy: #0F172A;
+    --navy-mid: #1E293B;
+    --navy-light: #334155;
+    --slate: #64748B;
+    --slate-light: #94A3B8;
+    --amber: #F59E0B;
+    --amber-light: #FEF3C7;
+    --amber-bg: #FFFBEB;
+    --red: #EF4444;
+    --red-light: #FEE2E2;
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --border: #E2E8F0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    font-size: 10.5pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 0;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page:last-child { page-break-after: auto; }
+
+  /* ---- COVER PAGE ---- */
+  .cover {
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px;
+    position: relative;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, transparent 70%);
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.08) 0%, transparent 70%);
+  }
+
+  .cover-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    border: 1.5px solid rgba(52, 211, 153, 0.3);
+    border-radius: 100px;
+    padding: 8px 20px;
+    background: rgba(52, 211, 153, 0.08);
+    width: fit-content;
+  }
+
+  .cover-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+
+  .cover-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 800;
+    font-size: 44pt;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  .cover h1 span {
+    color: var(--green);
+  }
+
+  .cover-sub {
+    font-size: 12pt;
+    font-weight: 300;
+    color: var(--slate-light);
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .cover-divider {
+    width: 48px;
+    height: 3px;
+    background: var(--green);
+    border-radius: 2px;
+  }
+
+  .cover-stats {
+    display: flex;
+    gap: 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-stat-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28pt;
+    font-weight: 800;
+    color: var(--white);
+  }
+
+  .cover-stat-label {
+    font-size: 8pt;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-light);
+    margin-top: 2px;
+  }
+
+  .cover-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cover-logo {
+    font-size: 16pt;
+    font-weight: 300;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+
+  .cover-logo strong {
+    font-weight: 700;
+  }
+
+  .cover-url {
+    font-size: 9pt;
+    color: var(--slate-light);
+    font-weight: 400;
+  }
+
+  /* ---- CONTENT PAGES ---- */
+  .content {
+    padding: 40px 48px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .page-logo {
+    font-size: 11pt;
+    font-weight: 300;
+    color: var(--navy);
+  }
+
+  .page-logo strong { font-weight: 700; }
+
+  .page-num {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--slate-light);
+  }
+
+  /* Phase headings */
+  .phase-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green-dark);
+    background: var(--green-bg);
+    border: 1px solid rgba(5, 150, 105, 0.15);
+    border-radius: 6px;
+    padding: 5px 14px;
+    margin-bottom: 10px;
+  }
+
+  .phase-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22pt;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .phase-desc {
+    font-size: 10pt;
+    color: var(--slate);
+    font-weight: 400;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 22px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .section-letter {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 9pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* Checklist items */
+  .checklist {
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--navy-mid);
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    background: var(--off-white);
+  }
+
+  .checklist li strong {
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .checklist li .detail {
+    color: var(--slate);
+    font-weight: 400;
+  }
+
+  /* Tip boxes */
+  .tip {
+    background: var(--green-bg);
+    border: 1px solid rgba(5, 150, 105, 0.12);
+    border-left: 3px solid var(--green);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .tip-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green-dark);
+    margin-bottom: 4px;
+  }
+
+  .tip-text {
+    font-size: 9.5pt;
+    color: var(--navy-mid);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  /* Warning boxes */
+  .warning {
+    background: var(--amber-bg);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .warning-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #92400E;
+    margin-bottom: 4px;
+  }
+
+  .warning-text {
+    font-size: 9.5pt;
+    color: var(--navy-mid);
+    line-height: 1.5;
+  }
+
+  /* Question box */
+  .question-box {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .question-box-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 8px;
+  }
+
+  .question-box p {
+    font-size: 9.5pt;
+    color: var(--navy-mid);
+    font-style: italic;
+    line-height: 1.6;
+    padding-left: 12px;
+    border-left: 2px solid var(--border);
+    margin-bottom: 6px;
+  }
+
+  .question-box p:last-child { margin-bottom: 0; }
+
+  /* Tables */
+  .division-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 14px 0;
+    font-size: 9pt;
+  }
+
+  .division-table th {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 600;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .division-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.45;
+    color: var(--navy-mid);
+  }
+
+  .division-table tr:last-child td { border-bottom: none; }
+
+  .division-table tr:nth-child(even) td {
+    background: var(--off-white);
+  }
+
+  .division-table td:first-child {
+    font-weight: 600;
+    color: var(--navy);
+    white-space: nowrap;
+    width: 120px;
+  }
+
+  /* Footer */
+  .page-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 48px;
+    right: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .page-footer span {
+    font-size: 8pt;
+    color: var(--slate-light);
+  }
+
+  /* CTA page */
+  .cta-page {
+    background: var(--navy);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 48px;
+    position: relative;
+  }
+
+  .cta-page::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.1) 0%, transparent 70%);
+  }
+
+  .cta-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 30pt;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-title span { color: var(--green); }
+
+  .cta-desc {
+    font-size: 11pt;
+    font-weight: 300;
+    color: var(--slate-light);
+    max-width: 380px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green);
+    color: var(--navy);
+    font-size: 11pt;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 12px;
+    text-decoration: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-firms {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 440px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-firm-tag {
+    font-size: 8pt;
+    font-weight: 500;
+    color: var(--slate-light);
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 5px 12px;
+  }
+
+  .cta-footer {
+    position: absolute;
+    bottom: 40px;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .cta-footer .cover-logo {
+    margin-bottom: 6px;
+  }
+
+  @media print {
+    body { margin: 0; }
+    .page { margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: COVER ==================== -->
+<div class="page cover">
+  <div class="cover-badge">EarlyEdge Checklist</div>
+
+  <div class="cover-main">
+    <h1>Spring Week<br><span>Conversion<br>Checklist</span></h1>
+    <div class="cover-divider"></div>
+    <p class="cover-sub">Everything you need to prepare for, perform during, and convert your spring week into a summer internship offer.</p>
+
+    <div class="cover-stats">
+      <div>
+        <div class="cover-stat-num">4</div>
+        <div class="cover-stat-label">Phases</div>
+      </div>
+      <div>
+        <div class="cover-stat-num">60+</div>
+        <div class="cover-stat-label">Action Items</div>
+      </div>
+      <div>
+        <div class="cover-stat-num">6</div>
+        <div class="cover-stat-label">Division Guides</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-logo">Early<strong>Edge</strong></div>
+    <div class="cover-url">yourearlyedge.com</div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2: PHASE 1 ==================== -->
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-logo">Early<strong>Edge</strong></div>
+      <div class="page-num">02</div>
+    </div>
+
+    <div class="phase-label">Phase 1 of 4</div>
+    <div class="phase-title">Pre-Spring Week Preparation</div>
+    <p class="phase-desc">The work you do before you arrive is what separates candidates who convert from those who don't.</p>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">A</div>
+        <div class="section-title">Have the Right Conversations</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Find 2-3 people who did your exact spring week last year</strong> <span class="detail">- hearing first-hand experience is the single biggest advantage you can give yourself</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Ask them how each day went</strong> <span class="detail">- what tasks, case studies, and presentations they did</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Ask what they wish they had prepared</strong> <span class="detail">- what caught them off guard, what they would do differently</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Ask about the conversion process</strong> <span class="detail">- was there an AC at the end? Fast-tracked interviews? How many people converted?</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Ask about the social dynamics</strong> <span class="detail">- how many interns, how competitive was the vibe, any social events</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Write down every insight</strong> <span class="detail">in a preparation document you can review the week before</span></div></li>
+      </ul>
+
+      <div class="tip">
+        <div class="tip-label">EarlyEdge Tip</div>
+        <div class="tip-text">Even one conversation with a previous spring weeker gives you an unfair advantage. Most candidates walk in blind.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">B</div>
+        <div class="section-title">Build Your Technical Foundations</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Learn technicals to summer internship level</strong> <span class="detail">- not spring week level. This is what separates you</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Don't just memorise formulas - understand application.</strong> <span class="detail">E.g. know that EV = Equity Value + Net Debt + Minority Interest AND how it appears in real transaction announcements</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare division-specific knowledge</strong> <span class="detail">(see the table below for what to focus on)</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Practice explaining concepts out loud</strong> <span class="detail">- you need to articulate these in case studies and conversations</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Work through at least 2 mock case studies</strong> <span class="detail">relevant to your division</span></div></li>
+      </ul>
+
+      <table class="division-table">
+        <thead>
+          <tr><th>Division</th><th>What to Know</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Investment Banking</td><td>Valuation methods (DCF, comps, precedent), EV/Equity bridge, M&A transaction mechanics, LBO basics, accounting fundamentals</td></tr>
+          <tr><td>Markets / S&T</td><td>Bond/equity pricing, derivatives (options, swaps, MBS, CDS), how market factors affect security values, desk functions</td></tr>
+          <tr><td>Research</td><td>Stock pitch structure, industry analysis, macro drivers, portfolio construction basics, equity vs fixed income focus</td></tr>
+          <tr><td>Asset Management</td><td>Portfolio allocation, diversification, risk management, hedging strategies, investment philosophies (value, growth, contrarian)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>Early<strong>Edge</strong></span>
+    <span>yourearlyedge.com</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 3: PHASE 1 (cont) ==================== -->
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-logo">Early<strong>Edge</strong></div>
+      <div class="page-num">03</div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">C</div>
+        <div class="section-title">Build Awareness and Prepare Questions</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Read up on the firm's recent transactions and deals</strong> <span class="detail">- know at least 3 recent pieces of work</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Understand current market conditions</strong> <span class="detail">- interest rates, major indices, sector trends, central bank policy</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Research the teams you'll be meeting</strong> <span class="detail">- find out which desks/groups you'll shadow (Healthcare, Tech, ECM, DCM, etc.)</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare 2-3 tailored questions per team</strong> <span class="detail">- specific to their recent work, not generic "what do you do" questions</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Track 1-2 live market stories</strong> <span class="detail">you can reference in conversations (M&A deal, IPO, rate decision, earnings)</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Research senior people you might meet</strong> <span class="detail">- LinkedIn profiles, any published articles or deals they led</span></div></li>
+      </ul>
+
+      <div class="tip">
+        <div class="tip-label">EarlyEdge Tip</div>
+        <div class="tip-text">Write your questions in a small notebook. Interviewers notice when you pull out prepared, specific questions. It signals genuine interest.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">D</div>
+        <div class="section-title">Logistics and Mindset</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Plan your outfits for every day</strong> <span class="detail">- dress your smartest, no surprises on the morning</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Map your commute and arrive 15 minutes early</strong> <span class="detail">- being late is an instant red flag</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare your "tell me about yourself" story</strong> <span class="detail">- 60-90 seconds, covering your background, why finance, and why this firm</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Have a clear answer for "why this division"</strong> <span class="detail">- tie it to genuine interest, not just prestige</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Make sure your LinkedIn is polished and ready to share</strong> <span class="detail">- clean headshot, updated headline, relevant experience</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Get proper sleep the 3 nights before</strong> <span class="detail">- you need to be sharp, not caffeinated and anxious</span></div></li>
+      </ul>
+
+      <div class="warning">
+        <div class="warning-label">Common Mistake</div>
+        <div class="warning-text">Most candidates prepare technicals but forget to prepare their personal story. Senior bankers remember the person, not the valuation answer. Have a compelling narrative about your journey.</div>
+      </div>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>Early<strong>Edge</strong></span>
+    <span>yourearlyedge.com</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 4: PHASE 2 ==================== -->
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-logo">Early<strong>Edge</strong></div>
+      <div class="page-num">04</div>
+    </div>
+
+    <div class="phase-label">Phase 2 of 4</div>
+    <div class="phase-title">During the Spring Week</div>
+    <p class="phase-desc">HR is watching. Employees are forming opinions. Every interaction counts. Here's how to maximise every day.</p>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">A</div>
+        <div class="section-title">Daily Non-Negotiables</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Arrive early, dress sharp, demonstrate attention</strong> <span class="detail">- basics that many still get wrong</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Take notes in every session</strong> <span class="detail">- and review them each evening to refresh for the next day</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Do not speak over others</strong> <span class="detail">- take a moderate approach and make your contributions impactful, not frequent</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Ask at least one thoughtful question per session</strong> <span class="detail">- use your prepared questions but adapt to what's been discussed</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Stay for every social event</strong> <span class="detail">- this is where you build rapport with HR and employees in a relaxed setting</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Connect with your assigned buddy/shadow</strong> <span class="detail">- do your research on them beforehand and ask genuine questions</span></div></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">B</div>
+        <div class="section-title">Building Relationships</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Follow up every meaningful conversation</strong> <span class="detail">with a LinkedIn connection request or email within 24 hours</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Reference something specific from your conversation</strong> <span class="detail">in the follow-up message - shows you listened</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Build strong rapport with HR specifically</strong> <span class="detail">- they often have significant input on conversion decisions</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Be genuinely curious about people's careers</strong> <span class="detail">- ask about their path, not just what their team does</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Remember names</strong> <span class="detail">- write them down if you need to. Using someone's name when you see them again is powerful</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Be kind and collaborative with other spring weekers</strong> <span class="detail">- competitiveness is noticed negatively</span></div></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">C</div>
+        <div class="section-title">Evening Reflection Routine</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Review your notes</strong> from the day's sessions</div></li>
+        <li><div class="checkbox"></div><div><strong>Write down names and key details</strong> of everyone you spoke to</div></li>
+        <li><div class="checkbox"></div><div><strong>Draft follow-up messages</strong> for LinkedIn/email</div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare questions for tomorrow's sessions</strong> based on what you learned today</div></li>
+        <li><div class="checkbox"></div><div><strong>Note anything you want to improve</strong> <span class="detail">for the next day (spoke too much, too little, missed an opportunity)</span></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>Early<strong>Edge</strong></span>
+    <span>yourearlyedge.com</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 5: PHASE 3 ==================== -->
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-logo">Early<strong>Edge</strong></div>
+      <div class="page-num">05</div>
+    </div>
+
+    <div class="phase-label">Phase 3 of 4</div>
+    <div class="phase-title">The Conversion Assessment Centre</div>
+    <p class="phase-desc">The format varies by firm: some have ACs on the last day, others a few weeks after, others fast-track you to next year's process. Be ready for all components.</p>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">A</div>
+        <div class="section-title">Group Case Study</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Read the instructions independently first</strong> <span class="detail">- think about your strengths before diving in as a group</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Volunteer for sections that match your strengths</strong> <span class="detail">- split the work for efficiency</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Be critical of information</strong> <span class="detail">- not everything in the pack is relevant. Time efficiency is key</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Share findings with the group and discuss critically</strong> <span class="detail">- challenge ideas constructively</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Run through the full presentation once as a team</strong> before presenting</div></li>
+        <li><div class="checkbox"></div><div><strong>When presenting: stay calm, use notes, support teammates</strong> who need help</div></li>
+        <li><div class="checkbox"></div><div><strong>Know the weaknesses in your thesis</strong> <span class="detail">- assessors will probe them. Anticipate counterarguments</span></div></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">B</div>
+        <div class="section-title">Senior Interviews</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Expect curveballs</strong> <span class="detail">- "Should we tax charities?", "Do you have what it takes?", "What would you advise our CEO?"</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Have a compelling personal story</strong> <span class="detail">- what makes you unique? Why are you here? Sell your journey like a banker sells a deal</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Give answers that invite follow-up questions</strong> <span class="detail">- make your responses interesting enough that they want to dig deeper</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Turn interviews into conversations</strong> <span class="detail">- ask the MD about their career, their leadership philosophy, what they wish they knew</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Reference what you learned during the spring week</strong> <span class="detail">- shows you paid attention and you're already bought in</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare for standard technicals</strong> <span class="detail">- valuation, market awareness, accounting, brain teasers (division-dependent)</span></div></li>
+      </ul>
+
+      <div class="question-box">
+        <div class="question-box-label">Questions to Ask Senior Interviewers</div>
+        <p>"Was there a specific person or moment that shaped your career?"</p>
+        <p>"What's your personal leadership philosophy?"</p>
+        <p>"What do you wish you knew when you started, and how would it have changed things?"</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">C</div>
+        <div class="section-title">Maths Test (if applicable)</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Expect: basic operations, data interpretation, applied finance calculations</strong></div></li>
+        <li><div class="checkbox"></div><div><strong>Practice mental maths daily in the 2 weeks before</strong> <span class="detail">- percentages, ratios, quick multiplication</span></div></li>
+        <li><div class="checkbox"></div><div><strong>For markets roles: practice estimation questions</strong> <span class="detail">- "How long is a train from London to Edinburgh?" Think out loud, explain your reasoning</span></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>Early<strong>Edge</strong></span>
+    <span>yourearlyedge.com</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 6: DIVISION AC FOCUS + PHASE 4 ==================== -->
+<div class="page">
+  <div class="content">
+    <div class="page-header">
+      <div class="page-logo">Early<strong>Edge</strong></div>
+      <div class="page-num">06</div>
+    </div>
+
+    <div class="phase-title" style="font-size: 18pt; margin-bottom: 4px;">Division-Specific AC Focus Areas</div>
+    <p class="phase-desc">What to prioritise depending on your division.</p>
+
+    <table class="division-table">
+      <thead>
+        <tr><th>Division</th><th>Case Study Focus</th><th>Interview Focus</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Investment Banking</td><td>Transaction analysis, M&A deal rationale, valuation application, group presentations</td><td>Technical questions, deal discussion, "why IB", personal story, curveball opinions</td></tr>
+        <tr><td>Markets / S&T</td><td>Trade ideas, portfolio construction given macro conditions, risk scenarios</td><td>Market awareness, brain teasers, mental maths, "pitch me a trade", estimation questions</td></tr>
+        <tr><td>Equity Research</td><td>Stock pitch, industry analysis, investment portfolio for a client given current conditions</td><td>Commercial awareness, stock picks, sector drivers, clarity of presentation</td></tr>
+        <tr><td>Fixed Income</td><td>Bond-focused portfolio construction, macro environment analysis, asset class recommendations</td><td>Bond fundamentals, yield curves, rate sensitivity, macro views</td></tr>
+        <tr><td>Asset Management</td><td>Portfolio allocation for different investor profiles, diversification, hedging strategies</td><td>Investment philosophy, correlation/expected returns, benchmark comparisons</td></tr>
+      </tbody>
+    </table>
+
+    <div style="height: 8px;"></div>
+
+    <div class="phase-label">Phase 4 of 4</div>
+    <div class="phase-title" style="font-size: 20pt;">After the Spring Week</div>
+    <p class="phase-desc">The spring week ends but the conversion process doesn't. What you do in the days and weeks after matters.</p>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">A</div>
+        <div class="section-title">Immediate Follow-Up</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Send thank-you emails to HR, your buddy, and anyone who gave you significant time</strong></div></li>
+        <li><div class="checkbox"></div><div><strong>Connect with every employee you spoke to on LinkedIn</strong> <span class="detail">with a personalised note</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Connect with fellow spring weekers</strong> <span class="detail">- these are your future network in the industry</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Write a full debrief while it's fresh</strong> <span class="detail">- what went well, what you'd improve, key learnings</span></div></li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-letter">B</div>
+        <div class="section-title">Ongoing Relationship Building</div>
+      </div>
+      <ul class="checklist">
+        <li><div class="checkbox"></div><div><strong>Keep in touch with your key contacts</strong> <span class="detail">- send relevant articles, congratulate them on deals, check in quarterly</span></div></li>
+        <li><div class="checkbox"></div><div><strong>If you don't convert immediately, stay on their radar</strong> <span class="detail">- politely follow up with HR on next steps</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Apply what you learned</strong> <span class="detail">- whether it's technicals, networking skills, or market awareness, keep building</span></div></li>
+        <li><div class="checkbox"></div><div><strong>Prepare for the full internship application</strong> <span class="detail">if you're fast-tracked rather than given an immediate offer</span></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="page-footer">
+    <span>Early<strong>Edge</strong></span>
+    <span>yourearlyedge.com</span>
+  </div>
+</div>
+
+<!-- ==================== PAGE 7: CTA ==================== -->
+<div class="page cta-page">
+  <div class="cta-title">Ready to<br><span>convert yours?</span></div>
+  <p class="cta-desc">Students who converted their spring weeks at the firms below are doing a live panel, walking through exactly what they did - day by day, firm by firm.</p>
+  <div class="cta-button">Join the Live Panel &rarr;</div>
+
+  <div class="cta-firms">
+    <span class="cta-firm-tag">Morgan Stanley</span>
+    <span class="cta-firm-tag">JP Morgan</span>
+    <span class="cta-firm-tag">Jane Street</span>
+    <span class="cta-firm-tag">Citadel</span>
+    <span class="cta-firm-tag">D.E. Shaw</span>
+    <span class="cta-firm-tag">Barclays</span>
+    <span class="cta-firm-tag">Evercore</span>
+    <span class="cta-firm-tag">Lazard</span>
+    <span class="cta-firm-tag">Blackstone</span>
+    <span class="cta-firm-tag">Macquarie</span>
+    <span class="cta-firm-tag">Deutsche Bank</span>
+    <span class="cta-firm-tag">BNP Paribas</span>
+    <span class="cta-firm-tag">Nomura</span>
+    <span class="cta-firm-tag">HSBC</span>
+    <span class="cta-firm-tag">Bank of America</span>
+    <span class="cta-firm-tag">Houlihan Lokey</span>
+  </div>
+
+  <div class="cta-footer">
+    <div class="cover-logo">Early<strong>Edge</strong></div>
+    <div class="cover-url">yourearlyedge.com</div>
+  </div>
+</div>
+
+</body>
+</html>
