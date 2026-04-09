@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Logo } from "@/components/Logo";
 import { Progress } from "@/components/ui/progress";
 import { useWebinarForm } from "@/hooks/useWebinarForm";
 import { useToast } from "@/hooks/use-toast";
@@ -43,29 +42,29 @@ function SuccessScreen({
   const nightCount = ticket === "handbook" ? 0 : ticket.split(",").filter((p) => ["1", "2", "3"].includes(p)).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 flex items-start justify-center px-4 py-12 md:py-20">
+    <div className="funnel-dark flex items-start justify-center px-4 py-12 md:py-20">
       <div className="w-full max-w-lg space-y-8">
         {/* Confirmation header */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-100">
-            <CheckCircle2 className="h-7 w-7 text-emerald-600" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/10">
+            <CheckCircle2 className="h-7 w-7 text-emerald-400" />
           </div>
-          <h1 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+          <h1 className="text-2xl md:text-3xl font-light text-white">
             You're all set{name ? `, ${name}` : ""}!
           </h1>
-          <p className="text-muted-foreground font-sans font-light text-sm leading-relaxed max-w-sm mx-auto">
+          <p className="text-white/50 font-light text-sm leading-relaxed max-w-sm mx-auto">
             Check your email for your ticket confirmation.
             We'll send you the Zoom link(s) for your session(s) closer to the date.
           </p>
         </div>
 
         {/* Confirmation card */}
-        <div className="bg-white border border-border rounded-2xl p-5 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-sans font-semibold text-foreground">
-            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+        <div className="funnel-card rounded-2xl p-5 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-white">
+            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
             Your spot is secured
           </div>
-          <p className="text-sm text-muted-foreground font-sans font-light leading-relaxed">
+          <p className="text-sm text-white/50 font-light leading-relaxed">
             {ticket === "handbook"
               ? "Your Spring Week Playbook will arrive in your inbox shortly."
               : isAllNights && hasHandbook
@@ -80,20 +79,20 @@ function SuccessScreen({
 
         {/* Upsell - only for single-night buyers (not already bundle) */}
         {isSingleNight && (
-          <div className="relative bg-gradient-to-br from-blue-50/60 via-white to-emerald-50/40 border-2 border-emerald-600/40 rounded-2xl p-6 md:p-8 space-y-5 shadow-lg">
+          <div className="relative funnel-card rounded-2xl p-6 md:p-8 space-y-5" style={{ borderColor: "rgba(52,211,153,0.2)" }}>
             <div className="absolute -top-3 left-6">
-              <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full shadow-sm">
+              <span className="inline-flex items-center gap-1.5 bg-emerald-500 text-black text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full">
                 <Zap className="h-3 w-3" />
                 Upgrade Offer
               </span>
             </div>
 
             <div className="space-y-2 pt-2">
-              <h2 className="text-xl font-sans font-semibold text-foreground">
+              <h2 className="text-xl font-semibold text-white">
                 Get all 3 nights for £49.99
               </h2>
-              <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
-                Each night features <strong>completely different speakers from different firms</strong>.
+              <p className="text-sm font-light text-white/60 leading-relaxed">
+                Each night features <strong className="font-semibold text-white/80">completely different speakers from different firms</strong>.
                 Students who attend all 3 nights go in with a much broader picture of what
                 different firms expect.
               </p>
@@ -102,7 +101,7 @@ function SuccessScreen({
             <button
               type="button"
               onClick={() => setShowBundleDetails(!showBundleDetails)}
-              className="flex items-center gap-1.5 text-xs font-sans font-semibold text-emerald-700 uppercase tracking-wider hover:text-emerald-800 transition-colors"
+              className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 uppercase tracking-wider hover:text-emerald-300 transition-colors"
             >
               <BookOpen className="h-3.5 w-3.5" />
               What's included
@@ -122,8 +121,8 @@ function SuccessScreen({
                   "Recordings of all 3 sessions included",
                 ].map((item) => (
                   <div key={item} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-600" />
-                    <span className="text-sm font-sans font-light text-foreground/80 leading-snug">
+                    <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
+                    <span className="text-sm font-light text-white/60 leading-snug">
                       {item}
                     </span>
                   </div>
@@ -133,13 +132,13 @@ function SuccessScreen({
 
             <a
               href={BUNDLE_UPGRADE_LINK}
-              className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-sans font-semibold text-base rounded-xl py-4 px-6 transition-all shadow-md hover:shadow-lg"
+              className="funnel-cta no-underline"
             >
               Upgrade to All 3 Nights for £49.99
               <ArrowRight className="h-4 w-4" />
             </a>
 
-            <p className="text-center text-[11px] text-muted-foreground font-sans font-light flex items-center justify-center gap-1">
+            <p className="text-center text-[11px] text-white/30 font-light flex items-center justify-center gap-1">
               <Lock className="h-3 w-3" />
               Secure checkout via Stripe
             </p>
@@ -148,14 +147,14 @@ function SuccessScreen({
 
         {/* Handbook confirmation for bundle buyers */}
         {hasHandbook && (
-          <div className="bg-gradient-to-br from-amber-50/60 to-white border border-amber-200 rounded-2xl p-6 space-y-4">
+          <div className="funnel-card rounded-2xl p-6 space-y-4" style={{ borderColor: "rgba(245,158,11,0.15)" }}>
             <div className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-amber-600" />
-              <h2 className="text-lg font-sans font-semibold text-foreground">
+              <BookOpen className="h-5 w-5 text-amber-400" />
+              <h2 className="text-lg font-semibold text-white">
                 The Spring Week Playbook is on its way
               </h2>
             </div>
-            <p className="text-sm font-sans font-light text-foreground/80 leading-relaxed">
+            <p className="text-sm font-light text-white/60 leading-relaxed">
               You'll receive your Playbook download link in your inbox shortly.
               Use it to prepare before each live session.
             </p>
@@ -165,7 +164,7 @@ function SuccessScreen({
         <div className="text-center">
           <a
             href="/"
-            className="inline-block text-sm text-muted-foreground underline underline-offset-4 font-sans font-light hover:text-foreground/70 transition-colors"
+            className="inline-block text-sm text-white/40 underline underline-offset-4 font-light hover:text-white/60 transition-colors"
           >
             Back to EarlyEdge
           </a>
@@ -214,9 +213,9 @@ function PreparingCheckout({
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="text-center space-y-6 animate-in fade-in duration-500 max-w-md">
-        <Loader2 className="h-8 w-8 mx-auto text-emerald-600 animate-spin" />
+        <Loader2 className="h-8 w-8 mx-auto text-emerald-400 animate-spin" />
         <div className="space-y-2">
-          <h2 className="text-xl font-sans font-light text-foreground">
+          <h2 className="text-xl font-light text-white">
             Tailoring your options{firstName ? `, ${firstName}` : ""}...
           </h2>
         </div>
@@ -225,17 +224,17 @@ function PreparingCheckout({
             <div
               key={i}
               className={[
-                "flex items-center gap-2.5 text-sm font-sans transition-all duration-300",
+                "flex items-center gap-2.5 text-sm transition-all duration-300",
                 i < visibleLines ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
               ].join(" ")}
             >
-              <Check className="h-4 w-4 text-emerald-600 shrink-0" />
-              <span className="text-foreground/80 font-light">{line.text}</span>
+              <Check className="h-4 w-4 text-emerald-400 shrink-0" />
+              <span className="text-white/70 font-light">{line.text}</span>
             </div>
           ))}
         </div>
         {firmMatches.length > 0 && visibleLines >= lines.length && (
-          <p className="text-xs text-emerald-600 font-sans font-medium animate-in fade-in duration-300 pt-2">
+          <p className="text-xs text-emerald-400 font-medium animate-in fade-in duration-300 pt-2">
             We recommend the 3-night pass so you don't miss any relevant content.
           </p>
         )}
@@ -389,15 +388,15 @@ export default function SpringWeekWebinar() {
 
   if (showTransition) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+      <div className="funnel-dark relative">
         <div className="fixed top-0 left-0 right-0 z-40">
           <Progress
             value={form.progress}
-            className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+            className="h-1 rounded-none bg-white/[0.06] [&>div]:bg-emerald-500"
           />
         </div>
         <div className="absolute top-5 left-6 z-50">
-          <Logo to="#" className="text-xl pointer-events-none" />
+          <span className="text-sm font-light text-white/40">Early<span className="font-bold text-white/70">Edge</span></span>
         </div>
         <PreparingCheckout
           firstName={form.formData.firstName}
@@ -409,24 +408,24 @@ export default function SpringWeekWebinar() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30 relative">
+    <div className="funnel-dark relative">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 z-40">
         <Progress
           value={form.progress}
-          className="h-1.5 rounded-none bg-secondary [&>div]:bg-emerald-600"
+          className="h-1 rounded-none bg-white/[0.06] [&>div]:bg-emerald-500"
         />
       </div>
 
       {/* Logo */}
       <div className="absolute top-5 left-6 z-50">
-        <Logo to="#" className="text-xl pointer-events-none" />
+        <span className="text-sm font-light text-white/40">Early<span className="font-bold text-white/70">Edge</span></span>
       </div>
 
       {/* Step counter */}
       {form.step > 0 && (
         <div className="absolute top-6 right-6 z-50">
-          <span className="text-xs text-muted-foreground font-sans font-light">
+          <span className="text-xs text-white/30 font-light">
             {form.step} of {form.totalSteps - 1}
           </span>
         </div>
@@ -437,7 +436,7 @@ export default function SpringWeekWebinar() {
         <button
           type="button"
           onClick={form.prevStep}
-          className="absolute top-14 left-6 z-50 text-sm text-muted-foreground hover:text-foreground transition-colors font-sans font-light flex items-center gap-1"
+          className="absolute top-14 left-6 z-50 text-sm text-white/40 hover:text-white/70 transition-colors font-light flex items-center gap-1"
         >
           <ChevronLeft className="w-4 h-4" />
           Back
