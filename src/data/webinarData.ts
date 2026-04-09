@@ -27,8 +27,6 @@ export const INDUSTRY_OPTIONS = [
 ] as const;
 
 export const YEAR_OPTIONS = [
-  "Year 12",
-  "Year 13",
   "1st Year",
   "2nd Year",
   "3rd Year",

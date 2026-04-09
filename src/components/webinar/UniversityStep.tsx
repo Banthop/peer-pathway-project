@@ -74,7 +74,7 @@ export function UniversityStep({
                 setShowDropdown(true);
               }}
               onFocus={() => setShowDropdown(true)}
-              className="font-sans text-base h-12 border-border pl-10 rounded-xl"
+              className="font-sans text-base h-12 border-border !pl-10 overflow-hidden rounded-xl"
               autoComplete="off"
             />
           </div>
@@ -130,8 +130,8 @@ export function UniversityStep({
               className={cn(
                 "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 yearOfStudy === year
-                  ? "bg-foreground text-background border-foreground shadow-sm"
-                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
+                  ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02] z-10 relative"
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
               )}
             >
               {year}
