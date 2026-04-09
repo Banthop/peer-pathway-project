@@ -187,6 +187,7 @@ const AppRoutes = () => {
           <Route path="/da-webinar" element={<DaWebinar />} />
           <Route path="/spring-week" element={<SpringWeekWebinar />} />
           <Route path="/spring-week-prep" element={<SpringWeekPrep />} />
+          <Route path="/register" element={<Navigate to="/spring-week-prep" replace />} />
           <Route path="/resources/cold-email-guide" element={<ColdEmailGuide />} />
           <Route path="/resources/cold-email-checklist" element={<ColdEmailChecklist />} />
           <Route path="/portal/slides" element={<SlidesPage />} />
@@ -262,6 +263,7 @@ const AppRoutes = () => {
         <Route path="/da-webinar" element={<DaWebinar />} />
         <Route path="/spring-week" element={<SpringWeekWebinar />} />
         <Route path="/spring-week-prep" element={<SpringWeekPrep />} />
+        <Route path="/register" element={<Navigate to="/spring-week-prep" replace />} />
         <Route path="/portal" element={<PortalLayout />}>
           <Route index element={<PortalRecording />} />
           <Route path="resources" element={<PortalResources />} />

@@ -67,7 +67,7 @@ function FeatureList({ features }: { features: string[] }) {
   );
 }
 
-export default function SpringWeekPrepConversion({
+export function SpringWeekPrepConversion({
   formData,
   onGetFreeDoc,
 }: SpringWeekPrepConversionProps) {
