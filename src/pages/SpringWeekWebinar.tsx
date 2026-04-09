@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useWebinarForm } from "@/hooks/useWebinarForm";
 import { useToast } from "@/hooks/use-toast";
-import { SPRING_WEEK_COMBOS } from "@/data/springWeekData";
+import { SPRING_WEEK_COMBOS, STRIPE_SW_PREPARE, STRIPE_SW_CONVERT } from "@/data/springWeekData";
 import type { NightComboKey } from "@/data/springWeekData";
 import { WebinarFormStep } from "@/components/webinar/WebinarFormStep";
 import { SpringWeekWelcome } from "@/components/spring-week/SpringWeekWelcome";
@@ -34,12 +34,15 @@ function SuccessScreen({
   name: string;
   ticket: string;
 }) {
-  const isSingleNight = ticket === "1" || ticket === "2" || ticket === "3";
-  const hasHandbook = ticket.includes("handbook");
-  const isAllNights = ticket.startsWith("1,2,3");
-  const [showBundleDetails, setShowBundleDetails] = useState(false);
+  const tier = ticket === "prepare" || ticket === "1,2,3+handbook"
+    ? "prepare"
+    : ticket === "convert" || ticket === "premium"
+    ? "convert"
+    : "watch";
 
-  const nightCount = ticket === "handbook" ? 0 : ticket.split(",").filter((p) => ["1", "2", "3"].includes(p)).length;
+  const hasHandbook = tier === "prepare" || tier === "convert";
+  const hasPrepCall = tier === "convert";
+  const isWatch = tier === "watch";
 
   return (
     <div className="funnel-dark flex items-start justify-center px-4 py-12 md:py-20">
@@ -53,111 +56,109 @@ function SuccessScreen({
             You're all set{name ? `, ${name}` : ""}!
           </h1>
           <p className="text-white/50 font-light text-sm leading-relaxed max-w-sm mx-auto">
-            Check your email for your ticket confirmation.
-            We'll send you the Zoom link(s) for your session(s) closer to the date.
+            Check your email for your confirmation.
+            We'll send you the Zoom link before Sunday April 12.
           </p>
         </div>
 
-        {/* Confirmation card */}
-        <div className="funnel-card rounded-2xl p-5 space-y-3">
+        {/* What you're getting */}
+        <div className="funnel-card rounded-2xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-sm font-semibold text-white">
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-            Your spot is secured
+            Here's what's coming your way
           </div>
-          <p className="text-sm text-white/50 font-light leading-relaxed">
-            {ticket === "handbook"
-              ? "Your Spring Week Playbook will arrive in your inbox shortly."
-              : isAllNights && hasHandbook
-              ? "You have access to all 3 nights plus The Spring Week Playbook. Everything will be sent to your inbox."
-              : isAllNights
-              ? "You have access to all 3 nights of the Spring Week Conversion Panel. Zoom links will be sent closer to each date."
-              : isSingleNight
-              ? `You have access to Night ${ticket} of the Spring Week Conversion Panel. Your Zoom link will arrive by email.`
-              : `You have access to ${nightCount} nights of the Spring Week Conversion Panel${hasHandbook ? " plus The Spring Week Playbook" : ""}. Details will be sent to your inbox.`}
-          </p>
+          <div className="space-y-2.5">
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
+              <span className="text-sm font-light text-white/60">
+                Live panel on Sunday April 12, 2-5pm BST (Zoom link by email)
+              </span>
+            </div>
+            <div className="flex items-start gap-2">
+              <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
+              <span className="text-sm font-light text-white/60">
+                Full recording after the event
+              </span>
+            </div>
+            {hasHandbook && (
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400" />
+                <span className="text-sm font-light text-white/60">
+                  Spring Week Handbook (45+ firms) - being finalized by the speakers, landing in your inbox before April 12
+                </span>
+              </div>
+            )}
+            {hasPrepCall && (
+              <div className="flex items-start gap-2">
+                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-violet-400" />
+                <span className="text-sm font-light text-white/60">
+                  1x free prep call with a converter at your firm - we'll email you to match you with the right speaker
+                </span>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Upsell - only for single-night buyers (not already bundle) */}
-        {isSingleNight && (
+        {/* Free checklist for everyone */}
+        <div className="funnel-card rounded-2xl p-5 space-y-3" style={{ borderColor: "rgba(52,211,153,0.15)" }}>
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4 text-emerald-400" />
+            <span className="text-sm font-semibold text-white">Free bonus: Spring Week Conversion Checklist</span>
+          </div>
+          <p className="text-sm font-light text-white/50">
+            Your step-by-step checklist for before, during, and after your spring week.
+          </p>
+          <a
+            href="/spring-week-conversion-checklist.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors no-underline"
+          >
+            Download Checklist (PDF)
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+
+        {/* Upsell for Watch buyers */}
+        {isWatch && (
           <div className="relative funnel-card rounded-2xl p-6 md:p-8 space-y-5" style={{ borderColor: "rgba(52,211,153,0.2)" }}>
             <div className="absolute -top-3 left-6">
               <span className="inline-flex items-center gap-1.5 bg-emerald-500 text-black text-[10px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-full">
                 <Zap className="h-3 w-3" />
-                Upgrade Offer
+                Upgrade
               </span>
             </div>
 
             <div className="space-y-2 pt-2">
               <h2 className="text-xl font-semibold text-white">
-                Get all 3 nights for £49.99
+                Want the full picture?
               </h2>
               <p className="text-sm font-light text-white/60 leading-relaxed">
-                Each night features <strong className="font-semibold text-white/80">completely different speakers from different firms</strong>.
-                Students who attend all 3 nights go in with a much broader picture of what
-                different firms expect.
+                Upgrade to <strong className="font-semibold text-white/80">Prepare</strong> for firm-specific intel on 45+ firms,
+                or <strong className="font-semibold text-white/80">Convert</strong> for a 1-on-1 prep call with someone who converted at your firm.
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setShowBundleDetails(!showBundleDetails)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-emerald-400 uppercase tracking-wider hover:text-emerald-300 transition-colors"
-            >
-              <BookOpen className="h-3.5 w-3.5" />
-              What's included
-              {showBundleDetails ? (
-                <ChevronLeft className="h-3.5 w-3.5 rotate-90" />
-              ) : (
-                <ChevronLeft className="h-3.5 w-3.5 -rotate-90" />
-              )}
-            </button>
-
-            {showBundleDetails && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                {[
-                  "Night 1: Banking & Trading (Goldman, JPMorgan, Morgan Stanley, Barclays)",
-                  "Night 2: Consulting, Big 4 & Asset Management (McKinsey, Deloitte, PwC)",
-                  "Night 3: The Conversion Masterclass (assessment centres, follow-ups)",
-                  "Recordings of all 3 sessions included",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2">
-                    <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-emerald-400" />
-                    <span className="text-sm font-light text-white/60 leading-snug">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <a
-              href={BUNDLE_UPGRADE_LINK}
-              className="funnel-cta no-underline"
-            >
-              Upgrade to All 3 Nights for £49.99
-              <ArrowRight className="h-4 w-4" />
-            </a>
-
-            <p className="text-center text-[11px] text-white/30 font-light flex items-center justify-center gap-1">
-              <Lock className="h-3 w-3" />
-              Secure checkout via Stripe
-            </p>
-          </div>
-        )}
-
-        {/* Handbook confirmation for bundle buyers */}
-        {hasHandbook && (
-          <div className="funnel-card rounded-2xl p-6 space-y-4" style={{ borderColor: "rgba(245,158,11,0.15)" }}>
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-amber-400" />
-              <h2 className="text-lg font-semibold text-white">
-                The Spring Week Playbook is on its way
-              </h2>
+            <div className="space-y-2">
+              <a
+                href={STRIPE_SW_PREPARE}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="funnel-cta no-underline"
+              >
+                Upgrade to Prepare - £39
+                <ArrowRight className="h-4 w-4" />
+              </a>
+              <a
+                href={STRIPE_SW_CONVERT}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-white/60 border border-white/10 hover:border-white/20 transition-colors no-underline"
+              >
+                Upgrade to Convert - £79
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
-            <p className="text-sm font-light text-white/60 leading-relaxed">
-              You'll receive your Playbook download link in your inbox shortly.
-              Use it to prepare before each live session.
-            </p>
           </div>
         )}
 
