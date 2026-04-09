@@ -228,14 +228,19 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         <p className="text-center text-[11px] text-white/50 mt-3 font-light">
           Join 150+ students already registered. Full refund if it's not for you.
         </p>
+        <div className="flex justify-center mt-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
+            Recording included
+          </span>
+        </div>
       </div>
 
       {/* ---- SPEAKERS WHO CONVERTED AT ---- */}
       <div className="w-full max-w-2xl mt-14">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4 text-center">
           Speakers who converted at
         </h2>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {FIRM_NAMES.map((firm) => (
             <span
               key={firm}
@@ -249,14 +254,14 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
 
       {/* ---- WHAT YOU'LL WALK AWAY WITH ---- */}
       <div className="w-full max-w-2xl mt-14">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4 text-center">
           What you will walk away with
         </h2>
         <div className="space-y-2">
           {[
             "What to expect during your spring week - day by day, firm by firm",
-            "How to network without being awkward (scripts from people who did it)",
-            "Assessment centre strategies that got them return offers",
+            "How to network without being awkward (including scripts from people who did it)",
+            "Assessment centre strategies that landed return offers",
             "The mistakes that cost other students their offers",
             "Direct Q&A with speakers about your specific firm",
             "Recordings of all sessions if you can't make one live",
