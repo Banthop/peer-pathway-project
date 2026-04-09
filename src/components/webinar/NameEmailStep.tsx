@@ -39,10 +39,10 @@ export function NameEmailStep({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Names row */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           Let's start with your details
         </h2>
-        <p className="text-sm text-muted-foreground font-sans font-light">
+        <p className="text-sm text-white/50 font-sans font-light">
           This takes about 30 seconds
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -76,7 +76,7 @@ export function NameEmailStep({
           className="font-sans text-base h-12 border-border rounded-xl"
           autoComplete="email"
         />
-        <p className="text-xs text-muted-foreground font-sans font-light">
+        <p className="text-xs text-white/50 font-sans font-light">
           We'll send your ticket confirmation here
         </p>
       </div>
@@ -89,7 +89,7 @@ export function NameEmailStep({
           onCodeChange={(code) => onUpdate("phoneCode", code)}
           onPhoneChange={(val) => onUpdate("phone", val)}
         />
-        <p className="text-xs text-muted-foreground font-sans font-light">
+        <p className="text-xs text-white/50 font-sans font-light">
           Phone <span className="text-amber-600 font-medium">(optional)</span> - for reminders and last-minute updates only
         </p>
       </div>

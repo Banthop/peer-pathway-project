@@ -58,12 +58,12 @@ export function UniversityStep({
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* University */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           Where do you study?
         </h2>
         <div className="relative">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
             <Input
               ref={inputRef}
               type="text"
@@ -82,7 +82,7 @@ export function UniversityStep({
           {showDropdown && universities.length > 0 && (
             <div
               ref={dropdownRef}
-              className="absolute z-50 w-full mt-1 bg-background border border-border rounded-xl shadow-lg overflow-hidden"
+              className="absolute z-50 w-full mt-1 bg-white/[0.04] border border-white/[0.08] rounded-xl shadow-lg overflow-hidden"
             >
               {universities.map((name) => (
                 <button
@@ -93,8 +93,8 @@ export function UniversityStep({
                     "w-full text-left px-4 py-3 text-sm font-sans font-light transition-colors",
                     "hover:bg-secondary focus:bg-secondary focus:outline-none",
                     name === university
-                      ? "bg-secondary text-foreground"
-                      : "text-foreground",
+                      ? "bg-white/10 text-white"
+                      : "text-white/70",
                   )}
                 >
                   {name}
@@ -104,21 +104,21 @@ export function UniversityStep({
           )}
 
           {loading && university.length >= 2 && showDropdown && (
-            <div className="absolute z-50 w-full mt-1 bg-background border border-border rounded-xl shadow-lg px-4 py-3">
-              <p className="text-sm text-muted-foreground font-sans font-light">
+            <div className="absolute z-50 w-full mt-1 bg-white/[0.04] border border-white/[0.08] rounded-xl shadow-lg px-4 py-3">
+              <p className="text-sm text-white/50 font-sans font-light">
                 Loading universities...
               </p>
             </div>
           )}
         </div>
-        <p className="text-xs text-muted-foreground font-sans font-light">
+        <p className="text-xs text-white/50 font-sans font-light">
           Can't find yours? Just type it in manually
         </p>
       </div>
 
       {/* Year of study */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           What year are you in?
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -131,7 +131,7 @@ export function UniversityStep({
                 "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 yearOfStudy === year
                   ? "bg-foreground text-background border-foreground shadow-sm"
-                  : "bg-background text-foreground border-border hover:border-foreground/40",
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
               )}
             >
               {year}

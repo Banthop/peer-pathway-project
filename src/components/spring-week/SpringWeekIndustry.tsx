@@ -57,10 +57,10 @@ export function SpringWeekIndustry({
 
       {/* Section: Industry */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-foreground">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           About your spring week
         </h2>
-        <p className="text-sm text-muted-foreground font-sans font-light">
+        <p className="text-sm text-white/50 font-sans font-light">
           What area are you targeting?
         </p>
       </div>
@@ -75,7 +75,7 @@ export function SpringWeekIndustry({
               "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
               industry === option
                 ? "bg-foreground text-background border-foreground shadow-sm"
-                : "bg-background text-foreground border-border hover:border-foreground/40",
+                : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
             )}
           >
             {option}
@@ -103,8 +103,8 @@ export function SpringWeekIndustry({
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-sans font-medium text-foreground">
-              <Building2 className="h-4 w-4 text-muted-foreground" />
+            <label className="flex items-center gap-2 text-sm font-sans font-medium text-white">
+              <Building2 className="h-4 w-4 text-white/50" />
               Which firm(s) have you got a spring week at?
             </label>
             <Input
@@ -114,15 +114,15 @@ export function SpringWeekIndustry({
               onChange={(e) => onUpdate("springWeekFirms", e.target.value)}
               className="font-sans text-base h-12 border-border rounded-xl"
             />
-            <p className="text-[11px] text-muted-foreground font-sans font-light">
+            <p className="text-[11px] text-white/50 font-sans font-light">
               We'll tailor our recommendation to your specific firms
             </p>
           </div>
 
           {/* Section: Biggest concern */}
           <div className="space-y-3 pt-2">
-            <label className="flex items-center gap-2 text-sm font-sans font-medium text-foreground">
-              <ShieldAlert className="h-4 w-4 text-muted-foreground" />
+            <label className="flex items-center gap-2 text-sm font-sans font-medium text-white">
+              <ShieldAlert className="h-4 w-4 text-white/50" />
               What's your biggest concern about your spring week?
             </label>
             <div className="space-y-2">
@@ -135,7 +135,7 @@ export function SpringWeekIndustry({
                     "w-full text-left px-4 py-3 text-sm rounded-xl border font-sans font-light transition-all duration-200",
                     biggestConcern === option
                       ? "bg-foreground text-background border-foreground shadow-sm"
-                      : "bg-background text-foreground border-border hover:border-foreground/40",
+                      : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
                   )}
                 >
                   {option}
@@ -152,8 +152,8 @@ export function SpringWeekIndustry({
       )}
 
       {/* REFERRAL SOURCE */}
-      <div className="space-y-3 pt-2 border-t border-border/60">
-        <h2 className="text-lg font-sans font-light text-foreground">
+      <div className="space-y-3 pt-2 border-t border-white/[0.08]">
+        <h2 className="text-lg font-sans font-light text-white">
           How did you hear about us?
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -166,7 +166,7 @@ export function SpringWeekIndustry({
                 "px-4 py-2 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 referralSource === option
                   ? "bg-foreground text-background border-foreground shadow-sm"
-                  : "bg-background text-foreground border-border hover:border-foreground/40",
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
               )}
             >
               {option}
