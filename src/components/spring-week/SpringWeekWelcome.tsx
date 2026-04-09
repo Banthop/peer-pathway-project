@@ -96,7 +96,7 @@ const LANDING_FAQS = [
   },
   {
     q: "Can I get a refund?",
-    a: "Full refund available, no questions asked. We're confident you'll find it valuable.",
+    a: "Full refund available. We're confident you'll find it valuable.",
   },
 ];
 
@@ -325,7 +325,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         </button>
         <div className="flex items-center justify-center gap-1.5 mt-3 text-[11px] text-white/50 font-light">
           <Shield className="h-3 w-3" />
-          <span>Full refund, no questions asked. Secure Stripe checkout.</span>
+          <span>Full refund. Secure Stripe checkout.</span>
         </div>
       </div>
 

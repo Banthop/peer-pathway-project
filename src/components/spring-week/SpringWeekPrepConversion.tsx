@@ -201,7 +201,7 @@ export function SpringWeekPrepConversion({
         style={{ animationDelay: "0.28s" }}
       >
         <Shield className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-        <span>Not what you expected? Full refund, no questions asked.</span>
+        <span>Not what you expected? Full refund.</span>
       </div>
 
       {/* Section 6: Free Escape Hatch */}

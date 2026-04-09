@@ -48,7 +48,7 @@ export default function Guarantee() {
                         <p className="text-[14px] text-foreground/60 font-light leading-relaxed">
                             Not satisfied with your first session? Email us at{" "}
                             <span className="font-medium text-foreground">support@earlyedge.co</span>{" "}
-                            within 24 hours for a full refund - no questions asked.
+                            within 24 hours for a full refund.
                         </p>
                     </div>
 

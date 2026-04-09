@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Star,
@@ -7,14 +7,169 @@ import {
   CheckCircle2,
   Users,
   Trophy,
+  MessageSquare,
   ChevronDown,
   ArrowRight,
+  Sparkles,
   X as XIcon,
   Zap,
   Target,
+  AlertCircle,
 } from "lucide-react";
 
-const CAL_USERNAME = "yourearlyedge";
+/* ═══════════════════════════════════════════════════════════════
+ *  CAL.COM SETUP - see original for instructions
+ * ═══════════════════════════════════════════════════════════════ */
+
+const CAL_USERNAME = "uthm4n";
+
+/* ─── Live availability from Cal.com API ─── */
+
+interface SlotData {
+  [date: string]: { start: string }[];
+}
+
+function useCalAvailability(slugs: string[]) {
+  const [nextDates, setNextDates] = useState<Record<string, string | null>>({});
+  const [slotCounts, setSlotCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchSlots() {
+      setLoading(true);
+      const now = new Date();
+      const start = now.toISOString().split("T")[0];
+      const end = new Date(now.getTime() + 14 * 86400000).toISOString().split("T")[0];
+
+      const results: Record<string, string | null> = {};
+      const counts: Record<string, number> = {};
+
+      await Promise.all(
+        slugs.map(async (slug) => {
+          try {
+            const url = `https://api.cal.com/v2/slots?eventTypeSlug=${slug}&username=${CAL_USERNAME}&start=${start}&end=${end}&timeZone=Europe/London`;
+            const res = await fetch(url, {
+              headers: { "cal-api-version": "2024-09-04" },
+            });
+            if (!res.ok) { results[slug] = null; counts[slug] = 0; return; }
+            const json = await res.json();
+            const data: SlotData = json.data || {};
+            const dates = Object.keys(data).sort();
+            
+            // Count total slots across all dates
+            let total = 0;
+            for (const d of dates) total += (data[d] || []).length;
+            counts[slug] = total;
+
+            if (dates.length > 0) {
+              // Format first available date nicely
+              const firstDate = new Date(dates[0] + "T00:00:00");
+              const dayName = firstDate.toLocaleDateString("en-GB", { weekday: "short" });
+              const day = firstDate.getDate();
+              const month = firstDate.toLocaleDateString("en-GB", { month: "short" });
+              results[slug] = `${dayName} ${day} ${month}`;
+            } else {
+              results[slug] = null;
+            }
+          } catch {
+            results[slug] = null;
+            counts[slug] = 0;
+          }
+        })
+      );
+
+      if (!cancelled) {
+        setNextDates(results);
+        setSlotCounts(counts);
+        setLoading(false);
+      }
+    }
+
+    fetchSlots();
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchSlots, 5 * 60 * 1000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [slugs.join(",")]);
+
+  return { nextDates, slotCounts, loading };
+}
+
+
+/* ─── Live availability from Cal.com API ─── */
+
+interface SlotData {
+  [date: string]: { start: string }[];
+}
+
+function useCalAvailability(slugs: string[]) {
+  const [nextDates, setNextDates] = useState<Record<string, string | null>>({});
+  const [slotCounts, setSlotCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchSlots() {
+      setLoading(true);
+      const now = new Date();
+      const start = now.toISOString().split("T")[0];
+      const end = new Date(now.getTime() + 14 * 86400000).toISOString().split("T")[0];
+
+      const results: Record<string, string | null> = {};
+      const counts: Record<string, number> = {};
+
+      await Promise.all(
+        slugs.map(async (slug) => {
+          try {
+            const url = `https://api.cal.com/v2/slots?eventTypeSlug=${slug}&username=${CAL_USERNAME}&start=${start}&end=${end}&timeZone=Europe/London`;
+            const res = await fetch(url, {
+              headers: { "cal-api-version": "2024-09-04" },
+            });
+            if (!res.ok) { results[slug] = null; counts[slug] = 0; return; }
+            const json = await res.json();
+            const data: SlotData = json.data || {};
+            const dates = Object.keys(data).sort();
+            
+            // Count total slots across all dates
+            let total = 0;
+            for (const d of dates) total += (data[d] || []).length;
+            counts[slug] = total;
+
+            if (dates.length > 0) {
+              // Format first available date nicely
+              const firstDate = new Date(dates[0] + "T00:00:00");
+              const dayName = firstDate.toLocaleDateString("en-GB", { weekday: "short" });
+              const day = firstDate.getDate();
+              const month = firstDate.toLocaleDateString("en-GB", { month: "short" });
+              results[slug] = `${dayName} ${day} ${month}`;
+            } else {
+              results[slug] = null;
+            }
+          } catch {
+            results[slug] = null;
+            counts[slug] = 0;
+          }
+        })
+      );
+
+      if (!cancelled) {
+        setNextDates(results);
+        setSlotCounts(counts);
+        setLoading(false);
+      }
+    }
+
+    fetchSlots();
+    // Refresh every 5 minutes
+    const interval = setInterval(fetchSlots, 5 * 60 * 1000);
+    return () => { cancelled = true; clearInterval(interval); };
+  }, [slugs.join(",")]);
+
+  return { nextDates, slotCounts, loading };
+}
+
 
 /* ─── Session types ─── */
 
@@ -31,6 +186,7 @@ interface SessionType {
   isGroup?: boolean;
   maxParticipants?: number;
   testimonial?: { text: string; name: string; uni: string };
+  nextAvailable?: string;
 }
 
 const SESSION_TYPES: SessionType[] = [
@@ -77,6 +233,29 @@ const SESSION_TYPES: SessionType[] = [
       uni: "Warwick",
     },
   },
+  {
+    id: "group-workshop",
+    name: "Group Cold Email Workshop",
+    duration: "90 min",
+    price: "£20",
+    priceLabel: "per person",
+    description:
+      "Small-group session (max 8 people) where Uthman walks through the full cold email system live. Great if you want a more affordable option and learn from others' questions.",
+    includes: [
+      "Full system walkthrough",
+      "Live template building",
+      "Group Q&A",
+      "Recording of the session",
+    ],
+    calSlug: "group-workshop",
+    isGroup: true,
+    maxParticipants: 8,
+    testimonial: {
+      text: "Brilliant workshop. Learned so much from other people's questions too",
+      name: "Amina R.",
+      uni: "UCL",
+    },
+  },
 ];
 
 /* ─── Package ─── */
@@ -90,7 +269,7 @@ const PACKAGE = {
   description:
     "Three Deep Dive sessions. Book your first slot below, and we'll schedule the remaining two sessions together on our first call. Full outreach audit, custom templates, and ongoing accountability.",
   journey: ["Week 1: Strategy & Templates", "Week 2: Pipeline Building", "Week 3: First Replies & Iteration"],
-  calSlug: "3x-deep-dive-bundle",
+  calSlug: "3xdeepdivebundle",
 };
 
 /* ─── Testimonials ─── */
@@ -162,32 +341,84 @@ const FAQ = [
   },
 ];
 
+/* ─── Custom Calendar Modal ─── */
+
+function BookingModal({ isOpen, onClose, sessionName, calSlug, user }: any) {
+  if (!isOpen) return null;
+
+  // Build the cal.com URL with pre-filled user data
+  const params = new URLSearchParams();
+  if (user?.email) params.set("email", user.email);
+  const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
+  if (name) params.set("name", name);
+  params.set("layout", "month_view");
+  
+  const calUrl = `https://cal.com/${CAL_USERNAME}/${calSlug}?${params.toString()}`;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm">
+      <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E8E8]">
+          <div>
+            <h2 className="text-lg font-bold text-[#111]">Book {sessionName}</h2>
+            <p className="text-xs text-[#666]">Select a date and time from Uthman's live calendar</p>
+          </div>
+          <button onClick={onClose} className="p-2 bg-[#F5F5F5] rounded-full text-[#999] hover:text-[#111] hover:bg-[#EBEBEB] transition-colors">
+            <XIcon className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-hidden" style={{ minHeight: "500px" }}>
+          <iframe
+            src={calUrl}
+            className="w-full h-full border-0"
+            style={{ minHeight: "500px" }}
+            title={`Book ${sessionName}`}
+            allow="payment"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main Component ─── */
 
 export default function BookUthman() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleBookClick = (calSlug: string) => {
-    const email = user?.email ? `?email=${encodeURIComponent(user.email)}` : "";
-    const name = user?.user_metadata?.name || user?.user_metadata?.full_name || "";
-    const nameParam = name ? `${email ? "&" : "?"}name=${encodeURIComponent(name)}` : "";
-    window.open(`https://cal.com/${CAL_USERNAME}/${calSlug}${email}${nameParam}`, "_blank");
+  // Live availability from Cal.com
+  const allSlugs = SESSION_TYPES.map(s => s.calSlug);
+  const { nextDates, slotCounts, loading: slotsLoading } = useCalAvailability(allSlugs);
+
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSessionName, setSelectedSessionName] = useState("");
+  const [selectedCalSlug, setSelectedCalSlug] = useState("");
+
+  const handleBookClick = (sessionName: string, calSlug: string) => {
+    setSelectedSessionName(sessionName);
+    setSelectedCalSlug(calSlug);
+    setIsModalOpen(true);
   };
 
   return (
     <div className="w-full relative">
+      <BookingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        sessionName={selectedSessionName}
+        calSlug={selectedCalSlug}
+        user={user}
+      />
 
       {/* ════════ HERO SECTION ════════ */}
       <div className="bg-gradient-to-br from-[#FAFAF7] to-[#F0EDE8] px-6 pt-10 pb-10 md:px-10 lg:px-12 rounded-b-3xl shadow-sm border-b border-[#E8E8E8]">
         <div className="flex flex-col md:flex-row items-start gap-6">
           {/* Avatar */}
-          <div className="w-20 h-20 rounded-full flex-shrink-0 ring-4 ring-white shadow-lg overflow-hidden">
-            <img
-              src="/images/uthman-profile.jpg"
-              alt="Uthman"
-              className="w-full h-full object-cover"
-            />
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#111] to-[#444] flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 ring-4 ring-white shadow-lg overflow-hidden">
+            UA
           </div>
 
           <div className="flex-1">
@@ -220,7 +451,7 @@ export default function BookUthman() {
 
       <div className="px-6 md:px-10 lg:px-12 pb-10">
         {/* ════════ PAIN SECTION ════════ */}
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 border-l-[6px] border-l-amber-500 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden shadow-sm">
+        <div className="bg-[#FFFBF5] border border-amber-200 rounded-xl p-6 mt-8 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
           <h3 className="text-[15px] font-semibold text-[#111] mb-3 flex items-center gap-2 relative z-10">
             <Target className="w-4 h-4 text-amber-600" />
@@ -253,7 +484,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ COMPARISON ANCHOR ════════ */}
-        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 rounded-xl p-5 mb-8 text-center shadow-sm">
+        <div className="bg-[#FAFAFA] border border-[#E8E8E8] rounded-xl p-5 mb-8 text-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
           <p className="text-[13px] text-[#888] font-light">
             Professional career coaching firms charge <strong className="text-[#111] font-semibold">£150-300/hr</strong>.
           </p>
@@ -274,12 +505,10 @@ export default function BookUthman() {
           {SESSION_TYPES.map((session) => (
             <div
               key={session.id}
-              className={`relative bg-white border-2 rounded-xl overflow-hidden transition-all hover:shadow-lg ${
+              className={`relative bg-white border rounded-xl overflow-hidden transition-all hover:shadow-lg ${
                 session.popular
-                  ? "border-emerald-400 shadow-md border-l-[6px] border-l-emerald-500 ring-1 ring-emerald-100"
-                  : session.isGroup
-                    ? "border-blue-300 border-l-[6px] border-l-blue-500 hover:border-blue-400"
-                    : "border-[#DDD] border-l-[6px] border-l-slate-400 hover:border-[#BBB]"
+                  ? "border-emerald-400 shadow-md border-l-4 ring-1 ring-emerald-100"
+                  : "border-[#E8E8E8] hover:border-[#CCC]"
               }`}
             >
               <div className="p-6">
@@ -314,7 +543,26 @@ export default function BookUthman() {
                           Max {session.maxParticipants}
                         </span>
                       )}
-
+                      {(() => {
+                        const nextDate = nextDates[session.calSlug];
+                        const count = slotCounts[session.calSlug] || 0;
+                        if (slotsLoading) return (
+                          <span className="flex items-center gap-1 text-[11px] text-[#888] font-medium">
+                            <span className="w-3 h-3 border border-[#ccc] border-t-[#888] rounded-full animate-spin" />
+                          </span>
+                        );
+                        if (nextDate) return (
+                          <span className="flex items-center gap-1 text-[11px] font-medium">
+                            Next: <span className="text-emerald-700 font-semibold">{nextDate}</span>
+                            {count > 0 && <span className="text-[#aaa]">· {count} slots</span>}
+                          </span>
+                        );
+                        return (
+                          <span className="flex items-center gap-1 text-[11px] text-amber-600 font-medium">
+                            No slots this week
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
@@ -358,7 +606,7 @@ export default function BookUthman() {
                 )}
 
                 <button
-                  onClick={() => handleBookClick(session.calSlug)}
+                  onClick={() => handleBookClick(session.name, session.calSlug)}
                   className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
                     session.popular
                       ? "bg-[#111] text-white hover:bg-[#222] shadow-sm hover:-translate-y-0.5"
@@ -375,7 +623,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ BUNDLE PACKAGE ════════ */}
-        <div className="relative bg-gradient-to-br from-[#0a0a0a] to-[#1a1a2e] border-2 border-purple-500/40 rounded-xl p-6 text-white mt-6 shadow-[0_0_30px_rgba(168,85,247,0.15)]">
+        <div className="relative bg-[#111] border border-[#222] rounded-xl p-6 text-white mt-6">
           <div className="flex items-start justify-between mb-3 pt-2">
             <div>
               <h4 className="text-[15px] font-semibold">{PACKAGE.name}</h4>
@@ -405,7 +653,7 @@ export default function BookUthman() {
           </div>
 
           <button
-            onClick={() => handleBookClick(PACKAGE.calSlug)}
+            onClick={() => handleBookClick(PACKAGE.name, PACKAGE.calSlug)}
             className="w-full py-3 rounded-xl text-sm font-semibold bg-white text-[#111] hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-md hover:-translate-y-0.5"
           >
             <CalendarIcon className="w-4 h-4" />
@@ -415,7 +663,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ TESTIMONIALS SECTION ════════ */}
-        <div className="mt-12 mb-8 bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200 rounded-2xl p-6 md:p-8">
+        <div className="mt-12 mb-8">
           <div className="text-center mb-6">
             <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-1">
               Real results from real students
@@ -451,7 +699,7 @@ export default function BookUthman() {
         </div>
 
         {/* ════════ FAQ ════════ */}
-        <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 border-2 border-slate-300 rounded-xl overflow-hidden mt-8">
+        <div className="bg-white border border-[#E8E8E8] rounded-xl overflow-hidden mt-8">
           <div className="px-5 py-4 border-b border-[#E8E8E8]">
             <h3 className="text-[13px] font-semibold text-[#111]">
               Common Questions

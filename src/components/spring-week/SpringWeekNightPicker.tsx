@@ -120,7 +120,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Can I get a refund?",
-    a: "Yes. Full refund, no questions asked, up to 48 hours before the event.",
+    a: "Yes. Full refund up to 48 hours before the event.",
   },
 ];
 
@@ -346,7 +346,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         <div className="flex items-center justify-center gap-4 text-[11px] text-white/30">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" />
-            Full refund, no questions asked
+            Full refund
           </span>
           <span className="flex items-center gap-1">
             <Lock className="w-3 h-3" />

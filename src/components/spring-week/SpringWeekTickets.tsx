@@ -101,7 +101,7 @@ function SpringWeekFAQ() {
     },
     {
       q: "Can I get a refund?",
-      a: "Not what you expected? Full refund, no questions asked.",
+      a: "Not what you expected? Full refund.",
     },
   ];
 
@@ -309,7 +309,7 @@ export function SpringWeekTickets({
       {/* Risk reversal */}
       <div className="flex items-center justify-center gap-2 text-sm text-emerald-700 font-sans font-medium bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
         <ShieldCheck className="h-5 w-5 shrink-0" />
-        Not what you expected? Full refund, no questions asked.
+        Not what you expected? Full refund.
       </div>
 
       {/* Checkout button */}
