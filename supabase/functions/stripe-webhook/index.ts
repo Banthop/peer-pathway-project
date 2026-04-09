@@ -16,21 +16,61 @@ const BOOK_UTHMAN = "https://webinar.yourearlyedge.co.uk/portal/book-uthman";
 const PORTAL_LINK = "https://webinar.yourearlyedge.co.uk/portal";
 
 const SPRING_WEEK_PRODUCTS: Record<string, { productType: string; tags: string[] }> = {
+    // New simplified 3-tier system (one session, not multi-night)
+    "prod_UJ0kCSYRquVkWf": {
+        productType: "spring_week_watch",
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
+    },
+    "prod_UJ0kIbUru7XKX2": {
+        productType: "spring_week_prepare",
+        tags: ["stripe_customer", "spring_week", "spring_week_prepare", "playbook_access"],
+    },
+    "prod_UJ0jZzURyUaCxy": {
+        productType: "spring_week_convert",
+        tags: ["stripe_customer", "spring_week", "spring_week_convert", "playbook_access", "coaching_included"],
+    },
+    // Standalone handbook
+    "prod_UGVUkmrEFLFjlC": {
+        productType: "spring_week_handbook",
+        tags: ["stripe_customer", "spring_week", "playbook_access"],
+    },
+    // Legacy multi-night products (keep for existing purchases)
     "prod_UFrcUWCwGdzNqo": {
         productType: "spring_week_part1",
-        tags: ["stripe_customer", "spring_week", "spring_week_part1"],
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
     },
     "prod_UFrcmX59L7wHRW": {
         productType: "spring_week_part2",
-        tags: ["stripe_customer", "spring_week", "spring_week_part2"],
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
     },
     "prod_UFrcsQHhGy0WES": {
         productType: "spring_week_bundle",
-        tags: ["stripe_customer", "spring_week", "spring_week_bundle", "playbook_access"],
+        tags: ["stripe_customer", "spring_week", "spring_week_prepare", "playbook_access"],
     },
     "prod_UFrcW9BHxahd9E": {
         productType: "spring_week_premium",
-        tags: ["stripe_customer", "spring_week", "spring_week_premium", "playbook_access", "coaching_included"],
+        tags: ["stripe_customer", "spring_week", "spring_week_convert", "playbook_access", "coaching_included"],
+    },
+    // Legacy night-combo products
+    "prod_UGVQuH5D34Wryo": {
+        productType: "spring_week_watch",
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
+    },
+    "prod_UGVQvFNfxSqY2K": {
+        productType: "spring_week_watch",
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
+    },
+    "prod_UGVRroVNpmu7on": {
+        productType: "spring_week_watch",
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
+    },
+    "prod_UGVTEhGH4AkkKY": {
+        productType: "spring_week_watch",
+        tags: ["stripe_customer", "spring_week", "spring_week_watch"],
+    },
+    "prod_UGVUnU5UkXQVBR": {
+        productType: "spring_week_prepare",
+        tags: ["stripe_customer", "spring_week", "spring_week_prepare", "playbook_access"],
     },
 };
 
@@ -43,22 +83,12 @@ const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] 
         productType: "bundle",
         tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
     },
-    // Portal upgrade: free -> recording
+    // Portal upgrade: free -> recording (£10)
     "prod_UI9GnUfRmimKds": {
         productType: "webinar_only",
         tags: ["stripe_customer", "recording_access"],
     },
-    // Portal upgrade: free -> bundle
-    "prod_UI9IbKsHRmFvhH": {
-        productType: "bundle",
-        tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
-    },
-    // Portal upgrade: free → recording (£10)
-    "prod_UI9GnUfRmimKds": {
-        productType: "webinar_only",
-        tags: ["stripe_customer", "recording_access"],
-    },
-    // Portal upgrade: free → bundle (£29)
+    // Portal upgrade: free -> bundle (£29)
     "prod_UI9IbKsHRmFvhH": {
         productType: "bundle",
         tags: ["stripe_customer", "recording_access", "bundle", "premium_buyer"],
@@ -74,8 +104,8 @@ const COLD_EMAIL_PRODUCTS: Record<string, { productType: string; tags: string[] 
 // Tags representing lower spring-week tiers that should be removed when a
 // customer upgrades to bundle or premium.
 const SPRING_WEEK_TIER_UPGRADE_MAP: Record<string, string[]> = {
-    spring_week_bundle: ["spring_week_part1", "spring_week_part2"],
-    spring_week_premium: ["spring_week_part1", "spring_week_part2", "spring_week_bundle"],
+    spring_week_prepare: ["spring_week_watch", "spring_week_part1", "spring_week_part2"],
+    spring_week_convert: ["spring_week_watch", "spring_week_prepare", "spring_week_part1", "spring_week_part2", "spring_week_bundle"],
 };
 
 /**
@@ -125,10 +155,9 @@ async function syncToAttio(
         if (productType === "bundle" || productType === "recording_bundle") mappedProductType = "Bundle";
         else if (productType === "recording_premium") mappedProductType = "Premium";
         else if (productType.includes("webinar")) mappedProductType = "Recording Only";
-        else if (productType === "spring_week_part1") mappedProductType = "Spring Week Part 1";
-        else if (productType === "spring_week_part2") mappedProductType = "Spring Week Part 2";
-        else if (productType === "spring_week_bundle") mappedProductType = "Spring Week Bundle";
-        else if (productType === "spring_week_premium") mappedProductType = "Spring Week Premium";
+        else if (productType === "spring_week_watch" || productType === "spring_week_part1" || productType === "spring_week_part2") mappedProductType = "Spring Week Watch";
+        else if (productType === "spring_week_prepare" || productType === "spring_week_bundle" || productType === "spring_week_handbook") mappedProductType = "Spring Week Prepare";
+        else if (productType === "spring_week_convert" || productType === "spring_week_premium") mappedProductType = "Spring Week Convert";
 
         // Build name values, omitting fields absent in this session so we don't
         // overwrite names that were captured earlier in the registration form.
@@ -226,12 +255,13 @@ async function triggerLoopsEvents(
 
     if (isSpringWeek) {
         // Fire 'spring_week_purchase_completed' to trigger Flow 6 (Spring Week Welcome Sequence)
-        const hasPlaybook = productType === "spring_week_bundle" || productType === "spring_week_premium";
-        const hasCoaching = productType === "spring_week_premium";
-        const webinarPart = productType === "spring_week_part1" ? "1"
-            : productType === "spring_week_part2" ? "2"
-                : "both";
-        const hasBothParts = productType === "spring_week_bundle" || productType === "spring_week_premium";
+        const hasPlaybook = ["spring_week_prepare", "spring_week_convert", "spring_week_bundle", "spring_week_premium", "spring_week_handbook"].includes(productType);
+        const hasCoaching = ["spring_week_convert", "spring_week_premium"].includes(productType);
+        const tier = productType === "spring_week_convert" || productType === "spring_week_premium" ? "convert"
+            : hasPlaybook ? "prepare"
+                : "watch";
+        const webinarPart = "all";
+        const hasBothParts = true;
 
         try {
             const evtRes = await fetch("https://app.loops.so/api/v1/events/send", {
@@ -246,6 +276,8 @@ async function triggerLoopsEvents(
                         isBundle,
                         hasPlaybook,
                         hasCoaching,
+                        tier,
+                        handbookReady: false,
                         webinarPart,
                         hasBothParts,
                         portalLink: PORTAL_LINK,

@@ -2,7 +2,7 @@
 export const WEBINAR_TITLE =
   "How Students Converted Their Spring Weeks Into Return Offers";
 export const WEBINAR_SUBTITLE =
-  "One evening. 6 speakers. Every firm covered. April 12, 2:00 PM - 5:00 PM BST.";
+  "One evening. 7+ speakers. Every firm covered. April 12, 2:00 PM - 5:00 PM BST.";
 
 // -- Single-day event info --
 export const SW_EVENT_DATE = "April 12, 2026";
@@ -18,12 +18,12 @@ export const SW_TIER_TAGS: Record<SwTierId, string> = {
   convert: "spring_week_convert",
 };
 
-// -- Stripe links - placeholders until products are created --
-export const STRIPE_SW_WATCH = "https://buy.stripe.com/TODO_SW_WEBINAR";
-export const STRIPE_SW_PREPARE = "https://buy.stripe.com/TODO_SW_BUNDLE";
-export const STRIPE_SW_CONVERT = "https://buy.stripe.com/TODO_SW_PREMIUM";
-export const STRIPE_SW_HANDBOOK = "https://buy.stripe.com/TODO_SW_HANDBOOK";
-export const STRIPE_SW_MATCH = "https://buy.stripe.com/TODO_SW_MATCH";
+// -- Stripe payment links (live) --
+export const STRIPE_SW_WATCH = "https://buy.stripe.com/8x2cN47eQcK58CS60I2400n";
+export const STRIPE_SW_PREPARE = "https://buy.stripe.com/7sYbJ0czah0l7yO60I2400o";
+export const STRIPE_SW_CONVERT = "https://buy.stripe.com/aFadR88iU6lHaL0bl22400p";
+export const STRIPE_SW_HANDBOOK = "https://buy.stripe.com/14A3cu7eQh0l06m2Ow2400q";
+export const STRIPE_SW_MATCH = STRIPE_SW_CONVERT;
 
 // -- Backward-compat aliases (used by legacy components) --
 export const STRIPE_SW_WEBINAR = STRIPE_SW_WATCH;
@@ -154,17 +154,21 @@ export const BIGGEST_CONCERN_OPTIONS = [
 export interface Speaker {
   name: string;
   firms: string[];
+  converted?: string;
   university?: string;
 }
 
 export const SPEAKERS: Speaker[] = [
-  { name: "Ayo", firms: ["Morgan Stanley", "Evercore", "HSBC", "Deutsche Bank"], university: "LSE" },
+  { name: "Ayo", firms: ["Morgan Stanley IB", "Evercore", "HSBC CIB", "Deutsche Bank"], converted: "Morgan Stanley", university: "LSE" },
   { name: "Aashay", firms: ["Houlihan Lokey", "Barclays"], university: "LSE" },
-  { name: "Serena", firms: ["Nomura", "RBC", "Dare", "Barings", "Houlihan Lokey"], university: "LSE" },
-  { name: "Momo", firms: ["JP Morgan", "D.E. Shaw", "Deutsche Bank"], university: "" },
-  { name: "Joel", firms: ["Jane Street", "Bank of America", "EY"], university: "LSE" },
-  { name: "Ike", firms: ["Macquarie", "Lazard", "BNP Paribas", "HSBC"], university: "" },
+  { name: "Serena", firms: ["Houlihan Lokey", "Dare", "Barings", "RBC", "Nomura"], university: "LSE" },
+  { name: "Momo", firms: ["JP Morgan", "Blackstone", "D.E. Shaw", "Deutsche Bank O&A"], converted: "JP Morgan" },
+  { name: "Joel", firms: ["Jane Street", "Bank of America S&T", "EY Tech"] },
+  { name: "Ike", firms: ["Macquarie", "Lazard", "BNP Paribas S&T", "HSBC CIB"] },
+  { name: "Palak", firms: ["Barclays", "D.E. Shaw", "Citadel"] },
 ];
+
+export const SPEAKER_COUNT_LABEL = "7+ speakers";
 
 // -- Target firms for display --
 export const TARGET_FIRMS = [
@@ -322,33 +326,13 @@ export interface SpringWeekNight {
 export const SPRING_WEEK_NIGHTS: SpringWeekNight[] = [
   {
     id: "1",
-    label: "Session 1",
-    date: "Sun 12 Apr, 2-3:30pm",
+    label: "Live Panel",
+    date: "Sun 12 Apr, 2:00 - 5:00 PM BST",
     dateISO: "2026-04-12T14:00:00+01:00",
-    theme: "Banking, Trading and Asset Management",
-    speakers: ["Morgan Stanley", "Evercore", "Nomura", "JP Morgan", "Macquarie", "HSBC"],
-    tagline: "How they converted in IBD, S&T, and asset management",
+    theme: "How Students Converted Their Spring Weeks",
+    speakers: ["Morgan Stanley", "JP Morgan", "Jane Street", "Barclays", "Macquarie", "Lazard", "Citadel"],
+    tagline: "One evening. 7+ speakers. Every firm covered.",
     accent: "#6366F1",
-  },
-  {
-    id: "2",
-    label: "Session 2",
-    date: "Sun 12 Apr, 3:30-5pm",
-    dateISO: "2026-04-12T15:30:00+01:00",
-    theme: "The Conversion Masterclass",
-    speakers: ["Jane Street", "Bank of America", "Lazard", "BNP Paribas", "EY", "Barclays"],
-    tagline: "Universal conversion strategies that work at every firm",
-    accent: "#10B981",
-  },
-  {
-    id: "3",
-    label: "Q&A",
-    date: "Sun 12 Apr, 4:45-5pm",
-    dateISO: "2026-04-12T16:45:00+01:00",
-    theme: "Open Q&A",
-    speakers: ["All speakers"],
-    tagline: "Ask anything directly to the panel",
-    accent: "#F59E0B",
   },
 ];
 
