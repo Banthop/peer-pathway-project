@@ -188,8 +188,8 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
 
             {/* Date + Platform row */}
             <div className="flex flex-wrap items-center gap-4 mt-5 text-[13px] text-white/60 font-light">
-              <span className="flex items-center gap-2">
-                <Clock className="w-3.5 h-3.5 text-white/25" />
+              <span className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
+                <Clock className="w-3.5 h-3.5 text-white/80" />
                 Sun April 12 - 2-5pm BST
               </span>
               <span className="hidden sm:inline text-white/15">|</span>
@@ -213,7 +213,8 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 shrink-0 ml-3">
             <Clock className="h-3 w-3" />
             {countdown.days}d {String(countdown.hours).padStart(2, "0")}h{" "}
-            {String(countdown.minutes).padStart(2, "0")}m
+            {String(countdown.minutes).padStart(2, "0")}m{" "}
+            {String(countdown.seconds).padStart(2, "0")}s
           </div>
         </div>
       </div>
