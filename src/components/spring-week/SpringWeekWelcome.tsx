@@ -324,7 +324,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           Only{" "}
           <span style={{ color: "#FFFFFF", fontWeight: 700 }}>10-15%</span> of
           spring interns convert on average. This Sunday,{" "}
-          <span style={{ color: "#ffffff" }}>7 students</span> who converted{" "}
+          <span style={{ color: "#ffffff" }}>10+ students</span> who converted{" "}
           <span style={{ color: "#ffffff" }}>25+ spring weeks</span> share exactly
           how they did it - the weekend before yours starts.
         </p>
