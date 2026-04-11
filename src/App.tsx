@@ -86,6 +86,7 @@ const SpringWeekHandbook = lazy(() => import("./pages/spring-week-portal/SpringW
 const SpringWeekMatchmaking = lazy(() => import("./pages/spring-week-portal/SpringWeekMatchmaking"));
 const SpringWeekBooking = lazy(() => import("./pages/spring-week-portal/SpringWeekBooking"));
 const SpringWeekUpgrade = lazy(() => import("./pages/spring-week-portal/SpringWeekUpgrade"));
+const SpringWeekHandbookContent = lazy(() => import("./pages/spring-week-portal/SpringWeekHandbookContent"));
 
 const queryClient = new QueryClient();
 
@@ -217,6 +218,7 @@ const AppRoutes = () => {
             <Route path="coaching" element={<SpringWeekBooking />} />
             <Route path="upgrade" element={<SpringWeekUpgrade />} />
           </Route>
+          <Route path="/handbook" element={<SpringWeekHandbookContent />} />
           <Route path="*" element={<Navigate to="/portal" replace />} />
         </Routes>
       </Suspense>
@@ -295,6 +297,7 @@ const AppRoutes = () => {
           <Route path="coaching" element={<SpringWeekBooking />} />
           <Route path="upgrade" element={<SpringWeekUpgrade />} />
         </Route>
+        <Route path="/handbook" element={<SpringWeekHandbookContent />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
