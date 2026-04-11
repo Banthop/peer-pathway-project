@@ -392,7 +392,7 @@ function PartialFirmCard({ entry }: { entry: FirmEntry }) {
         <div className="px-5 py-4 relative">
           <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Programme Structure</p>
           <p className="text-[13px] text-white/70 font-light leading-relaxed">
-            {entry.sections[0]?.content.slice(0, 280)}...
+            {entry.structure.slice(0, 280)}...
           </p>
           {/* Fade overlay */}
           <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-950 to-transparent" />
