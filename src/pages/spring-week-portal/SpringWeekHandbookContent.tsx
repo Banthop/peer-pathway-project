@@ -372,7 +372,7 @@ function useHandbookAccess(): boolean {
 
 // --------------- Sample firm ID for preview ---------------
 
-const SAMPLE_FIRM_ID = "morgan-stanley";
+const SAMPLE_FIRM_ID = "bank-of-america";
 
 // --------------- Locked firm card (preview mode) ---------------
 
@@ -475,7 +475,7 @@ export default function SpringWeekHandbookContent() {
               You are viewing a preview of the handbook
             </p>
             <p className="text-[12px] text-slate-400 font-light leading-relaxed">
-              The full Morgan Stanley chapter is unlocked below as a sample. All other firms require a Prepare or Convert tier ticket.
+              The full Bank of America chapter is unlocked below as a sample. All other firms require a Prepare or Convert tier ticket.
             </p>
           </div>
         )}
