@@ -13,6 +13,8 @@ import { SpringWeekNightPicker } from "@/components/spring-week/SpringWeekNightP
 import { saveWebinarLead, markLeadCheckout } from "@/utils/webinarTracking";
 import { saveCrmContact } from "@/utils/crmTracking";
 import { matchFirmsToNights } from "@/data/springWeekData";
+import { DEFAULT_TIERS } from "@/data/partnerConfig";
+import { WebinarCheckout } from "@/components/checkout/WebinarCheckout";
 import {
   ChevronLeft,
   CheckCircle2,
@@ -228,6 +230,7 @@ export default function SpringWeekWebinar() {
   const form = useWebinarForm();
   const { toast } = useToast();
   const [showTransition, setShowTransition] = useState(false);
+  const [checkoutTier, setCheckoutTier] = useState<string | null>(null);
 
   if (isSuccess) {
     const saved = localStorage.getItem("spring_week_signup") || sessionStorage.getItem("spring_week_signup");
@@ -313,27 +316,75 @@ export default function SpringWeekWebinar() {
     return null;
   };
 
-  const handleCheckout = (comboKey: NightComboKey, stripeLink: string) => {
+  const handleCheckout = (comboKey: NightComboKey, _stripeLink: string) => {
     form.updateField("selectedTicket", comboKey);
+    markLeadCheckout(form.formData.email);
+    setCheckoutTier(comboKey as string);
+  };
 
+  const handleCheckoutSuccess = (tierId: string) => {
     const signupData = JSON.stringify({
       ...form.formData,
-      selectedTicket: comboKey,
+      selectedTicket: tierId,
       productType: "spring_week",
       timestamp: new Date().toISOString(),
     });
-
     localStorage.setItem("spring_week_signup", signupData);
     sessionStorage.setItem("spring_week_signup", signupData);
 
-    markLeadCheckout(form.formData.email);
+    saveCrmContact({
+      email: form.formData.email,
+      firstName: form.formData.firstName,
+      lastName: form.formData.lastName,
+      university: form.formData.university,
+      source: "webinar",
+      tags: ["spring_week_form_started", "stripe_customer", "spring_week", `spring_week_${tierId}`],
+      metadata: {
+        product_type: "spring_week",
+        webinar_type: "spring_week",
+        tier: tierId,
+      },
+    });
 
-    const url = new URL(stripeLink);
-    url.searchParams.set("prefilled_email", form.formData.email);
-    url.searchParams.set("client_reference_id", `${form.formData.email}|${comboKey}`);
-
-    window.open(url.toString(), "_blank");
+    window.history.replaceState(null, "", `?success=true&ticket=${tierId}`);
+    window.location.reload();
   };
+
+  if (checkoutTier) {
+    return (
+      <div className="funnel-dark relative">
+        <div className="fixed top-0 left-0 right-0 z-40">
+          <Progress
+            value={100}
+            className="h-1 rounded-none bg-white/[0.06] [&>div]:bg-emerald-500"
+          />
+        </div>
+        <div className="absolute top-5 left-6 z-50">
+          <span className="text-sm font-light text-white/40">
+            Early<span className="font-bold text-white/70">Edge</span>
+          </span>
+        </div>
+        <main className="min-h-screen flex items-center justify-center px-4 py-8">
+          <div className="w-full max-w-2xl mx-auto">
+            <WebinarCheckout
+              selectedTierId={checkoutTier}
+              tiers={DEFAULT_TIERS}
+              formData={{
+                firstName: form.formData.firstName,
+                lastName: form.formData.lastName,
+                email: form.formData.email,
+                springWeekFirms: form.formData.springWeekFirms,
+                university: form.formData.university,
+                industry: form.formData.industry,
+              }}
+              onSuccess={handleCheckoutSuccess}
+              onBack={() => setCheckoutTier(null)}
+            />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   if (showTransition) {
     return (
