@@ -135,7 +135,10 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           type="button"
           onClick={() => {
             const el = document.getElementById("bottom-cta");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
+            if (el) {
+              const y = el.getBoundingClientRect().top + window.scrollY - 200;
+              window.scrollTo({ top: y, behavior: "smooth" });
+            }
           }}
           className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer text-black hover:opacity-90 active:scale-[0.99]"
           style={{ background: "linear-gradient(135deg, #6EE7B7, #34D399)" }}
