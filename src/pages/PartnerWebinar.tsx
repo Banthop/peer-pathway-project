@@ -406,20 +406,20 @@ function PartnerWelcome({
           {[
             { name: "Morgan Stanley", file: "morgan-stanley.svg", h: "h-5 md:h-6", invert: true },
             { name: "JP Morgan", file: "jpmorgan.svg", h: "h-6 md:h-7", invert: true },
-            { name: "Barclays", file: "barclays.png", h: "h-10 md:h-12", invert: true },
-            { name: "HSBC", file: "hsbc.png", h: "h-8 md:h-10", invert: true },
+            { name: "Barclays", file: "barclays.png", h: "h-10 md:h-12", invert: false },
+            { name: "HSBC", file: "hsbc.png", h: "h-8 md:h-10", invert: false },
             { name: "Deutsche Bank", file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
             { name: "Macquarie", file: "macquarie.svg", h: "h-5 md:h-6", invert: true },
             { name: "Lazard", file: "lazard.svg", h: "h-5 md:h-6", invert: true },
             { name: "Evercore", file: "evercore.svg", h: "h-5 md:h-6", invert: true },
-            { name: "Houlihan Lokey", file: "houlihan-lokey.png", h: "h-10 md:h-12", invert: true },
+            { name: "Houlihan Lokey", file: "houlihan-lokey.png", h: "h-10 md:h-12", invert: false },
             { name: "Jane Street", file: "jane-street.png", h: "h-5 md:h-7", invert: false },
             { name: "D.E. Shaw", file: "de-shaw.svg", h: "h-5 md:h-6", invert: false },
             { name: "BNP Paribas", file: "bnp-paribas.svg", h: "h-5 md:h-6", invert: false },
             { name: "Bank of America", file: "bank-of-america.svg", h: "h-5 md:h-6", invert: true },
             { name: "EY", file: "ey.svg", h: "h-6 md:h-7", invert: false },
             { name: "Nomura", file: "nomura.svg", h: "h-5 md:h-6", invert: true },
-            { name: "RBC", file: "rbc.png", h: "h-10 md:h-12", invert: true },
+            { name: "RBC", file: "rbc.png", h: "h-10 md:h-12", invert: false },
           ].map((firm) => (
             <img
               key={firm.name}
