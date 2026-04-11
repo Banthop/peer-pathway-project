@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { loadStripe, type Appearance } from "@stripe/stripe-js";
 import {
   Elements,
@@ -71,7 +71,7 @@ const CHECKOUT_ENDPOINT = `${SUPABASE_URL}/functions/v1/create-webinar-checkout`
 
 const stripePromise = loadStripe(
   (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string) ||
-    "pk_live_51S9SPFC2xvQw3GwfmZEYlRhOCaIbQtRgB8yVKPwSFt2hCp2VnTPjKdJuQeLSZ2bGOIbYVZqPBkxvVHrWEdnM1Cvp00rA8IhkSL",
+    "pk_live_51S9SPFC2xvQw3GwfxxGh9TAFqfaP3ZI5aA9nQkA88kGPxqsy2Rb40QSgua74EgxuPiAdosRBsWGOqsbzhXE1nOog009Q2oSmMu",
 );
 
 const STRIPE_APPEARANCE: Appearance = {
@@ -125,8 +125,11 @@ async function callCheckout(payload: CheckoutPayload) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  if (!r.ok) throw new Error(`Server error (${r.status})`);
-  return r.json() as Promise<{ clientSecret?: string; free?: boolean }>;
+  if (!r.ok) {
+    const body = await r.text().catch(() => "");
+    throw new Error(body || `Server error (${r.status})`);
+  }
+  return r.json() as Promise<{ clientSecret?: string | null; free?: boolean; intentId?: string }>;
 }
 
 // ---------------------------------------------------------------------------
@@ -203,7 +206,7 @@ export function WebinarCheckout({
   selectedTierId, tiers, formData, partnerSlug, partnerName, onSuccess, onBack,
 }: WebinarCheckoutProps) {
   const tier = tiers.find((t) => t.id === selectedTierId) ?? tiers[0];
-  const availableAddOns = getAvailableAddOns(selectedTierId);
+  const availableAddOns = useMemo(() => getAvailableAddOns(selectedTierId), [selectedTierId]);
   const [activeAddOns, setActiveAddOns] = useState<Set<string>>(new Set());
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -232,7 +235,7 @@ export function WebinarCheckout({
         partnerSlug: partnerSlug ?? "", partnerName: partnerName ?? "",
       },
     };
-  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData, partnerSlug, partnerName]);
+  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName]);
 
   // TEMPORARY: fall back to Stripe payment link when edge function is unavailable
   const handleStripeLinkFallback = useCallback(() => {
@@ -248,17 +251,26 @@ export function WebinarCheckout({
     callCheckout(buildPayload())
       .then((data) => {
         if (seq !== reqRef.current) return;
-        setClientSecret(data.clientSecret ?? null);
+        if (data.free) {
+          // Edge function confirmed free order, skip Stripe
+          onSuccess(selectedTierId);
+          return;
+        }
+        if (!data.clientSecret) {
+          setFetchError("No payment session returned. Please try again.");
+          setLoading(false);
+          return;
+        }
+        setClientSecret(data.clientSecret);
         setLoading(false);
       })
       .catch((err) => {
         if (seq !== reqRef.current) return;
-        // TEMPORARY: if edge function is not deployed, fall back to Stripe link
         const message = err instanceof Error ? err.message : "Could not create checkout";
         setFetchError(message);
         setLoading(false);
       });
-  }, [buildPayload]);
+  }, [buildPayload, onSuccess, selectedTierId]);
 
   // Create or update PaymentIntent when total changes
   useEffect(() => {
@@ -454,11 +466,19 @@ export function WebinarCheckout({
               Try again
             </button>
           </div>
-        ) : clientSecret ? (
+        ) : clientSecret && clientSecret.length > 0 ? (
           <Elements stripe={stripePromise} options={{ clientSecret, appearance: STRIPE_APPEARANCE }}>
             <PaymentForm total={total} onSuccess={onSuccess} tierId={selectedTierId} />
           </Elements>
-        ) : null}
+        ) : (
+          <div className="funnel-card rounded-2xl p-8 flex flex-col items-center gap-3">
+            <p className="text-sm text-white/40 font-light">Waiting for payment session...</p>
+            <button type="button" onClick={fetchIntent}
+              className="text-sm text-emerald-400 hover:text-emerald-300 underline underline-offset-2 cursor-pointer">
+              Retry
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Social proof footer */}

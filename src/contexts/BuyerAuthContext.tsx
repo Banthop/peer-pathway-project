@@ -102,7 +102,7 @@ export function BuyerAuthProvider({ children }: { children: React.ReactNode }) {
       const tags = (contact.tags as string[]) || [];
       const isBuyer = tags.includes("stripe_customer");
       const isBundle = tags.includes("bundle");
-      const hasRecording = tags.includes("recording_access") || isBundle;
+      const hasRecording = tags.includes("recording_access") || tags.includes("webinar_only") || isBundle;
       const hasGuide = isBundle;
 
       let tier: AccessTier = "free";
