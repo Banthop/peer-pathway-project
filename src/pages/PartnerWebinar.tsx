@@ -38,7 +38,7 @@ import {
 
 /* ---- Firm names (text only) ---- */
 const FIRM_NAMES = [
-  "Morgan Stanley", "Evercore", "HSBC", "Deutsche Bank",
+  "Evercore", "HSBC", "Deutsche Bank",
   "Houlihan Lokey", "Barclays", "Nomura", "RBC",
   "JP Morgan", "D.E. Shaw", "Macquarie", "Lazard",
   "BNP Paribas", "Jane Street", "Bank of America", "EY",
@@ -433,7 +433,6 @@ function PartnerWelcome({
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
           {[
-            { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true, url: "https://www.morganstanley.com" },
             { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true, url: "https://www.jpmorgan.com" },
             { file: "barclays.svg", h: "h-6 md:h-7", invert: true, url: "https://www.barclays.com" },
             { file: "citadel.png", h: "h-7 md:h-8", invert: true, url: "https://www.citadel.com" },
@@ -507,7 +506,7 @@ function PartnerWelcome({
 
         <div className="space-y-2">
           {[
-            { division: "Investment Banking", firms: "Goldman Sachs, Morgan Stanley, Evercore, Houlihan Lokey, Barclays, Lazard, Rothschild, and more" },
+            { division: "Investment Banking", firms: "Goldman Sachs, Evercore, Houlihan Lokey, Barclays, Lazard, Rothschild, and more" },
             { division: "Global Markets / Trading", firms: "Jane Street, Citadel, BNP Paribas, Nomura, Optiver, and more" },
             { division: "Multi-Division / Big 4", firms: "Macquarie, Bank of America, HSBC, RBC, Deloitte, EY, and more" },
           ].map((cat) => (
@@ -527,7 +526,7 @@ function PartnerWelcome({
             "The exact case study format at Lazard and how to prioritise it",
             "Why Macquarie's two-way matching system changes how you network",
             "What the 'newsflash' interview at BNP Paribas actually looks like",
-            "The one thing every Morgan Stanley spring weeker should do on day one",
+            "The one thing every Evercore spring weeker should do on day one",
           ].map((insight) => (
             <div key={insight} className="flex items-start gap-3 py-1.5">
               <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0 text-white/20" />
