@@ -4,7 +4,6 @@ import {
   Lock,
   ChevronDown,
   ChevronUp,
-  BookOpen,
   Zap,
   Clock,
   Users,
@@ -14,11 +13,6 @@ import {
 } from "lucide-react";
 import {
   SPRING_WEEK_NIGHTS,
-  SPRING_WEEK_HANDBOOK,
-  SPRING_WEEK_COMBOS,
-  getComboKey,
-  NIGHT_INDIVIDUAL_PRICE,
-  matchFirmsToNights,
   type NightComboKey,
 } from "@/data/springWeekData";
 import type { WebinarFormData } from "@/hooks/useWebinarForm";
@@ -149,70 +143,23 @@ function FaqItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-// ---- Tier definitions ----
+// ---- Tier definitions (from shared config) ----
 import {
-  SW_TICKETS,
-  STRIPE_SW_WATCH,
-  STRIPE_SW_PREPARE,
-  STRIPE_SW_CONVERT,
   SPEAKERS,
 } from "@/data/springWeekData";
-
-type TierId = "watch" | "prepare" | "convert";
-
-const TIERS: { id: TierId; name: string; price: number; tagline: string; features: string[]; badge?: string; recommended?: boolean; stripeLink: string }[] = [
-  {
-    id: "watch",
-    name: "Watch",
-    price: 19,
-    tagline: "See how they did it",
-    features: [
-      "Live panel on April 12 + full recording",
-      "Hear how students converted at Morgan Stanley, JP Morgan, Jane Street and more",
-      "Direct Q&A with the speakers",
-    ],
-    stripeLink: STRIPE_SW_WATCH,
-  },
-  {
-    id: "prepare",
-    name: "Prepare",
-    price: 39,
-    tagline: "Know what to expect at YOUR firm",
-    features: [
-      "Everything in Watch",
-      "Spring Week Handbook: 45+ firms, phase-by-phase",
-      "Firm-specific intel on assessments, conversion rates, and what to expect",
-    ],
-    badge: "MOST CHOSEN",
-    recommended: true,
-    stripeLink: STRIPE_SW_PREPARE,
-  },
-  {
-    id: "convert",
-    name: "Convert",
-    price: 79,
-    tagline: "Walk in ready to get the offer",
-    features: [
-      "Everything in Prepare",
-      "1 free prep call with someone who converted at your firm (worth £50)",
-      "They tell you what the week is really like and what got them the offer",
-    ],
-    badge: "BEST VALUE",
-    stripeLink: STRIPE_SW_CONVERT,
-  },
-];
+import { DEFAULT_TIERS } from "@/data/partnerConfig";
 
 // ---- Main component ----
 export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightPickerProps) {
-  const [selectedTier, setSelectedTier] = useState<TierId>("prepare");
+  const [selectedTier, setSelectedTier] = useState("prepare");
 
   const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
   const firstName = formData.firstName;
 
-  const tier = TIERS.find((t) => t.id === selectedTier)!;
+  const currentTier = DEFAULT_TIERS.find((t) => t.id === selectedTier) ?? DEFAULT_TIERS[0];
 
   function handleCheckout() {
-    onCheckout(selectedTier as unknown as NightComboKey, tier.stripeLink);
+    onCheckout(currentTier.id as unknown as NightComboKey, currentTier.stripeLink);
   }
 
   return (
@@ -246,9 +193,8 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
 
       {/* Tier Cards */}
       <div className="space-y-4">
-        {TIERS.map((t) => {
+        {DEFAULT_TIERS.map((t) => {
           const isSelected = selectedTier === t.id;
-          const accentColor = t.id === "watch" ? "#6366F1" : t.id === "prepare" ? "#10B981" : "#F59E0B";
 
           return (
             <button
@@ -265,7 +211,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
               {/* Accent strip */}
               <div
                 className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-opacity duration-200"
-                style={{ backgroundColor: accentColor, opacity: isSelected ? 1 : 0.25 }}
+                style={{ backgroundColor: t.accent, opacity: isSelected ? 1 : 0.25 }}
               />
 
               <div className="pl-4 flex items-start gap-4">
@@ -286,7 +232,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
                     {t.badge && (
                       <span
                         className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: `${accentColor}18`, color: accentColor }}
+                        style={{ backgroundColor: `${t.accent}18`, color: t.accent }}
                       >
                         {t.badge}
                       </span>
@@ -301,11 +247,19 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
                       </div>
                     ))}
                   </div>
+                  {t.limited && (
+                    <div className="flex items-center gap-1.5 mt-3">
+                      <AlertTriangle className="w-3 h-3 text-amber-400" />
+                      <span className="text-[11px] font-semibold text-amber-400">
+                        Only {t.limited} spots left
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Price */}
                 <div className="text-right shrink-0">
-                  <p className="text-xl md:text-2xl font-bold text-white">£{t.price}</p>
+                  <p className="text-xl md:text-2xl font-bold text-white">{"\u00A3"}{t.price}</p>
                 </div>
               </div>
             </button>
@@ -318,13 +272,13 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         <div className="flex items-end justify-between gap-2">
           <div>
             <div className="text-3xl font-bold text-white tracking-tight">
-              <AnimatedPrice value={tier.price} />
+              <AnimatedPrice value={currentTier.price} />
             </div>
-            <p className="text-xs text-white/40 mt-1">{tier.name} tier selected</p>
+            <p className="text-xs text-white/40 mt-1">{currentTier.name} tier selected</p>
           </div>
-          {tier.badge && (
+          {currentTier.badge && (
             <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white text-black shrink-0">
-              {tier.badge}
+              {currentTier.badge}
             </span>
           )}
         </div>
@@ -335,7 +289,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
           className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400 active:scale-[0.99]"
         >
           <Zap className="w-4 h-4" />
-          <span>Get {tier.name} for £{tier.price}</span>
+          <span>Get {currentTier.name} for {"\u00A3"}{currentTier.price}</span>
         </button>
 
         <p className="text-center text-[11px] text-white/30 font-light">

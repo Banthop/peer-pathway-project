@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useWebinarForm } from "@/hooks/useWebinarForm";
 import { useToast } from "@/hooks/use-toast";
-import { SPRING_WEEK_COMBOS, STRIPE_SW_PREPARE, STRIPE_SW_CONVERT } from "@/data/springWeekData";
 import type { NightComboKey } from "@/data/springWeekData";
 import { WebinarFormStep } from "@/components/webinar/WebinarFormStep";
 import { SpringWeekWelcome } from "@/components/spring-week/SpringWeekWelcome";
@@ -19,13 +18,9 @@ import {
   CheckCircle2,
   Loader2,
   ArrowRight,
-  Lock,
-  Zap,
   BookOpen,
   Check,
 } from "lucide-react";
-
-const BUNDLE_UPGRADE_LINK = SPRING_WEEK_COMBOS["1,2,3"].stripeLink;
 
 function SuccessScreen({
   name,
@@ -36,16 +31,26 @@ function SuccessScreen({
 }) {
   const tier = ticket === "prepare" || ticket === "1,2,3+handbook"
     ? "prepare"
+    : ticket === "after-hours"
+    ? "after-hours"
     : ticket === "convert" || ticket === "premium"
     ? "convert"
     : "watch";
 
-  const tierLabel = tier === "convert" ? "Convert" : tier === "prepare" ? "Prepare" : "Watch";
+  const tierLabel =
+    tier === "convert"
+      ? "Convert"
+      : tier === "after-hours"
+        ? "After Hours"
+        : tier === "prepare"
+          ? "Prepare"
+          : "Watch";
 
   const tierDescription: Record<string, string> = {
     watch: "You've secured your spot for the live panel + recording. We'll be in touch within 24 hours with your Zoom link and everything you need.",
     prepare: "You've secured the live panel, recording, and your Spring Week Handbook. We'll be in touch within 24 hours with your access details and next steps.",
-    convert: "You've secured the full package: live panel, recording, handbook, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
+    "after-hours": "You've secured the live panel, recording, handbook, and your spot in the After Hours session. We'll be in touch within 24 hours with everything you need.",
+    convert: "You've secured the full package: live panel, recording, handbook, After Hours, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
   };
 
   return (

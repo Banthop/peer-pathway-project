@@ -9,68 +9,31 @@ import {
   HelpCircle,
   Clock,
   Shield,
-  Check,
 } from "lucide-react";
 
 interface SpringWeekWelcomeProps {
   onContinue: () => void;
 }
 
-/* ---- Firm names (text only, no logos) ---- */
-const FIRM_NAMES = [
-  "Morgan Stanley", "Evercore", "HSBC", "Deutsche Bank",
-  "Houlihan Lokey", "Barclays", "Nomura", "RBC",
-  "JP Morgan", "D.E. Shaw", "Macquarie", "Lazard",
-  "BNP Paribas", "Jane Street", "Bank of America", "EY",
+/* ---- Firm logos (SVGs from /public/logos/) ---- */
+const FIRM_LOGOS = [
+  { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true },
+  { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true },
+  { file: "barclays.svg", h: "h-8 md:h-9", invert: false },
+  { file: "citadel.svg", h: "h-7 md:h-8", invert: false },
+  { file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
+  { file: "macquarie.svg", h: "h-6 md:h-7", invert: true },
+  { file: "lazard.svg", h: "h-6 md:h-7", invert: true },
+  { file: "evercore.svg", h: "h-6 md:h-7", invert: true },
+  { file: "houlihan-lokey.svg", h: "h-6 md:h-7", invert: false },
+  { file: "jane-street.svg", h: "h-6 md:h-7", invert: false },
+  { file: "de-shaw.svg", h: "h-6 md:h-7", invert: false },
+  { file: "bnp-paribas.svg", h: "h-6 md:h-7", invert: false },
+  { file: "bank-of-america.svg", h: "h-6 md:h-7", invert: true },
+  { file: "ey.svg", h: "h-7 md:h-8", invert: false },
+  { file: "nomura.svg", h: "h-6 md:h-7", invert: true },
+  { file: "rbc.svg", h: "h-7 md:h-8", invert: false },
 ];
-
-/* ---- Checklist card component ---- */
-function ChecklistCard() {
-  return (
-    <div className="checklist-card">
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full">
-          EarlyEdge Checklist
-        </span>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-full ml-auto">
-          Free
-        </span>
-      </div>
-      <h3 className="text-lg font-bold text-white mt-3 leading-tight">
-        Spring Week
-        <br />
-        <span className="text-emerald-400">Conversion</span>
-        <br />
-        Checklist
-      </h3>
-      <p className="text-xs text-white/60 mt-2 mb-4">
-        Your step-by-step guide to standing out
-      </p>
-      <div className="space-y-2.5">
-        {[0, 1, 2, 3, 4].map((i) => (
-          <div key={i} className="flex items-center gap-2.5">
-            <div
-              className={`rounded flex items-center justify-center shrink-0 ${
-                i < 2 ? "bg-emerald-500" : "border border-white/15 bg-transparent"
-              }`}
-              style={{ width: 18, height: 18 }}
-            >
-              {i < 2 && <Check className="w-3 h-3 text-black" strokeWidth={3} />}
-            </div>
-            <div
-              className={`h-2 rounded-full flex-1 ${
-                i < 2 ? "bg-emerald-500/30" : "bg-white/[0.06]"
-              }`}
-            />
-          </div>
-        ))}
-      </div>
-      <p className="text-xs text-white/50 mt-4 font-medium">
-        Early<span className="text-white/60 font-bold">Edge</span>
-      </p>
-    </div>
-  );
-}
 
 /* ---- FAQ accordion ---- */
 const LANDING_FAQS = [
@@ -146,69 +109,50 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
   return (
     <div className="flex flex-col items-center w-full">
 
-      {/* ---- HERO SECTION ---- */}
-      <div className="w-full max-w-2xl">
-        {/* Top row: Checklist card + Headline */}
-        <div className="flex flex-col md:flex-row gap-8 md:gap-10 items-start">
+      {/* ---- HERO SECTION (bold centered) ---- */}
+      <div className="w-full max-w-2xl text-center">
+        <h1
+          className="text-white font-bold leading-[1.05] tracking-tight"
+          style={{ fontSize: "clamp(32px, 7vw, 56px)" }}
+        >
+          You got the spring week.
+          <br />
+          Will you <span className="text-emerald-400">convert</span> it?
+        </h1>
 
-          {/* Checklist card - hidden on mobile */}
-          <div className="hidden md:block w-[240px] shrink-0">
-            <ChecklistCard />
-          </div>
+        <p className="mt-6 text-base md:text-lg font-light text-white/60 leading-relaxed max-w-lg mx-auto">
+          Only <strong className="text-white font-bold">10-15%</strong> of spring interns convert on average. This Sunday,{" "}
+          <span className="text-white font-medium">10+ students</span> who converted{" "}
+          <span className="text-white font-medium">25+ spring weeks</span> share exactly how they did it.
+        </p>
+      </div>
 
-          {/* Right: headline area */}
-          <div className="flex-1">
-            {/* Date pill + free note */}
-            <div className="flex items-center gap-3 mb-8">
-              <span className="funnel-pill">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
-                Sunday April 12
-              </span>
-              <span className="text-xs font-medium text-white/60">
-                Free checklist included
-              </span>
-            </div>
-
-            {/* Headline */}
-            <h1
-              className="funnel-heading"
-              style={{ fontSize: "clamp(28px, 5vw, 48px)" }}
-            >
-              How students{" "}
-              <span className="text-emerald-400">converted</span> their spring weeks into return offers
-            </h1>
-
-            {/* Subtitle */}
-            <p className="funnel-sub mt-4 text-sm md:text-[15px] max-w-md">
-              10+ speakers. 25+ firms. Every conversion strategy they used, shared in one evening.
-            </p>
-
-            {/* Date + Platform row */}
-            <div className="flex flex-wrap items-center gap-4 mt-5 text-[13px] text-white/60 font-light">
-              <span className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
-                <Clock className="w-3.5 h-3.5 text-white/80" />
-                Sun April 12 - 7pm BST
-              </span>
-              <span className="hidden sm:inline text-white/15">|</span>
-              <span>Live on Zoom - recording included</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Checklist card - mobile only */}
-        <div className="md:hidden mt-8">
-          <ChecklistCard />
+      {/* ---- CTA ---- */}
+      <div className="w-full max-w-2xl mt-8">
+        <button
+          type="button"
+          onClick={onContinue}
+          className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer text-black hover:opacity-90 active:scale-[0.99]"
+          style={{ background: "linear-gradient(135deg, #6EE7B7, #34D399)" }}
+        >
+          Get Ready Before Monday
+          <ArrowRight className="h-4 w-4" />
+        </button>
+        <p className="text-center text-[11px] text-white/40 mt-3 font-light">
+          Join 150+ students already registered. Full refund if it's not for you.
+        </p>
+        <div className="flex justify-center mt-3">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/[0.06] border border-white/[0.08] px-3 py-1 rounded-full">
+            Recording included
+          </span>
         </div>
       </div>
 
       {/* ---- COUNTDOWN BAR ---- */}
-      <div className="w-full max-w-2xl mt-10">
+      <div className="w-full max-w-2xl mt-8">
         <div className="flex items-center justify-between funnel-card rounded-xl px-4 py-3">
           <span className="text-xs text-white/60 font-light">
-            Spring weeks start Monday. This is the weekend to get ready.
+            Spring weeks are happening now. Get ready before yours starts.
           </span>
           <div className="flex items-center gap-1.5 font-mono text-xs font-bold text-emerald-400 shrink-0 ml-3">
             <Clock className="h-3 w-3" />
@@ -219,40 +163,28 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         </div>
       </div>
 
-      {/* ---- CTA ---- */}
-      <div className="w-full max-w-2xl mt-6">
-        <button type="button" onClick={onContinue} className="funnel-cta">
-          Secure Your Spot - From £19
-          <ArrowRight className="h-4 w-4" />
-        </button>
-        <p className="text-center text-[11px] text-white/50 mt-3 font-light">
-          Join 150+ students already registered. Full refund if it's not for you.
-        </p>
-        <div className="flex justify-center mt-3">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-full">
-            Recording included
-          </span>
-        </div>
-      </div>
-
-      {/* ---- SPEAKERS WHO CONVERTED AT ---- */}
+      {/* ---- SPEAKERS WHO CONVERTED AT (logos) ---- */}
       <div className="w-full max-w-2xl mt-14">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4 text-center">
-          Speakers who converted at
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-6 text-center">
+          Speakers who converted at these firms
         </h2>
-        <div className="flex flex-wrap justify-center gap-2">
-          {FIRM_NAMES.map((firm) => (
-            <span
-              key={firm}
-              className="text-[13px] font-semibold text-white/80 bg-white/[0.06] border border-white/[0.10] rounded-lg px-3.5 py-2"
-            >
-              {firm}
-            </span>
+        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
+          {FIRM_LOGOS.map((firm) => (
+            <img
+              key={firm.file}
+              src={`/logos/${firm.file}`}
+              alt={firm.file.replace(".svg", "").replace(/-/g, " ")}
+              className={`${firm.h} w-auto opacity-60 hover:opacity-100 transition-opacity duration-200`}
+              style={firm.invert ? { filter: "brightness(0) invert(1)" } : undefined}
+            />
           ))}
         </div>
+        <p className="text-[11px] text-white/40 text-center mt-4 tracking-wide">
+          + many more
+        </p>
       </div>
 
-      {/* ---- WHAT YOU'LL WALK AWAY WITH ---- */}
+      {/* ---- WHAT YOU WILL WALK AWAY WITH ---- */}
       <div className="w-full max-w-2xl mt-14">
         <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-4 text-center">
           What you will walk away with
@@ -268,7 +200,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           ].map((text) => (
             <div key={text} className="flex items-start gap-3 py-2">
               <CheckCircle2 className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400/80" />
-              <span className="text-[14px] text-white/60 font-light leading-snug">
+              <span className="text-[14px] text-white/85 font-light leading-snug">
                 {text}
               </span>
             </div>
@@ -283,50 +215,23 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             Why this weekend?
           </p>
           <p className="text-[14px] font-light text-white/70 leading-relaxed">
-            Spring weeks start <strong className="font-semibold text-white/80">Monday April 13</strong>.
-            Most firms run the assessment centre on the{" "}
+            Spring weeks are running right now across every major firm.
+            Most run the assessment centre on the{" "}
             <strong className="font-semibold text-white/80">final day</strong>,
-            so the students who convert are the ones who showed up ready from day one.
+            so the students who convert are the ones who showed up ready from
+            day one.
           </p>
           <p className="text-[14px] font-light text-white/60 mt-2 leading-relaxed">
-            This is the last weekend to prepare with students who already converted.
+            Get ready before your week starts with students who already
+            converted.
           </p>
-        </div>
-      </div>
-
-      {/* ---- PRICING PREVIEW ---- */}
-      <div className="w-full max-w-2xl mt-12">
-        <div className="grid grid-cols-3 gap-2 sm:gap-3">
-          {[
-            { name: "Watch", price: "£19", desc: "Live panel + recording" },
-            { name: "Prepare", price: "£39", desc: "Panel + Handbook (45+ firms)", highlight: true },
-            { name: "Convert", price: "£79", desc: "Panel + Handbook + prep call" },
-          ].map((tier) => (
-            <div
-              key={tier.name}
-              className={`funnel-card rounded-xl px-3 py-4 sm:p-5 text-center ${
-                tier.highlight ? "border-emerald-500/30 bg-emerald-500/[0.04]" : ""
-              }`}
-            >
-              <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white/60 mb-1">
-                {tier.name}
-              </p>
-              <p className="text-xl sm:text-2xl font-bold text-white">{tier.price}</p>
-              <p className="text-[10px] sm:text-xs text-white/55 font-light mt-1 leading-tight">{tier.desc}</p>
-              {tier.highlight && (
-                <span className="inline-block mt-2 text-[9px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded-full">
-                  Most chosen
-                </span>
-              )}
-            </div>
-          ))}
         </div>
       </div>
 
       {/* ---- BOTTOM CTA ---- */}
       <div className="w-full max-w-2xl mt-8">
         <button type="button" onClick={onContinue} className="funnel-cta">
-          I Want to Be Prepared
+          From £19 - I Want to Be Prepared
           <ArrowRight className="h-4 w-4" />
         </button>
         <div className="flex items-center justify-center gap-1.5 mt-3 text-[11px] text-white/50 font-light">
