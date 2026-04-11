@@ -34,9 +34,16 @@ export function SpringWeekIndustry({
 }: SpringWeekIndustryProps) {
   const [showDetail, setShowDetail] = useState(!!industry);
 
+  // Support multi-select: industry is stored as comma-separated string
+  const selectedIndustries = industry ? industry.split(",").map((s) => s.trim()).filter(Boolean) : [];
+
   const handleSelectIndustry = (option: string) => {
-    onUpdate("industry", option);
-    setShowDetail(true);
+    const isSelected = selectedIndustries.includes(option);
+    const next = isSelected
+      ? selectedIndustries.filter((s) => s !== option)
+      : [...selectedIndustries, option];
+    onUpdate("industry", next.join(", "));
+    if (next.length > 0) setShowDetail(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,43 +68,51 @@ export function SpringWeekIndustry({
           About your spring week
         </h2>
         <p className="text-sm text-white/50 font-sans font-light">
-          What area are you targeting?
+          What area(s) are you targeting? Select all that apply.
         </p>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {SPRING_WEEK_INDUSTRY_OPTIONS.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => handleSelectIndustry(option)}
-            className={cn(
-              "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
-              industry === option
-                ? "bg-foreground text-background border-foreground shadow-sm"
-                : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
-            )}
-          >
-            {option}
-          </button>
-        ))}
+        {SPRING_WEEK_INDUSTRY_OPTIONS.map((option) => {
+          const isActive = selectedIndustries.includes(option);
+          return (
+            <button
+              key={option}
+              type="button"
+              onClick={() => handleSelectIndustry(option)}
+              className={cn(
+                "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
+                isActive
+                  ? "bg-emerald-500 text-black border-emerald-500 shadow-md shadow-emerald-500/20"
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
+              )}
+            >
+              {option}
+            </button>
+          );
+        })}
       </div>
+      {selectedIndustries.length > 0 && (
+        <p className="text-[11px] text-white/40 font-light -mt-4">
+          {selectedIndustries.length} selected - tap to add or remove
+        </p>
+      )}
 
-      {/* Micro-reinforcement based on industry */}
-      {industry && SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry] && (
+      {/* Micro-reinforcement based on first selected industry */}
+      {selectedIndustries.length > 0 && SPRING_WEEK_INDUSTRY_REINFORCEMENT[selectedIndustries[selectedIndustries.length - 1]] && (
         <div
           className="flex items-start gap-2.5 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           <Target className="h-4 w-4 mt-0.5 shrink-0" />
           <span className="font-sans font-light leading-snug">
-            {SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry]}
+            {SPRING_WEEK_INDUSTRY_REINFORCEMENT[selectedIndustries[selectedIndustries.length - 1]]}
           </span>
         </div>
       )}
 
       {/* Section: Which spring weeks have you landed? */}
-      {showDetail && industry && (
+      {showDetail && selectedIndustries.length > 0 && (
         <div
           className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300"
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
@@ -134,7 +149,7 @@ export function SpringWeekIndustry({
                   className={cn(
                     "w-full text-left px-4 py-3 text-sm rounded-xl border font-sans font-light transition-all duration-200",
                     biggestConcern === option
-                      ? "bg-foreground text-background border-foreground shadow-sm"
+                      ? "bg-emerald-500 text-black border-emerald-500 shadow-md shadow-emerald-500/20"
                       : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
                   )}
                 >
@@ -165,7 +180,7 @@ export function SpringWeekIndustry({
               className={cn(
                 "px-4 py-2 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 referralSource === option
-                  ? "bg-foreground text-background border-foreground shadow-sm"
+                  ? "bg-emerald-500 text-black border-emerald-500 shadow-md shadow-emerald-500/20"
                   : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20",
               )}
             >

@@ -84,34 +84,34 @@ export function PhoneInput({
                     type="button"
                     onClick={() => setOpen(!open)}
                     className={cn(
-                        "flex items-center gap-2 h-12 px-3 rounded-md border border-border bg-background",
-                        "text-sm font-sans transition-colors hover:border-foreground/40 whitespace-nowrap",
+                        "flex items-center gap-2 h-12 px-3 rounded-md border border-white/10 bg-white/[0.04]",
+                        "text-sm font-sans transition-colors hover:border-white/20 whitespace-nowrap",
                         "min-w-[120px]",
                     )}
                 >
                     <FlagImg iso={selected.iso} />
-                    <span className="text-foreground">{selected.code}</span>
-                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground ml-auto" />
+                    <span className="text-white">{selected.code}</span>
+                    <ChevronDown className="h-3.5 w-3.5 text-white/50 ml-auto" />
                 </button>
 
                 {open && (
-                    <div className="absolute z-50 top-full mt-1 left-0 w-72 bg-background border border-border rounded-lg shadow-lg overflow-hidden">
+                    <div className="absolute z-50 top-full mt-1 left-0 w-72 bg-zinc-900 border border-white/10 rounded-lg shadow-lg overflow-hidden">
                         {/* Search */}
-                        <div className="p-2 border-b border-border">
+                        <div className="p-2 border-b border-white/10">
                             <input
                                 ref={searchRef}
                                 type="text"
                                 placeholder="Search country..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full text-sm font-sans px-3 py-2 rounded-md border border-border bg-background outline-none focus:border-foreground/40"
+                                className="w-full text-sm font-sans px-3 py-2 rounded-md border border-white/10 bg-white/[0.04] text-white placeholder:text-white/40 outline-none focus:border-white/20"
                             />
                         </div>
 
                         {/* List */}
                         <div className="max-h-52 overflow-y-auto">
                             {filtered.length === 0 ? (
-                                <p className="px-4 py-3 text-sm text-muted-foreground font-sans">
+                                <p className="px-4 py-3 text-sm text-white/50 font-sans">
                                     No results
                                 </p>
                             ) : (
@@ -122,17 +122,17 @@ export function PhoneInput({
                                         onClick={() => handleSelect(c)}
                                         className={cn(
                                             "w-full flex items-center gap-3 px-4 py-2.5 text-sm font-sans transition-colors",
-                                            "hover:bg-secondary focus:bg-secondary focus:outline-none",
+                                            "hover:bg-white/[0.08] focus:bg-white/[0.08] focus:outline-none",
                                             selected.iso === c.iso && selected.code === c.code
-                                                ? "bg-secondary"
+                                                ? "bg-white/[0.08]"
                                                 : "",
                                         )}
                                     >
                                         <FlagImg iso={c.iso} />
-                                        <span className="text-foreground flex-1 text-left">
+                                        <span className="text-white flex-1 text-left">
                                             {c.name}
                                         </span>
-                                        <span className="text-muted-foreground text-xs">{c.code}</span>
+                                        <span className="text-white/50 text-xs">{c.code}</span>
                                     </button>
                                 ))
                             )}
@@ -147,7 +147,7 @@ export function PhoneInput({
                 placeholder="Phone number"
                 value={phone}
                 onChange={(e) => onPhoneChange(e.target.value)}
-                className="flex-1 h-12 px-4 rounded-md border border-border bg-background text-base font-sans outline-none focus:border-foreground/40 transition-colors"
+                className="flex-1 h-12 px-4 rounded-md border border-white/10 bg-white/[0.04] text-white placeholder:text-white/40 text-base font-sans outline-none focus:border-white/20 transition-colors"
                 autoComplete="tel-national"
             />
         </div>
