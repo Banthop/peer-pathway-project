@@ -455,8 +455,8 @@ function PartnerWelcome({
             />
           ))}
         </div>
-        <p className="text-[11px] text-white/40 text-center mt-4 tracking-wide">
-          + many more
+        <p className="text-sm font-medium text-white/50 text-center mt-5 tracking-wide">
+          + many more firms covered
         </p>
       </div>
 
