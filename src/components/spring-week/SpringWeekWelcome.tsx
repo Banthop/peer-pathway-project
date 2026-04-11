@@ -122,7 +122,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           Will you <span className="text-emerald-400">convert</span> it?
         </h1>
 
-        <p className="mt-6 text-base md:text-lg font-light text-white/60 leading-relaxed max-w-lg mx-auto">
+        <p className="mt-6 text-lg md:text-xl font-light text-white/70 leading-relaxed max-w-lg mx-auto">
           Only <strong className="text-white font-bold">10-15%</strong> of spring interns convert on average. This Sunday,{" "}
           <span className="text-white font-medium">10+ students</span> who converted{" "}
           <span className="text-white font-medium">25+ spring weeks</span> share exactly how they did it.
@@ -133,7 +133,10 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       <div className="w-full max-w-2xl mt-8">
         <button
           type="button"
-          onClick={onContinue}
+          onClick={() => {
+            const el = document.getElementById("bottom-cta");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
           className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer text-black hover:opacity-90 active:scale-[0.99]"
           style={{ background: "linear-gradient(135deg, #6EE7B7, #34D399)" }}
         >
@@ -216,15 +219,15 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-2 text-center">
           What's inside the handbook
         </h2>
-        <p className="text-[12px] text-white/40 text-center mb-5 font-light">
-          Included free with Prepare, After Hours, and Convert tiers
+        <p className="text-[13px] text-white/50 text-center mb-5 font-light">
+          Firm-by-firm breakdowns across every major division. Included with Prepare, After Hours, and Convert.
         </p>
 
         <div className="space-y-2">
           {[
-            { division: "Investment Banking", firms: "Morgan Stanley, Evercore, Houlihan Lokey, Barclays, Lazard" },
-            { division: "Global Markets / Trading", firms: "Jane Street, BNP Paribas, Nomura" },
-            { division: "Multi-Division", firms: "Macquarie, Bank of America, HSBC, RBC" },
+            { division: "Investment Banking", firms: "Goldman Sachs, Morgan Stanley, Evercore, Houlihan Lokey, Barclays, Lazard, Rothschild, and more" },
+            { division: "Global Markets / Trading", firms: "Jane Street, Citadel, BNP Paribas, Nomura, Optiver, and more" },
+            { division: "Multi-Division / Big 4", firms: "Macquarie, Bank of America, HSBC, RBC, Deloitte, EY, and more" },
           ].map((cat) => (
             <div key={cat.division} className="funnel-card rounded-xl px-4 py-3">
               <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80 mb-1">
@@ -253,8 +256,10 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           ))}
         </div>
 
-        <p className="text-[11px] text-white/30 text-center mt-4 font-light">
-          12 firms covered. More being added weekly. Buyers can request specific firms.
+        <p className="text-sm text-white/40 text-center mt-5 font-light leading-relaxed">
+          Covering every major firm. Updated constantly as we add more.
+          <br />
+          <span className="text-emerald-400/70 font-medium">Your firm not listed? Request it and we'll add it within hours.</span>
         </p>
       </div>
 
@@ -279,7 +284,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       </div>
 
       {/* ---- BOTTOM CTA ---- */}
-      <div className="w-full max-w-2xl mt-8">
+      <div id="bottom-cta" className="w-full max-w-2xl mt-8">
         <button type="button" onClick={onContinue} className="funnel-cta">
           From £19 - I Want to Be Prepared
           <ArrowRight className="h-4 w-4" />
