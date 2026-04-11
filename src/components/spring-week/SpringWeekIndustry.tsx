@@ -45,7 +45,7 @@ export function SpringWeekIndustry({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-8 pt-4 md:pt-0">
       {/* Pain-point stat */}
       <div className="flex items-start gap-3 bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.05)] rounded-xl px-4 py-3">
         <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />

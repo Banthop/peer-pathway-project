@@ -58,12 +58,12 @@ export function UniversityStep({
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* University */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-gray-900">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           Where do you study?
         </h2>
         <div className="relative">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none z-10" />
             <Input
               ref={inputRef}
               type="text"
@@ -74,7 +74,7 @@ export function UniversityStep({
                 setShowDropdown(true);
               }}
               onFocus={() => setShowDropdown(true)}
-              className="font-sans text-base h-12 border-gray-200 pl-10 rounded-xl text-gray-900"
+              className="font-sans text-base h-12 border-white/[0.1] bg-[#141414] text-white placeholder:text-white/30 pl-10 rounded-xl focus:border-emerald-400 focus:ring-emerald-400/20"
               autoComplete="off"
             />
           </div>
@@ -82,7 +82,7 @@ export function UniversityStep({
           {showDropdown && universities.length > 0 && !(universities.length === 1 && universities[0] === university) && (
             <div
               ref={dropdownRef}
-              className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-[240px] overflow-y-auto"
+              className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.1] rounded-xl shadow-lg overflow-hidden max-h-[240px] overflow-y-auto"
             >
               {universities.map((name) => (
                 <button
@@ -90,9 +90,9 @@ export function UniversityStep({
                   type="button"
                   onClick={() => handleSelect(name)}
                   className={cn(
-                    "w-full text-left px-4 py-3 text-sm font-sans font-light transition-colors text-gray-900",
-                    "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-                    name === university && "bg-gray-50",
+                    "w-full text-left px-4 py-3 text-sm font-sans font-light transition-colors text-white/80",
+                    "hover:bg-white/[0.08] focus:bg-white/[0.08] focus:outline-none",
+                    name === university && "bg-white/[0.08] text-emerald-400",
                   )}
                 >
                   {name}
@@ -102,21 +102,21 @@ export function UniversityStep({
           )}
 
           {loading && university.length >= 2 && showDropdown && (
-            <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3">
-              <p className="text-sm text-gray-500 font-sans font-light">
+            <div className="absolute z-50 w-full mt-1 bg-[#1a1a1a] border border-white/[0.1] rounded-xl shadow-lg px-4 py-3">
+              <p className="text-sm text-white/50 font-sans font-light">
                 Loading universities...
               </p>
             </div>
           )}
         </div>
-        <p className="text-xs text-gray-500 font-sans font-light">
+        <p className="text-xs text-white/50 font-sans font-light">
           Can't find yours? Just type it in manually
         </p>
       </div>
 
       {/* Year of study */}
       <div className="space-y-3">
-        <h2 className="text-2xl md:text-3xl font-sans font-light text-gray-900">
+        <h2 className="text-2xl md:text-3xl font-sans font-light text-white">
           What year are you in?
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -128,8 +128,8 @@ export function UniversityStep({
               className={cn(
                 "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
                 yearOfStudy === year
-                  ? "bg-gray-900 text-white border-gray-900 shadow-sm"
-                  : "bg-white text-gray-900 border-gray-300 hover:border-gray-500",
+                  ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+                  : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
               )}
             >
               {year}

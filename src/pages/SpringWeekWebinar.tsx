@@ -499,7 +499,7 @@ export default function SpringWeekWebinar() {
       {/* Form steps */}
       <main
         className={`min-h-screen flex ${
-          form.step === 0 ? "items-start pt-20 md:pt-24" : "items-center"
+          form.step === 0 ? "items-start pt-20 md:pt-24" : "items-start md:items-center pt-24 md:pt-8"
         } justify-center px-4 py-8`}
       >
         <div className={`w-full mx-auto ${form.step === 0 ? "max-w-2xl" : "max-w-xl"}`}>
