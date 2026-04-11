@@ -827,7 +827,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
               marginBottom: 12,
             }}
           >
-            Your spring week starts in {ctaCountdown}.
+            Your spring week starts soon.
           </h2>
           <p
             style={{
@@ -848,7 +848,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             <CTABtn onClick={onContinue} />
           </div>
           <p style={{ fontSize: 14, color: "#666666" }}>
-            150+ students already registered · Recording included · Full refund
+            Recording Included | Not satisfied? Full refund included
           </p>
         </div>
       </FadeIn>
