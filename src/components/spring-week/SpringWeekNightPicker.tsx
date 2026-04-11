@@ -80,13 +80,34 @@ function AnimatedPrice({ value }: { value: number }) {
 
 // ---- FAQ ----
 const FAQ_ITEMS = [
-  { q: "Will there be a recording?", a: "Yes. Every tier includes lifetime access to the full recording. Watch live or anytime after." },
-  { q: "What if my firm isn't covered?", a: "The conversion strategies our speakers share work across every firm and every area of finance. The frameworks are universal." },
-  { q: "Can I get a refund?", a: "Yes. Full refund if you're not satisfied, just email us." },
-  { q: "How long is the panel?", a: "About 1.5 hours of conversion strategies, stories and live Q&A." },
-  { q: "What's in the Handbook?", a: "Firm-by-firm breakdowns for 45+ firms. What the spring week looks like, what the assessment day involves, networking scripts, and conversion tactics from students who actually did it." },
-  { q: "What's the prep call in the Convert tier?", a: "A private 30-minute call with someone who converted their spring week at your target firm. They walk you through what to expect day by day and give tailored advice for your situation." },
-  { q: "Can I upgrade later?", a: "We can't guarantee these prices will still be available. The best time to lock in your tier is now." },
+  {
+    q: "Will there be a recording?",
+    a: "Yes. The full recording is included with every tier and you'll have lifetime access. Watch it live, rewatch it before your spring week, or come back to it anytime. If you can't make it on Sunday, you won't miss anything.",
+  },
+  {
+    q: "What's in the Handbook?",
+    a: "The Spring Week Conversion Handbook covers 45+ firms with insider breakdowns from students who actually converted. For each firm, you get: what the programme looks like day by day, what the assessment centre involves, how networking works, what they're really looking for, and the mistakes that cost other students their offers. It's organised by division (Investment Banking, Global Markets, Trading, Big 4, and more) so you can jump straight to your target firm. New firms are being added constantly, and if yours isn't covered yet, you can request it and we'll add it within hours.",
+  },
+  {
+    q: "What's the 1-on-1 prep call in Convert?",
+    a: "A private 30-minute call with a student who completed and converted their spring week at your specific firm. They'll walk you through exactly what to expect day by day, cover the assessment format and what they're really looking for, give you a personalised networking strategy (who to talk to, when, and what to say), and help you feel fully prepared before you walk in. Think of it as having a mentor who's already been through the exact process at your firm. You'll be matched based on the firm and division you're targeting.",
+  },
+  {
+    q: "What if my firm isn't covered?",
+    a: "The conversion strategies our speakers share work across every firm and every area of finance. The networking, assessment centre, and follow-up strategies work at every firm. Plus, the Handbook is being updated constantly. If your specific firm isn't in there yet, request it and we'll source someone who converted there and add their insights within hours.",
+  },
+  {
+    q: "Can I get a refund?",
+    a: "Yes. Full refund if it's not for you. Just email us and we'll process it. We'd rather you try it risk-free than wonder what you missed.",
+  },
+  {
+    q: "How long is the panel?",
+    a: "About 1.5 hours of focused conversion strategies from 7+ speakers, followed by a live Q&A where you can ask about your specific firm. It's designed to be dense and actionable, not a lecture.",
+  },
+  {
+    q: "Can I upgrade later?",
+    a: "We can't guarantee these prices will be available after checkout. The Prepare and Convert tiers are priced for this launch and may increase. If you're considering the Handbook or a prep call, it's best to get it now.",
+  },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
