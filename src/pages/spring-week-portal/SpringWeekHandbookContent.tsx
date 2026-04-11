@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { ChevronDown, ChevronRight, Building2, User, Clock, MapPin } from "lucide-react";
+import { useState, useRef, useMemo } from "react";
+import { ChevronDown, ChevronRight, Building2, User, Clock, MapPin, Lock, ArrowRight } from "lucide-react";
 
 // --------------- Types ---------------
 
@@ -352,10 +352,55 @@ function FirmCard({ entry }: { entry: FirmEntry }) {
   );
 }
 
+// --------------- Access check ---------------
+
+const ALLOWED_TICKETS = ["prepare", "convert", "1,2,3+handbook", "bundle", "premium"];
+
+function useHandbookAccess(): boolean {
+  return useMemo(() => {
+    try {
+      const raw = localStorage.getItem("spring_week_signup");
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      const ticket = (data.selectedTicket ?? "").toLowerCase();
+      return ALLOWED_TICKETS.includes(ticket);
+    } catch {
+      return false;
+    }
+  }, []);
+}
+
+// --------------- Sample firm ID for preview ---------------
+
+const SAMPLE_FIRM_ID = "morgan-stanley";
+
+// --------------- Locked firm card (preview mode) ---------------
+
+function LockedFirmCard({ entry }: { entry: FirmEntry }) {
+  return (
+    <div id={entry.id} className="scroll-mt-24 relative">
+      <div className="w-full flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-xl px-5 py-4 opacity-60">
+        <div className="flex items-center gap-3 min-w-0">
+          <Building2 className="w-5 h-5 text-slate-600 flex-shrink-0" />
+          <div className="min-w-0">
+            <h3 className="text-[15px] font-bold text-white truncate">{entry.firm}</h3>
+            <p className="text-[12px] text-slate-500 truncate">{entry.division}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 text-slate-500 flex-shrink-0">
+          <Lock className="w-4 h-4" />
+          <span className="text-[11px] font-medium">Unlock with Prepare or Convert</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --------------- Main component ---------------
 
 export default function SpringWeekHandbookContent() {
   const tocRef = useRef<HTMLDivElement>(null);
+  const hasAccess = useHandbookAccess();
 
   const scrollToFirm = (id: string) => {
     const el = document.getElementById(id);
@@ -370,7 +415,7 @@ export default function SpringWeekHandbookContent() {
           <div className="flex items-center gap-2 mb-4">
             <span className="w-2 h-2 bg-emerald-500 rounded-full" />
             <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider">
-              Premium Content
+              {hasAccess ? "Premium Content" : "Preview"}
             </p>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-white leading-tight">
@@ -394,7 +439,7 @@ export default function SpringWeekHandbookContent() {
       </div>
 
       <div className="px-6 md:px-10 max-w-3xl mx-auto">
-        {/* Table of Contents */}
+        {/* Table of Contents - always visible */}
         <div ref={tocRef} className="mt-8 bg-slate-900/60 border border-slate-800 rounded-xl p-5">
           <h2 className="text-[14px] font-bold text-white mb-4">Table of Contents</h2>
           <div className="space-y-4">
@@ -423,6 +468,18 @@ export default function SpringWeekHandbookContent() {
           </div>
         </div>
 
+        {/* Non-buyer banner */}
+        {!hasAccess && (
+          <div className="mt-6 bg-emerald-950/30 border border-emerald-800/30 rounded-xl px-5 py-4">
+            <p className="text-[13px] text-emerald-300 font-medium mb-1">
+              You are viewing a preview of the handbook
+            </p>
+            <p className="text-[12px] text-slate-400 font-light leading-relaxed">
+              The full Morgan Stanley chapter is unlocked below as a sample. All other firms require a Prepare or Convert tier ticket.
+            </p>
+          </div>
+        )}
+
         {/* Firm sections by category */}
         {CATEGORIES.map((cat) => (
           <div key={cat.id} className="mt-10">
@@ -437,11 +494,34 @@ export default function SpringWeekHandbookContent() {
               {cat.firmIds.map((fid) => {
                 const firm = FIRMS.find((f) => f.id === fid);
                 if (!firm) return null;
-                return <FirmCard key={fid} entry={firm} />;
+                if (hasAccess || fid === SAMPLE_FIRM_ID) {
+                  return <FirmCard key={fid} entry={firm} />;
+                }
+                return <LockedFirmCard key={fid} entry={firm} />;
               })}
             </div>
           </div>
         ))}
+
+        {/* CTA for non-buyers */}
+        {!hasAccess && (
+          <div className="mt-10 bg-slate-900/60 border border-emerald-800/20 rounded-xl p-6 text-center">
+            <h2 className="text-lg font-bold text-white mb-2">
+              Want the full handbook?
+            </h2>
+            <p className="text-[13px] text-slate-400 font-light leading-relaxed mb-5 max-w-md mx-auto">
+              Get firm-by-firm breakdowns for all 12 firms, including day-by-day schedules, insider tips, assessment formats, and preparation strategies.
+            </p>
+            <a
+              href="/spring-week"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-black no-underline hover:opacity-90 transition-opacity"
+              style={{ background: "linear-gradient(135deg, #6EE7B7, #34D399)" }}
+            >
+              Get the Handbook
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        )}
 
         {/* More firms coming soon */}
         <div className="mt-12 bg-slate-900/40 border border-slate-800/60 rounded-xl p-6">

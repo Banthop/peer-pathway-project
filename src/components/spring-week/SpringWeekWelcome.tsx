@@ -19,22 +19,22 @@ interface SpringWeekWelcomeProps {
 
 /* ---- Firm logos (SVGs from /public/logos/) ---- */
 const FIRM_LOGOS = [
-  { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true },
-  { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true },
-  { file: "barclays.svg", h: "h-6 md:h-7", invert: true },
-  { file: "citadel.png", h: "h-7 md:h-8", invert: true },
-  { file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
-  { file: "macquarie.svg", h: "h-6 md:h-7", invert: true },
-  { file: "lazard.svg", h: "h-6 md:h-7", invert: true },
-  { file: "evercore.svg", h: "h-6 md:h-7", invert: true },
-  { file: "houlihan-lokey.png", h: "h-7 md:h-9", invert: false },
-  { file: "jane-street.png", h: "h-6 md:h-8", invert: false },
-  { file: "de-shaw.svg", h: "h-7 md:h-8", invert: true },
-  { file: "bnp-paribas.svg", h: "h-6 md:h-7", invert: false },
-  { file: "bank-of-america.svg", h: "h-6 md:h-7", invert: true },
-  { file: "ey.svg", h: "h-7 md:h-8", invert: false },
-  { file: "nomura.svg", h: "h-6 md:h-7", invert: true },
-  { file: "rbc.svg", h: "h-7 md:h-8", invert: false },
+  { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true, url: "https://www.morganstanley.com" },
+  { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true, url: "https://www.jpmorgan.com" },
+  { file: "barclays.svg", h: "h-6 md:h-7", invert: true, url: "https://www.barclays.com" },
+  { file: "citadel.png", h: "h-7 md:h-8", invert: true, url: "https://www.citadel.com" },
+  { file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true, url: "https://www.db.com" },
+  { file: "macquarie.svg", h: "h-6 md:h-7", invert: true, url: "https://www.macquarie.com" },
+  { file: "lazard.svg", h: "h-6 md:h-7", invert: true, url: "https://www.lazard.com" },
+  { file: "evercore.svg", h: "h-6 md:h-7", invert: true, url: "https://www.evercore.com" },
+  { file: "houlihan-lokey.png", h: "h-7 md:h-9", invert: false, url: "https://www.hl.com" },
+  { file: "jane-street.png", h: "h-6 md:h-8", invert: false, url: "https://www.janestreet.com" },
+  { file: "de-shaw.svg", h: "h-7 md:h-8", invert: true, url: "https://www.deshaw.com" },
+  { file: "bnp-paribas.svg", h: "h-6 md:h-7", invert: false, url: "https://www.bnpparibas.com" },
+  { file: "bank-of-america.svg", h: "h-6 md:h-7", invert: true, url: "https://www.bankofamerica.com" },
+  { file: "ey.svg", h: "h-7 md:h-8", invert: false, url: "https://www.ey.com" },
+  { file: "nomura.svg", h: "h-6 md:h-7", invert: true, url: "https://www.nomura.com" },
+  { file: "rbc.svg", h: "h-7 md:h-8", invert: false, url: "https://www.rbc.com" },
 ];
 
 /* ---- FAQ accordion ---- */
@@ -178,13 +178,20 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
           {FIRM_LOGOS.map((firm) => (
-            <img
+            <a
               key={firm.file}
-              src={`/logos/${firm.file}`}
-              alt={firm.file.replace(".svg", "").replace(/-/g, " ")}
-              className={`${firm.h} w-auto opacity-60 hover:opacity-100 transition-opacity duration-200`}
-              style={firm.invert ? { filter: "brightness(0) invert(1)" } : undefined}
-            />
+              href={firm.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="no-underline"
+            >
+              <img
+                src={`/logos/${firm.file}`}
+                alt={firm.file.replace(".svg", "").replace(".png", "").replace(/-/g, " ")}
+                className={`${firm.h} w-auto opacity-60 hover:opacity-100 transition-opacity duration-200`}
+                style={firm.invert ? { filter: "brightness(0) invert(1)" } : undefined}
+              />
+            </a>
           ))}
         </div>
         <p className="text-sm font-medium text-white/50 text-center mt-5 tracking-wide">
