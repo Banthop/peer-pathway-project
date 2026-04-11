@@ -79,7 +79,7 @@ const CONVERT_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
   ],
   badge: "BEST VALUE",
   stripeLink: STRIPE_SW_CONVERT,
-  accent: "#F59E0B",
+  accent: "#10B981",
   limited: 12,
 };
 
