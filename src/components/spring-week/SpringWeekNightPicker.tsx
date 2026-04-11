@@ -99,9 +99,9 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         className="w-full flex items-center justify-between gap-4 py-4 text-left text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer"
       >
         {q}
-        {open ? <ChevronUp className="w-4 h-4 shrink-0 text-white/30" /> : <ChevronDown className="w-4 h-4 shrink-0 text-white/30" />}
+        {open ? <ChevronUp className="w-4 h-4 shrink-0 text-white/70" /> : <ChevronDown className="w-4 h-4 shrink-0 text-white/70" />}
       </button>
-      {open && <p className="pb-4 text-sm text-white/40 leading-relaxed font-light animate-in fade-in duration-200">{a}</p>}
+      {open && <p className="pb-4 text-sm text-white/70 leading-relaxed font-light animate-in fade-in duration-200">{a}</p>}
     </div>
   );
 }
@@ -123,14 +123,14 @@ function WebinarIncludes() {
         className="w-full flex items-center justify-between gap-3 px-5 py-3.5 text-left cursor-pointer"
       >
         <span className="text-sm font-medium text-white/70">What's included in the webinar?</span>
-        {open ? <ChevronUp className="w-4 h-4 text-white/30" /> : <ChevronDown className="w-4 h-4 text-white/30" />}
+        {open ? <ChevronUp className="w-4 h-4 text-white/70" /> : <ChevronDown className="w-4 h-4 text-white/70" />}
       </button>
       {open && (
         <div className="px-5 pb-4 space-y-2 animate-in fade-in duration-200">
           {items.map((item) => (
             <div key={item} className="flex items-start gap-2">
               <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-              <span className="text-xs text-white/50 leading-snug">{item}</span>
+              <span className="text-xs text-white/80 leading-snug">{item}</span>
             </div>
           ))}
         </div>
@@ -146,25 +146,25 @@ function HandbookPreview() {
       <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">
         The Spring Week Conversion Handbook
       </p>
-      <p className="text-xs text-white/50 leading-relaxed">
+      <p className="text-xs text-white/80 leading-relaxed">
         This is the most detailed spring week preparation resource available anywhere.
       </p>
-      <p className="text-xs text-white/40 leading-relaxed">
+      <p className="text-xs text-white/70 leading-relaxed">
         Covering 45+ firms with insider breakdowns from students who actually converted.
         This is not generic careers advice - it's real, specific intel from people who
         were in your seat last year.
       </p>
-      <p className="text-xs text-white/40 leading-relaxed">
+      <p className="text-xs text-white/70 leading-relaxed">
         Use it alongside the live panel to go deeper on your target firm.
       </p>
       {/* Mini handbook mockup */}
       <div className="rounded-lg bg-black/40 border border-white/[0.06] p-3 space-y-1.5">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">Bank of America Spring Week</p>
-        <p className="text-[11px] text-white/20 leading-snug italic">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/70">Bank of America Spring Week</p>
+        <p className="text-[11px] text-white/70 leading-snug italic">
           "I was in the global payment solutions and credit divisions. On the first day, it was very much trying to get us to understand how the bank makes money and how the bank operates. Second and third day would be spending the entire day with your first preference, then your second preference..."
         </p>
       </div>
-      <p className="text-[10px] text-white/30 text-center">Preview of the Bank of America section - tap to expand</p>
+      <p className="text-[10px] text-white/70 text-center">Preview of the Bank of America section - tap to expand</p>
       <a
         href="/handbook"
         target="_blank"
@@ -181,14 +181,14 @@ function HandbookPreview() {
 // ---- Prep call embed ----
 function PrepCallPreview() {
   return (
-    <div className="mt-4 rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4 space-y-3">
+    <div className="mt-4 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <Phone className="w-4 h-4 text-amber-400" />
-        <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400">
+        <Phone className="w-4 h-4 text-emerald-400" />
+        <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">
           30-minute 1-on-1 prep call
         </p>
       </div>
-      <p className="text-xs text-white/50 leading-relaxed">
+      <p className="text-xs text-white/80 leading-relaxed">
         A private 30-minute call with a speaker who completed and converted their spring week
         at your target firm. They'll walk you through exactly what to expect - day by day -
         and give you tailored advice for your specific situation, your firm's culture, and your goals.
@@ -202,11 +202,11 @@ function PrepCallPreview() {
         ].map((item) => (
           <div key={item} className="flex items-start gap-2">
             <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-            <span className="text-xs text-white/50 leading-snug">{item}</span>
+            <span className="text-xs text-white/80 leading-snug">{item}</span>
           </div>
         ))}
       </div>
-      <p className="text-[11px] text-white/30 italic">
+      <p className="text-[11px] text-white/70 italic">
         This is the closest thing to having a mentor who's already been through it.
       </p>
     </div>
@@ -234,7 +234,7 @@ function FeatureLine({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-2">
       <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-      <span className="text-xs md:text-sm text-white/50 leading-snug">
+      <span className="text-xs md:text-sm text-white/80 leading-snug">
         {parts.map((p, i) =>
           p.highlight ? <span key={i} className="text-emerald-400 font-medium">{p.text}</span> : <span key={i}>{p.text}</span>
         )}
@@ -273,7 +273,7 @@ function PrepareContent() {
       </div>
       <div className="flex items-start gap-2">
         <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-        <span className="text-xs md:text-sm text-white/50 leading-snug">
+        <span className="text-xs md:text-sm text-white/80 leading-snug">
           <span className="text-white font-semibold">The Spring Week Conversion Handbook</span> - get access instantly, and apply the strategies while you watch
         </span>
       </div>
@@ -285,7 +285,7 @@ function PrepareContent() {
 function ConvertContent() {
   return (
     <div className="space-y-4">
-      <p className="text-xs text-white/40 font-medium">Everything in Prepare, plus:</p>
+      <p className="text-xs text-white/70 font-medium">Everything in Prepare, plus:</p>
       <PrepCallPreview />
     </div>
   );
@@ -322,7 +322,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         <h1 className="text-2xl md:text-[28px] font-bold text-white leading-tight tracking-tight">
           {firstName ? `Choose your tier, ${firstName}` : "Choose your tier"}
         </h1>
-        <p className="text-sm text-white/40 font-light max-w-md mx-auto">
+        <p className="text-sm text-white/70 font-light max-w-md mx-auto">
           One live panel. {SPEAKERS.length} speakers who converted. Every tier includes the full recording.
         </p>
       </div>
@@ -330,7 +330,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       {/* Countdown */}
       <div className="flex items-center justify-center gap-3 funnel-card rounded-xl px-5 py-3">
         <Clock className="w-3.5 h-3.5 text-white/25 shrink-0" />
-        <p className="text-xs text-white/40">Live panel starts in</p>
+        <p className="text-xs text-white/70">Live panel starts in</p>
         <div className="flex items-center gap-2 font-mono text-sm font-semibold text-emerald-400">
           {countdown.days > 0 && <span>{countdown.days}d</span>}
           <span>{String(countdown.hours).padStart(2, "0")}h</span>
@@ -342,18 +342,18 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       {/* Social proof row */}
       <div className="space-y-2">
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/40 bg-white/[0.04] rounded-full px-3 py-1.5">
-            <Clock className="w-3 h-3 text-white/30" />
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/70 bg-white/[0.04] rounded-full px-3 py-1.5">
+            <Clock className="w-3 h-3 text-white/70" />
             +1.5 hours of conversion strategies
           </span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/40 bg-white/[0.04] rounded-full px-3 py-1.5">
-            <Users className="w-3 h-3 text-white/30" />
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/70 bg-white/[0.04] rounded-full px-3 py-1.5">
+            <Users className="w-3 h-3 text-white/70" />
             20+ students have already purchased
           </span>
         </div>
         <div className="flex items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/40">
-            <Play className="w-3 h-3 text-white/30" />
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-white/70">
+            <Play className="w-3 h-3 text-white/70" />
             Full recording included
           </span>
         </div>
@@ -411,7 +411,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
                         <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded">
                           24% OFF
                         </span>
-                        <span className="text-[10px] font-medium text-amber-400">
+                        <span className="text-[10px] font-medium text-emerald-400">
                           Valid for next 12 hours only
                         </span>
                       </>
@@ -421,7 +421,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
                         <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded">
                           Best Value
                         </span>
-                        <span className="text-[10px] font-medium text-amber-400">
+                        <span className="text-[10px] font-medium text-emerald-400">
                           This week only
                         </span>
                       </>
@@ -443,30 +443,28 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
                         </div>
                         <span className="text-base md:text-lg font-bold text-white">{t.name}</span>
                       </div>
-                      <p className="mt-1 text-sm text-white/50 pl-[34px]">
+                      <p className="mt-1 text-sm text-white/80 pl-[34px]">
                         {tierTaglines[t.id] ?? t.tagline}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
                       {isWatch && (
-                        <p className="text-xs text-white/30 line-through">{"\u00A3"}25</p>
+                        <p className="text-xs text-white/70 line-through">{"\u00A3"}25</p>
                       )}
                       <p className="text-xl md:text-2xl font-bold text-white">{"\u00A3"}{t.price}</p>
                     </div>
                   </div>
 
-                  {/* Expanded content when selected */}
-                  {isSelected && (
-                    <div className="pl-[34px] pt-2 animate-in fade-in duration-200">
-                      {tierContentMap[t.id]}
-                    </div>
-                  )}
+                  {/* Tier content always visible */}
+                  <div className="pl-[34px] pt-2">
+                    {tierContentMap[t.id]}
+                  </div>
 
                   {/* Scarcity for convert */}
                   {t.limited && (
                     <div className="flex items-center gap-1.5 pl-[34px]">
-                      <AlertTriangle className="w-3 h-3 text-amber-400" />
-                      <span className="text-[11px] font-semibold text-amber-400">
+                      <AlertTriangle className="w-3 h-3 text-emerald-400" />
+                      <span className="text-[11px] font-semibold text-emerald-400">
                         Only {t.limited} spots left
                       </span>
                     </div>
@@ -485,7 +483,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
             <div className="text-3xl font-bold text-white tracking-tight">
               <AnimatedPrice value={currentTier.price} />
             </div>
-            <p className="text-xs text-white/40 mt-1">{currentTier.name} tier selected</p>
+            <p className="text-xs text-white/70 mt-1">{currentTier.name} tier selected</p>
           </div>
         </div>
 
@@ -499,7 +497,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         </button>
 
         {/* Social proof under CTA */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-white/30">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-white/70">
           <span className="flex items-center gap-1">
             <Users className="w-3 h-3" />
             78% of students choose Prepare
@@ -511,7 +509,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         </div>
 
         {/* Trust row */}
-        <div className="flex items-center justify-center gap-4 text-[11px] text-white/30">
+        <div className="flex items-center justify-center gap-4 text-[11px] text-white/70">
           <span className="flex items-center gap-1">
             <ShieldCheck className="w-3 h-3" />
             Full refund if not satisfied
@@ -526,7 +524,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       {/* FAQ */}
       <div className="funnel-card rounded-xl overflow-hidden">
         <div className="px-5 py-3 border-b border-white/[0.06]">
-          <p className="text-xs font-semibold text-white/30 uppercase tracking-wider">
+          <p className="text-xs font-semibold text-white/70 uppercase tracking-wider">
             Frequently asked questions
           </p>
         </div>
@@ -538,13 +536,13 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       </div>
 
       {/* Urgency footer */}
-      <div className="flex items-start gap-3 funnel-card rounded-xl px-4 py-3" style={{ borderColor: "rgba(245,158,11,0.12)" }}>
-        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
+      <div className="flex items-start gap-3 funnel-card rounded-xl px-4 py-3" style={{ borderColor: "rgba(16,185,129,0.12)" }}>
+        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400" />
         <div>
           <p className="text-sm font-medium text-white/70">
             The live panel is Sunday April 12 at 7pm BST.
           </p>
-          <p className="text-xs font-light text-white/40 mt-0.5">
+          <p className="text-xs font-light text-white/70 mt-0.5">
             Spring weeks start the next morning. This is the last weekend to prepare.
           </p>
         </div>

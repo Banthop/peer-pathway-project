@@ -211,7 +211,9 @@ export function WebinarCheckout({
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
   const reqRef = useRef(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
 
   // Stable refs for callbacks to avoid re-triggering the payment intent effect
@@ -234,6 +236,13 @@ export function WebinarCheckout({
     const seq = ++reqRef.current;
     setLoading(true);
     setFetchError(null);
+    setShowFallback(false);
+
+    // Show fallback button after 5 seconds if still loading
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setShowFallback(true);
+    }, 5000);
 
     const items: Array<{ id: string; type: string; price: number }> = [
       { id: selectedTierId, type: "tier", price: tier.price },
@@ -254,12 +263,14 @@ export function WebinarCheckout({
     callCheckout(payload)
       .then((data) => {
         if (seq !== reqRef.current) return;
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
         if (data.free) {
           onSuccessRef.current(selectedTierId);
           return;
         }
         if (!data.clientSecret) {
           setFetchError("No payment session returned. Please try again.");
+          setShowFallback(true);
           setLoading(false);
           return;
         }
@@ -268,12 +279,19 @@ export function WebinarCheckout({
       })
       .catch((err) => {
         if (seq !== reqRef.current) return;
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
         const message = err instanceof Error ? err.message : "Could not create checkout";
         setFetchError(message);
+        setShowFallback(true);
         setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName]);
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => { if (timeoutRef.current) clearTimeout(timeoutRef.current); };
+  }, []);
 
   // Create or update PaymentIntent when total changes
   useEffect(() => {
@@ -394,7 +412,7 @@ export function WebinarCheckout({
                       <span className="text-sm font-bold text-emerald-400">+{"\u00A3"}{addOn.price}</span>
                     </div>
                     <p className="mt-1 text-xs text-white/40 leading-snug">{addOn.description}</p>
-                    {addOn.scarcity && <p className="mt-1.5 text-[11px] font-semibold text-amber-400">{addOn.scarcity}</p>}
+                    {addOn.scarcity && <p className="mt-1.5 text-[11px] font-semibold text-emerald-400">{addOn.scarcity}</p>}
                   </div>
                 </div>
                 {active && (
@@ -448,6 +466,12 @@ export function WebinarCheckout({
           <div className="funnel-card rounded-2xl p-8 flex flex-col items-center gap-3">
             <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
             <p className="text-sm text-white/40 font-light">Preparing secure checkout...</p>
+            {showFallback && tier.stripeLink && (
+              <button type="button" onClick={handleStripeLinkFallback}
+                className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400 active:scale-[0.99] mt-2">
+                <Lock className="w-4 h-4" />Continue to Payment ({fmt(tier.price)})
+              </button>
+            )}
           </div>
         ) : fetchError ? (
           <div className="space-y-3">
