@@ -85,30 +85,24 @@ function PartnerSuccessScreen({
   const tier =
     ticket === "prepare"
       ? "prepare"
-      : ticket === "after-hours"
-        ? "after-hours"
-        : ticket === "convert"
-          ? "convert"
-          : "watch";
+      : ticket === "convert"
+        ? "convert"
+        : "watch";
 
   const tierLabel =
     tier === "convert"
       ? "Convert"
-      : tier === "after-hours"
-        ? "After Hours"
-        : tier === "prepare"
-          ? "Prepare"
-          : "Watch";
+      : tier === "prepare"
+        ? "Prepare"
+        : "Watch";
 
   const tierDescription: Record<string, string> = {
     watch:
       "You've secured your spot for the live panel + recording. We'll be in touch within 24 hours with your Zoom link and everything you need.",
     prepare:
       "You've secured the live panel, recording, and your Spring Week Handbook. We'll be in touch within 24 hours with your access details and next steps.",
-    "after-hours":
-      "You've secured the live panel, recording, handbook, and your spot in the After Hours session. We'll be in touch within 24 hours with everything you need.",
     convert:
-      "You've secured the full package: live panel, recording, handbook, After Hours, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
+      "You've secured the full package: live panel, recording, handbook, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
   };
 
   return (
@@ -172,7 +166,7 @@ function PartnerSuccessScreen({
           </div>
         </div>
 
-        {/* Handbook access - prepare/after-hours/convert only */}
+        {/* Handbook access - prepare/convert only */}
         {tier !== "watch" && (
           <div
             className="funnel-card rounded-2xl p-5 space-y-3"
@@ -491,7 +485,7 @@ function PartnerWelcome({
           What's inside the handbook
         </h2>
         <p className="text-[13px] text-white/50 text-center mb-5 font-light">
-          Firm-by-firm breakdowns across every major division. Included with Prepare, After Hours, and Convert.
+          Firm-by-firm breakdowns across every major division. Included with Prepare and Convert.
         </p>
 
         <div className="space-y-2">
@@ -532,6 +526,44 @@ function PartnerWelcome({
           <br />
           <span className="text-emerald-400/70 font-medium">Your firm not listed? Request it and we'll add it within hours.</span>
         </p>
+
+        <div className="flex justify-center mt-6">
+          <a
+            href="/handbook"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/60 border border-white/15 rounded-xl px-5 py-2.5 hover:border-white/30 hover:text-white/80 transition-all no-underline"
+          >
+            <BookOpen className="h-4 w-4" />
+            Learn more about the Handbook
+          </a>
+        </div>
+      </div>
+
+      {/* 1-on-1 prep call promo */}
+      <div className="w-full max-w-2xl mt-14">
+        <div className="funnel-card rounded-xl px-5 py-6" style={{ borderColor: "rgba(245,158,11,0.15)" }}>
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-2">
+            Not sure you'll convert? Talk to someone who did
+          </h3>
+          <p className="text-[14px] font-light text-white/60 leading-relaxed mb-4">
+            Book a 1-on-1 prep call with a student who converted at your exact firm. They'll tell you what to expect, what caught them off guard, and what got them the offer.
+          </p>
+          <div className="space-y-2">
+            {[
+              "Matched to your specific firm and division",
+              "30-45 min call before your spring week starts",
+              "Available with Convert tier or as an add-on at checkout",
+            ].map((text) => (
+              <div key={text} className="flex items-start gap-2.5">
+                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400/80" />
+                <span className="text-[13px] text-white/55 font-light leading-snug">
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Why this weekend */}
@@ -559,12 +591,11 @@ function PartnerWelcome({
 
       {/* Tier teaser (no prices) */}
       <div className="w-full max-w-2xl mt-12">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {[
-            { name: "Watch", desc: "Live panel + recording", icon: "🎙" },
-            { name: "Prepare", desc: "Panel + Handbook (45+ firms)", icon: "📖", highlight: true },
-            { name: "After Hours", desc: "Stay after with speakers", icon: "🌙" },
-            { name: "Convert", desc: "Panel + Handbook + 1-on-1 call", icon: "🚀" },
+            { name: "Watch", desc: "Live panel + recording" },
+            { name: "Prepare", desc: "Panel + Handbook (45+ firms)", highlight: true },
+            { name: "Convert", desc: "Panel + Handbook + 1-on-1 call" },
           ].map((tier) => (
             <div
               key={tier.name}

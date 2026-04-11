@@ -220,7 +220,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           What's inside the handbook
         </h2>
         <p className="text-[13px] text-white/50 text-center mb-5 font-light">
-          Firm-by-firm breakdowns across every major division. Included with Prepare, After Hours, and Convert.
+          Firm-by-firm breakdowns across every major division. Included with Prepare and Convert.
         </p>
 
         <div className="space-y-2">
@@ -261,6 +261,44 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           <br />
           <span className="text-emerald-400/70 font-medium">Your firm not listed? Request it and we'll add it within hours.</span>
         </p>
+
+        <div className="flex justify-center mt-6">
+          <a
+            href="/handbook"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/60 border border-white/15 rounded-xl px-5 py-2.5 hover:border-white/30 hover:text-white/80 transition-all no-underline"
+          >
+            <BookOpen className="h-4 w-4" />
+            Learn more about the Handbook
+          </a>
+        </div>
+      </div>
+
+      {/* ---- 1-ON-1 PREP CALL PROMO ---- */}
+      <div className="w-full max-w-2xl mt-14">
+        <div className="funnel-card rounded-xl px-5 py-6" style={{ borderColor: "rgba(245,158,11,0.15)" }}>
+          <h3 className="text-xs font-bold uppercase tracking-[0.15em] text-amber-400 mb-2">
+            Not sure you'll convert? Talk to someone who did
+          </h3>
+          <p className="text-[14px] font-light text-white/60 leading-relaxed mb-4">
+            Book a 1-on-1 prep call with a student who converted at your exact firm. They'll tell you what to expect, what caught them off guard, and what got them the offer.
+          </p>
+          <div className="space-y-2">
+            {[
+              "Matched to your specific firm and division",
+              "30-45 min call before your spring week starts",
+              "Available with Convert tier or as an add-on at checkout",
+            ].map((text) => (
+              <div key={text} className="flex items-start gap-2.5">
+                <CheckCircle2 className="h-3.5 w-3.5 mt-0.5 shrink-0 text-amber-400/80" />
+                <span className="text-[13px] text-white/55 font-light leading-snug">
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* ---- WHY THIS WEEKEND ---- */}

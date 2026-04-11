@@ -59,6 +59,7 @@ const PREPARE_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
     "Everything in Watch",
     "Spring Week Handbook: 45+ firms phase-by-phase",
     "Firm-specific intel on assessments, conversion rates and what to expect",
+    "Speakers stay on for an extra hour with a small group after the panel (8:30-9:30pm)",
   ],
   badge: "MOST CHOSEN",
   recommended: true,
@@ -66,33 +67,17 @@ const PREPARE_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
   accent: "#10B981",
 };
 
-const AFTER_HOURS_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
-  id: "after-hours",
-  name: "After Hours",
-  tagline: "Stay after with the speakers",
-  features: [
-    "Everything in Prepare",
-    "Speakers stay on for an extra hour with a small group (8:30-9:30pm)",
-    "Cameras on, direct questions about YOUR firm and YOUR spring week",
-    "The advice you can't get from a webinar recording",
-  ],
-  badge: "NEW",
-  stripeLink: STRIPE_SW_CONVERT,
-  accent: "#8B5CF6",
-  limited: 25,
-};
-
 const CONVERT_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
   id: "convert",
   name: "Convert",
   tagline: "Walk in Monday ready to get the offer",
   features: [
-    "Everything in After Hours",
+    "Everything in Prepare",
     "1-on-1 prep call with someone who converted at your firm (worth £69)",
     "They tell you what the week is really like and what got them the offer",
     "Priority booking for additional prep calls",
   ],
-  badge: "ULTIMATE",
+  badge: "BEST VALUE",
   stripeLink: STRIPE_SW_CONVERT,
   accent: "#F59E0B",
   limited: 12,
@@ -105,8 +90,7 @@ const CONVERT_TIER_BASE: Omit<PartnerTier, "price" | "originalPrice"> = {
 export const DEFAULT_TIERS: PartnerTier[] = [
   { ...WATCH_TIER_BASE, price: 19 },
   { ...PREPARE_TIER_BASE, price: 49 },
-  { ...AFTER_HOURS_TIER_BASE, price: 79 },
-  { ...CONVERT_TIER_BASE, price: 149 },
+  { ...CONVERT_TIER_BASE, price: 99 },
 ];
 
 // ---------------------------------------------------------------------------
@@ -126,8 +110,7 @@ const TRACKR_CONFIG: PartnerConfig = {
   tiers: [
     { ...WATCH_TIER_BASE, price: 0, originalPrice: 19 },
     { ...PREPARE_TIER_BASE, price: 49 },
-    { ...AFTER_HOURS_TIER_BASE, price: 79 },
-    { ...CONVERT_TIER_BASE, price: 149 },
+    { ...CONVERT_TIER_BASE, price: 99 },
   ],
 };
 

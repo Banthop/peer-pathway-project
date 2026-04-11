@@ -39,8 +39,7 @@ const corsHeaders = {
 const PRODUCT_PRICES: Record<string, number> = {
   watch: 19,
   prepare: 49,
-  "after-hours": 79,
-  convert: 149,
+  convert: 99,
   handbook: 29,
   "prep-call": 69,
 };

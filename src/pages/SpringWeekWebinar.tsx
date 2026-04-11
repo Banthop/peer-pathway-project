@@ -15,6 +15,7 @@ import { saveCrmContact } from "@/utils/crmTracking";
 import { matchFirmsToNights } from "@/data/springWeekData";
 import { DEFAULT_TIERS } from "@/data/partnerConfig";
 import { WebinarCheckout } from "@/components/checkout/WebinarCheckout";
+import { useCountdown } from "@/components/spring-week/shared";
 import {
   ChevronLeft,
   CheckCircle2,
@@ -23,6 +24,101 @@ import {
   BookOpen,
   Check,
 } from "lucide-react";
+
+// Live panel: Sunday April 12, 2026, 7pm BST
+const SESSION_START_ISO = "2026-04-12T19:00:00+01:00";
+
+/* ---- Countdown box sub-component ---- */
+function CountdownBox({ value, unit }: { value: string | number; unit: string }) {
+  return (
+    <span
+      style={{
+        background: "#1A1A1A",
+        border: "1px solid #333333",
+        borderRadius: 6,
+        padding: "4px 8px",
+        minWidth: 44,
+        display: "inline-flex",
+        alignItems: "baseline",
+        justifyContent: "center",
+        gap: 1,
+      }}
+    >
+      <span
+        style={{
+          color: "#2EE6A8",
+          fontSize: 14,
+          fontWeight: 700,
+          fontVariantNumeric: "tabular-nums",
+          fontFamily: "monospace, ui-monospace",
+        }}
+      >
+        {value}
+      </span>
+      <span style={{ color: "#2EE6A8", fontSize: 11, fontWeight: 500 }}>
+        {unit}
+      </span>
+    </span>
+  );
+}
+
+/* ---- Sticky urgency bar (shown on landing page only) ---- */
+function UrgencyBar() {
+  const countdown = useCountdown(SESSION_START_ISO);
+
+  return (
+    <div
+      className="grid items-center px-5"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        height: 48,
+        background: "#111111",
+        borderBottom: "1px solid #222222",
+        gridTemplateColumns: "1fr auto 1fr",
+      }}
+    >
+      {/* Logo - left */}
+      <span
+        style={{
+          justifySelf: "start",
+          fontSize: 14,
+          fontWeight: 400,
+          color: "rgba(255,255,255,0.4)",
+        }}
+      >
+        Early<span style={{ fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>Edge</span>
+      </span>
+
+      {/* Countdown - centre */}
+      <div
+        style={{
+          justifySelf: "center",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+        }}
+      >
+        <span
+          className="hidden sm:inline"
+          style={{ color: "#A0A0A0", fontSize: 13, fontWeight: 500, marginRight: 8 }}
+        >
+          Live panel starts in
+        </span>
+        <CountdownBox value={countdown.days} unit="d" />
+        <CountdownBox value={String(countdown.hours).padStart(2, "0")} unit="h" />
+        <CountdownBox value={String(countdown.minutes).padStart(2, "0")} unit="m" />
+        <CountdownBox value={String(countdown.seconds).padStart(2, "0")} unit="s" />
+      </div>
+
+      {/* Empty spacer - right */}
+      <div style={{ justifySelf: "end" }} />
+    </div>
+  );
+}
 
 function SuccessScreen({
   name,
@@ -33,8 +129,6 @@ function SuccessScreen({
 }) {
   const tier = ticket === "prepare" || ticket === "1,2,3+handbook"
     ? "prepare"
-    : ticket === "after-hours"
-    ? "after-hours"
     : ticket === "convert" || ticket === "premium"
     ? "convert"
     : "watch";
@@ -42,17 +136,14 @@ function SuccessScreen({
   const tierLabel =
     tier === "convert"
       ? "Convert"
-      : tier === "after-hours"
-        ? "After Hours"
-        : tier === "prepare"
-          ? "Prepare"
-          : "Watch";
+      : tier === "prepare"
+        ? "Prepare"
+        : "Watch";
 
   const tierDescription: Record<string, string> = {
     watch: "You've secured your spot for the live panel + recording. We'll be in touch within 24 hours with your Zoom link and everything you need.",
     prepare: "You've secured the live panel, recording, and your Spring Week Handbook. We'll be in touch within 24 hours with your access details and next steps.",
-    "after-hours": "You've secured the live panel, recording, handbook, and your spot in the After Hours session. We'll be in touch within 24 hours with everything you need.",
-    convert: "You've secured the full package: live panel, recording, handbook, After Hours, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
+    convert: "You've secured the full package: live panel, recording, handbook, and your 1-on-1 prep call. We'll be in touch within 24 hours to get you matched with the right speaker and send over everything.",
   };
 
   return (
@@ -112,7 +203,7 @@ function SuccessScreen({
           </div>
         </div>
 
-        {/* Handbook access - prepare/after-hours/convert only */}
+        {/* Handbook access - prepare/convert only */}
         {tier !== "watch" && (
           <div
             className="funnel-card rounded-2xl p-5 space-y-3"
@@ -224,7 +315,7 @@ export default function SpringWeekWebinar() {
 
   useEffect(() => {
     const prev = document.title;
-    document.title = "EarlyEdge - Spring Week Conversion Webinar";
+    document.title = "Convert Your Spring Week Into a Return Offer | EarlyEdge";
 
     const setMeta = (name: string, content: string) => {
       let el = document.querySelector(`meta[name="${name}"], meta[property="${name}"]`) as HTMLMetaElement;
@@ -236,14 +327,14 @@ export default function SpringWeekWebinar() {
       el.content = content;
     };
 
-    setMeta("description", "Learn how students at Goldman, Citi, Barclays and more converted their spring weeks into return offers. Live 2-part panel webinar with real spring weekers who did it.");
-    setMeta("og:title", "Spring Week Conversion Webinar - EarlyEdge");
-    setMeta("og:description", "Learn how students at Goldman, Citi, Barclays and more turned 1-2 week spring weeks into return offers. Live 2-part panel webinar.");
+    setMeta("description", "10+ students who converted their spring weeks at Goldman Sachs, Morgan Stanley, JP Morgan and 20+ other firms share exactly how they did it. Live this Sunday, recording included. From £19.");
+    setMeta("og:title", "Convert Your Spring Week Into a Return Offer | EarlyEdge");
+    setMeta("og:description", "10+ students who converted their spring weeks at Goldman Sachs, Morgan Stanley, JP Morgan and 20+ other firms share exactly how they did it. Live this Sunday, recording included. From £19.");
     setMeta("og:type", "website");
     setMeta("og:url", window.location.href);
     setMeta("twitter:card", "summary_large_image");
-    setMeta("twitter:title", "Spring Week Conversion Webinar - EarlyEdge");
-    setMeta("twitter:description", "Learn how students at Goldman, Citi, Barclays and more turned 1-2 week spring weeks into return offers. Live 2-part panel webinar.");
+    setMeta("twitter:title", "Convert Your Spring Week Into a Return Offer | EarlyEdge");
+    setMeta("twitter:description", "10+ students who converted their spring weeks at Goldman Sachs, Morgan Stanley, JP Morgan and 20+ other firms share exactly how they did it. Live this Sunday, recording included. From £19.");
 
     return () => {
       document.title = prev;
@@ -434,18 +525,25 @@ export default function SpringWeekWebinar() {
 
   return (
     <div className="funnel-dark relative">
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-40">
-        <Progress
-          value={form.progress}
-          className="h-1 rounded-none bg-white/[0.06] [&>div]:bg-emerald-500"
-        />
-      </div>
+      {/* Urgency bar - only on landing page (step 0) */}
+      {form.step === 0 && <UrgencyBar />}
 
-      {/* Logo */}
-      <div className="absolute top-5 left-6 z-50">
-        <span className="text-sm font-light text-white/40">Early<span className="font-bold text-white/70">Edge</span></span>
-      </div>
+      {/* Progress bar - only on form steps (step 1+) */}
+      {form.step > 0 && (
+        <div className="fixed top-0 left-0 right-0 z-40">
+          <Progress
+            value={form.progress}
+            className="h-1 rounded-none bg-white/[0.06] [&>div]:bg-emerald-500"
+          />
+        </div>
+      )}
+
+      {/* Logo - only on form steps (step 1+); step 0 has logo in urgency bar */}
+      {form.step > 0 && (
+        <div className="absolute top-5 left-6 z-50">
+          <span className="text-sm font-light text-white/40">Early<span className="font-bold text-white/70">Edge</span></span>
+        </div>
+      )}
 
       {/* Step counter */}
       {form.step > 0 && (
@@ -469,7 +567,7 @@ export default function SpringWeekWebinar() {
       )}
 
       {/* Form steps */}
-      <main className={`min-h-screen flex ${form.step === 0 ? 'items-start pt-28 md:pt-32' : 'items-center'} justify-center px-4 py-8`}>
+      <main className={`min-h-screen flex ${form.step === 0 ? 'items-start pt-20 md:pt-24' : 'items-center'} justify-center px-4 py-8`}>
         <div className={`w-full mx-auto ${form.step === 0 ? 'max-w-2xl' : 'max-w-xl'}`}>
           <WebinarFormStep isActive={form.step === 0} direction={form.direction}>
             <SpringWeekWelcome onContinue={handleContinue} />
