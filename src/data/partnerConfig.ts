@@ -114,12 +114,29 @@ const TRACKR_CONFIG: PartnerConfig = {
   ],
 };
 
+const FORGED_FINANCE_CONFIG: PartnerConfig = {
+  slug: "forged-finance",
+  name: "Forged Finance",
+  logo: "/forged-finance-logo.png",
+  brandColor: "#FFFFFF",
+  tagline: "Exclusive for Forged Finance members",
+  partnerMessage:
+    "Forged Finance sorted you free access to the live panel. Choose your tier below.",
+  referralTag: "ref_forged_finance",
+  tiers: [
+    { ...WATCH_TIER_BASE, price: 0, originalPrice: 19 },
+    { ...PREPARE_TIER_BASE, price: 49 },
+    { ...CONVERT_TIER_BASE, price: 99 },
+  ],
+};
+
 // ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
 export const PARTNERS: Record<string, PartnerConfig> = {
   [TRACKR_CONFIG.slug]: TRACKR_CONFIG,
+  [FORGED_FINANCE_CONFIG.slug]: FORGED_FINANCE_CONFIG,
 };
 
 export function getPartnerConfig(slug: string): PartnerConfig | null {
