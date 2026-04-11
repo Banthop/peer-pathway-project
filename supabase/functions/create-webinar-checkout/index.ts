@@ -60,6 +60,7 @@ interface CheckoutRequest {
   lastName: string;
   items: CheckoutItem[];
   partner?: string;
+  coupon?: string;
   metadata?: Record<string, string>;
 }
 
@@ -87,7 +88,7 @@ Deno.serve(async (req) => {
 
   try {
     const body: CheckoutRequest = await req.json();
-    const { email, firstName, lastName, items, partner, metadata } = body;
+    const { email, firstName, lastName, items, partner, coupon, metadata } = body;
 
     // --- Validation ---
 
@@ -138,11 +139,58 @@ Deno.serve(async (req) => {
 
     // --- Calculate total ---
 
-    const totalPence = items.reduce((sum, item) => sum + item.price * 100, 0);
+    const subtotalPence = items.reduce((sum, item) => sum + item.price * 100, 0);
+    let totalPence = subtotalPence;
+    let discountInfo: { type: "percent" | "amount"; value: number; finalTotal: number } | null = null;
 
-    // Free checkout (e.g. partner deal with Watch only at 0)
+    // --- Apply coupon if provided ---
+
+    if (coupon && typeof coupon === "string" && coupon.trim() !== "") {
+      try {
+        const stripeCoupon = await stripe.coupons.retrieve(coupon.trim());
+
+        if (!stripeCoupon || !stripeCoupon.valid) {
+          return jsonResponse({ error: "Invalid promo code" }, 400);
+        }
+
+        if (stripeCoupon.percent_off != null) {
+          const discountPence = Math.round(subtotalPence * (stripeCoupon.percent_off / 100));
+          totalPence = Math.max(0, subtotalPence - discountPence);
+          discountInfo = {
+            type: "percent",
+            value: stripeCoupon.percent_off,
+            finalTotal: totalPence / 100,
+          };
+        } else if (stripeCoupon.amount_off != null) {
+          // amount_off is in the smallest currency unit (pence for GBP)
+          totalPence = Math.max(0, subtotalPence - stripeCoupon.amount_off);
+          discountInfo = {
+            type: "amount",
+            value: stripeCoupon.amount_off / 100,
+            finalTotal: totalPence / 100,
+          };
+        }
+      } catch (couponErr: unknown) {
+        // Stripe throws if coupon ID does not exist
+        const msg = couponErr instanceof Error ? couponErr.message : "";
+        if (msg.includes("No such coupon") || msg.includes("resource_missing")) {
+          return jsonResponse({ error: "Invalid promo code" }, 400);
+        }
+        // Re-throw unexpected errors
+        throw couponErr;
+      }
+    }
+
+    // Free checkout (e.g. partner deal with Watch only at 0, or 100% coupon)
     if (totalPence === 0) {
-      return jsonResponse({ clientSecret: null, free: true }, 200);
+      return jsonResponse(
+        {
+          clientSecret: null,
+          free: true,
+          ...(discountInfo ? { discount: discountInfo } : {}),
+        },
+        200,
+      );
     }
 
     // --- Create PaymentIntent ---
@@ -153,6 +201,8 @@ Deno.serve(async (req) => {
       firstName,
       lastName,
       ...(partner ? { partner } : {}),
+      ...(coupon ? { coupon } : {}),
+      ...(discountInfo ? { discountType: discountInfo.type, discountValue: String(discountInfo.value) } : {}),
       ...(metadata || {}),
     };
 
@@ -168,8 +218,9 @@ Deno.serve(async (req) => {
       {
         clientSecret: paymentIntent.client_secret,
         intentId: paymentIntent.id,
+        ...(discountInfo ? { discount: discountInfo } : {}),
       },
-      200
+      200,
     );
   } catch (err: unknown) {
     const message =

@@ -18,6 +18,8 @@ import {
   Phone,
   Zap,
   Plus,
+  Tag,
+  X,
 } from "lucide-react";
 import { useCountdown } from "@/components/spring-week/shared";
 import { SPRING_WEEK_NIGHTS } from "@/data/springWeekData";
@@ -53,12 +55,19 @@ interface AddOn {
   scarcity?: string;
 }
 
+interface DiscountInfo {
+  type: "percent" | "amount";
+  value: number;
+  finalTotal: number;
+}
+
 interface CheckoutPayload {
   email: string;
   firstName: string;
   lastName: string;
   items: Array<{ id: string; type: string; price: number }>;
   partner?: string;
+  coupon?: string;
   metadata: Record<string, string>;
 }
 
@@ -129,7 +138,12 @@ async function callCheckout(payload: CheckoutPayload) {
     const body = await r.text().catch(() => "");
     throw new Error(body || `Server error (${r.status})`);
   }
-  return r.json() as Promise<{ clientSecret?: string | null; free?: boolean; intentId?: string }>;
+  return r.json() as Promise<{
+    clientSecret?: string | null;
+    free?: boolean;
+    intentId?: string;
+    discount?: DiscountInfo;
+  }>;
 }
 
 // ---------------------------------------------------------------------------
@@ -212,6 +226,12 @@ export function WebinarCheckout({
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [showFallback, setShowFallback] = useState(false);
+  const [promoOpen, setPromoOpen] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoDiscount, setPromoDiscount] = useState<DiscountInfo | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
   const reqRef = useRef(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
@@ -221,7 +241,8 @@ export function WebinarCheckout({
   onSuccessRef.current = onSuccess;
 
   const addOnTotal = availableAddOns.filter((a) => activeAddOns.has(a.id)).reduce((s, a) => s + a.price, 0);
-  const total = tier.price + addOnTotal;
+  const subtotal = tier.price + addOnTotal;
+  const total = promoDiscount ? promoDiscount.finalTotal : subtotal;
   const isFree = total === 0;
   const firstFirm = formData.springWeekFirms ? formData.springWeekFirms.split(",")[0].trim() : "";
 
@@ -253,6 +274,7 @@ export function WebinarCheckout({
     const payload: CheckoutPayload = {
       email: formData.email, firstName: formData.firstName, lastName: formData.lastName,
       items, partner: partnerSlug,
+      ...(appliedPromo ? { coupon: appliedPromo } : {}),
       metadata: {
         university: formData.university, industry: formData.industry,
         springWeekFirms: formData.springWeekFirms, tierId: selectedTierId,
@@ -264,6 +286,9 @@ export function WebinarCheckout({
       .then((data) => {
         if (seq !== reqRef.current) return;
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        if (data.discount) {
+          setPromoDiscount(data.discount);
+        }
         if (data.free) {
           onSuccessRef.current(selectedTierId);
           return;
@@ -286,7 +311,7 @@ export function WebinarCheckout({
         setLoading(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName]);
+  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName, appliedPromo]);
 
   // Clean up timeout on unmount
   useEffect(() => {
@@ -317,6 +342,58 @@ export function WebinarCheckout({
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
+  }
+
+  async function applyPromo() {
+    const code = promoCode.trim();
+    if (!code) return;
+    setPromoLoading(true);
+    setPromoError(null);
+
+    const items: Array<{ id: string; type: string; price: number }> = [
+      { id: selectedTierId, type: "tier", price: tier.price },
+    ];
+    for (const a of availableAddOns) {
+      if (activeAddOns.has(a.id)) items.push({ id: a.id, type: "addon", price: a.price });
+    }
+    const payload: CheckoutPayload = {
+      email: formData.email, firstName: formData.firstName, lastName: formData.lastName,
+      items, partner: partnerSlug, coupon: code,
+      metadata: {
+        university: formData.university, industry: formData.industry,
+        springWeekFirms: formData.springWeekFirms, tierId: selectedTierId,
+        partnerSlug: partnerSlug ?? "", partnerName: partnerName ?? "",
+      },
+    };
+
+    try {
+      const data = await callCheckout(payload);
+      if (data.discount) {
+        setAppliedPromo(code);
+        setPromoDiscount(data.discount);
+        setPromoError(null);
+        // Update client secret if not free
+        if (data.free) {
+          onSuccessRef.current(selectedTierId);
+        } else if (data.clientSecret) {
+          setClientSecret(data.clientSecret);
+        }
+      } else {
+        setPromoError("Invalid promo code");
+      }
+    } catch {
+      setPromoError("Invalid promo code");
+    } finally {
+      setPromoLoading(false);
+    }
+  }
+
+  function removePromo() {
+    setAppliedPromo(null);
+    setPromoDiscount(null);
+    setPromoCode("");
+    setPromoError(null);
+    setClientSecret(null);
   }
 
   // --- Render ---
@@ -426,8 +503,58 @@ export function WebinarCheckout({
         </div>
       )}
 
-      {/* Total breakdown (only when add-ons active or original price shown) */}
-      {(addOnTotal > 0 || tier.originalPrice != null) && (
+      {/* Promo code */}
+      {subtotal > 0 && (
+        <div className="space-y-2">
+          {!appliedPromo ? (
+            <>
+              {!promoOpen ? (
+                <button type="button" onClick={() => setPromoOpen(true)}
+                  className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors cursor-pointer">
+                  <Tag className="w-3 h-3" />Have a promo code?
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
+                    onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); applyPromo(); } }}
+                    placeholder="Enter code"
+                    className="flex-1 rounded-lg bg-white/[0.03] border border-white/[0.1] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25 transition-colors"
+                  />
+                  <button type="button" onClick={applyPromo} disabled={promoLoading || !promoCode.trim()}
+                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white/[0.06] text-white/70 hover:bg-white/[0.1] hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                    {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
+                  </button>
+                </div>
+              )}
+              {promoError && (
+                <p className="text-xs text-red-400 pl-1">{promoError}</p>
+              )}
+            </>
+          ) : (
+            <div className="flex items-center justify-between rounded-lg bg-emerald-500/[0.06] border border-emerald-500/20 px-3 py-2">
+              <div className="flex items-center gap-2">
+                <Check className="w-3.5 h-3.5 text-emerald-400" strokeWidth={2.5} />
+                <span className="text-sm font-semibold text-emerald-400">{appliedPromo}</span>
+                <span className="text-xs text-white/40">
+                  {promoDiscount?.type === "percent"
+                    ? `${promoDiscount.value}% off`
+                    : promoDiscount ? `-${"\u00A3"}${promoDiscount.value}` : ""}
+                </span>
+              </div>
+              <button type="button" onClick={removePromo}
+                className="p-1 rounded-md hover:bg-white/[0.06] text-white/40 hover:text-white/70 transition-colors cursor-pointer">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Total breakdown (only when add-ons active, original price shown, or discount applied) */}
+      {(addOnTotal > 0 || tier.originalPrice != null || promoDiscount) && (
         <div className="funnel-card rounded-xl p-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-white/50">{tier.name} tier</span>
@@ -439,6 +566,16 @@ export function WebinarCheckout({
               <span className="text-white/70">+{"\u00A3"}{a.price}</span>
             </div>
           ))}
+          {promoDiscount && (
+            <div className="flex justify-between text-sm">
+              <span className="text-emerald-400/70">Promo ({appliedPromo})</span>
+              <span className="text-emerald-400 font-medium">
+                {promoDiscount.type === "percent"
+                  ? `-${promoDiscount.value}%`
+                  : `-${"\u00A3"}${subtotal - promoDiscount.finalTotal}`}
+              </span>
+            </div>
+          )}
           <div className="border-t border-white/[0.06] pt-2 flex justify-between">
             <span className="text-sm font-semibold text-white">Total</span>
             <span className="text-lg font-bold text-white">{fmt(total)}</span>
