@@ -404,30 +404,30 @@ function PartnerWelcome({
         </h2>
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
           {[
-            { name: "Morgan Stanley", file: "morgan-stanley.svg", h: "h-5 md:h-6", invert: true },
-            { name: "JP Morgan", file: "jpmorgan.svg", h: "h-6 md:h-7", invert: true },
-            { name: "Barclays", file: "barclays.png", h: "h-10 md:h-12", invert: false },
-            { name: "HSBC", file: "hsbc.png", h: "h-8 md:h-10", invert: false },
-            { name: "Deutsche Bank", file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
-            { name: "Macquarie", file: "macquarie.svg", h: "h-5 md:h-6", invert: true },
-            { name: "Lazard", file: "lazard.svg", h: "h-5 md:h-6", invert: true },
-            { name: "Evercore", file: "evercore.svg", h: "h-5 md:h-6", invert: true },
-            { name: "Houlihan Lokey", file: "houlihan-lokey.png", h: "h-10 md:h-12", invert: false },
-            { name: "Jane Street", file: "jane-street.png", h: "h-5 md:h-7", invert: false },
-            { name: "D.E. Shaw", file: "de-shaw.svg", h: "h-5 md:h-6", invert: false },
-            { name: "BNP Paribas", file: "bnp-paribas.svg", h: "h-5 md:h-6", invert: false },
-            { name: "Bank of America", file: "bank-of-america.svg", h: "h-5 md:h-6", invert: true },
-            { name: "EY", file: "ey.svg", h: "h-6 md:h-7", invert: false },
-            { name: "Nomura", file: "nomura.svg", h: "h-5 md:h-6", invert: true },
-            { name: "RBC", file: "rbc.png", h: "h-10 md:h-12", invert: false },
+            { name: "Morgan Stanley", file: "morgan-stanley.svg", h: "h-5 md:h-6" },
+            { name: "JP Morgan", file: "jpmorgan.svg", h: "h-6 md:h-7" },
+            { name: "Barclays", file: "barclays.png", h: "h-8 md:h-10" },
+            { name: "Citadel", file: "citadel.png", h: "h-6 md:h-8" },
+            { name: "Deutsche Bank", file: "deutsche-bank.svg", h: "h-6 md:h-7" },
+            { name: "Macquarie", file: "macquarie.svg", h: "h-5 md:h-6" },
+            { name: "Lazard", file: "lazard.svg", h: "h-5 md:h-6" },
+            { name: "Evercore", file: "evercore.svg", h: "h-5 md:h-6" },
+            { name: "Houlihan Lokey", file: "houlihan-lokey.png", h: "h-8 md:h-10" },
+            { name: "Jane Street", file: "jane-street.png", h: "h-5 md:h-7" },
+            { name: "D.E. Shaw", file: "de-shaw.svg", h: "h-5 md:h-6" },
+            { name: "BNP Paribas", file: "bnp-paribas.svg", h: "h-5 md:h-6" },
+            { name: "Bank of America", file: "bank-of-america.svg", h: "h-5 md:h-6" },
+            { name: "EY", file: "ey.svg", h: "h-6 md:h-7" },
+            { name: "Nomura", file: "nomura.svg", h: "h-5 md:h-6" },
+            { name: "RBC", file: "rbc.png", h: "h-10 md:h-12" },
           ].map((firm) => (
             <img
               key={firm.name}
               src={`/logos/${firm.file}`}
               alt={firm.name}
               title={firm.name}
-              className={`${firm.h} w-auto opacity-60 hover:opacity-100 transition-opacity`}
-              style={firm.invert ? { filter: "brightness(0) invert(1)" } : undefined}
+              className={`${firm.h} w-auto opacity-50 hover:opacity-80 transition-opacity`}
+              style={{ filter: "grayscale(1) brightness(2)" }}
             />
           ))}
         </div>
