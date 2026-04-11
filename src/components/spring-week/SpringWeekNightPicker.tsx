@@ -27,8 +27,8 @@ interface SpringWeekNightPickerProps {
   onCheckout: (comboKey: NightComboKey, stripeLink: string) => void;
 }
 
-// Live panel: Sunday April 12, 2026, 2pm BST
-const SESSION_START_ISO = "2026-04-12T14:00:00+01:00";
+// Live panel: Sunday April 12, 2026, 7pm BST
+const SESSION_START_ISO = "2026-04-12T19:00:00+01:00";
 
 // ---- Countdown ----
 function useCountdown(targetISO: string) {
@@ -97,7 +97,7 @@ const FAQ_ITEMS: { q: string; a: string; defaultOpen: boolean }[] = [
   { q: "Will there be a recording?", a: "Yes. The full recording is included with every tier. If you can't make it live, you won't miss out.", defaultOpen: true },
   { q: "What if my firm isn't covered?", a: "The conversion strategies our speakers share work across every firm and every area of finance. The networking, assessment centre, and follow-up strategies work at every firm.", defaultOpen: true },
   { q: "Can I get a refund?", a: "Yes. Full refund if it's not for you. Just email us and we'll process it. We'd rather you try it risk-free than wonder what you missed.", defaultOpen: true },
-  { q: "How long is the panel?", a: "About 3 hours. 10+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.", defaultOpen: false },
+  { q: "How long is the panel?", a: "About 1.5 hours. 10+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.", defaultOpen: false },
   { q: "What's in the Handbook?", a: "Firm-by-firm breakdowns for 45+ firms. What the spring week looks like, what the assessment day involves, networking scripts, and conversion tactics.", defaultOpen: false },
   { q: "What's the prep call in the Convert tier?", a: "A 1-on-1 call with someone who actually converted their spring week at your firm. They'll tell you what to expect, what caught them off guard, and exactly what got them the offer.", defaultOpen: false },
   { q: "Can I upgrade later?", a: "These prices are only available at checkout. Once you've purchased, the Prepare and Convert add-ons may not be available at the same price.", defaultOpen: false },
@@ -203,7 +203,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "16px 24px", padding: "4px 0" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Clock style={{ width: 16, height: 16, color: "#2EE6A8" }} />
-          <span style={{ fontSize: 14, fontWeight: 500, color: "#A0A0A0" }}>~3 hours of conversion strategies</span>
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#A0A0A0" }}>~1.5 hours of conversion strategies</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <Users style={{ width: 16, height: 16, color: "#2EE6A8" }} />
@@ -269,14 +269,14 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         </div>
 
         <h2 style={{ fontSize: 24, fontWeight: 700, color: "#FFFFFF", marginBottom: 4 }}>Watch</h2>
-        <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Full 3-hour panel - watch live or anytime after</p>
+        <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Full 1.5-hour panel - watch live or anytime after</p>
 
         <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 20 }}>
           <span style={{ fontSize: 22, color: "#666666", textDecoration: "line-through" }}>&pound;29</span>
           <span style={{ fontSize: 36, fontWeight: 800, color: "#FFFFFF" }}>&pound;19</span>
         </div>
 
-        <Bullet>Full <B>3-hour</B> live panel recording</Bullet>
+        <Bullet>Full <B>1.5-hour</B> live panel recording</Bullet>
         <Bullet>Hear how students converted at <B>JP Morgan</B>, <B>Jane Street</B>, <B>Evercore</B> and more</Bullet>
         <Bullet>Direct Q&amp;A with the speakers</Bullet>
         <Bullet><G>Lifetime access</G> to the recording - watch anytime, anywhere</Bullet>
@@ -328,7 +328,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
           <span style={{ fontSize: 36, fontWeight: 800, color: "#FFFFFF" }}>&pound;39</span>
         </div>
 
-        <Bullet>Full <B>3-hour</B> live panel recording</Bullet>
+        <Bullet>Full <B>1.5-hour</B> live panel recording</Bullet>
         <Bullet>Hear how students converted at <B>JP Morgan</B>, <B>Jane Street</B>, <B>Evercore</B> and more</Bullet>
         <Bullet>Direct Q&amp;A with the speakers</Bullet>
         <Bullet><G>Lifetime access</G> to the recording - watch anytime, anywhere</Bullet>
@@ -528,7 +528,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
 
       {/* ---- 12. BOTTOM URGENCY BAR ---- */}
       <div style={{ background: "#161616", borderLeft: "3px solid #2EE6A8", borderTop: "1px solid #222222", borderRight: "1px solid #222222", borderBottom: "1px solid #222222", borderRadius: "0 12px 12px 0", padding: "14px 18px" }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF", lineHeight: 1.4 }}>The live panel is Sunday April 12 at 2pm BST.</p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF", lineHeight: 1.4 }}>The live panel is Sunday April 12 at 7pm BST.</p>
         <p style={{ fontSize: 13, fontWeight: 400, color: "#A0A0A0", marginTop: 4, lineHeight: 1.5 }}>Spring weeks start the next morning. This is the last weekend to prepare.</p>
       </div>
 

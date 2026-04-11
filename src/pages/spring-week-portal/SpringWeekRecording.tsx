@@ -258,7 +258,7 @@ function PostEventView({ hasAccess }: { hasAccess: boolean }) {
           How Students Converted Their Spring Weeks Into Return Offers
         </p>
         <p className="text-[12px] text-[#888] font-light">
-          Full recording from {SW_EVENT_DATE} - 6 speakers, 3 hours
+          Full recording from {SW_EVENT_DATE} - 10+ speakers, 1.5 hours
         </p>
       </div>
 

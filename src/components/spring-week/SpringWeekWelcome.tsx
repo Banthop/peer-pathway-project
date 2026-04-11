@@ -42,7 +42,7 @@ const FAQS = [
   },
   {
     q: "How long does the session last?",
-    a: "Approximately 2 hours. 10+ speakers, each doing a focused segment on their firm, followed by a live panel discussion and audience Q&A.",
+    a: "Approximately 1.5 hours (7pm-8:30pm BST). 10+ speakers, each doing a focused segment on their firm, followed by a live panel discussion and audience Q&A.",
   },
   {
     q: "What is included inside The Handbook?",
@@ -654,7 +654,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
               marginBottom: 32,
             }}
           >
-            One live panel. 7 speakers. 25+ spring weeks covered. Recording included.
+            One live panel. 10+ speakers. 25+ spring weeks covered. Recording included.
           </p>
 
           {/* CTA */}

@@ -26,8 +26,8 @@ import {
 
 const BUNDLE_UPGRADE_LINK = SPRING_WEEK_COMBOS["1,2,3"].stripeLink;
 
-// Live panel: Sunday April 12, 2026, 2pm BST
-const SESSION_START_ISO = "2026-04-12T14:00:00+01:00";
+// Live panel: Sunday April 12, 2026, 7pm BST
+const SESSION_START_ISO = "2026-04-12T19:00:00+01:00";
 
 /* ---- Countdown box sub-component ---- */
 function CountdownBox({ value, unit }: { value: string | number; unit: string }) {
