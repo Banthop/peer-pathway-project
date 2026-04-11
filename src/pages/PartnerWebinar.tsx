@@ -468,6 +468,7 @@ function PartnerWelcome({
         <div className="space-y-2">
           {[
             "What to expect during your spring week - day by day, firm by firm",
+            "The full conversion process - ACs, interviews, and the exact questions they were asked",
             "How to network without being awkward (including scripts from people who did it)",
             "Assessment centre strategies that landed return offers",
             "The mistakes that cost other students their offers",
