@@ -1,6 +1,6 @@
 {
   "redirects": [
-    { "source": "/", "destination": "/webinar", "permanent": false }
+    { "source": "/", "destination": "/spring-week", "permanent": false }
   ],
   "rewrites": [
     { "source": "/webinar", "destination": "/index.html" },
