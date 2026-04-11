@@ -681,6 +681,82 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
       </FadeIn>
 
       {/* ================================================================
+          SECTION 8.5: 1-ON-1 COACHING
+      ================================================================ */}
+      <FadeIn>
+        <div style={{ maxWidth: 720, margin: "60px auto 0", textAlign: "center" }}>
+          <p
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#2EE6A8",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              marginBottom: 20,
+            }}
+          >
+            Want Something More Personalised?
+          </p>
+
+          <div
+            style={{
+              maxWidth: 600,
+              margin: "0 auto",
+              padding: "0 28px",
+            }}
+          >
+            <h3
+              style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: "#ffffff",
+                marginBottom: 14,
+                lineHeight: 1.3,
+              }}
+            >
+              Been There. Done That.
+            </h3>
+
+            <p
+              style={{
+                fontSize: 18,
+                color: "#ffffff",
+                lineHeight: 1.6,
+                marginBottom: 24,
+                textDecoration: "underline",
+                textDecorationColor: "rgba(46,230,168,0.4)",
+                textUnderlineOffset: 4,
+              }}
+            >
+              Book a 1-on-1 Prep Call with someone who's been in your position. Speak to someone who's already been in your exact seat - and converted.
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 24, textAlign: "left", maxWidth: 480, margin: "0 auto 24px" }}>
+              {[
+                "A full walkthrough of your spring week schedule - what happens each day, what's being assessed, and where most candidates slip up",
+                "Detailed preparation for your firm's specific interview and assessment centre format, including the types of questions asked and how to structure your answers",
+                "A personalised networking strategy - which people to prioritise, how to start conversations with senior staff, and how to follow up effectively",
+                "Insider perspective on your firm's culture, what your division actually values, and how hiring decisions are made behind the scenes",
+                "A clear action plan for each day of your spring week so you walk in knowing exactly how to position yourself for the return offer",
+              ].map((item) => (
+                <div key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                  <span style={{ color: "#2EE6A8", fontSize: 15, marginTop: 1, flexShrink: 0 }}>✓</span>
+                  <span style={{ fontSize: 15, color: "#ffffff", lineHeight: 1.5 }}>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <p style={{ fontSize: 13, color: "#2EE6A8", fontWeight: 600, marginBottom: 6 }}>
+              Limited slots available before Monday.
+            </p>
+            <p style={{ fontSize: 14, color: "#ffffff" }}>
+              Fill out the form to find out more.
+            </p>
+          </div>
+        </div>
+      </FadeIn>
+
+      {/* ================================================================
           SECTION 9: CHECKLIST CALLOUT
       ================================================================ */}
       <FadeIn>
@@ -737,6 +813,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           </div>
         </div>
       </FadeIn>
+
 
       {/* ================================================================
           SECTION 10: WHY THIS WEEKEND
