@@ -119,7 +119,7 @@ function FaqItem({ q, a, defaultOpen = false }: { q: string; a: string; defaultO
 // ---- "What's included" items ----
 const WEBINAR_ITEMS = [
   "Exactly what your Spring Week looks like at your specific firm",
-  "Specific, niche advice from students who converted \u2014 the small things that actually made the difference",
+  "Specific, niche advice from students who converted - the small things that actually made the difference",
   "How to network with senior bankers without being awkward, including actual scripts",
   "The mistakes that cost other students their offers (so you don't make them)",
   "Assessment centre and interview strategies that landed return offers at 25+ firms",

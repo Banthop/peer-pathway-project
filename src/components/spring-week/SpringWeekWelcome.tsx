@@ -19,7 +19,7 @@ const FIRM_NAMES = [
 
 const CHECKLIST_ITEMS = [
   "Exactly what your Spring Week looks like at your specific firm",
-  "Specific, niche advice from students who converted \u2014 the small things that actually made the difference",
+  "Specific, niche advice from students who converted - the small things that actually made the difference",
   "How to network with senior bankers without being awkward, including actual scripts",
   "The mistakes that cost other students their offers (so you don't make them)",
   "Assessment centre and interview strategies that landed return offers at 25+ firms",
@@ -326,7 +326,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           spring interns convert on average. This Sunday,{" "}
           <span style={{ color: "#ffffff" }}>7 students</span> who converted{" "}
           <span style={{ color: "#ffffff" }}>25+ spring weeks</span> share exactly
-          how they did it — the weekend before yours starts.
+          how they did it - the weekend before yours starts.
         </p>
 
         {/* CTA */}
