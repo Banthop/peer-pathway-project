@@ -187,14 +187,15 @@ function HandbookPreview() {
         </p>
       </div>
       <p className="text-[10px] text-white/70 text-center mb-2">Preview of the Bank of America section - tap to expand</p>
-      <button
-        type="button"
-        onClick={() => window.open("/handbook", "_blank")}
-        className="w-full py-2.5 rounded-lg text-sm font-semibold text-black bg-emerald-500 hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+      <a
+        href="/handbook"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="w-full py-2.5 rounded-lg text-sm font-semibold text-black bg-emerald-500 hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 no-underline"
       >
         See what's inside the Handbook
         <ArrowRight className="w-3.5 h-3.5" />
-      </button>
+      </a>
     </div>
   );
 }

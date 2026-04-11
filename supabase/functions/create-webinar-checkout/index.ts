@@ -147,7 +147,19 @@ Deno.serve(async (req) => {
 
     if (coupon && typeof coupon === "string" && coupon.trim() !== "") {
       try {
-        const stripeCoupon = await stripe.coupons.retrieve(coupon.trim());
+        // First try to find a promotion code by the user-facing code
+        let stripeCoupon: Stripe.Coupon | null = null;
+        const promoList = await stripe.promotionCodes.list({
+          code: coupon.trim().toUpperCase(),
+          active: true,
+          limit: 1,
+        });
+        if (promoList.data.length > 0) {
+          stripeCoupon = promoList.data[0].coupon;
+        } else {
+          // Fallback: try as a raw coupon ID
+          stripeCoupon = await stripe.coupons.retrieve(coupon.trim());
+        }
 
         if (!stripeCoupon || !stripeCoupon.valid) {
           return jsonResponse({ error: "Invalid promo code" }, 400);
