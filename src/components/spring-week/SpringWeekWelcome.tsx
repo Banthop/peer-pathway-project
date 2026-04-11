@@ -9,6 +9,8 @@ import {
   HelpCircle,
   Clock,
   Shield,
+  BookOpen,
+  Lock,
 } from "lucide-react";
 
 interface SpringWeekWelcomeProps {
@@ -206,6 +208,53 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ---- HANDBOOK TEASER ---- */}
+      <div className="w-full max-w-2xl mt-14">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-2 text-center">
+          What's inside the handbook
+        </h2>
+        <p className="text-[12px] text-white/40 text-center mb-5 font-light">
+          Included free with Prepare, After Hours, and Convert tiers
+        </p>
+
+        <div className="space-y-2">
+          {[
+            { division: "Investment Banking", firms: "Morgan Stanley, Evercore, Houlihan Lokey, Barclays, Lazard" },
+            { division: "Global Markets / Trading", firms: "Jane Street, BNP Paribas, Nomura" },
+            { division: "Multi-Division", firms: "Macquarie, Bank of America, HSBC, RBC" },
+          ].map((cat) => (
+            <div key={cat.division} className="funnel-card rounded-xl px-4 py-3">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80 mb-1">
+                {cat.division}
+              </p>
+              <p className="text-[13px] text-white/60 font-light leading-snug">
+                {cat.firms}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 space-y-2">
+          {[
+            "The exact case study format at Lazard and how to prioritise it",
+            "Why Macquarie's two-way matching system changes how you network",
+            "What the 'newsflash' interview at BNP Paribas actually looks like",
+            "The one thing every Morgan Stanley spring weeker should do on day one",
+          ].map((insight) => (
+            <div key={insight} className="flex items-start gap-3 py-1.5">
+              <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0 text-white/20" />
+              <span className="text-[13px] text-white/35 font-light leading-snug italic">
+                {insight}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-[11px] text-white/30 text-center mt-4 font-light">
+          12 firms covered. More being added weekly. Buyers can request specific firms.
+        </p>
       </div>
 
       {/* ---- WHY THIS WEEKEND ---- */}

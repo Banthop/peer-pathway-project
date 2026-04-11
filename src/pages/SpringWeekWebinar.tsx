@@ -112,6 +112,31 @@ function SuccessScreen({
           </div>
         </div>
 
+        {/* Handbook access - prepare/after-hours/convert only */}
+        {tier !== "watch" && (
+          <div
+            className="funnel-card rounded-2xl p-5 space-y-3"
+            style={{ borderColor: "rgba(52,211,153,0.25)" }}
+          >
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-emerald-400" />
+              <span className="text-sm font-semibold text-white">
+                Your Spring Week Handbook is ready
+              </span>
+            </div>
+            <p className="text-sm font-light text-white/50">
+              12 firms. Division-by-division breakdowns. Insider tips from students who converted.
+            </p>
+            <a
+              href="/handbook"
+              className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors no-underline"
+            >
+              Open Handbook
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        )}
+
         <div className="text-center">
           <a
             href="/"

@@ -172,6 +172,31 @@ function PartnerSuccessScreen({
           </div>
         </div>
 
+        {/* Handbook access - prepare/after-hours/convert only */}
+        {tier !== "watch" && (
+          <div
+            className="funnel-card rounded-2xl p-5 space-y-3"
+            style={{ borderColor: "rgba(52,211,153,0.25)" }}
+          >
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-emerald-400" />
+              <span className="text-sm font-semibold text-white">
+                Your Spring Week Handbook is ready
+              </span>
+            </div>
+            <p className="text-sm font-light text-white/50">
+              12 firms. Division-by-division breakdowns. Insider tips from students who converted.
+            </p>
+            <a
+              href="/handbook"
+              className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-emerald-500/20 transition-colors no-underline"
+            >
+              Open Handbook
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        )}
+
         {/* Partner attribution */}
         <div className="text-center">
           <p className="text-xs text-white/30 font-light">
@@ -457,6 +482,53 @@ function PartnerWelcome({
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Handbook teaser */}
+      <div className="w-full max-w-2xl mt-14">
+        <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-2 text-center">
+          What's inside the handbook
+        </h2>
+        <p className="text-[12px] text-white/40 text-center mb-5 font-light">
+          Included free with Prepare, After Hours, and Convert tiers
+        </p>
+
+        <div className="space-y-2">
+          {[
+            { division: "Investment Banking", firms: "Morgan Stanley, Evercore, Houlihan Lokey, Barclays, Lazard" },
+            { division: "Global Markets / Trading", firms: "Jane Street, BNP Paribas, Nomura" },
+            { division: "Multi-Division", firms: "Macquarie, Bank of America, HSBC, RBC" },
+          ].map((cat) => (
+            <div key={cat.division} className="funnel-card rounded-xl px-4 py-3">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-400/80 mb-1">
+                {cat.division}
+              </p>
+              <p className="text-[13px] text-white/60 font-light leading-snug">
+                {cat.firms}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 space-y-2">
+          {[
+            "The exact case study format at Lazard and how to prioritise it",
+            "Why Macquarie's two-way matching system changes how you network",
+            "What the 'newsflash' interview at BNP Paribas actually looks like",
+            "The one thing every Morgan Stanley spring weeker should do on day one",
+          ].map((insight) => (
+            <div key={insight} className="flex items-start gap-3 py-1.5">
+              <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0 text-white/20" />
+              <span className="text-[13px] text-white/35 font-light leading-snug italic">
+                {insight}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-[11px] text-white/30 text-center mt-4 font-light">
+          12 firms covered. More being added weekly. Buyers can request specific firms.
+        </p>
       </div>
 
       {/* Why this weekend */}
