@@ -229,8 +229,8 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
         <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-2 text-center">
           What's inside the handbook
         </h2>
-        <p className="text-[13px] text-white/50 text-center mb-5 font-light">
-          Firm-by-firm breakdowns across every major division. Included with Prepare and Convert.
+        <p className="text-[14px] text-white/60 text-center mb-5 font-light leading-relaxed max-w-xl mx-auto">
+          The most detailed spring week preparation resource available anywhere. Written by students who actually converted at 45+ firms, covering exactly what happened during their spring week, what the assessment looked like, and what they did differently. This is not generic careers advice - it's real, specific intel from people who were in your seat last year.
         </p>
 
         <div className="space-y-2">

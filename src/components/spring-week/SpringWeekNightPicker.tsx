@@ -159,12 +159,12 @@ function HandbookPreview() {
       </p>
       {/* Mini handbook mockup */}
       <div className="rounded-lg bg-black/40 border border-white/[0.06] p-3 space-y-1.5">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">HSBC Spring Week</p>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/30">Bank of America Spring Week</p>
         <p className="text-[11px] text-white/20 leading-snug italic">
-          "So I'll give a quick overview of the HSBC spring week and what helped me convert..."
+          "I was in the global payment solutions and credit divisions. On the first day, it was very much trying to get us to understand how the bank makes money and how the bank operates. Second and third day would be spending the entire day with your first preference, then your second preference..."
         </p>
       </div>
-      <p className="text-[10px] text-white/30 text-center">Preview of the HSBC section</p>
+      <p className="text-[10px] text-white/30 text-center">Preview of the Bank of America section - tap to expand</p>
       <a
         href="/handbook"
         target="_blank"
@@ -198,10 +198,10 @@ function PrepCallPreview() {
           "Matched to a speaker who converted at your specific firm",
           "Covers your week's schedule, the assessment format, and what they're really looking for",
           "Personalised networking strategy - who to talk to, when, and what to say",
-          "Conducted before your spring week so you walk in fully prepared",
+          "Conducted before your conversion so you walk in fully prepared",
         ].map((item) => (
           <div key={item} className="flex items-start gap-2">
-            <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-amber-400" strokeWidth={2.5} />
+            <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
             <span className="text-xs text-white/50 leading-snug">{item}</span>
           </div>
         ))}
