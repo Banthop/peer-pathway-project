@@ -46,7 +46,9 @@
 
   .page {
     width: 210mm;
+    max-width: 100%;
     min-height: 297mm;
+    margin: 0 auto;
     padding: 0;
     page-break-after: always;
     position: relative;
@@ -568,9 +570,125 @@
     margin-bottom: 6px;
   }
 
+  /* ---- RESPONSIVE ---- */
+  @media screen and (max-width: 800px) {
+    .page {
+      min-height: auto;
+    }
+
+    .cover {
+      padding: 32px 24px;
+    }
+
+    .cover h1 {
+      font-size: 28pt;
+    }
+
+    .cover-sub {
+      font-size: 11pt;
+    }
+
+    .cover-stats {
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cover-stat-num {
+      font-size: 22pt;
+    }
+
+    .content {
+      padding: 24px 20px;
+    }
+
+    .phase-title {
+      font-size: 18pt;
+    }
+
+    .division-table {
+      font-size: 8pt;
+    }
+
+    .division-table td:first-child {
+      white-space: normal;
+      width: auto;
+    }
+
+    .division-table th,
+    .division-table td {
+      padding: 8px 10px;
+    }
+
+    .page-footer {
+      position: static;
+      margin-top: 24px;
+      padding: 12px 20px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cta-page {
+      padding: 40px 24px;
+    }
+
+    .cta-title {
+      font-size: 22pt;
+    }
+
+    .cta-desc {
+      font-size: 10pt;
+    }
+
+    .cta-firms {
+      max-width: 100%;
+    }
+
+    .cta-footer {
+      position: static;
+      margin-top: 32px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .cover h1 {
+      font-size: 22pt;
+    }
+
+    .cover-stats {
+      gap: 16px;
+    }
+
+    .cover-stat-num {
+      font-size: 18pt;
+    }
+
+    .phase-title {
+      font-size: 16pt;
+    }
+
+    .content {
+      padding: 20px 16px;
+    }
+
+    .checklist li {
+      font-size: 9pt;
+    }
+
+    .cta-title {
+      font-size: 18pt;
+    }
+
+    .cta-button {
+      font-size: 10pt;
+      padding: 12px 24px;
+    }
+  }
+
   @media print {
     body { margin: 0; }
-    .page { margin: 0; }
+    .page { margin: 0; max-width: none; }
   }
 </style>
 </head>
