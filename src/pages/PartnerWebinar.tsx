@@ -406,20 +406,20 @@ function PartnerWelcome({
           {[
             { name: "Morgan Stanley", file: "morgan-stanley.svg", h: "h-5 md:h-6", invert: true },
             { name: "JP Morgan", file: "jpmorgan.svg", h: "h-6 md:h-7", invert: true },
-            { name: "Barclays", file: "barclays.svg", h: "h-7 md:h-8", invert: false },
-            { name: "HSBC", file: "hsbc.svg", h: "h-7 md:h-8", invert: false },
+            { name: "Barclays", file: "barclays.png", h: "h-8 md:h-10", invert: false },
+            { name: "HSBC", file: "hsbc.png", h: "h-7 md:h-9", invert: false },
             { name: "Deutsche Bank", file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
             { name: "Macquarie", file: "macquarie.svg", h: "h-5 md:h-6", invert: true },
             { name: "Lazard", file: "lazard.svg", h: "h-5 md:h-6", invert: true },
             { name: "Evercore", file: "evercore.svg", h: "h-5 md:h-6", invert: true },
-            { name: "Houlihan Lokey", file: "houlihan-lokey.svg", h: "h-5 md:h-6", invert: false },
-            { name: "Jane Street", file: "jane-street.svg", h: "h-5 md:h-6", invert: false },
+            { name: "Houlihan Lokey", file: "houlihan-lokey.png", h: "h-8 md:h-10", invert: true },
+            { name: "Jane Street", file: "jane-street.png", h: "h-5 md:h-7", invert: false },
             { name: "D.E. Shaw", file: "de-shaw.svg", h: "h-5 md:h-6", invert: false },
             { name: "BNP Paribas", file: "bnp-paribas.svg", h: "h-5 md:h-6", invert: false },
             { name: "Bank of America", file: "bank-of-america.svg", h: "h-5 md:h-6", invert: true },
             { name: "EY", file: "ey.svg", h: "h-6 md:h-7", invert: false },
             { name: "Nomura", file: "nomura.svg", h: "h-5 md:h-6", invert: true },
-            { name: "RBC", file: "rbc.svg", h: "h-6 md:h-7", invert: false },
+            { name: "RBC", file: "rbc.png", h: "h-8 md:h-10", invert: false },
           ].map((firm) => (
             <img
               key={firm.name}
@@ -976,10 +976,36 @@ export default function PartnerWebinar() {
     return null;
   };
 
-  const handleCheckout = (tierId: string, _stripeLink: string) => {
+  const handleCheckout = (tierId: string, stripeLink: string) => {
     form.updateField("selectedTicket", tierId);
     markLeadCheckout(form.formData.email);
-    setCheckoutTier(tierId);
+
+    const tier = config.tiers.find((t) => t.id === tierId);
+
+    // Free tier: go straight to success
+    if (tier && tier.price === 0) {
+      handleCheckoutSuccess(tierId);
+      return;
+    }
+
+    // Paid tier: save data then open Stripe payment link
+    const signupData = JSON.stringify({
+      ...form.formData,
+      selectedTicket: tierId,
+      productType: "spring_week",
+      partner: config.slug,
+      timestamp: new Date().toISOString(),
+    });
+    localStorage.setItem("spring_week_signup", signupData);
+    sessionStorage.setItem("spring_week_signup", signupData);
+
+    const url = new URL(stripeLink);
+    url.searchParams.set("prefilled_email", form.formData.email);
+    url.searchParams.set(
+      "client_reference_id",
+      `${form.formData.email}|${tierId}|${config.slug}`,
+    );
+    window.open(url.toString(), "_blank");
   };
 
   const handleCheckoutSuccess = (tierId: string) => {
