@@ -219,7 +219,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(46,230,168,0.1)", border: "1px solid rgba(46,230,168,0.3)", borderRadius: 999, padding: "10px 24px", maxWidth: 400 }}>
           <Users style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
-          <span style={{ fontSize: 15, fontWeight: 600, color: "#2EE6A8" }}>78% of students choose the bundle</span>
+          <span style={{ fontSize: 15, fontWeight: 600, color: "#2EE6A8" }}>78% of students choose Prepare</span>
         </div>
       </div>
 
@@ -484,7 +484,7 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
         </div>
 
         <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "center", marginBottom: 10 }}>
-          78% of students choose the bundle &middot; {SPEAKERS.length} speakers who converted their spring weeks
+          78% of students choose Prepare &middot; {SPEAKERS.length} speakers who converted their spring weeks
         </p>
 
         <button
