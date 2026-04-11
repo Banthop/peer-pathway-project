@@ -63,9 +63,6 @@ export function UniversityStep({
         </h2>
         <div className="relative">
           <div className="relative">
-            {!university && (
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none z-10" />
-            )}
             <Input
               ref={inputRef}
               type="text"
@@ -76,7 +73,7 @@ export function UniversityStep({
                 setShowDropdown(true);
               }}
               onFocus={() => setShowDropdown(true)}
-              className={`font-sans text-base h-12 border-white/[0.1] bg-[#141414] text-white placeholder:text-white/30 rounded-xl focus:border-emerald-400 focus:ring-emerald-400/20 ${university ? "pl-4" : "pl-10"}`}
+              className="font-sans text-base h-12 border-white/[0.1] bg-[#141414] text-white placeholder:text-white/30 pl-4 rounded-xl focus:border-emerald-400 focus:ring-emerald-400/20"
               autoComplete="off"
             />
           </div>
