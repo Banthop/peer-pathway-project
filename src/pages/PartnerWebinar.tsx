@@ -962,36 +962,10 @@ export default function PartnerWebinar() {
     return null;
   };
 
-  const handleCheckout = (tierId: string, stripeLink: string) => {
+  const handleCheckout = (tierId: string, _stripeLink: string) => {
     form.updateField("selectedTicket", tierId);
     markLeadCheckout(form.formData.email);
-
-    const tier = config.tiers.find((t) => t.id === tierId);
-
-    // Free tier: go straight to success
-    if (tier && tier.price === 0) {
-      handleCheckoutSuccess(tierId);
-      return;
-    }
-
-    // Paid tier: save data then open Stripe payment link
-    const signupData = JSON.stringify({
-      ...form.formData,
-      selectedTicket: tierId,
-      productType: "spring_week",
-      partner: config.slug,
-      timestamp: new Date().toISOString(),
-    });
-    localStorage.setItem("spring_week_signup", signupData);
-    sessionStorage.setItem("spring_week_signup", signupData);
-
-    const url = new URL(stripeLink);
-    url.searchParams.set("prefilled_email", form.formData.email);
-    url.searchParams.set(
-      "client_reference_id",
-      `${form.formData.email}|${tierId}|${config.slug}`,
-    );
-    window.open(url.toString(), "_blank");
+    setCheckoutTier(tierId);
   };
 
   const handleCheckoutSuccess = (tierId: string) => {
