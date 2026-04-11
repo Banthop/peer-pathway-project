@@ -370,9 +370,53 @@ function useHandbookAccess(): boolean {
   }, []);
 }
 
-// --------------- Sample firm ID for preview ---------------
+// --------------- Sample firm ID for partial preview ---------------
 
 const SAMPLE_FIRM_ID = "bank-of-america";
+
+// --------------- Partial preview card (shows snippet then locks) ---------------
+
+function PartialFirmCard({ entry }: { entry: FirmEntry }) {
+  return (
+    <div id={entry.id} className="scroll-mt-24">
+      <div className="w-full bg-slate-900/40 border border-slate-800 rounded-xl overflow-hidden">
+        <div className="px-5 py-4 border-b border-slate-800/60">
+          <div className="flex items-center gap-3">
+            <Building2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+            <div>
+              <h3 className="text-[15px] font-bold text-white">{entry.firm}</h3>
+              <p className="text-[12px] text-slate-400">{entry.division} - {entry.speaker}</p>
+            </div>
+          </div>
+        </div>
+        <div className="px-5 py-4 relative">
+          <p className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">Programme Structure</p>
+          <p className="text-[13px] text-white/70 font-light leading-relaxed">
+            {entry.sections[0]?.content.slice(0, 280)}...
+          </p>
+          {/* Fade overlay */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-950 to-transparent" />
+        </div>
+        <div className="px-5 py-4 text-center border-t border-slate-800/60">
+          <Lock className="w-4 h-4 text-emerald-400 mx-auto mb-2" />
+          <p className="text-[13px] text-white/70 font-medium mb-1">
+            Unlock the full {entry.firm} breakdown
+          </p>
+          <p className="text-[11px] text-white/50 font-light">
+            Day-by-day schedule, assessment details, insider tips, and how to prepare
+          </p>
+          <a
+            href="/spring-week"
+            className="inline-flex items-center gap-2 mt-3 text-[12px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors no-underline"
+          >
+            Get Prepare or Convert to unlock
+            <ArrowRight className="w-3 h-3" />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // --------------- Locked firm card (preview mode) ---------------
 
@@ -475,7 +519,7 @@ export default function SpringWeekHandbookContent() {
               You are viewing a preview of the handbook
             </p>
             <p className="text-[12px] text-slate-400 font-light leading-relaxed">
-              The full Bank of America chapter is unlocked below as a sample. All other firms require a Prepare or Convert tier ticket.
+              A snippet of the Bank of America chapter is shown below. Unlock the full handbook with a Prepare or Convert tier ticket.
             </p>
           </div>
         )}
@@ -494,8 +538,11 @@ export default function SpringWeekHandbookContent() {
               {cat.firmIds.map((fid) => {
                 const firm = FIRMS.find((f) => f.id === fid);
                 if (!firm) return null;
-                if (hasAccess || fid === SAMPLE_FIRM_ID) {
+                if (hasAccess) {
                   return <FirmCard key={fid} entry={firm} />;
+                }
+                if (fid === SAMPLE_FIRM_ID) {
+                  return <PartialFirmCard key={fid} entry={firm} />;
                 }
                 return <LockedFirmCard key={fid} entry={firm} />;
               })}
