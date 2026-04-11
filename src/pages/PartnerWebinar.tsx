@@ -400,9 +400,9 @@ function PartnerWelcome({
       {/* Speakers who converted at - logos */}
       <div className="w-full max-w-2xl mt-14">
         <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-6 text-center">
-          Speakers who converted at these firms and many more
+          Speakers who converted at these firms
         </h2>
-        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
+        <div className="grid grid-cols-4 md:grid-cols-4 gap-x-6 gap-y-4 items-center justify-items-center">
           {[
             "morgan-stanley", "jpmorgan", "barclays", "citadel",
             "deutsche-bank", "macquarie", "lazard", "evercore",
@@ -412,11 +412,14 @@ function PartnerWelcome({
             <img
               key={firm}
               src={`/logos/${firm}.svg`}
-              alt={firm}
-              className="h-7 md:h-9 w-auto opacity-50 hover:opacity-90 transition-opacity"
+              alt={firm.replace(/-/g, " ")}
+              className="h-8 md:h-10 w-auto opacity-60 hover:opacity-100 transition-opacity duration-200"
             />
           ))}
         </div>
+        <p className="text-[11px] text-white/40 text-center mt-4 tracking-wide">
+          + many more
+        </p>
       </div>
 
       {/* What you will walk away with */}
