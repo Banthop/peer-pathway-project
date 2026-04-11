@@ -406,7 +406,7 @@ function PartnerWelcome({
           {[
             { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true },
             { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true },
-            { file: "barclays.svg", h: "h-8 md:h-10", invert: true },
+            { file: "barclays.svg", h: "h-6 md:h-7", invert: true },
             { file: "citadel.svg", h: "h-7 md:h-8", invert: false },
             { file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
             { file: "macquarie.svg", h: "h-6 md:h-7", invert: true },
@@ -415,11 +415,11 @@ function PartnerWelcome({
             { file: "houlihan-lokey.svg", h: "h-6 md:h-7", invert: false },
             { file: "jane-street.svg", h: "h-6 md:h-7", invert: false },
             { file: "de-shaw.svg", h: "h-7 md:h-8", invert: true },
-            { file: "bnp-paribas.svg", h: "h-7 md:h-8", invert: true },
+            { file: "bnp-paribas.svg", h: "h-6 md:h-7", invert: false },
             { file: "bank-of-america.svg", h: "h-6 md:h-7", invert: true },
             { file: "ey.svg", h: "h-7 md:h-8", invert: false },
             { file: "nomura.svg", h: "h-6 md:h-7", invert: true },
-            { file: "rbc.svg", h: "h-9 md:h-11", invert: true },
+            { file: "rbc.svg", h: "h-7 md:h-8", invert: false },
           ].map((firm) => (
             <img
               key={firm.file}
