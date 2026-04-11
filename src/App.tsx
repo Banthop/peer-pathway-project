@@ -185,6 +185,7 @@ const AppRoutes = () => {
     return (
       <Suspense fallback={<PageLoading />}>
         <Routes>
+          <Route path="/" element={<Navigate to="/spring-week" replace />} />
           <Route path="/webinar" element={<Webinar />} />
           <Route path="/da-webinar" element={<DaWebinar />} />
           <Route path="/spring-week" element={<SpringWeekWebinar />} />
