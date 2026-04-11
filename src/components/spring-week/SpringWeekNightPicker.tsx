@@ -5,20 +5,19 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
-  Zap,
   Clock,
   Users,
   ShieldCheck,
-  Star,
-  AlertTriangle,
+  ArrowRight,
+  Info,
+  Phone,
+  Zap,
+  Play,
+  Shield,
+  X,
 } from "lucide-react";
 import {
   SPRING_WEEK_NIGHTS,
-  SPRING_WEEK_HANDBOOK,
-  SPRING_WEEK_COMBOS,
-  getComboKey,
-  NIGHT_INDIVIDUAL_PRICE,
-  matchFirmsToNights,
   type NightComboKey,
 } from "@/data/springWeekData";
 import type { WebinarFormData } from "@/hooks/useWebinarForm";
@@ -28,19 +27,17 @@ interface SpringWeekNightPickerProps {
   onCheckout: (comboKey: NightComboKey, stripeLink: string) => void;
 }
 
-// ---- Countdown to Night 1 ----
+// Live panel: Sunday April 12, 2026, 2pm BST
+const SESSION_START_ISO = "2026-04-12T14:00:00+01:00";
+
+// ---- Countdown ----
 function useCountdown(targetISO: string) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
   useEffect(() => {
     const target = new Date(targetISO).getTime();
     function tick() {
-      const now = Date.now();
-      const diff = target - now;
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
+      const diff = target - Date.now();
+      if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
       setTimeLeft({
         days: Math.floor(diff / 86400000),
         hours: Math.floor((diff % 86400000) / 3600000),
@@ -52,106 +49,98 @@ function useCountdown(targetISO: string) {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [targetISO]);
-
   return timeLeft;
 }
 
-// ---- Animated price display ----
+// ---- Animated price ----
 function AnimatedPrice({ value }: { value: number }) {
   const [displayValue, setDisplayValue] = useState(value);
   const prevRef = useRef(value);
-
   useEffect(() => {
     if (prevRef.current === value) return;
     const start = prevRef.current;
     const end = value;
-    const duration = 300;
-    const startTime = performance.now();
-
+    const dur = 300;
+    const t0 = performance.now();
     function step(now: number) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayValue(+(start + (end - start) * eased).toFixed(2));
-      if (progress < 1) requestAnimationFrame(step);
-      else {
-        setDisplayValue(end);
-        prevRef.current = end;
-      }
+      const p = Math.min((now - t0) / dur, 1);
+      setDisplayValue(+(start + (end - start) * (1 - Math.pow(1 - p, 3))).toFixed(2));
+      if (p < 1) requestAnimationFrame(step);
+      else { setDisplayValue(end); prevRef.current = end; }
     }
     requestAnimationFrame(step);
   }, [value]);
-
-  const integer = Math.floor(displayValue);
-  const decimal = Math.round((displayValue - integer) * 100).toString().padStart(2, "0");
-
-  return (
-    <span>
-      £{integer}<span className="text-[0.65em] font-normal">.{decimal}</span>
-    </span>
-  );
+  const int = Math.floor(displayValue);
+  const dec = Math.round((displayValue - int) * 100).toString().padStart(2, "0");
+  return <span>&pound;{int}<span className="text-[0.65em] font-normal">.{dec}</span></span>;
 }
 
-// ---- FAQ accordion ----
-const FAQ_ITEMS = [
-  {
-    q: "How long is the panel?",
-    a: "About 3 hours. 10+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.",
-  },
-  {
-    q: "Will there be a recording?",
-    a: "Yes - the full recording is included with every tier. If you can't make it live, you won't miss out.",
-  },
-  {
-    q: "What if my firm isn't covered?",
-    a: "The conversion strategies our speakers share work across every firm and every area of finance. The frameworks are universal.",
-  },
-  {
-    q: "Can I upgrade later?",
-    a: "We can't guarantee this. The Prepare and Convert prices are only available during checkout.",
-  },
-  {
-    q: "What's in the Handbook?",
-    a: "Firm-by-firm breakdowns for 45+ firms. What the spring week looks like, what the assessment day involves, networking scripts, and conversion tactics.",
-  },
-  {
-    q: "What's the prep call in the Convert tier?",
-    a: "A 1-on-1 call with someone who actually converted their spring week at your firm. They'll tell you what to expect, what caught them off guard, and exactly what got them the offer.",
-  },
-  {
-    q: "Can I get a refund?",
-    a: "Yes. Full refund up to 48 hours before the event.",
-  },
-];
-
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
+// ---- Bullet component ----
+function Bullet({ children, size = 16 }: { children: React.ReactNode; size?: number }) {
   return (
-    <div className="border-b border-white/[0.06] last:border-0">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-4 py-4 text-left text-sm font-medium text-white/80 hover:text-white transition-colors cursor-pointer"
-      >
-        {q}
-        {open ? (
-          <ChevronUp className="w-4 h-4 shrink-0 text-white/30" />
-        ) : (
-          <ChevronDown className="w-4 h-4 shrink-0 text-white/30" />
-        )}
-      </button>
-      {open && (
-        <p className="pb-4 text-sm text-white/40 leading-relaxed font-light animate-in fade-in duration-200">
-          {a}
-        </p>
-      )}
+    <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12 }}>
+      <Check style={{ width: 15, height: 15, marginTop: 3, flexShrink: 0, color: "#2EE6A8" }} strokeWidth={2.5} />
+      <span style={{ fontSize: size, color: "#FFFFFF", lineHeight: 1.5 }}>{children}</span>
     </div>
   );
 }
 
-// ---- Tier definitions ----
+const B = ({ children }: { children: React.ReactNode }) => (
+  <span style={{ fontWeight: 600 }}>{children}</span>
+);
+const G = ({ children }: { children: React.ReactNode }) => (
+  <span style={{ fontWeight: 600, color: "#2EE6A8" }}>{children}</span>
+);
+
+// ---- FAQ ----
+const FAQ_ITEMS: { q: string; a: string; defaultOpen: boolean }[] = [
+  { q: "Will there be a recording?", a: "Yes. The full recording is included with every tier. If you can't make it live, you won't miss out.", defaultOpen: true },
+  { q: "What if my firm isn't covered?", a: "The conversion strategies our speakers share work across every firm and every area of finance. The networking, assessment centre, and follow-up strategies work at every firm.", defaultOpen: true },
+  { q: "Can I get a refund?", a: "Yes. Full refund if it's not for you. Just email us and we'll process it. We'd rather you try it risk-free than wonder what you missed.", defaultOpen: true },
+  { q: "How long is the panel?", a: "About 3 hours. 10+ speakers sharing their conversion stories, followed by a live Q&A where you can ask about your specific firm.", defaultOpen: false },
+  { q: "What's in the Handbook?", a: "Firm-by-firm breakdowns for 45+ firms. What the spring week looks like, what the assessment day involves, networking scripts, and conversion tactics.", defaultOpen: false },
+  { q: "What's the prep call in the Convert tier?", a: "A 1-on-1 call with someone who actually converted their spring week at your firm. They'll tell you what to expect, what caught them off guard, and exactly what got them the offer.", defaultOpen: false },
+  { q: "Can I upgrade later?", a: "These prices are only available at checkout. Once you've purchased, the Prepare and Convert add-ons may not be available at the same price.", defaultOpen: false },
+];
+
+function FaqItem({ q, a, defaultOpen = false }: { q: string; a: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+      <button type="button" onClick={() => setOpen(!open)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, padding: "16px 0", textAlign: "left", fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.8)", background: "none", border: "none", cursor: "pointer" }}>
+        {q}
+        <ChevronDown style={{ width: 16, height: 16, flexShrink: 0, color: "rgba(255,255,255,0.3)", transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }} />
+      </button>
+      {open && <p style={{ paddingBottom: 16, fontSize: 14, color: "rgba(255,255,255,0.4)", lineHeight: 1.6 }}>{a}</p>}
+    </div>
+  );
+}
+
+// ---- "What's included" items ----
+const WEBINAR_ITEMS = [
+  "Exactly what your Spring Week looks like at your specific firm",
+  "Specific, niche advice from students who converted \u2014 the small things that actually made the difference",
+  "How to network with senior bankers without being awkward, including actual scripts",
+  "The mistakes that cost other students their offers (so you don't make them)",
+  "Assessment centre and interview strategies that landed return offers at 25+ firms",
+  "What students that converted their spring week did differently, and what they'd do again",
+  "The full recording if you can't make it live",
+];
+
+// ---- Handbook bullets (split for "see more") ----
+const HANDBOOK_BULLETS = [
+  "Firm-by-firm breakdowns: what each day looks like, who you'll meet, what they're assessing",
+  "Assessment centre and interview formats - what to expect and how to prepare",
+  "Networking scripts and conversation starters that don't feel forced",
+  "The specific things to do right before each session during your spring week",
+  "3 follow-up email templates to send after your spring week ends",
+  "Common mistakes at each firm - and what the students who converted did instead",
+  "Culture breakdowns so you know what each firm actually values (not what their website says)",
+  "A pre-spring-week checklist: what to research, what to wear, what to bring, who to contact",
+];
+
+// ---- Tier data ----
 import {
-  SW_TICKETS,
   STRIPE_SW_WATCH,
   STRIPE_SW_PREPARE,
   STRIPE_SW_CONVERT,
@@ -159,240 +148,456 @@ import {
 } from "@/data/springWeekData";
 
 type TierId = "watch" | "prepare" | "convert";
-
-const TIERS: { id: TierId; name: string; price: number; tagline: string; features: string[]; badge?: string; recommended?: boolean; stripeLink: string }[] = [
-  {
-    id: "watch",
-    name: "Watch",
-    price: 19,
-    tagline: "See how they did it",
-    features: [
-      "Live panel on April 12 + full recording",
-      "Hear how students converted at Morgan Stanley, JP Morgan, Jane Street and more",
-      "Direct Q&A with the speakers",
-    ],
-    stripeLink: STRIPE_SW_WATCH,
-  },
-  {
-    id: "prepare",
-    name: "Prepare",
-    price: 39,
-    tagline: "Know what to expect at YOUR firm",
-    features: [
-      "Everything in Watch",
-      "Spring Week Handbook: 45+ firms, phase-by-phase",
-      "Firm-specific intel on assessments, conversion rates, and what to expect",
-    ],
-    badge: "MOST CHOSEN",
-    recommended: true,
-    stripeLink: STRIPE_SW_PREPARE,
-  },
-  {
-    id: "convert",
-    name: "Convert",
-    price: 79,
-    tagline: "Walk in ready to get the offer",
-    features: [
-      "Everything in Prepare",
-      "1 free prep call with someone who converted at your firm (worth £50)",
-      "They tell you what the week is really like and what got them the offer",
-    ],
-    badge: "BEST VALUE",
-    stripeLink: STRIPE_SW_CONVERT,
-  },
-];
+const TIER_LINKS: Record<TierId, string> = { watch: STRIPE_SW_WATCH, prepare: STRIPE_SW_PREPARE, convert: STRIPE_SW_CONVERT };
+const TIER_PRICES: Record<TierId, number> = { watch: 19, prepare: 39, convert: 79 };
+const TIER_NAMES: Record<TierId, string> = { watch: "Watch", prepare: "Prepare", convert: "Convert" };
 
 // ---- Main component ----
 export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightPickerProps) {
   const [selectedTier, setSelectedTier] = useState<TierId>("prepare");
+  const [showPreview, setShowPreview] = useState(false);
+  const [handbookMore, setHandbookMore] = useState(false);
+  const [webinarExpanded, setWebinarExpanded] = useState(false);
+  const countdown = useCountdown(SESSION_START_ISO);
 
-  const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
-  const firstName = formData.firstName;
-
-  const tier = TIERS.find((t) => t.id === selectedTier)!;
+  // Lock body scroll when modal open
+  useEffect(() => {
+    if (showPreview) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [showPreview]);
 
   function handleCheckout() {
-    onCheckout(selectedTier as unknown as NightComboKey, tier.stripeLink);
+    onCheckout(selectedTier as unknown as NightComboKey, TIER_LINKS[selectedTier]);
   }
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">
-          Step 4 of 4
-        </p>
-        <h1 className="text-2xl md:text-[28px] font-bold text-white leading-tight tracking-tight">
-          {firstName
-            ? `Choose your tier, ${firstName}`
-            : "Choose your tier"}
+
+      {/* ---- 1. HEADER ---- */}
+      <div style={{ textAlign: "center" }}>
+        <h1 style={{ fontSize: "clamp(26px, 5vw, 32px)", fontWeight: 700, color: "#ffffff", lineHeight: 1.2, marginBottom: 8 }}>
+          Choose your tier
         </h1>
-        <p className="text-sm text-white/40 font-light max-w-md mx-auto">
+        <p style={{ fontSize: 16, fontWeight: 400, color: "#A0A0A0", maxWidth: 500, margin: "0 auto" }}>
           One live panel. {SPEAKERS.length} speakers who converted. Every tier includes the full recording.
         </p>
       </div>
 
-      {/* Countdown */}
-      <div className="flex items-center justify-center gap-3 funnel-card rounded-xl px-5 py-3">
-        <Clock className="w-3.5 h-3.5 text-white/25 shrink-0" />
-        <p className="text-xs text-white/40">Live panel starts in</p>
-        <div className="flex items-center gap-2 font-mono text-sm font-semibold text-emerald-400">
-          {countdown.days > 0 && <span>{countdown.days}d</span>}
-          <span>{String(countdown.hours).padStart(2, "0")}h</span>
-          <span>{String(countdown.minutes).padStart(2, "0")}m</span>
-          <span>{String(countdown.seconds).padStart(2, "0")}s</span>
+      {/* ---- 2. COUNTDOWN ---- */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "12px 20px" }}>
+        <Clock style={{ width: 14, height: 14, color: "rgba(255,255,255,0.25)", flexShrink: 0 }} />
+        <span style={{ fontSize: 13, color: "#A0A0A0" }}>Live panel starts in</span>
+        <span style={{ fontFamily: "monospace", fontSize: 14, fontWeight: 700, color: "#2EE6A8", letterSpacing: "0.05em" }}>
+          {countdown.days > 0 && <>{countdown.days}d </>}
+          {String(countdown.hours).padStart(2, "0")}h{" "}
+          {String(countdown.minutes).padStart(2, "0")}m{" "}
+          {String(countdown.seconds).padStart(2, "0")}s
+        </span>
+      </div>
+
+      {/* ---- 3. SOCIAL PROOF PILLS ---- */}
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "16px 24px", padding: "4px 0" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Clock style={{ width: 16, height: 16, color: "#2EE6A8" }} />
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#A0A0A0" }}>~3 hours of conversion strategies</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Users style={{ width: 16, height: 16, color: "#2EE6A8" }} />
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#A0A0A0" }}>20+ students have already purchased</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Play style={{ width: 16, height: 16, color: "#2EE6A8" }} />
+          <span style={{ fontSize: 14, fontWeight: 500, color: "#A0A0A0" }}>Full recording included</span>
         </div>
       </div>
 
-      {/* Tier Cards */}
-      <div className="space-y-4">
-        {TIERS.map((t) => {
-          const isSelected = selectedTier === t.id;
-          const accentColor = t.id === "watch" ? "#6366F1" : t.id === "prepare" ? "#10B981" : "#F59E0B";
-
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setSelectedTier(t.id)}
-              className={[
-                "w-full text-left rounded-2xl border-2 p-6 md:p-7 transition-all duration-200 relative overflow-hidden cursor-pointer",
-                isSelected
-                  ? "border-white/20 bg-white/[0.04]"
-                  : "border-white/[0.06] bg-transparent hover:border-white/12",
-              ].join(" ")}
-            >
-              {/* Accent strip */}
-              <div
-                className="absolute left-0 top-0 bottom-0 w-1.5 rounded-l-2xl transition-opacity duration-200"
-                style={{ backgroundColor: accentColor, opacity: isSelected ? 1 : 0.25 }}
-              />
-
-              <div className="pl-4 flex items-start gap-4">
-                {/* Radio */}
-                <div
-                  className={[
-                    "mt-1 w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all duration-200",
-                    isSelected ? "bg-emerald-500 border-emerald-500" : "border-white/20",
-                  ].join(" ")}
-                >
-                  {isSelected && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <span className="text-base md:text-lg font-bold text-white">{t.name}</span>
-                    {t.badge && (
-                      <span
-                        className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
-                        style={{ backgroundColor: `${accentColor}18`, color: accentColor }}
-                      >
-                        {t.badge}
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-sm text-white/50">{t.tagline}</p>
-                  <div className="mt-3 space-y-1.5">
-                    {t.features.map((f) => (
-                      <div key={f} className="flex items-start gap-2">
-                        <Check className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-400" strokeWidth={2.5} />
-                        <span className="text-xs md:text-sm text-white/50 leading-snug">{f}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Price */}
-                <div className="text-right shrink-0">
-                  <p className="text-xl md:text-2xl font-bold text-white">£{t.price}</p>
-                </div>
-              </div>
-            </button>
-          );
-        })}
+      {/* ---- 4. 78% CHOOSE BUNDLE BAR ---- */}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(46,230,168,0.1)", border: "1px solid rgba(46,230,168,0.3)", borderRadius: 999, padding: "10px 24px", maxWidth: 400 }}>
+          <Users style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
+          <span style={{ fontSize: 15, fontWeight: 600, color: "#2EE6A8" }}>78% of students choose the bundle</span>
+        </div>
       </div>
 
-      {/* CTA */}
-      <div className="funnel-card rounded-xl p-5 space-y-3">
-        <div className="flex items-end justify-between gap-2">
-          <div>
-            <div className="text-3xl font-bold text-white tracking-tight">
-              <AnimatedPrice value={tier.price} />
-            </div>
-            <p className="text-xs text-white/40 mt-1">{tier.name} tier selected</p>
+      {/* ---- 5. WHAT'S INCLUDED IN THE WEBINAR (Change 1: renamed + moved here) ---- */}
+      <div style={{ background: "#161616", border: "1px solid #222222", borderRadius: 8, overflow: "hidden" }}>
+        <button
+          type="button"
+          onClick={() => setWebinarExpanded(!webinarExpanded)}
+          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", background: "none", border: "none", cursor: "pointer" }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Info style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
+            <span style={{ fontSize: 16, fontWeight: 600, color: "#FFFFFF" }}>What's included in the webinar?</span>
           </div>
-          {tier.badge && (
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white text-black shrink-0">
-              {tier.badge}
-            </span>
-          )}
+          <ChevronDown style={{ width: 16, height: 16, color: "rgba(255,255,255,0.3)", flexShrink: 0, transform: webinarExpanded ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }} />
+        </button>
+        {webinarExpanded && (
+          <div style={{ padding: "0 20px 20px", borderTop: "1px solid #222222", paddingTop: 16 }}>
+            {WEBINAR_ITEMS.map((item, i) => (
+              <Bullet key={i} size={15}>{item}</Bullet>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ================================================================
+          6. WATCH TIER (Change 3: border follows selection)
+      ================================================================ */}
+      <div
+        onClick={() => setSelectedTier("watch")}
+        style={{
+          background: "#111111",
+          border: selectedTier === "watch" ? "2px solid #2EE6A8" : "1px solid #222222",
+          borderRadius: 12,
+          padding: 28,
+          cursor: "pointer",
+          transition: "border-color 0.2s",
+        }}
+      >
+        {/* Badge row */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <span style={{ background: "rgba(46,230,168,0.15)", color: "#2EE6A8", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999 }}>
+            <Zap style={{ width: 12, height: 12, display: "inline", verticalAlign: "-1px", marginRight: 4 }} />
+            34% OFF
+          </span>
+          <span style={{ color: "#FF4D4D", fontSize: 13, fontWeight: 600, fontStyle: "italic" }}>Valid for next 12 hours only</span>
         </div>
+
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: "#FFFFFF", marginBottom: 4 }}>Watch</h2>
+        <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Full 3-hour panel - watch live or anytime after</p>
+
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 20 }}>
+          <span style={{ fontSize: 22, color: "#666666", textDecoration: "line-through" }}>&pound;29</span>
+          <span style={{ fontSize: 36, fontWeight: 800, color: "#FFFFFF" }}>&pound;19</span>
+        </div>
+
+        <Bullet>Full <B>3-hour</B> live panel recording</Bullet>
+        <Bullet>Hear how students converted at <B>JP Morgan</B>, <B>Jane Street</B>, <B>Evercore</B> and more</Bullet>
+        <Bullet>Direct Q&amp;A with the speakers</Bullet>
+        <Bullet><G>Lifetime access</G> to the recording - watch anytime, anywhere</Bullet>
+        <Bullet>Extra <G>free resources</G> included</Bullet>
+
+        <span
+          role="button"
+          tabIndex={0}
+          onClick={(e) => { e.stopPropagation(); setSelectedTier("prepare"); }}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.stopPropagation(); setSelectedTier("prepare"); } }}
+          style={{ display: "inline-block", marginTop: 16, fontSize: 14, fontWeight: 600, color: "#2EE6A8", cursor: "pointer" }}
+        >
+          Upgrade to Prepare for the Handbook &rarr;
+        </span>
+      </div>
+
+      {/* ================================================================
+          7. PREPARE TIER (Change 3: border follows selection; Change 4: see more; Change 5: modal; Change 6: MOST POPULAR)
+      ================================================================ */}
+      <div
+        onClick={() => setSelectedTier("prepare")}
+        style={{
+          background: "#111111",
+          border: selectedTier === "prepare" ? "2px solid #2EE6A8" : "1px solid #222222",
+          borderRadius: 12,
+          padding: "40px 28px 28px",
+          position: "relative",
+          cursor: "pointer",
+          transition: "border-color 0.2s",
+        }}
+      >
+        {/* MOST POPULAR badge (Change 6: stays permanently) */}
+        <div style={{ position: "absolute", top: -14, left: "50%", transform: "translateX(-50%)", background: "#2EE6A8", color: "#0A0A0A", fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", padding: "6px 16px", borderRadius: 999, whiteSpace: "nowrap" }}>
+          Most Popular
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <span style={{ background: "rgba(46,230,168,0.15)", color: "#2EE6A8", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999 }}>
+            <Zap style={{ width: 12, height: 12, display: "inline", verticalAlign: "-1px", marginRight: 4 }} />
+            BEST VALUE
+          </span>
+          <span style={{ color: "#2EE6A8", fontSize: 13, fontWeight: 600 }}>This week only</span>
+        </div>
+
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: "#FFFFFF", marginBottom: 4 }}>Prepare</h2>
+        <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Everything in Watch, plus the complete handbook that covers 45+ firms</p>
+
+        <div style={{ marginBottom: 20 }}>
+          <span style={{ fontSize: 36, fontWeight: 800, color: "#FFFFFF" }}>&pound;39</span>
+        </div>
+
+        <Bullet>Full <B>3-hour</B> live panel recording</Bullet>
+        <Bullet>Hear how students converted at <B>JP Morgan</B>, <B>Jane Street</B>, <B>Evercore</B> and more</Bullet>
+        <Bullet>Direct Q&amp;A with the speakers</Bullet>
+        <Bullet><G>Lifetime access</G> to the recording - watch anytime, anywhere</Bullet>
+        <Bullet>Extra <G>free resources</G> included</Bullet>
+
+        <div style={{ height: 1, background: "#222222", margin: "20px 0" }} />
+
+        <Bullet size={15}>
+          <B>The Spring Week Conversion Handbook</B>{" "}
+          <span style={{ color: "#A0A0A0" }}>- get access instantly, and apply the strategies while you watch</span>
+        </Bullet>
+
+        {/* ---- Handbook detail card ---- */}
+        <div style={{ background: "#1A1A1A", border: "1px solid #333333", borderRadius: 8, padding: 20, margin: "16px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <BookOpen style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#FFFFFF", textTransform: "uppercase", letterSpacing: "0.05em" }}>The Spring Week Conversion Handbook</span>
+          </div>
+
+          <p style={{ fontSize: 15, fontWeight: 600, color: "#FFFFFF", marginBottom: 8 }}>
+            This is the most detailed spring week preparation resource available anywhere.
+          </p>
+          <p style={{ fontSize: 14, color: "#A0A0A0", lineHeight: 1.6, marginBottom: 12 }}>
+            Covering 45+ firms with insider breakdowns from students who actually converted. This is not generic careers advice - it's real, specific intel from people who were in your seat last year.
+          </p>
+          <p style={{ fontSize: 14, color: "#A0A0A0", lineHeight: 1.6, marginBottom: 16 }}>
+            Use it alongside the live panel to go deeper on <B>your target firm</B>.
+          </p>
+
+          {/* Change 5: Image opens modal, not inline expand */}
+          <div
+            onClick={(e) => { e.stopPropagation(); setShowPreview(true); }}
+            style={{ position: "relative", borderRadius: 8, overflow: "hidden", border: "1px solid #333333", marginBottom: 8, cursor: "pointer", maxHeight: 200 }}
+          >
+            <img
+              src="/images/handbook-preview-hsbc.png"
+              alt="Preview of the HSBC Spring Week section from the handbook"
+              style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "top" }}
+            />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 60, background: "linear-gradient(transparent, #1A1A1A)", borderRadius: "0 0 8px 8px", pointerEvents: "none" }} />
+          </div>
+          <p
+            onClick={(e) => { e.stopPropagation(); setShowPreview(true); }}
+            style={{ fontSize: 12, color: "#666666", fontStyle: "italic", marginBottom: 16, textAlign: "center", cursor: "pointer" }}
+          >
+            Preview of the HSBC section - tap to expand
+          </p>
+
+          {/* Toggle pill button */}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setHandbookMore(!handbookMore); }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              width: "100%",
+              padding: "12px 20px",
+              background: "rgba(46, 230, 168, 0.1)",
+              border: "1px solid rgba(46, 230, 168, 0.3)",
+              borderRadius: 8,
+              color: "#2EE6A8",
+              fontSize: 14,
+              fontWeight: 600,
+              cursor: "pointer",
+              marginTop: 12,
+              transition: "all 0.15s ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(46, 230, 168, 0.2)"; e.currentTarget.style.borderColor = "rgba(46, 230, 168, 0.5)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(46, 230, 168, 0.1)"; e.currentTarget.style.borderColor = "rgba(46, 230, 168, 0.3)"; }}
+          >
+            {handbookMore ? "Hide Handbook details" : "See what's inside the Handbook"}
+            <ChevronDown style={{ width: 14, height: 14, transform: handbookMore ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }} />
+          </button>
+
+          {/* All handbook bullets inside toggle */}
+          <div
+            style={{
+              maxHeight: handbookMore ? 600 : 0,
+              overflow: "hidden",
+              transition: "max-height 0.3s ease",
+            }}
+          >
+            <div style={{ fontSize: 14, paddingTop: 12 }}>
+              {HANDBOOK_BULLETS.map((b, i) => (
+                <Bullet key={i} size={14}>{b}</Bullet>
+              ))}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ================================================================
+          8. CONVERT TIER (Change 3: border follows selection)
+      ================================================================ */}
+      <div
+        onClick={() => setSelectedTier("convert")}
+        style={{
+          background: "#111111",
+          border: selectedTier === "convert" ? "2px solid #2EE6A8" : "1px solid #333333",
+          borderRadius: 12,
+          padding: 28,
+          cursor: "pointer",
+          transition: "border-color 0.2s",
+        }}
+      >
+        <div style={{ marginBottom: 16 }}>
+          <span style={{ background: "rgba(255,184,77,0.15)", color: "#FFB84D", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999 }}>BEST VALUE</span>
+        </div>
+
+        <h2 style={{ fontSize: 24, fontWeight: 700, color: "#FFFFFF", marginBottom: 4 }}>Convert</h2>
+        <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Walk in ready to get the offer</p>
+
+        <div style={{ marginBottom: 20 }}>
+          <span style={{ fontSize: 36, fontWeight: 800, color: "#FFFFFF" }}>&pound;79</span>
+        </div>
+
+        <p style={{ fontSize: 16, fontWeight: 500, color: "#FFFFFF", marginBottom: 16 }}>Everything in Prepare, plus:</p>
+
+        <div style={{ background: "#1A1A1A", border: "1px solid #333333", borderRadius: 8, padding: 20, margin: "12px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <Phone style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#FFFFFF", textTransform: "uppercase", letterSpacing: "0.05em" }}>30-Minute 1-on-1 Prep Call</span>
+          </div>
+
+          <p style={{ fontSize: 14, color: "#A0A0A0", lineHeight: 1.6, marginBottom: 16 }}>
+            A private 30-minute call with a speaker who completed and converted their spring week at <B>your target firm</B>. They'll walk you through exactly what to expect - day by day - and give you <B>tailored advice</B> for your specific situation, your firm's culture, and your goals.
+          </p>
+
+          <Bullet size={14}>Matched to a speaker who converted at your specific firm</Bullet>
+          <Bullet size={14}>Covers your week's schedule, the assessment format, and what they're really looking for</Bullet>
+          <Bullet size={14}>Personalised networking strategy - who to talk to, when, and what to say</Bullet>
+          <Bullet size={14}>Conducted before your conversion so you walk in fully prepared</Bullet>
+
+          <p style={{ fontSize: 13, color: "#A0A0A0", fontStyle: "italic", marginTop: 12 }}>
+            This is the closest thing to having a mentor who's already been through it.
+          </p>
+        </div>
+      </div>
+
+      {/* ---- 9. STICKY PURCHASE BAR (Change 2: space in button text) ---- */}
+      <div style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: 20 }}>
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+              {selectedTier === "watch" && (
+                <span style={{ fontSize: 18, color: "#666666", textDecoration: "line-through" }}>&pound;29</span>
+              )}
+              <span style={{ fontSize: 32, fontWeight: 800, color: selectedTier === "prepare" ? "#2EE6A8" : "#FFFFFF", letterSpacing: "-0.02em" }}>
+                <AnimatedPrice value={TIER_PRICES[selectedTier]} />
+              </span>
+            </div>
+            <p style={{ fontSize: 12, color: "#666666", marginTop: 4 }}>{TIER_NAMES[selectedTier]} tier selected</p>
+          </div>
+        </div>
+
+        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "center", marginBottom: 10 }}>
+          78% of students choose the bundle &middot; {SPEAKERS.length} speakers who converted their spring weeks
+        </p>
 
         <button
           type="button"
           onClick={handleCheckout}
-          className="w-full py-4 rounded-xl text-base font-bold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer bg-emerald-500 text-black hover:bg-emerald-400 active:scale-[0.99]"
+          style={{ width: "100%", padding: "16px 0", borderRadius: 12, fontSize: 16, fontWeight: 700, background: "#2EE6A8", color: "#0A0A0A", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.2s" }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "#26CC96"; e.currentTarget.style.boxShadow = "0 0 30px rgba(46,230,168,0.15)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "#2EE6A8"; e.currentTarget.style.boxShadow = "none"; }}
         >
-          <Zap className="w-4 h-4" />
-          <span>Get {tier.name} for £{tier.price}</span>
+          Get {TIER_NAMES[selectedTier]}{" "}for &pound;{TIER_PRICES[selectedTier]}
+          <ArrowRight style={{ width: 16, height: 16 }} />
         </button>
 
-        <p className="text-center text-[11px] text-white/30 font-light">
-          You'll receive your ticket confirmation by email immediately
-        </p>
-
-        {/* Trust row */}
-        <div className="flex items-center justify-center gap-4 text-[11px] text-white/30">
-          <span className="flex items-center gap-1">
-            <ShieldCheck className="w-3 h-3" />
-            Full refund
-          </span>
-          <span className="flex items-center gap-1">
-            <Lock className="w-3 h-3" />
-            Secure Stripe checkout
-          </span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 12, fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: 4 }}><ShieldCheck style={{ width: 12, height: 12 }} /> Full refund</span>
+          <span style={{ display: "flex", alignItems: "center", gap: 4 }}><Lock style={{ width: 12, height: 12 }} /> Secure Stripe checkout</span>
         </div>
       </div>
 
-      {/* Social proof */}
-      <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 py-1">
-        <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <Users className="w-3.5 h-3.5 text-white/20" />
-          Most students choose Prepare
-        </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-white/30">
-          <Star className="w-3.5 h-3.5 text-white/20" />
-          {SPEAKERS.length} speakers who did spring weeks and more
+      {/* ---- 10. REFUND GUARANTEE PILL ---- */}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(46,230,168,0.1)", border: "1px solid rgba(46,230,168,0.3)", borderRadius: 999, padding: "10px 20px" }}>
+          <Shield style={{ width: 16, height: 16, color: "#2EE6A8", flexShrink: 0 }} />
+          <span style={{ fontSize: 14, fontWeight: 600, color: "#2EE6A8" }}>Full refund included if not satisfied</span>
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="funnel-card rounded-xl overflow-hidden">
-        <div className="px-5 py-3 border-b border-white/[0.06]">
-          <p className="text-xs font-semibold text-white/30 uppercase tracking-wider">
-            Frequently asked questions
-          </p>
+      {/* ---- 11. FAQ ---- */}
+      <div style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, overflow: "hidden" }}>
+        <div style={{ padding: "12px 20px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Frequently asked questions</p>
         </div>
-        <div className="px-5">
-          {FAQ_ITEMS.map((item) => (
-            <FaqItem key={item.q} q={item.q} a={item.a} />
-          ))}
+        <div style={{ padding: "0 20px" }}>
+          {FAQ_ITEMS.map((item) => <FaqItem key={item.q} q={item.q} a={item.a} defaultOpen={item.defaultOpen} />)}
         </div>
       </div>
 
-      {/* Urgency footer */}
-      <div className="flex items-start gap-3 funnel-card rounded-xl px-4 py-3" style={{ borderColor: "rgba(245,158,11,0.12)" }}>
-        <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0 text-amber-400" />
-        <div>
-          <p className="text-sm font-medium text-white/70">
-            The live panel is Sunday April 12 at 7pm BST.
-          </p>
-          <p className="text-xs font-light text-white/40 mt-0.5">
-            Spring weeks begin Monday April 13. This is your last chance to prepare with people who converted.
-          </p>
-        </div>
+      {/* ---- 12. BOTTOM URGENCY BAR ---- */}
+      <div style={{ background: "#161616", borderLeft: "3px solid #2EE6A8", borderTop: "1px solid #222222", borderRight: "1px solid #222222", borderBottom: "1px solid #222222", borderRadius: "0 12px 12px 0", padding: "14px 18px" }}>
+        <p style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF", lineHeight: 1.4 }}>The live panel is Sunday April 12 at 2pm BST.</p>
+        <p style={{ fontSize: 13, fontWeight: 400, color: "#A0A0A0", marginTop: 4, lineHeight: 1.5 }}>Spring weeks start the next morning. This is the last weekend to prepare.</p>
       </div>
+
+      {/* ---- Change 5: Handbook preview modal ---- */}
+      {showPreview && (
+        <div
+          onClick={() => setShowPreview(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.85)",
+            zIndex: 1000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            cursor: "pointer",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              maxWidth: 600,
+              width: "100%",
+              maxHeight: "90vh",
+              overflow: "auto",
+              borderRadius: 12,
+              border: "1px solid #333333",
+              backgroundColor: "#111111",
+            }}
+          >
+            <button
+              onClick={() => setShowPreview(false)}
+              style={{
+                position: "sticky",
+                top: 12,
+                float: "right",
+                marginRight: 12,
+                background: "rgba(0,0,0,0.6)",
+                border: "1px solid #444444",
+                borderRadius: "50%",
+                width: 32,
+                height: 32,
+                color: "#FFFFFF",
+                fontSize: 16,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1001,
+              }}
+            >
+              <X style={{ width: 16, height: 16 }} />
+            </button>
+            <img
+              src="/images/handbook-preview-hsbc.png"
+              alt="Full preview of the HSBC Spring Week section"
+              style={{ width: "100%", display: "block", borderRadius: 12 }}
+            />
+            <p style={{ color: "#666666", fontSize: 13, fontStyle: "italic", textAlign: "center", padding: 12 }}>
+              HSBC Spring Week - full section preview
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
