@@ -32,11 +32,19 @@ export function SpringWeekIndustry({
   onUpdate,
   onContinue,
 }: SpringWeekIndustryProps) {
-  const [showDetail, setShowDetail] = useState(!!industry);
+  const selectedIndustries = industry ? industry.split(", ").filter(Boolean) : [];
+  const [showDetail, setShowDetail] = useState(selectedIndustries.length > 0);
 
-  const handleSelectIndustry = (option: string) => {
-    onUpdate("industry", option);
-    setShowDetail(true);
+  const handleToggleIndustry = (option: string) => {
+    const current = new Set(selectedIndustries);
+    if (current.has(option)) {
+      current.delete(option);
+    } else {
+      current.add(option);
+    }
+    const updated = Array.from(current).join(", ");
+    onUpdate("industry", updated);
+    if (current.size > 0) setShowDetail(true);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,7 +69,7 @@ export function SpringWeekIndustry({
           About your spring week
         </h2>
         <p className="text-sm text-white/50 font-sans font-light">
-          What area are you targeting?
+          What area(s) are you targeting? <span className="text-white/30">(select all that apply)</span>
         </p>
       </div>
 
@@ -70,10 +78,10 @@ export function SpringWeekIndustry({
           <button
             key={option}
             type="button"
-            onClick={() => handleSelectIndustry(option)}
+            onClick={() => handleToggleIndustry(option)}
             className={cn(
               "px-5 py-2.5 text-sm rounded-full border font-sans font-light transition-all duration-200",
-              industry === option
+              selectedIndustries.includes(option)
                 ? "bg-emerald-500 text-black border-emerald-500 font-medium shadow-[0_0_15px_rgba(16,185,129,0.3)] scale-[1.02] z-10 relative"
                 : "bg-white/[0.04] text-white/70 border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08]",
             )}
@@ -84,20 +92,20 @@ export function SpringWeekIndustry({
       </div>
 
       {/* Micro-reinforcement based on industry */}
-      {industry && SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry] && (
+      {selectedIndustries.length > 0 && SPRING_WEEK_INDUSTRY_REINFORCEMENT[selectedIndustries[0]] && (
         <div
           className="flex items-start gap-2.5 text-sm text-emerald-100/90 bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.05)] rounded-xl px-4 py-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
           style={{ animationTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)" }}
         >
           <Target className="h-4 w-4 mt-0.5 shrink-0 text-emerald-400" />
           <span className="font-sans font-light leading-snug">
-            {SPRING_WEEK_INDUSTRY_REINFORCEMENT[industry]}
+            {SPRING_WEEK_INDUSTRY_REINFORCEMENT[selectedIndustries[0]]}
           </span>
         </div>
       )}
 
       {/* Section: Which spring weeks have you landed? */}
-      <div className={cn("grid transition-all duration-500 ease-in-out", showDetail && industry ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none")}>
+      <div className={cn("grid transition-all duration-500 ease-in-out", showDetail && selectedIndustries.length > 0 ? "grid-rows-[1fr] opacity-100 mt-6" : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none")}>
         <div className="overflow-hidden">
           <div className="space-y-6 pt-2 pb-2">
           <div className="space-y-2">

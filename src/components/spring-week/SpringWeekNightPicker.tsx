@@ -437,10 +437,6 @@ export function SpringWeekNightPicker({ formData, onCheckout }: SpringWeekNightP
           transition: "border-color 0.2s",
         }}
       >
-        <div style={{ marginBottom: 16 }}>
-          <span style={{ background: "rgba(255,184,77,0.15)", color: "#FFB84D", fontSize: 12, fontWeight: 700, padding: "4px 10px", borderRadius: 999 }}>BEST VALUE</span>
-        </div>
-
         <h2 style={{ fontSize: 24, fontWeight: 700, color: "#FFFFFF", marginBottom: 4 }}>Convert</h2>
         <p style={{ fontSize: 14, color: "#A0A0A0", marginBottom: 16 }}>Walk in ready to get the offer</p>
 
