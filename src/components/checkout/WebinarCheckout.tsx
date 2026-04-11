@@ -214,28 +214,14 @@ export function WebinarCheckout({
   const reqRef = useRef(0);
   const countdown = useCountdown(SPRING_WEEK_NIGHTS[0].dateISO);
 
+  // Stable refs for callbacks to avoid re-triggering the payment intent effect
+  const onSuccessRef = useRef(onSuccess);
+  onSuccessRef.current = onSuccess;
+
   const addOnTotal = availableAddOns.filter((a) => activeAddOns.has(a.id)).reduce((s, a) => s + a.price, 0);
   const total = tier.price + addOnTotal;
   const isFree = total === 0;
   const firstFirm = formData.springWeekFirms ? formData.springWeekFirms.split(",")[0].trim() : "";
-
-  const buildPayload = useCallback((): CheckoutPayload => {
-    const items: Array<{ id: string; type: string; price: number }> = [
-      { id: selectedTierId, type: "tier", price: tier.price },
-    ];
-    for (const a of availableAddOns) {
-      if (activeAddOns.has(a.id)) items.push({ id: a.id, type: "addon", price: a.price });
-    }
-    return {
-      email: formData.email, firstName: formData.firstName, lastName: formData.lastName,
-      items, partner: partnerSlug,
-      metadata: {
-        university: formData.university, industry: formData.industry,
-        springWeekFirms: formData.springWeekFirms, tierId: selectedTierId,
-        partnerSlug: partnerSlug ?? "", partnerName: partnerName ?? "",
-      },
-    };
-  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName]);
 
   // TEMPORARY: fall back to Stripe payment link when edge function is unavailable
   const handleStripeLinkFallback = useCallback(() => {
@@ -248,12 +234,28 @@ export function WebinarCheckout({
     const seq = ++reqRef.current;
     setLoading(true);
     setFetchError(null);
-    callCheckout(buildPayload())
+
+    const items: Array<{ id: string; type: string; price: number }> = [
+      { id: selectedTierId, type: "tier", price: tier.price },
+    ];
+    for (const a of availableAddOns) {
+      if (activeAddOns.has(a.id)) items.push({ id: a.id, type: "addon", price: a.price });
+    }
+    const payload: CheckoutPayload = {
+      email: formData.email, firstName: formData.firstName, lastName: formData.lastName,
+      items, partner: partnerSlug,
+      metadata: {
+        university: formData.university, industry: formData.industry,
+        springWeekFirms: formData.springWeekFirms, tierId: selectedTierId,
+        partnerSlug: partnerSlug ?? "", partnerName: partnerName ?? "",
+      },
+    };
+
+    callCheckout(payload)
       .then((data) => {
         if (seq !== reqRef.current) return;
         if (data.free) {
-          // Edge function confirmed free order, skip Stripe
-          onSuccess(selectedTierId);
+          onSuccessRef.current(selectedTierId);
           return;
         }
         if (!data.clientSecret) {
@@ -270,7 +272,8 @@ export function WebinarCheckout({
         setFetchError(message);
         setLoading(false);
       });
-  }, [buildPayload, onSuccess, selectedTierId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTierId, tier.price, activeAddOns, availableAddOns, formData.email, formData.firstName, formData.lastName, formData.university, formData.industry, formData.springWeekFirms, partnerSlug, partnerName]);
 
   // Create or update PaymentIntent when total changes
   useEffect(() => {
@@ -281,18 +284,13 @@ export function WebinarCheckout({
   function handleFreeClaim() {
     // Free tier with no add-ons: skip edge function entirely
     if (isFree) {
-      onSuccess(selectedTierId);
+      onSuccessRef.current(selectedTierId);
       return;
     }
     // Free tier base + paid add-ons: still need checkout
     setLoading(true);
     setFetchError(null);
-    callCheckout(buildPayload())
-      .then(() => onSuccess(selectedTierId))
-      .catch((err) => {
-        setFetchError(err instanceof Error ? err.message : "Something went wrong");
-        setLoading(false);
-      });
+    fetchIntent();
   }
 
   function toggleAddOn(id: string) {
