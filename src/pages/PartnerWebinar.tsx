@@ -402,18 +402,31 @@ function PartnerWelcome({
         <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-white/60 mb-6 text-center">
           Speakers who converted at these firms
         </h2>
-        <div className="grid grid-cols-4 md:grid-cols-4 gap-x-6 gap-y-4 items-center justify-items-center">
+        <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-5">
           {[
-            "morgan-stanley", "jpmorgan", "barclays", "citadel",
-            "deutsche-bank", "macquarie", "lazard", "evercore",
-            "houlihan-lokey", "jane-street", "de-shaw", "bnp-paribas",
-            "bank-of-america", "ey", "nomura", "rbc",
+            { file: "morgan-stanley.svg", h: "h-6 md:h-7", invert: true },
+            { file: "jpmorgan.svg", h: "h-7 md:h-8", invert: true },
+            { file: "barclays.svg", h: "h-8 md:h-9", invert: false },
+            { file: "citadel.svg", h: "h-7 md:h-8", invert: false },
+            { file: "deutsche-bank.svg", h: "h-6 md:h-7", invert: true },
+            { file: "macquarie.svg", h: "h-6 md:h-7", invert: true },
+            { file: "lazard.svg", h: "h-6 md:h-7", invert: true },
+            { file: "evercore.svg", h: "h-6 md:h-7", invert: true },
+            { file: "houlihan-lokey.svg", h: "h-6 md:h-7", invert: false },
+            { file: "jane-street.svg", h: "h-6 md:h-7", invert: false },
+            { file: "de-shaw.svg", h: "h-6 md:h-7", invert: false },
+            { file: "bnp-paribas.svg", h: "h-6 md:h-7", invert: false },
+            { file: "bank-of-america.svg", h: "h-6 md:h-7", invert: true },
+            { file: "ey.svg", h: "h-7 md:h-8", invert: false },
+            { file: "nomura.svg", h: "h-6 md:h-7", invert: true },
+            { file: "rbc.svg", h: "h-7 md:h-8", invert: false },
           ].map((firm) => (
             <img
-              key={firm}
-              src={`/logos/${firm}.svg`}
-              alt={firm.replace(/-/g, " ")}
-              className="h-8 md:h-10 w-auto opacity-60 hover:opacity-100 transition-opacity duration-200"
+              key={firm.file}
+              src={`/logos/${firm.file}`}
+              alt={firm.file.replace(".svg", "").replace(/-/g, " ")}
+              className={`${firm.h} w-auto opacity-60 hover:opacity-100 transition-opacity duration-200`}
+              style={firm.invert ? { filter: "brightness(0) invert(1)" } : undefined}
             />
           ))}
         </div>
