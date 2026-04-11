@@ -622,7 +622,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
             maxWidth: 580,
             margin: "0 auto",
             textAlign: "center",
-            padding: "64px 20px",
+            padding: "48px 20px 32px",
           }}
         >
           <SectionLabel>The Session</SectionLabel>
@@ -684,7 +684,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           SECTION 9: CHECKLIST CALLOUT
       ================================================================ */}
       <FadeIn>
-        <div style={{ maxWidth: 720, margin: "80px auto 0" }}>
+        <div style={{ maxWidth: 720, margin: "40px auto 0" }}>
           <div
             style={{
               maxWidth: 600,
@@ -742,7 +742,7 @@ export function SpringWeekWelcome({ onContinue }: SpringWeekWelcomeProps) {
           SECTION 10: WHY THIS WEEKEND
       ================================================================ */}
       <FadeIn>
-        <div style={{ maxWidth: 720, margin: "80px auto 0" }}>
+        <div style={{ maxWidth: 720, margin: "40px auto 0" }}>
           <div
             style={{
               maxWidth: 600,
