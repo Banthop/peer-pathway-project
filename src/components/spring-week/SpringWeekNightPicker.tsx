@@ -13,6 +13,7 @@ import {
   Phone,
   ExternalLink,
   BookOpen,
+  ArrowRight,
 } from "lucide-react";
 import {
   SPRING_WEEK_NIGHTS,
@@ -185,16 +186,15 @@ function HandbookPreview() {
           "I was in the global payment solutions and credit divisions. On the first day, it was very much trying to get us to understand how the bank makes money and how the bank operates. Second and third day would be spending the entire day with your first preference, then your second preference..."
         </p>
       </div>
-      <p className="text-[10px] text-white/70 text-center">Preview of the Bank of America section - tap to expand</p>
-      <a
-        href="/handbook"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors no-underline"
+      <p className="text-[10px] text-white/70 text-center mb-2">Preview of the Bank of America section - tap to expand</p>
+      <button
+        type="button"
+        onClick={() => window.open("/handbook", "_blank")}
+        className="w-full py-2.5 rounded-lg text-sm font-semibold text-black bg-emerald-500 hover:bg-emerald-400 transition-colors flex items-center justify-center gap-2 cursor-pointer"
       >
         See what's inside the Handbook
-        <ExternalLink className="w-3 h-3" />
-      </a>
+        <ArrowRight className="w-3.5 h-3.5" />
+      </button>
     </div>
   );
 }

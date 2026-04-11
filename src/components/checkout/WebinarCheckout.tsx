@@ -510,8 +510,8 @@ export function WebinarCheckout({
             <>
               {!promoOpen ? (
                 <button type="button" onClick={() => setPromoOpen(true)}
-                  className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/60 transition-colors cursor-pointer">
-                  <Tag className="w-3 h-3" />Have a promo code?
+                  className="w-full flex items-center justify-center gap-2 text-sm font-medium text-emerald-400 hover:text-emerald-300 border border-emerald-500/20 hover:border-emerald-500/40 rounded-xl px-4 py-3 transition-all cursor-pointer">
+                  <Tag className="w-4 h-4" />Have a promo code? Tap here
                 </button>
               ) : (
                 <div className="flex items-center gap-2">
@@ -520,11 +520,12 @@ export function WebinarCheckout({
                     value={promoCode}
                     onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoError(null); }}
                     onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); applyPromo(); } }}
-                    placeholder="Enter code"
-                    className="flex-1 rounded-lg bg-white/[0.03] border border-white/[0.1] px-3 py-2 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25 transition-colors"
+                    placeholder="Enter promo code"
+                    autoFocus
+                    className="flex-1 rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-base text-white placeholder:text-white/40 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/25 transition-colors"
                   />
                   <button type="button" onClick={applyPromo} disabled={promoLoading || !promoCode.trim()}
-                    className="px-4 py-2 rounded-lg text-sm font-semibold bg-white/[0.06] text-white/70 hover:bg-white/[0.1] hover:text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
+                    className="px-5 py-3 rounded-xl text-sm font-bold bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer">
                     {promoLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
                   </button>
                 </div>
