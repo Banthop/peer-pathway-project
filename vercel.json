@@ -11,6 +11,8 @@
     { "source": "/email-proof.png", "destination": "/email-proof.png" },
     { "source": "/spring-week-checklist", "destination": "/spring-week-checklist.html" },
     { "source": "/spring-week-conversion-checklist.pdf", "destination": "/spring-week-conversion-checklist.pdf" },
+    { "source": "/handbook", "destination": "/index.html" },
+    { "source": "/spring-week/:path*", "destination": "/index.html" },
     { "source": "/:path*", "destination": "/index.html" }
   ]
 }

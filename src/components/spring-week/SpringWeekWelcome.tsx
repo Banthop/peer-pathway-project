@@ -41,7 +41,7 @@ const FIRM_LOGOS = [
 const LANDING_FAQS = [
   {
     q: "How long does the session last?",
-    a: "The session runs for approximately 3 hours. This includes two speaker presentations, followed by a dedicated Q&A segment where you can ask specific questions about your target firm.",
+    a: "The panel runs for about 1.5 hours of focused conversion strategies from 7+ speakers, followed by a live Q&A where you can ask about your specific firm. Dense and actionable, not a lecture.",
   },
   {
     q: "Will the session be recorded?",

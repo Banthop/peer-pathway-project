@@ -87,7 +87,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "What's in the Handbook?",
-    a: "The Spring Week Conversion Handbook covers 45+ firms with insider breakdowns from students who actually converted. For each firm, you get: what the programme looks like day by day, what the assessment centre involves, how networking works, what they're really looking for, and the mistakes that cost other students their offers. It's organised by division (Investment Banking, Global Markets, Trading, Big 4, and more) so you can jump straight to your target firm. New firms are being added constantly, and if yours isn't covered yet, you can request it and we'll add it within hours.",
+    a: "The Spring Week Conversion Handbook covers 45+ firms with insider breakdowns from students who actually converted. For each firm, you get: what the programme looks like day by day, what the assessment centre involves, how networking works, what they're really looking for, and the mistakes that cost other students their offers. It's organised by division (Investment Banking, Global Markets, Trading, Big 4, and more) so you can jump straight to your target firm. We're adding new chapters, firms, and divisions constantly. Anyone with Handbook access can request a specific firm or division and we'll source someone who converted there and add their chapter as fast as possible. You'll have lifetime access so every update is yours automatically.",
   },
   {
     q: "What's the 1-on-1 prep call in Convert?",
